@@ -1,20 +1,21 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from "react";
+import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
+import Navigation from "./src/routes/Navigation";
+import colors from "./src/colors";
+
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: colors.primary,
+    secondary: colors.secondary,
+  },
+};
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Vai Timão</Text>
-      <StatusBar style="auto" />
-    </View>
+    <PaperProvider theme={theme}>
+      <Navigation />
+    </PaperProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
