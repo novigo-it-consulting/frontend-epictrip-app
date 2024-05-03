@@ -35,12 +35,14 @@ const styles = StyleSheet.create({
     marginTop: 16,
     padding: 8,
   },
-  linkForgotPassword: {
-    marginTop: 8,
-    fontWeight: "bold",
+  linkPrivacy: {
+    marginTop: 20,
+    fontSize: 14,
+    marginBottom: 20,
   },
   link: {
     fontWeight: "bold",
+    color: colors.primary,
   },
   containerText: {
     position: "absolute",
@@ -49,6 +51,16 @@ const styles = StyleSheet.create({
   imageLogo: {
     position: "absolute",
     top: 80,
+    width: 70,
+    height: 60,
+  },
+
+  backButton: {
+    position: "absolute",
+    top: 50,
+    left: -30,
+    width: 70,
+    height: 60,
   },
 });
 

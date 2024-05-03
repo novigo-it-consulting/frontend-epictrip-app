@@ -35,12 +35,13 @@ const styles = StyleSheet.create({
     marginTop: 16,
     padding: 8,
   },
-  linkForgotPassword: {
-    marginTop: 8,
-    fontWeight: "bold",
+  linkPrivacy: {
+    marginTop: 20,
+    fontSize: 14,
   },
   link: {
     fontWeight: "bold",
+    color: colors.primary,
   },
   containerText: {
     position: "absolute",

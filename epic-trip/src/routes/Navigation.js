@@ -4,6 +4,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import LoginScreen from "../screens/LoginScreen";
 import HomeScreen from "../screens/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
+import SignUpScreen from "../screens/SignUpScreen";
+import EnterCode from "../screens/EnterCode";
+import FogotPassword from "../screens/ForgetPasswordScreen";
+import SetNewPassword from "../screens/SetNewPasswordScreen";
 
 const Stack = createStackNavigator();
 
@@ -13,6 +17,10 @@ const Navigation = () => {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="SignUp" component={SignUpScreen} />
+        <Stack.Screen name="EnterCode" component={EnterCode} />
+        <Stack.Screen name="FogotPassword" component={FogotPassword} />
+        <Stack.Screen name="SetNewPassword" component={SetNewPassword} />
       </Stack.Navigator>
     </NavigationContainer>
   );

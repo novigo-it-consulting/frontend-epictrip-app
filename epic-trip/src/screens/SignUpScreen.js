@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, Keyboard } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
 import {
   TextInput,
   Button,
@@ -9,20 +15,19 @@ import {
 } from "react-native-paper";
 import logo from "../../assets/logo.png";
 import { useForm, Controller } from "react-hook-form";
-import styles from "../styles/LoginStyles";
+import styles from "../styles/SignUpStyle";
 import colors from "../colors";
 import * as yup from "yup";
-import { requestLogin } from "../services/api";
+import requestLogin from "../services/api";
 import {
   ALERT_TYPE,
   AlertNotificationRoot,
   Toast,
 } from "react-native-alert-notification";
-
+import { Link } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const LoginScreen = ({ navigation }) => {
-  const [showPassword, setShowPassword] = useState(false);
+const SignUpScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
 
   const {
@@ -32,10 +37,11 @@ const LoginScreen = ({ navigation }) => {
   } = useForm();
 
   const schema = yup.object().shape({
-    username: yup
+    email: yup
       .string()
       .email("E-mail inválido")
       .required("E-mail é obrigatório"),
+    shareNumber: yup.number().required("E-mail é obrigatório"),
     password: yup
       .string()
       .min(6, "Senha deve ter pelo menos 6 caracteres")
@@ -47,40 +53,32 @@ const LoginScreen = ({ navigation }) => {
     try {
       await schema.validate(data, { abortEarly: false });
       const response = await requestLogin(data);
-      console.log(response);
 
       if (response.status === 200) {
-        // Salvando as informações de login no AsyncStorage
         await AsyncStorage.setItem("userData", JSON.stringify(data));
-
-        // Navega para a tela HomeScreen
         navigation.navigate("Home");
         return;
       } else {
-        throw new Error("Erro ao efetuar login. Por favor, tente novamente."); // Lançamos um erro se o status não for 200
+        throw new Error("Erro ao efetuar login. Por favor, tente novamente.");
       }
     } catch (error) {
-      // Tratamento de erros
       if (
         error.response &&
         error.response.data &&
         error.response.data.message
       ) {
-        // Se o erro foi retornado pela API
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
           textBody: error.response.data.message,
         });
       } else {
-        // Se ocorreu um erro inesperado
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
           textBody:
             "Erro ao efetuar login. Por favor, tente novamente mais tarde.",
         });
-        console.error(error); // Registra o erro no console para depuração
       }
     } finally {
       setLoading(false);
@@ -101,20 +99,16 @@ const LoginScreen = ({ navigation }) => {
 
   useEffect(() => {
     const checkLoggedIn = async () => {
-      const token = await AsyncStorage.getItem("token");
-      if (token) {
+      const userData = await AsyncStorage.getItem("userData");
+      if (userData) {
         navigation.navigate("Home");
       }
     };
     checkLoggedIn();
   }, []);
 
-  const handleForgotPassword = () => {
-    navigation.navigate("FogotPassword");
-  };
-
-  const handleGoToSignUp = () => {
-    navigation.navigate("SignUp");
+  const handleGoToSignIn = () => {
+    navigation.navigate("Login");
   };
 
   return (
@@ -122,12 +116,12 @@ const LoginScreen = ({ navigation }) => {
       <AlertNotificationRoot>
         <View style={styles.container}>
           <Image source={logo} style={styles.imageLogo} />
-          <Text style={styles.textTitle}>Login</Text>
+          <Text style={styles.textTitle}>Sign Up</Text>
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
-                label="E-mail"
+                label="Email"
                 mode="flat"
                 left={<TextInput.Icon icon="account-outline" />}
                 onBlur={onBlur}
@@ -149,23 +143,39 @@ const LoginScreen = ({ navigation }) => {
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
-                label="Senha"
+                label="Share Number"
                 mode="flat"
-                left={<TextInput.Icon icon="lock-outline" />}
-                right={
-                  <TextInput.Icon
-                    icon={showPassword ? "eye-outline-off" : "eye-outline"}
-                    onPress={() => setShowPassword(!showPassword)}
-                  />
-                }
+                left={<TextInput.Icon icon="account-group-outline" />}
                 onBlur={onBlur}
                 onChangeText={(value) => onChange(value)}
-                secureTextEntry={!showPassword}
-                style={styles.textPassword}
-                error={errors.password ? true : false}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                style={styles.textEmail}
+                error={errors.email ? true : false}
               />
             )}
-            name="password"
+            name="shareNumber"
+            rules={{ required: true }}
+            defaultValue=""
+          />
+          {errors.email && (
+            <Text style={{ color: colors.error }}>{errors.email.message}</Text>
+          )}
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                label="Phone"
+                mode="flat"
+                left={<TextInput.Icon icon="phone-outline" />}
+                onBlur={onBlur}
+                onChangeText={(value) => onChange(value)}
+                style={styles.textPassword}
+                error={errors.phone ? true : false}
+                keyboardType="phone-pad"
+              />
+            )}
+            name="phone"
             rules={{ required: true }}
             defaultValue=""
           />
@@ -186,17 +196,22 @@ const LoginScreen = ({ navigation }) => {
               "Login"
             )}
           </Button>
-          <Button
-            style={styles.linkForgotPassword}
-            onPress={handleForgotPassword}
-          >
-            Esqueceu a senha?
-          </Button>
+          <Text style={styles.linkPrivacy}>
+            By signin up, you agree to our{" "}
+            <Link style={styles.link} to={"https://qa.myepictrip.app"}>
+              Privacy Policy
+            </Link>{" "}
+            and{" "}
+            <Link style={styles.link} to={"https://qa.myepictrip.app"}>
+              Terms & Conditions
+            </Link>{" "}
+          </Text>
+
           <View style={styles.containerText}>
-            <Text>Don't have an account?</Text>
-            <Button onPress={handleGoToSignUp} style={styles.link}>
+            <Text>Already have an account?</Text>
+            <Button onPress={handleGoToSignIn} style={styles.link}>
               {" "}
-              Sign Up
+              Sign In
             </Button>
           </View>
         </View>
@@ -214,4 +229,4 @@ const theme = {
   },
 };
 
-export default LoginScreen;
+export default SignUpScreen;
