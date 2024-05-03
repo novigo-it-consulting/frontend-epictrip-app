@@ -3,17 +3,9 @@
     "version": ">= 0.43.0"
   },
   "build": {
-    "development": {
-      "distribution": "internal"
-    },
     "production": {
-      "android": {
-        "releaseChannel": "default",
-        "submitProfile": "default"
-      },
       "ios": {
-        "releaseChannel": "default",
-        "submitProfile": "default"
+        "releaseChannel": "production"
       }
     }
   }
