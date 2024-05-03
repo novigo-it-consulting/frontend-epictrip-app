@@ -19,7 +19,6 @@ import {
   AlertNotificationRoot,
   Toast,
 } from "react-native-alert-notification";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const EnterCodeScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
@@ -47,7 +46,7 @@ const EnterCodeScreen = ({ navigation }) => {
         navigation.navigate("EnterCode");
         return;
       } else {
-        throw new Error("Erro ao Resetar Senha. Por favor, tente novamente.");
+        throw new Error("Erro ao resetar renha. Por favor, tente novamente.");
       }
     } catch (error) {
       if (
@@ -64,8 +63,7 @@ const EnterCodeScreen = ({ navigation }) => {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody:
-            "Erro ao efetuar login. Por favor, tente novamente mais tarde.",
+          textBody: "Erro incomum, tente novamente mais tarde",
         });
       }
       console.log("Error", error);
@@ -87,7 +85,7 @@ const EnterCodeScreen = ({ navigation }) => {
   }, []);
 
   const handleResendCode = () => {
-    navigation.navigate("SignUp");
+    alert("Erro ao Reenviar código");
   };
 
   const handleGoBack = () => {
@@ -105,12 +103,7 @@ const EnterCodeScreen = ({ navigation }) => {
               style={styles.backIcon}
             />
           </TouchableOpacity>
-          <Image
-            source={LogoEnterCode}
-            style={styles.imageLogo}
-            width={50}
-            height={50}
-          />
+          <Image source={LogoEnterCode} style={styles.imageLogo} />
           <Text style={styles.textTitle}>Tell us your Email</Text>
 
           <Text style={styles.linkPrivacy}>
