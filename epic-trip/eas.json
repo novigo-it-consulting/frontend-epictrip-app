@@ -5,7 +5,8 @@
   "build": {
     "production": {
       "ios": {
-        "releaseChannel": "production"
+        "releaseChannel": "production",
+        "image": "latest"
       }
     }
   }
