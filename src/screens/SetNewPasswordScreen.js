@@ -113,7 +113,6 @@ const ForgetPasswordScreen = ({ navigation }) => {
               <TextInput
                 label="Password"
                 mode="flat"
-                left={<TextInput.Icon icon="lock-outline" />}
                 onBlur={onBlur}
                 onChangeText={(value) => onChange(value)}
                 keyboardType="email-address"
