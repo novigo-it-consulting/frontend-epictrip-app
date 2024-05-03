@@ -50,6 +50,8 @@ const styles = StyleSheet.create({
   imageLogo: {
     position: "absolute",
     top: 80,
+    width: 200,
+    height: 100,
   },
 });
 

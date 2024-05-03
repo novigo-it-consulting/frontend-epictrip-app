@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, Keyboard } from "react-native";
+import { View, Text, Image, Keyboard, ScrollView } from "react-native";
 import {
   TextInput,
   Button,
@@ -99,16 +99,6 @@ const LoginScreen = ({ navigation }) => {
     };
   }, []);
 
-  useEffect(() => {
-    const checkLoggedIn = async () => {
-      const token = await AsyncStorage.getItem("token");
-      if (token) {
-        navigation.navigate("Home");
-      }
-    };
-    checkLoggedIn();
-  }, []);
-
   const handleForgotPassword = () => {
     navigation.navigate("FogotPassword");
   };
@@ -120,7 +110,7 @@ const LoginScreen = ({ navigation }) => {
   return (
     <PaperProvider theme={theme}>
       <AlertNotificationRoot>
-        <View style={styles.container}>
+        <View onTouchStart={() => Keyboard.dismiss()} style={styles.container}>
           <Image source={logo} style={styles.imageLogo} />
           <Text style={styles.textTitle}>Login</Text>
           <Controller
@@ -128,6 +118,7 @@ const LoginScreen = ({ navigation }) => {
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
                 label="E-mail"
+                onSubmitEditing={Keyboard.dismiss}
                 mode="flat"
                 left={<TextInput.Icon icon="account-outline" />}
                 onBlur={onBlur}
@@ -151,6 +142,7 @@ const LoginScreen = ({ navigation }) => {
               <TextInput
                 label="Senha"
                 mode="flat"
+                onSubmitEditing={Keyboard.dismiss}
                 left={<TextInput.Icon icon="lock-outline" />}
                 right={
                   <TextInput.Icon

@@ -97,7 +97,7 @@ const ForgetPasswordScreen = ({ navigation }) => {
   return (
     <PaperProvider theme={theme}>
       <AlertNotificationRoot>
-        <View style={styles.container}>
+        <View onTouchStart={() => Keyboard.dismiss()} style={styles.container}>
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
             <IconButton
               icon={"arrow-left-thin"}

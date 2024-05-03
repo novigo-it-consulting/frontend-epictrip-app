@@ -97,16 +97,6 @@ const SignUpScreen = ({ navigation }) => {
     };
   }, []);
 
-  useEffect(() => {
-    const checkLoggedIn = async () => {
-      const userData = await AsyncStorage.getItem("userData");
-      if (userData) {
-        navigation.navigate("Home");
-      }
-    };
-    checkLoggedIn();
-  }, []);
-
   const handleGoToSignIn = () => {
     navigation.navigate("Login");
   };
@@ -114,7 +104,7 @@ const SignUpScreen = ({ navigation }) => {
   return (
     <PaperProvider theme={theme}>
       <AlertNotificationRoot>
-        <View style={styles.container}>
+        <View onTouchStart={() => Keyboard.dismiss()} style={styles.container}>
           <Image source={logo} style={styles.imageLogo} />
           <Text style={styles.textTitle}>Sign Up</Text>
           <Controller
