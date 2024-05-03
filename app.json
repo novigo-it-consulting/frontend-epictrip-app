@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "app.myepictrip"
     },
     "android": {
       "adaptiveIcon": {
@@ -26,11 +27,11 @@
     "web": {
       "favicon": "./assets/img/favicon.png"
     },
+    "owner": "novigo-it",
     "extra": {
       "eas": {
-        "projectId": "5131259f-8c5b-485c-b21d-b9b1c934af2b"
+        "projectId": "db969fca-1beb-44ee-9f79-97519a82855c"
       }
-    },
-    "owner": "novigo-it"
+    }
   }
 }
