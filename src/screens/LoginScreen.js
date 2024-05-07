@@ -191,6 +191,17 @@ const LoginScreen = ({ navigation }) => {
               Sign Up
             </Button>
           </View>
+          <Text
+            style={{
+              fontSize: 10,
+              position: "absolute",
+              fontWeight: "bold",
+              bottom: 30,
+              color: colors.primary,
+            }}
+          >
+            02
+          </Text>
         </View>
         <Toast />
       </AlertNotificationRoot>
