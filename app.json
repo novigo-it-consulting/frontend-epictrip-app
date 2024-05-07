@@ -16,7 +16,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "app.myepictrip"
+      "bundleIdentifier": "app.myepictrip",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
