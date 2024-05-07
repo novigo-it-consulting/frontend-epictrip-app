@@ -11,6 +11,7 @@ import {
 import LogoEnterCode from "../../assets/enterCode.png";
 import { useForm, Controller } from "react-hook-form";
 import styles from "../styles/EnterCodeStyles.js";
+import screenNumberStyles from "../styles/ScreenNumberStyles";
 import colors from "../colors";
 import * as yup from "yup";
 import { requestValidateToken } from "../services/api";
@@ -156,6 +157,9 @@ const ForgetPasswordScreen = ({ navigation }) => {
           </Button>
         </View>
         <Toast />
+        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+          <Text style={screenNumberStyles.numberStyle}>07</Text>
+        </View>
       </AlertNotificationRoot>
     </PaperProvider>
   );

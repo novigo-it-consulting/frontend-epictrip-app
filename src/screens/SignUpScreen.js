@@ -16,6 +16,7 @@ import {
 import logo from "../../assets/logo.png";
 import { useForm, Controller } from "react-hook-form";
 import styles from "../styles/SignUpStyle";
+import screenNumberStyles from "../styles/ScreenNumberStyles";
 import colors from "../colors";
 import * as yup from "yup";
 import requestLogin from "../services/api";
@@ -204,6 +205,7 @@ const SignUpScreen = ({ navigation }) => {
               Sign In
             </Button>
           </View>
+          <Text style={screenNumberStyles.numberStyle}>03</Text>
         </View>
         <Toast />
       </AlertNotificationRoot>

@@ -11,6 +11,7 @@ import {
 import LogoEnterCode from "../../assets/enterCode.png";
 import { useForm, Controller } from "react-hook-form";
 import styles from "../styles/EnterCodeStyles.js";
+import screenNumberStyles from "../styles/ScreenNumberStyles";
 import colors from "../colors.js";
 import * as yup from "yup";
 import { requestGenerateToken } from "../services/api.js";
@@ -142,6 +143,9 @@ const EnterCodeScreen = ({ navigation }) => {
           >
             {loading ? <ActivityIndicator color={colors.white} /> : "Continue"}
           </Button>
+        </View>
+        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+          <Text style={screenNumberStyles.numberStyle}>06</Text>
         </View>
         <Toast />
       </AlertNotificationRoot>

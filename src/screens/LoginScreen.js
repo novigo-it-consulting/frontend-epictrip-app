@@ -10,6 +10,7 @@ import {
 import logo from "../../assets/logo.png";
 import { useForm, Controller } from "react-hook-form";
 import styles from "../styles/LoginStyles";
+import screenNumberStyles from "../styles/ScreenNumberStyles";
 import colors from "../colors";
 import * as yup from "yup";
 import { requestLogin } from "../services/api";
@@ -191,17 +192,7 @@ const LoginScreen = ({ navigation }) => {
               Sign Up
             </Button>
           </View>
-          <Text
-            style={{
-              fontSize: 10,
-              position: "absolute",
-              fontWeight: "bold",
-              bottom: 30,
-              color: colors.primary,
-            }}
-          >
-            02
-          </Text>
+          <Text style={screenNumberStyles.numberStyle}>02</Text>
         </View>
         <Toast />
       </AlertNotificationRoot>
