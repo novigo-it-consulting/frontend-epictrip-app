@@ -21,7 +21,7 @@ import {
   Toast,
 } from "react-native-alert-notification";
 
-const EnterCodeScreen = ({ navigation }) => {
+const ForgetPasswordScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const {
     control,
@@ -162,4 +162,4 @@ const theme = {
   },
 };
 
-export default EnterCodeScreen;
+export default ForgetPasswordScreen;

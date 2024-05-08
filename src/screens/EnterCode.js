@@ -21,9 +21,11 @@ import {
   Toast,
 } from "react-native-alert-notification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
-const ForgetPasswordScreen = ({ navigation }) => {
+const EnterCodeScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   const {
     control,
@@ -112,12 +114,9 @@ const ForgetPasswordScreen = ({ navigation }) => {
             />
           </TouchableOpacity>
           <Image source={logo} style={styles.imageLogo} />
-          <Text style={styles.textTitle}>Enter Code</Text>
+          <Text style={styles.textTitle}>{t("enterCode.title")}</Text>
 
-          <Text style={styles.linkPrivacy}>
-            An 6 digit code has been sent to the your email. Check up in your
-            box Spam to.
-          </Text>
+          <Text style={styles.linkPrivacy}>{t("enterCode.subTitle")}</Text>
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
@@ -141,19 +140,16 @@ const ForgetPasswordScreen = ({ navigation }) => {
             <Text style={{ color: colors.error }}>{errors.email.message}</Text>
           )}
 
-          {/* <Button onPress={handleResendCode} style={styles.linkPrivacy}>
-            Resend Code
-          </Button> */}
           <Button
             mode="contained"
             onPress={handleSubmit(onSubmit)}
             style={styles.button}
-            disabled={loading} // Desabilita o botão durante o carregamento
+            disabled={loading}
           >
-            {loading ? ( // Renderiza o texto do botão com base no estado de carregamento
+            {loading ? (
               <ActivityIndicator color={colors.white} />
             ) : (
-              "Continue"
+              t("enterCode.continueButton")
             )}
           </Button>
         </View>
@@ -174,4 +170,4 @@ const theme = {
   },
 };
 
-export default ForgetPasswordScreen;
+export default EnterCodeScreen;

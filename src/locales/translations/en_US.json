@@ -1,4 +1,8 @@
 {
+  "homeScreen": {
+    "title": "Home Screen",
+    "logoutButton": "Logout"
+  },
   "loginScreen": {
     "title": "Login",
     "emailLabel": "Email",
@@ -7,5 +11,37 @@
     "forgotPassword": "Forgot Password?",
     "noAccount": "Don't have an account?",
     "signUp": "Sign Up"
+  },
+  "enterCode": {
+    "title": "Enter Code",
+    "codeLabel": "Code",
+    "codePlaceholder": "Enter the code",
+    "continueButton": "Continue",
+    "resendCode": "Resend Code",
+    "errorTitle": "Oops",
+    "errorMessage": "Error validating code. Please try again."
+  },
+  "forgetPasswordScreen": {
+    "title": "Set New Password",
+    "passwordLabel": "New Password",
+    "confirmPasswordLabel": "Confirm Password",
+    "continueButton": "Continue",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "errorTitle": "Oops",
+    "errorMessage": "Error setting password. Please try again."
+  },
+  "signUpScreen": {
+    "title": "Sign Up",
+    "emailLabel": "Email",
+    "shareNumberLabel": "Share Number",
+    "phoneLabel": "Phone",
+    "passwordLabel": "Password",
+    "signUpButton": "Sign Up",
+    "privacyPolicy": "By signing up, you agree to our ",
+    "termsAndConditions": "and our ",
+    "privacyPolicyLink": "Privacy Policy",
+    "termsAndConditionsLink": "Terms & Conditions",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign In"
   }
 }

@@ -1,4 +1,8 @@
 {
+  "homeScreen": {
+    "title": "Tela Inicial",
+    "logoutButton": "Sair"
+  },
   "loginScreen": {
     "title": "Login",
     "emailLabel": "E-mail",
@@ -7,5 +11,38 @@
     "forgotPassword": "Esqueceu a senha?",
     "noAccount": "Não tem uma conta?",
     "signUp": "Cadastre-se"
+  },
+  "enterCode": {
+    "title": "Digite seu código",
+    "subTitle": "Um código de 6 dígitos foi enviado para o seu e-mail. Confira em sua caixa Spam para.",
+    "codeLabel": "Código",
+    "codePlaceholder": "Digite o código",
+    "continueButton": "Continue",
+    "resendCode": "Reenviar Código",
+    "errorTitle": "Ops",
+    "errorMessage": "Erro ao validar o código. Por favor, tente novamente."
+  },
+  "forgetPasswordScreen": {
+    "title": "Definir sua Senha",
+    "passwordLabel": "Nova Senha",
+    "confirmPasswordLabel": "Confirmar Senha",
+    "continueButton": "Continuar",
+    "passwordsDoNotMatch": "As senhas não correspondem",
+    "errorTitle": "Ops",
+    "errorMessage": "Erro ao definir a senha. Por favor, tente novamente."
+  },
+  "signUpScreen": {
+    "title": "Cadastre-se",
+    "emailLabel": "E-mail",
+    "shareNumberLabel": "Número de Compartilhamento",
+    "phoneLabel": "Telefone",
+    "passwordLabel": "Senha",
+    "signUpButton": "Cadastrar",
+    "privacyPolicy": "Ao se cadastrar, você concorda com nossa ",
+    "termsAndConditions": "e nossos ",
+    "privacyPolicyLink": "Política de Privacidade",
+    "termsAndConditionsLink": "Termos e Condições",
+    "alreadyHaveAccount": "Já tem uma conta?",
+    "signIn": "Entrar"
   }
 }

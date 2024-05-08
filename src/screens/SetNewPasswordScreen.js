@@ -22,7 +22,7 @@ import {
 } from "react-native-alert-notification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ForgetPasswordScreen = ({ navigation }) => {
+const SetNewPasswordScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -203,4 +203,4 @@ const theme = {
   },
 };
 
-export default ForgetPasswordScreen;
+export default SetNewPasswordScreen;
