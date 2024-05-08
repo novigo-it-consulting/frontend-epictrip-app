@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, Keyboard, TouchableOpacity, Alert } from "react-native";
+import { View, Text, Image, Keyboard, TouchableOpacity } from "react-native";
 import {
   TextInput,
   Button,
@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   IconButton,
 } from "react-native-paper";
-import LogoEnterCode from "../../assets/enterCode.png";
+import logo from "../../assets/logo.png";
 import { useForm, Controller } from "react-hook-form";
 import styles from "../styles/EnterCodeStyles.js";
 import screenNumberStyles from "../styles/ScreenNumberStyles";
@@ -24,6 +24,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ForgetPasswordScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     control,
@@ -33,72 +34,54 @@ const ForgetPasswordScreen = ({ navigation }) => {
 
   const schema = yup.object().shape({
     newPassword: yup.string().required("Campo Obrigatório"),
+    confirmPassword: yup.string().required("Campo Obrigatório"),
   });
-
-  const passwordMatchValidator = (value) => {
-    const password = value.newPassword;
-    const confirmPassword = value.confirmPassword;
-
-    // console.log(password === confirmPassword)
-
-    return password === confirmPassword;
-  };
 
   const onSubmit = async (data) => {
     setLoading(true);
-    console.log(data.password);
 
-    if (passwordMatchValidator(data)) {
-      const passwordObject = {
-        newPassword: data.newPassword
-      };
-
-      // console.log(passwordObject);
-      
-      try {
-        await schema.validate(passwordObject, { abortEarly: false });
-        const token = await AsyncStorage.getItem("token");
-        const response = await requestChangePassword(passwordObject);
-        console.log(token);
-        if (response === 200) {
-          navigation.navigate("Home");
-          return;
-        } else {
-          throw new Error("Erro ao efetuar login. Por favor, tente novamente.");
-        }
-      } catch (error) {
-        console.log("Error", error);
-
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.message
-        ) {
-          Toast.show({
-            type: ALERT_TYPE.DANGER,
-            title: "Ops",
-            textBody: error.response.data.message,
-          });
-        } else {
-          console.log("caiu aqui")
-          Toast.show({
-            type: ALERT_TYPE.DANGER,
-            title: "Ops",
-            textBody:
-              "Erro ao efetuar login. Por favor, tente novamente mais tarde.",
-          });
-        }
-      } finally {
+    if (data.newPassword !== data.confirmPassword) {
+      const timer = setTimeout(() => {
         setLoading(false);
-      }
-    } else {
-      setLoading(false)
+      }, 2000);
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
-        textBody:
-          "As senhas não correspondem.",
+        textBody: "Passwords dont match",
       });
+      return () => clearTimeout(timer);
+    }
+    try {
+      await schema.validate(passwordObject, { abortEarly: false });
+      const token = await AsyncStorage.getItem("token");
+      const response = await requestChangePassword(passwordObject);
+
+      if (response === 200) {
+        navigation.navigate("Home");
+        return;
+      } else {
+        throw new Error("Erro ao efetuar login. Por favor, tente novamente.");
+      }
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Ops",
+          textBody: error.response.data.message,
+        });
+      } else {
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Ops",
+          textBody: error.response.data.message,
+        });
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -133,7 +116,7 @@ const ForgetPasswordScreen = ({ navigation }) => {
               style={styles.backIcon}
             />
           </TouchableOpacity>
-          <Image source={LogoEnterCode} style={styles.imageLogo} />
+          <Image source={logo} style={styles.imageLogo} />
           <Text style={styles.textTitle}>Set your password</Text>
           <Controller
             control={control}
@@ -142,6 +125,14 @@ const ForgetPasswordScreen = ({ navigation }) => {
                 label="Password"
                 mode="flat"
                 onBlur={onBlur}
+                left={<TextInput.Icon icon="account-key-outline" />}
+                right={
+                  <TextInput.Icon
+                    icon={showPassword ? "eye-off-outline" : "eye-outline"}
+                    onPress={() => setShowPassword(!showPassword)}
+                  />
+                }
+                secureTextEntry={!showPassword}
                 onChangeText={(value) => onChange(value)}
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -159,7 +150,15 @@ const ForgetPasswordScreen = ({ navigation }) => {
               <TextInput
                 label="Confirm Password"
                 mode="flat"
+                left={<TextInput.Icon icon="account-key-outline" />}
                 onBlur={onBlur}
+                right={
+                  <TextInput.Icon
+                    icon={showPassword ? "eye-off-outline" : "eye-outline"}
+                    onPress={() => setShowPassword(!showPassword)}
+                  />
+                }
+                secureTextEntry={!showPassword}
                 onChangeText={(value) => onChange(value)}
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -175,9 +174,9 @@ const ForgetPasswordScreen = ({ navigation }) => {
             <Text style={{ color: colors.error }}>{errors.email.message}</Text>
           )}
 
-          <Button onPress={handleResendCode} style={styles.linkPrivacy}>
+          {/* <Button onPress={handleResendCode} style={styles.linkPrivacy}>
             Resend Code
-          </Button>
+          </Button> */}
           <Button
             mode="contained"
             onPress={handleSubmit(onSubmit)}
@@ -187,7 +186,7 @@ const ForgetPasswordScreen = ({ navigation }) => {
             {loading ? <ActivityIndicator color={colors.white} /> : "Continue"}
           </Button>
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+        <View style={{ flexDirection: "row", justifyContent: "center" }}>
           <Text style={screenNumberStyles.numberStyle}>08</Text>
         </View>
         <Toast />

@@ -50,9 +50,7 @@ const styles = StyleSheet.create({
   },
   imageLogo: {
     position: "absolute",
-    top: 80,
-    width: 70,
-    height: 60,
+    top: 120,
   },
 
   backButton: {

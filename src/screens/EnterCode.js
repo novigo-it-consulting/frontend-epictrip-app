@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   IconButton,
 } from "react-native-paper";
-import LogoEnterCode from "../../assets/enterCode.png";
+import logo from "../../assets/logo.png";
 import { useForm, Controller } from "react-hook-form";
 import styles from "../styles/EnterCodeStyles.js";
 import screenNumberStyles from "../styles/ScreenNumberStyles";
@@ -111,7 +111,7 @@ const ForgetPasswordScreen = ({ navigation }) => {
               style={styles.backIcon}
             />
           </TouchableOpacity>
-          <Image source={LogoEnterCode} style={styles.imageLogo} />
+          <Image source={logo} style={styles.imageLogo} />
           <Text style={styles.textTitle}>Enter Code</Text>
 
           <Text style={styles.linkPrivacy}>
@@ -125,6 +125,7 @@ const ForgetPasswordScreen = ({ navigation }) => {
                 label="Code"
                 mode="flat"
                 onBlur={onBlur}
+                left={<TextInput.Icon icon="shield-check-outline" />}
                 onChangeText={(value) => onChange(value)}
                 keyboardType="phone-pad"
                 autoCapitalize="none"
@@ -140,9 +141,9 @@ const ForgetPasswordScreen = ({ navigation }) => {
             <Text style={{ color: colors.error }}>{errors.email.message}</Text>
           )}
 
-          <Button onPress={handleResendCode} style={styles.linkPrivacy}>
+          {/* <Button onPress={handleResendCode} style={styles.linkPrivacy}>
             Resend Code
-          </Button>
+          </Button> */}
           <Button
             mode="contained"
             onPress={handleSubmit(onSubmit)}
@@ -157,7 +158,7 @@ const ForgetPasswordScreen = ({ navigation }) => {
           </Button>
         </View>
         <Toast />
-        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+        <View style={{ flexDirection: "row", justifyContent: "center" }}>
           <Text style={screenNumberStyles.numberStyle}>07</Text>
         </View>
       </AlertNotificationRoot>
