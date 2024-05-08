@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, Keyboard, TouchableOpacity } from "react-native";
+import { View, Text, Image, Keyboard, TouchableOpacity, Alert } from "react-native";
 import {
   TextInput,
   Button,
@@ -35,43 +35,70 @@ const ForgetPasswordScreen = ({ navigation }) => {
     newPassword: yup.string().required("Campo Obrigatório"),
   });
 
+  const passwordMatchValidator = (value) => {
+    const password = value.newPassword;
+    const confirmPassword = value.confirmPassword;
+
+    // console.log(password === confirmPassword)
+
+    return password === confirmPassword;
+  };
+
   const onSubmit = async (data) => {
     setLoading(true);
-    console.log(data);
-    try {
-      await schema.validate(data, { abortEarly: false });
-      const token = await AsyncStorage.getItem("token");
-      const response = await requestChangePassword(data);
-      console.log(token);
-      if (response === 200) {
-        navigation.navigate("Home");
-        return;
-      } else {
-        throw new Error("Erro ao efetuar login. Por favor, tente novamente.");
-      }
-    } catch (error) {
-      console.log("Error", error);
+    console.log(data.password);
 
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        Toast.show({
-          type: ALERT_TYPE.DANGER,
-          title: "Ops",
-          textBody: error.response.data.message,
-        });
-      } else {
-        Toast.show({
-          type: ALERT_TYPE.DANGER,
-          title: "Ops",
-          textBody:
-            "Erro ao efetuar login. Por favor, tente novamente mais tarde.",
-        });
+    if (passwordMatchValidator(data)) {
+      const passwordObject = {
+        newPassword: data.newPassword
+      };
+
+      // console.log(passwordObject);
+      
+      try {
+        await schema.validate(passwordObject, { abortEarly: false });
+        const token = await AsyncStorage.getItem("token");
+        const response = await requestChangePassword(passwordObject);
+        console.log(token);
+        if (response === 200) {
+          navigation.navigate("Home");
+          return;
+        } else {
+          throw new Error("Erro ao efetuar login. Por favor, tente novamente.");
+        }
+      } catch (error) {
+        console.log("Error", error);
+
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          Toast.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Ops",
+            textBody: error.response.data.message,
+          });
+        } else {
+          console.log("caiu aqui")
+          Toast.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Ops",
+            textBody:
+              "Erro ao efetuar login. Por favor, tente novamente mais tarde.",
+          });
+        }
+      } finally {
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
+    } else {
+      setLoading(false)
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Ops",
+        textBody:
+          "As senhas não correspondem.",
+      });
     }
   };
 
@@ -126,6 +153,24 @@ const ForgetPasswordScreen = ({ navigation }) => {
             rules={{ required: true }}
             defaultValue=""
           />
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                label="Confirm Password"
+                mode="flat"
+                onBlur={onBlur}
+                onChangeText={(value) => onChange(value)}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                style={styles.textEmail}
+                error={errors.confirmPassword ? true : false}
+              />
+            )}
+            name="confirmPassword"
+            rules={{ required: true }}
+            defaultValue=""
+          />
           {errors.email && (
             <Text style={{ color: colors.error }}>{errors.email.message}</Text>
           )}
@@ -142,7 +187,7 @@ const ForgetPasswordScreen = ({ navigation }) => {
             {loading ? <ActivityIndicator color={colors.white} /> : "Continue"}
           </Button>
         </View>
-        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
           <Text style={screenNumberStyles.numberStyle}>08</Text>
         </View>
         <Toast />
