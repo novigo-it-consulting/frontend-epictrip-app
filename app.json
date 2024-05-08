@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/img/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "app.myepictrip"
     },
     "web": {
       "favicon": "./assets/img/favicon.png"
