@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, Keyboard, ScrollView } from "react-native";
+import { View, Text, Image, Keyboard } from "react-native";
 import {
   TextInput,
   Button,
@@ -19,12 +19,14 @@ import {
   AlertNotificationRoot,
   Toast,
 } from "react-native-alert-notification";
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
 const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const { t } = useTranslation();
 
   const {
     control,
@@ -113,12 +115,12 @@ const LoginScreen = ({ navigation }) => {
       <AlertNotificationRoot>
         <View onTouchStart={() => Keyboard.dismiss()} style={styles.container}>
           <Image source={logo} style={styles.imageLogo} />
-          <Text style={styles.textTitle}>Login</Text>
+          <Text style={styles.textTitle}>{t("loginScreen.title")}</Text>
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
-                label="E-mail"
+                label={t("loginScreen.emailLabel")}
                 onSubmitEditing={Keyboard.dismiss}
                 mode="flat"
                 left={<TextInput.Icon icon="account-outline" />}
@@ -141,13 +143,13 @@ const LoginScreen = ({ navigation }) => {
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
-                label="Senha"
+                label={t("loginScreen.passwordLabel")}
                 mode="flat"
                 onSubmitEditing={Keyboard.dismiss}
                 left={<TextInput.Icon icon="lock-outline" />}
                 right={
                   <TextInput.Icon
-                    icon={showPassword ? "eye-outline-off" : "eye-outline"}
+                    icon={showPassword ? "eye-off-outline" : "eye-outline"}
                     onPress={() => setShowPassword(!showPassword)}
                   />
                 }
@@ -176,20 +178,19 @@ const LoginScreen = ({ navigation }) => {
             {loading ? ( // Renderiza o texto do botão com base no estado de carregamento
               <ActivityIndicator color={colors.white} />
             ) : (
-              "Login"
+              t("loginScreen.loginButton")
             )}
           </Button>
           <Button
             style={styles.linkForgotPassword}
             onPress={handleForgotPassword}
           >
-            Esqueceu a senha?
+            {t("loginScreen.forgotPassword")}
           </Button>
           <View style={styles.containerText}>
-            <Text>Don't have an account?</Text>
+            <Text>{t("loginScreen.noAccount")}</Text>
             <Button onPress={handleGoToSignUp} style={styles.link}>
-              {" "}
-              Sign Up
+              {t("loginScreen.signUp")}
             </Button>
           </View>
           <Text style={screenNumberStyles.numberStyle}>02</Text>

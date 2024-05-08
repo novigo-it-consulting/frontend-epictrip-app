@@ -1,0 +1,11 @@
+{
+  "loginScreen": {
+    "title": "Login",
+    "emailLabel": "E-mail",
+    "passwordLabel": "Senha",
+    "loginButton": "Login",
+    "forgotPassword": "Esqueceu a senha?",
+    "noAccount": "Não tem uma conta?",
+    "signUp": "Cadastre-se"
+  }
+}
