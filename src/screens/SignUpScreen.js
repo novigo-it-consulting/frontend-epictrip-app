@@ -27,9 +27,12 @@ import {
 } from "react-native-alert-notification";
 import { Link } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
 const SignUpScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
+
+  const { t } = useTranslation();
 
   const {
     control,
@@ -107,12 +110,12 @@ const SignUpScreen = ({ navigation }) => {
       <AlertNotificationRoot>
         <View onTouchStart={() => Keyboard.dismiss()} style={styles.container}>
           <Image source={logo} style={styles.imageLogo} />
-          <Text style={styles.textTitle}>Sign Up</Text>
+          <Text style={styles.textTitle}>{t("signUpScreen.title")}</Text>
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
-                label="Email"
+                label={t("signUpScreen.emailLabel")}
                 mode="flat"
                 left={<TextInput.Icon icon="account-outline" />}
                 onBlur={onBlur}
@@ -134,7 +137,7 @@ const SignUpScreen = ({ navigation }) => {
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
-                label="Share Number"
+                label={t("signUpScreen.shareNumberLabel")}
                 mode="flat"
                 left={<TextInput.Icon icon="account-group-outline" />}
                 onBlur={onBlur}
@@ -156,7 +159,7 @@ const SignUpScreen = ({ navigation }) => {
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
-                label="Phone"
+                label={t("signUpScreen.phoneLabel")}
                 mode="flat"
                 left={<TextInput.Icon icon="phone-outline" />}
                 onBlur={onBlur}
@@ -179,30 +182,30 @@ const SignUpScreen = ({ navigation }) => {
             mode="contained"
             onPress={handleSubmit(onSubmit)}
             style={styles.button}
-            disabled={loading} // Desabilita o botão durante o carregamento
+            disabled={loading}
           >
-            {loading ? ( // Renderiza o texto do botão com base no estado de carregamento
+            {loading ? (
               <ActivityIndicator color={colors.white} />
             ) : (
-              "Login"
+              t("signUpScreen.signIn")
             )}
           </Button>
           <Text style={styles.linkPrivacy}>
-            By signin up, you agree to our{" "}
+            {t("signUpScreen.privacyPolicy")}
             <Link style={styles.link} to={"https://qa.myepictrip.app"}>
-              Privacy Policy
+              {t("signUpScreen.privacyPolicyLink")}
             </Link>{" "}
-            and{" "}
+            {t("signUpScreen.termsAndConditions")}
             <Link style={styles.link} to={"https://qa.myepictrip.app"}>
-              Terms & Conditions
+              {t("signUpScreen.termsAndConditionsLink")}
             </Link>{" "}
           </Text>
 
           <View style={styles.containerText}>
-            <Text>Already have an account?</Text>
+            <Text>{t("signUpScreen.alreadyHaveAccount")}</Text>
             <Button onPress={handleGoToSignIn} style={styles.link}>
               {" "}
-              Sign In
+              {t("signUpScreen.signIn")}
             </Button>
           </View>
           <Text style={screenNumberStyles.numberStyle}>03</Text>

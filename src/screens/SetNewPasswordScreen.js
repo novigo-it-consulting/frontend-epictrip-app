@@ -21,10 +21,13 @@ import {
   Toast,
 } from "react-native-alert-notification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
 const SetNewPasswordScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  const { t } = useTranslation();
 
   const {
     control,
@@ -97,10 +100,6 @@ const SetNewPasswordScreen = ({ navigation }) => {
     };
   }, []);
 
-  const handleResendCode = () => {
-    navigation.navigate("SignUp");
-  };
-
   const handleGoBack = () => {
     navigation.navigate("Login");
   };
@@ -117,12 +116,14 @@ const SetNewPasswordScreen = ({ navigation }) => {
             />
           </TouchableOpacity>
           <Image source={logo} style={styles.imageLogo} />
-          <Text style={styles.textTitle}>Set your password</Text>
+          <Text style={styles.textTitle}>
+            {t("setNewPasswordScreen.title")}
+          </Text>
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
-                label="Password"
+                label={t("setNewPasswordScreen.passwordLabel")}
                 mode="flat"
                 onBlur={onBlur}
                 left={<TextInput.Icon icon="account-key-outline" />}
@@ -148,7 +149,7 @@ const SetNewPasswordScreen = ({ navigation }) => {
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
-                label="Confirm Password"
+                label={t("setNewPasswordScreen.confirmPasswordLabel")}
                 mode="flat"
                 left={<TextInput.Icon icon="account-key-outline" />}
                 onBlur={onBlur}
@@ -174,16 +175,17 @@ const SetNewPasswordScreen = ({ navigation }) => {
             <Text style={{ color: colors.error }}>{errors.email.message}</Text>
           )}
 
-          {/* <Button onPress={handleResendCode} style={styles.linkPrivacy}>
-            Resend Code
-          </Button> */}
           <Button
             mode="contained"
             onPress={handleSubmit(onSubmit)}
             style={styles.button}
             disabled={loading}
           >
-            {loading ? <ActivityIndicator color={colors.white} /> : "Continue"}
+            {loading ? (
+              <ActivityIndicator color={colors.white} />
+            ) : (
+              t("setNewPasswordScreen.continueButton")
+            )}
           </Button>
         </View>
         <View style={{ flexDirection: "row", justifyContent: "center" }}>

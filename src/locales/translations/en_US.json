@@ -15,6 +15,7 @@
   "enterCode": {
     "title": "Enter Code",
     "codeLabel": "Code",
+    "subTitle": "A 6-digit code has been sent to your email. Check your Spam folder for.",
     "codePlaceholder": "Enter the code",
     "continueButton": "Continue",
     "resendCode": "Resend Code",
@@ -23,6 +24,8 @@
   },
   "forgetPasswordScreen": {
     "title": "Set New Password",
+    "subTitle": "Type in your Epic Trip account e-mail address",
+    "emailLabel": "Email",
     "passwordLabel": "New Password",
     "confirmPasswordLabel": "Confirm Password",
     "continueButton": "Continue",
@@ -43,5 +46,12 @@
     "termsAndConditionsLink": "Terms & Conditions",
     "alreadyHaveAccount": "Already have an account?",
     "signIn": "Sign In"
+  },
+  "setNewPasswordScreen": {
+    "title": "Set your password",
+    "passwordLabel": "Password",
+    "confirmPasswordLabel": "Confirm Password",
+    "continueButton": "Continue",
+    "passwordsDoNotMatch": "Passwords don't match"
   }
 }

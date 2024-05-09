@@ -17,14 +17,16 @@
     "subTitle": "Um código de 6 dígitos foi enviado para o seu e-mail. Confira em sua caixa Spam para.",
     "codeLabel": "Código",
     "codePlaceholder": "Digite o código",
-    "continueButton": "Continue",
+    "continueButton": "Continuar",
     "resendCode": "Reenviar Código",
     "errorTitle": "Ops",
     "errorMessage": "Erro ao validar o código. Por favor, tente novamente."
   },
   "forgetPasswordScreen": {
-    "title": "Definir sua Senha",
+    "title": "Digite seu E-mail",
+    "subTitle": "Digite o endereço de e-mail da sua conta Epic Trip",
     "passwordLabel": "Nova Senha",
+    "emailLabel": "E-mail",
     "confirmPasswordLabel": "Confirmar Senha",
     "continueButton": "Continuar",
     "passwordsDoNotMatch": "As senhas não correspondem",
@@ -34,8 +36,8 @@
   "signUpScreen": {
     "title": "Cadastre-se",
     "emailLabel": "E-mail",
-    "shareNumberLabel": "Número de Compartilhamento",
-    "phoneLabel": "Telefone",
+    "shareNumberLabel": "Número do Convidado",
+    "phoneLabel": "Celular",
     "passwordLabel": "Senha",
     "signUpButton": "Cadastrar",
     "privacyPolicy": "Ao se cadastrar, você concorda com nossa ",
@@ -44,5 +46,12 @@
     "termsAndConditionsLink": "Termos e Condições",
     "alreadyHaveAccount": "Já tem uma conta?",
     "signIn": "Entrar"
+  },
+  "setNewPasswordScreen": {
+    "title": "Definir sua senha",
+    "passwordLabel": "Senha",
+    "confirmPasswordLabel": "Confirmar Senha",
+    "continueButton": "Continuar",
+    "passwordsDoNotMatch": "As senhas não correspondem"
   }
 }

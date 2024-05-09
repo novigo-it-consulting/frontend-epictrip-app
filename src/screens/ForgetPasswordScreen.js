@@ -20,9 +20,13 @@ import {
   AlertNotificationRoot,
   Toast,
 } from "react-native-alert-notification";
+import { useTranslation } from "react-i18next";
 
 const ForgetPasswordScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
+
+  const { t } = useTranslation();
+
   const {
     control,
     handleSubmit,
@@ -85,10 +89,6 @@ const ForgetPasswordScreen = ({ navigation }) => {
     };
   }, []);
 
-  const handleResendCode = () => {
-    alert("Erro ao Reenviar código");
-  };
-
   const handleGoBack = () => {
     navigation.navigate("Login");
   };
@@ -105,16 +105,18 @@ const ForgetPasswordScreen = ({ navigation }) => {
             />
           </TouchableOpacity>
           <Image source={logo} style={styles.imageLogo} />
-          <Text style={styles.textTitle}>Tell us your Email</Text>
+          <Text style={styles.textTitle}>
+            {t("forgetPasswordScreen.title")}
+          </Text>
 
           <Text style={styles.linkPrivacy}>
-            Type in your Epic Trip account e-mail address
+            {t("forgetPasswordScreen.subTitle")}
           </Text>
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
-                label="Email"
+                label={t("forgetPasswordScreen.emailLabel")}
                 mode="flat"
                 onBlur={onBlur}
                 left={<TextInput.Icon icon="account-outline" />}
@@ -142,7 +144,11 @@ const ForgetPasswordScreen = ({ navigation }) => {
             style={styles.button}
             disabled={loading}
           >
-            {loading ? <ActivityIndicator color={colors.white} /> : "Continue"}
+            {loading ? (
+              <ActivityIndicator color={colors.white} />
+            ) : (
+              t("forgetPasswordScreen.continueButton")
+            )}
           </Button>
         </View>
         <View style={{ flexDirection: "row", justifyContent: "center" }}>

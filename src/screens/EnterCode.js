@@ -94,10 +94,6 @@ const EnterCodeScreen = ({ navigation }) => {
     };
   }, []);
 
-  const handleResendCode = () => {
-    navigation.navigate("SignUp");
-  };
-
   const handleGoBack = () => {
     navigation.navigate("Login");
   };
@@ -121,7 +117,7 @@ const EnterCodeScreen = ({ navigation }) => {
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
-                label="Code"
+                label={t("enterCode.codeLabel")}
                 mode="flat"
                 onBlur={onBlur}
                 left={<TextInput.Icon icon="shield-check-outline" />}
