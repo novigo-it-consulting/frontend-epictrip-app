@@ -11,6 +11,14 @@ const styles = StyleSheet.create({
     marginRight: "auto",
     paddingBottom: 40,
   },
+  containerFields: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    marginLeft: "auto",
+    marginRight: "auto",
+    height: "75%",
+  },
   textTitle: {
     fontSize: 37,
     textAlign: "left",
@@ -41,14 +49,27 @@ const styles = StyleSheet.create({
   },
   link: {
     fontWeight: "bold",
+    position: "relative",
+    bottom: -30,
   },
   containerText: {
-    position: "absolute",
-    bottom: 50,
+    position: "relative",
+    bottom: 0,
+  },
+  textFinalTextScreen: {
+    position: "relative",
+    bottom: -30,
   },
   imageLogo: {
-    position: "absolute",
-    top: 120,
+    position: "relative",
+    top: 0,
+  },
+  containerBackButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
   },
 });
 

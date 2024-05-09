@@ -17,7 +17,7 @@ const Navigation = () => {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
-        initialRouteName="SplashScreen"
+        initialRouteName="EnterCode"
       >
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />

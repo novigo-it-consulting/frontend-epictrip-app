@@ -21,6 +21,7 @@ import {
 } from "react-native-alert-notification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -112,83 +113,94 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <PaperProvider theme={theme}>
+      <SafeAreaView />
       <AlertNotificationRoot>
-        <View onTouchStart={() => Keyboard.dismiss()} style={styles.container}>
+        <View style={styles.containerBackButton}>
           <Image source={logo} style={styles.imageLogo} />
-          <Text style={styles.textTitle}>{t("loginScreen.title")}</Text>
-          <Controller
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                label={t("loginScreen.emailLabel")}
-                onSubmitEditing={Keyboard.dismiss}
-                mode="flat"
-                left={<TextInput.Icon icon="account-outline" />}
-                onBlur={onBlur}
-                onChangeText={(value) => onChange(value)}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                style={styles.textEmail}
-                error={errors.email ? true : false}
-              />
+        </View>
+        <View onTouchStart={() => Keyboard.dismiss()} style={styles.container}>
+          <View style={styles.containerFields}>
+            <Text style={styles.textTitle}>{t("loginScreen.title")}</Text>
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  label={t("loginScreen.emailLabel")}
+                  onSubmitEditing={Keyboard.dismiss}
+                  mode="flat"
+                  left={<TextInput.Icon icon="account-outline" />}
+                  onBlur={onBlur}
+                  onChangeText={(value) => onChange(value)}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  style={styles.textEmail}
+                  error={errors.email ? true : false}
+                />
+              )}
+              name="username"
+              rules={{ required: true }}
+              defaultValue=""
+            />
+            {errors.email && (
+              <Text style={{ color: colors.error }}>
+                {errors.email.message}
+              </Text>
             )}
-            name="username"
-            rules={{ required: true }}
-            defaultValue=""
-          />
-          {errors.email && (
-            <Text style={{ color: colors.error }}>{errors.email.message}</Text>
-          )}
-          <Controller
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                label={t("loginScreen.passwordLabel")}
-                mode="flat"
-                onSubmitEditing={Keyboard.dismiss}
-                left={<TextInput.Icon icon="lock-outline" />}
-                right={
-                  <TextInput.Icon
-                    icon={showPassword ? "eye-off-outline" : "eye-outline"}
-                    onPress={() => setShowPassword(!showPassword)}
-                  />
-                }
-                onBlur={onBlur}
-                onChangeText={(value) => onChange(value)}
-                secureTextEntry={!showPassword}
-                style={styles.textPassword}
-                error={errors.password ? true : false}
-              />
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  label={t("loginScreen.passwordLabel")}
+                  mode="flat"
+                  onSubmitEditing={Keyboard.dismiss}
+                  left={<TextInput.Icon icon="lock-outline" />}
+                  right={
+                    <TextInput.Icon
+                      icon={showPassword ? "eye-off-outline" : "eye-outline"}
+                      onPress={() => setShowPassword(!showPassword)}
+                    />
+                  }
+                  onBlur={onBlur}
+                  onChangeText={(value) => onChange(value)}
+                  secureTextEntry={!showPassword}
+                  style={styles.textPassword}
+                  error={errors.password ? true : false}
+                />
+              )}
+              name="password"
+              rules={{ required: true }}
+              defaultValue=""
+            />
+            {errors.password && (
+              <Text style={{ color: colors.error }}>
+                {errors.password.message}
+              </Text>
             )}
-            name="password"
-            rules={{ required: true }}
-            defaultValue=""
-          />
-          {errors.password && (
-            <Text style={{ color: colors.error }}>
-              {errors.password.message}
-            </Text>
-          )}
-          <Button
-            mode="contained"
-            onPress={handleSubmit(onSubmit)}
-            style={styles.button}
-            disabled={loading} // Desabilita o botão durante o carregamento
-          >
-            {loading ? ( // Renderiza o texto do botão com base no estado de carregamento
-              <ActivityIndicator color={colors.white} />
-            ) : (
-              t("loginScreen.loginButton")
-            )}
-          </Button>
-          <Button
-            style={styles.linkForgotPassword}
-            onPress={handleForgotPassword}
-          >
-            {t("loginScreen.forgotPassword")}
-          </Button>
+
+            <Button
+              mode="contained"
+              onPress={handleSubmit(onSubmit)}
+              style={styles.button}
+              disabled={loading} // Desabilita o botão durante o carregamento
+            >
+              {loading ? ( // Renderiza o texto do botão com base no estado de carregamento
+                <ActivityIndicator color={colors.white} />
+              ) : (
+                t("loginScreen.loginButton")
+              )}
+            </Button>
+
+            <Button
+              style={styles.linkForgotPassword}
+              onPress={handleForgotPassword}
+            >
+              {t("loginScreen.forgotPassword")}
+            </Button>
+          </View>
           <View style={styles.containerText}>
-            <Text>{t("loginScreen.noAccount")}</Text>
+            <Text style={styles.textFinalTextScreen}>
+              {t("loginScreen.noAccount")}
+            </Text>
             <Button onPress={handleGoToSignUp} style={styles.link}>
               {t("loginScreen.signUp")}
             </Button>

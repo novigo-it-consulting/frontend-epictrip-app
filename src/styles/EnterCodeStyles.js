@@ -11,6 +11,21 @@ const styles = StyleSheet.create({
     marginRight: "auto",
     paddingBottom: 40,
   },
+  containerFields: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    marginLeft: "auto",
+    marginRight: "auto",
+    height: "100%",
+  },
+  containerBackButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+  },
   textTitle: {
     fontSize: 37,
     textAlign: "left",
@@ -42,23 +57,25 @@ const styles = StyleSheet.create({
   },
   link: {
     fontWeight: "bold",
-    color: colors.primary,
+    position: "relative",
+    bottom: -30,
   },
   containerText: {
-    position: "absolute",
-    bottom: 50,
+    position: "relative",
+    bottom: 0,
+  },
+  textFinalTextScreen: {
+    position: "relative",
+    bottom: -30,
   },
   imageLogo: {
-    position: "absolute",
-    top: 120,
+    position: "relative",
+    top: 0,
+    marginRight: "auto",
+    marginLeft: "20%",
   },
-
   backButton: {
-    position: "absolute",
-    top: 50,
-    left: -30,
-    width: 70,
-    height: 60,
+    position: "relative",
   },
 });
 
