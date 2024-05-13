@@ -48,7 +48,7 @@
     "signIn": "Entrar"
   },
   "setNewPasswordScreen": {
-    "title": "Definir sua senha",
+    "title": "Defina sua senha nova",
     "passwordLabel": "Senha",
     "confirmPasswordLabel": "Confirmar Senha",
     "continueButton": "Continuar",

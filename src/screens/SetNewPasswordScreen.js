@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, Keyboard, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  Keyboard,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  SafeAreaView,
+  Platform,
+  KeyboardAvoidingView,
+} from "react-native";
 import {
   TextInput,
   Button,
@@ -10,7 +20,7 @@ import {
 } from "react-native-paper";
 import logo from "../../assets/logo.png";
 import { useForm, Controller } from "react-hook-form";
-import styles from "../styles/EnterCodeStyles.js";
+import styles from "../styles/globalScreen.js";
 import screenNumberStyles from "../styles/ScreenNumberStyles";
 import colors from "../colors.js";
 import * as yup from "yup";
@@ -106,92 +116,114 @@ const SetNewPasswordScreen = ({ navigation }) => {
 
   return (
     <PaperProvider theme={theme}>
+      <SafeAreaView />
       <AlertNotificationRoot>
-        <View onTouchStart={() => Keyboard.dismiss()} style={styles.container}>
-          <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-            <IconButton
-              icon={"arrow-left-thin"}
-              size={30}
-              style={styles.backIcon}
-            />
-          </TouchableOpacity>
-          <Image source={logo} style={styles.imageLogo} />
-          <Text style={styles.textTitle}>
-            {t("setNewPasswordScreen.title")}
-          </Text>
-          <Controller
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                label={t("setNewPasswordScreen.passwordLabel")}
-                mode="flat"
-                onBlur={onBlur}
-                left={<TextInput.Icon icon="account-key-outline" />}
-                right={
-                  <TextInput.Icon
-                    icon={showPassword ? "eye-off-outline" : "eye-outline"}
-                    onPress={() => setShowPassword(!showPassword)}
-                  />
-                }
-                secureTextEntry={!showPassword}
-                onChangeText={(value) => onChange(value)}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                style={styles.textEmail}
-                error={errors.newPassword ? true : false}
-              />
-            )}
-            name="newPassword"
-            rules={{ required: true }}
-            defaultValue=""
-          />
-          <Controller
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                label={t("setNewPasswordScreen.confirmPasswordLabel")}
-                mode="flat"
-                left={<TextInput.Icon icon="account-key-outline" />}
-                onBlur={onBlur}
-                right={
-                  <TextInput.Icon
-                    icon={showPassword ? "eye-off-outline" : "eye-outline"}
-                    onPress={() => setShowPassword(!showPassword)}
-                  />
-                }
-                secureTextEntry={!showPassword}
-                onChangeText={(value) => onChange(value)}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                style={styles.textEmail}
-                error={errors.confirmPassword ? true : false}
-              />
-            )}
-            name="confirmPassword"
-            rules={{ required: true }}
-            defaultValue=""
-          />
-          {errors.email && (
-            <Text style={{ color: colors.error }}>{errors.email.message}</Text>
-          )}
-
-          <Button
-            mode="contained"
-            onPress={handleSubmit(onSubmit)}
-            style={styles.button}
-            disabled={loading}
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? null : null}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "space-around",
+              flex: 1,
+              width: "75%",
+              marginRight: "auto",
+              marginLeft: "auto",
+            }}
           >
-            {loading ? (
-              <ActivityIndicator color={colors.white} />
-            ) : (
-              t("setNewPasswordScreen.continueButton")
-            )}
-          </Button>
-        </View>
-        <View style={{ flexDirection: "row", justifyContent: "center" }}>
-          <Text style={screenNumberStyles.numberStyle}>08</Text>
-        </View>
-        <Toast />
+            <View style={styles.containerBackButton}>
+              <TouchableOpacity onPress={handleGoBack} style={{ width: "40%" }}>
+                <IconButton
+                  icon={"arrow-left-thin"}
+                  size={30}
+                  style={styles.backIcon}
+                />
+              </TouchableOpacity>
+              <View style={{ width: "85%" }}>
+                <Image source={logo} style={styles.imageLogo} />
+              </View>
+            </View>
+            <View style={styles.container}>
+              <Text style={styles.textTitle}>
+                {t("setNewPasswordScreen.title")}
+              </Text>
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    label={t("setNewPasswordScreen.passwordLabel")}
+                    mode="flat"
+                    onBlur={onBlur}
+                    left={<TextInput.Icon icon="account-key-outline" />}
+                    right={
+                      <TextInput.Icon
+                        icon={showPassword ? "eye-off-outline" : "eye-outline"}
+                        onPress={() => setShowPassword(!showPassword)}
+                      />
+                    }
+                    secureTextEntry={!showPassword}
+                    onChangeText={(value) => onChange(value)}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    style={styles.textEmail}
+                    error={errors.newPassword ? true : false}
+                  />
+                )}
+                name="newPassword"
+                rules={{ required: true }}
+                defaultValue=""
+              />
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    label={t("setNewPasswordScreen.confirmPasswordLabel")}
+                    mode="flat"
+                    left={<TextInput.Icon icon="account-key-outline" />}
+                    onBlur={onBlur}
+                    right={
+                      <TextInput.Icon
+                        icon={showPassword ? "eye-off-outline" : "eye-outline"}
+                        onPress={() => setShowPassword(!showPassword)}
+                      />
+                    }
+                    secureTextEntry={!showPassword}
+                    onChangeText={(value) => onChange(value)}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    style={styles.textEmail}
+                    error={errors.confirmPassword ? true : false}
+                  />
+                )}
+                name="confirmPassword"
+                rules={{ required: true }}
+                defaultValue=""
+              />
+              {errors.email && (
+                <Text style={{ color: colors.error }}>
+                  {errors.email.message}
+                </Text>
+              )}
+              <Button
+                mode="contained"
+                onPress={handleSubmit(onSubmit)}
+                style={styles.button}
+                disabled={loading}
+              >
+                {loading ? (
+                  <ActivityIndicator color={colors.white} />
+                ) : (
+                  t("setNewPasswordScreen.continueButton")
+                )}
+              </Button>
+            </View>
+            <View style={{ flexDirection: "row", justifyContent: "center" }}>
+              <Text style={screenNumberStyles.numberStyle}>08</Text>
+            </View>
+            <Toast />
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
       </AlertNotificationRoot>
     </PaperProvider>
   );

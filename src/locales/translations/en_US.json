@@ -48,7 +48,7 @@
     "signIn": "Sign In"
   },
   "setNewPasswordScreen": {
-    "title": "Set your password",
+    "title": "Set your new password",
     "passwordLabel": "Password",
     "confirmPasswordLabel": "Confirm Password",
     "continueButton": "Continue",

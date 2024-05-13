@@ -5,6 +5,9 @@ import {
   Image,
   Keyboard,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  SafeAreaView,
+  Platform,
 } from "react-native";
 import {
   TextInput,
@@ -15,7 +18,7 @@ import {
 } from "react-native-paper";
 import logo from "../../assets/logo.png";
 import { useForm, Controller } from "react-hook-form";
-import styles from "../styles/SignUpStyle";
+import styles from "../styles/globalScreen.js";
 import screenNumberStyles from "../styles/ScreenNumberStyles";
 import colors from "../colors";
 import * as yup from "yup";
@@ -107,110 +110,134 @@ const SignUpScreen = ({ navigation }) => {
 
   return (
     <PaperProvider theme={theme}>
+      <SafeAreaView />
       <AlertNotificationRoot>
-        <View onTouchStart={() => Keyboard.dismiss()} style={styles.container}>
-          <Image source={logo} style={styles.imageLogo} />
-          <Text style={styles.textTitle}>{t("signUpScreen.title")}</Text>
-          <Controller
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                label={t("signUpScreen.emailLabel")}
-                mode="flat"
-                left={<TextInput.Icon icon="account-outline" />}
-                onBlur={onBlur}
-                onChangeText={(value) => onChange(value)}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                style={styles.textEmail}
-                error={errors.email ? true : false}
-              />
-            )}
-            name="username"
-            rules={{ required: true }}
-            defaultValue=""
-          />
-          {errors.email && (
-            <Text style={{ color: colors.error }}>{errors.email.message}</Text>
-          )}
-          <Controller
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                label={t("signUpScreen.shareNumberLabel")}
-                mode="flat"
-                left={<TextInput.Icon icon="account-group-outline" />}
-                onBlur={onBlur}
-                onChangeText={(value) => onChange(value)}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                style={styles.textEmail}
-                error={errors.email ? true : false}
-              />
-            )}
-            name="shareNumber"
-            rules={{ required: true }}
-            defaultValue=""
-          />
-          {errors.email && (
-            <Text style={{ color: colors.error }}>{errors.email.message}</Text>
-          )}
-          <Controller
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                label={t("signUpScreen.phoneLabel")}
-                mode="flat"
-                left={<TextInput.Icon icon="phone-outline" />}
-                onBlur={onBlur}
-                onChangeText={(value) => onChange(value)}
-                style={styles.textPassword}
-                error={errors.phone ? true : false}
-                keyboardType="phone-pad"
-              />
-            )}
-            name="phone"
-            rules={{ required: true }}
-            defaultValue=""
-          />
-          {errors.password && (
-            <Text style={{ color: colors.error }}>
-              {errors.password.message}
-            </Text>
-          )}
-          <Button
-            mode="contained"
-            onPress={handleSubmit(onSubmit)}
-            style={styles.button}
-            disabled={loading}
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? null : null}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "space-around",
+              flex: 1,
+              width: "75%",
+              marginRight: "auto",
+              marginLeft: "auto",
+            }}
           >
-            {loading ? (
-              <ActivityIndicator color={colors.white} />
-            ) : (
-              t("signUpScreen.signIn")
-            )}
-          </Button>
-          <Text style={styles.linkPrivacy}>
-            {t("signUpScreen.privacyPolicy")}
-            <Link style={styles.link} to={"https://qa.myepictrip.app"}>
-              {t("signUpScreen.privacyPolicyLink")}
-            </Link>{" "}
-            {t("signUpScreen.termsAndConditions")}
-            <Link style={styles.link} to={"https://qa.myepictrip.app"}>
-              {t("signUpScreen.termsAndConditionsLink")}
-            </Link>{" "}
-          </Text>
+            <View style={styles.containerBackButton}>
+              <Image source={logo} style={styles.imageLogo} />
+            </View>
+            <View style={styles.container}>
+              <Text style={styles.textTitle}>{t("signUpScreen.title")}</Text>
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    label={t("signUpScreen.emailLabel")}
+                    mode="flat"
+                    left={<TextInput.Icon icon="account-outline" />}
+                    onBlur={onBlur}
+                    onChangeText={(value) => onChange(value)}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    style={styles.textEmail}
+                    error={errors.email ? true : false}
+                  />
+                )}
+                name="username"
+                rules={{ required: true }}
+                defaultValue=""
+              />
+              {errors.email && (
+                <Text style={{ color: colors.error }}>
+                  {errors.email.message}
+                </Text>
+              )}
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    label={t("signUpScreen.shareNumberLabel")}
+                    mode="flat"
+                    left={<TextInput.Icon icon="account-group-outline" />}
+                    onBlur={onBlur}
+                    onChangeText={(value) => onChange(value)}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    style={styles.textEmail}
+                    error={errors.email ? true : false}
+                  />
+                )}
+                name="shareNumber"
+                rules={{ required: true }}
+                defaultValue=""
+              />
+              {errors.email && (
+                <Text style={{ color: colors.error }}>
+                  {errors.email.message}
+                </Text>
+              )}
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    label={t("signUpScreen.phoneLabel")}
+                    mode="flat"
+                    left={<TextInput.Icon icon="phone-outline" />}
+                    onBlur={onBlur}
+                    onChangeText={(value) => onChange(value)}
+                    style={styles.textPassword}
+                    error={errors.phone ? true : false}
+                    keyboardType="phone-pad"
+                  />
+                )}
+                name="phone"
+                rules={{ required: true }}
+                defaultValue=""
+              />
+              {errors.phone && (
+                <Text style={{ color: colors.error }}>
+                  {errors.phone.message}
+                </Text>
+              )}
+              <Button
+                mode="contained"
+                onPress={handleSubmit(onSubmit)}
+                style={styles.button}
+                disabled={loading}
+              >
+                {loading ? (
+                  <ActivityIndicator color={colors.white} />
+                ) : (
+                  t("signUpScreen.signIn")
+                )}
+              </Button>
+              <Text style={styles.linkPrivacy}>
+                {t("signUpScreen.privacyPolicy")}
+                <Text style={styles.link} onPress={() => {}}>
+                  {" "}
+                  {t("signUpScreen.privacyPolicyLink")}{" "}
+                </Text>
+                {t("signUpScreen.termsAndConditions")}
+                <Text style={styles.link} onPress={() => {}}>
+                  {" "}
+                  {t("signUpScreen.termsAndConditionsLink")}{" "}
+                </Text>
+              </Text>
+            </View>
 
-          <View style={styles.containerText}>
-            <Text>{t("signUpScreen.alreadyHaveAccount")}</Text>
-            <Button onPress={handleGoToSignIn} style={styles.link}>
-              {" "}
-              {t("signUpScreen.signIn")}
-            </Button>
-          </View>
-          <Text style={screenNumberStyles.numberStyle}>03</Text>
-        </View>
-        <Toast />
+            <View style={styles.containerText}>
+              <Text>{t("signUpScreen.alreadyHaveAccount")}</Text>
+              <Button onPress={handleGoToSignIn} style={styles.link}>
+                {t("signUpScreen.signIn")}
+              </Button>
+              <Text style={screenNumberStyles.numberStyle}>03</Text>
+            </View>
+            <Toast />
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
       </AlertNotificationRoot>
     </PaperProvider>
   );

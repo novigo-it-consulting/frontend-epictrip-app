@@ -3,28 +3,13 @@ import colors from "../colors";
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "75%",
-    marginLeft: "auto",
-    marginRight: "auto",
-    paddingBottom: 40,
-  },
-  containerFields: {
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
     marginLeft: "auto",
     marginRight: "auto",
-    height: "100%",
-  },
-  containerBackButton: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
+    height: "auto",
     display: "flex",
-    flexDirection: "row",
   },
   textTitle: {
     fontSize: 37,
@@ -50,32 +35,42 @@ const styles = StyleSheet.create({
     marginTop: 16,
     padding: 8,
   },
-  linkPrivacy: {
-    marginTop: 20,
-    fontSize: 14,
-    marginBottom: 20,
+  linkForgotPassword: {
+    marginTop: 8,
+    fontWeight: "bold",
   },
   link: {
     fontWeight: "bold",
     position: "relative",
-    bottom: -30,
+    color: colors.primary,
   },
-  containerText: {
+  linkPrivacy: {
+    marginTop: 10,
+  },
+  containerFooter: {
     position: "relative",
-    bottom: 0,
+    display: "flex",
+    width: "100%",
+    justifyContent: "space-between",
+    height: "auto",
+    alignItems: "center",
   },
   textFinalTextScreen: {
     position: "relative",
-    bottom: -30,
+    textAlign: "center",
   },
   imageLogo: {
     position: "relative",
     top: 0,
-    marginRight: "auto",
-    marginLeft: "20%",
   },
-  backButton: {
+  containerBackButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    display: "flex",
     position: "relative",
+    flexDirection: "row",
+    // backgroundColor: "red",
   },
 });
 

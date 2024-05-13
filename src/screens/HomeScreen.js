@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import styles from "../styles/LoginStyles";
+import styles from "../styles/HomeStyles";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
