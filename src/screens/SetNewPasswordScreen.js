@@ -65,9 +65,9 @@ const SetNewPasswordScreen = ({ navigation }) => {
       return () => clearTimeout(timer);
     }
     try {
-      await schema.validate(passwordObject, { abortEarly: false });
+      await schema.validate(data, { abortEarly: false });
       const token = await AsyncStorage.getItem("token");
-      const response = await requestChangePassword(passwordObject);
+      const response = await requestChangePassword(data);
 
       if (response === 200) {
         navigation.navigate("Home");
@@ -76,6 +76,7 @@ const SetNewPasswordScreen = ({ navigation }) => {
         throw new Error("Erro ao efetuar login. Por favor, tente novamente.");
       }
     } catch (error) {
+      console.log("Erro?", response);
       if (
         error.response &&
         error.response.data &&

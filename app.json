@@ -22,10 +22,11 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/img/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#0065ff"
       },
       "package": "app.myepictrip",
-      "buildNumber": "10"
+      "versionCode": "10",
+      "usesCleartextTraffic": true
     },
     "web": {
       "favicon": "./assets/img/favicon.png"
