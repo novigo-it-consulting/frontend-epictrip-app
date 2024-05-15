@@ -36,6 +36,7 @@ import { useTranslation } from "react-i18next";
 const SetNewPasswordScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
   const { t } = useTranslation();
 
@@ -65,9 +66,9 @@ const SetNewPasswordScreen = ({ navigation }) => {
       return () => clearTimeout(timer);
     }
     try {
-      await schema.validate(passwordObject, { abortEarly: false });
+      await schema.validate(data, { abortEarly: false });
       const token = await AsyncStorage.getItem("token");
-      const response = await requestChangePassword(passwordObject);
+      const response = await requestChangePassword(data);
 
       if (response === 200) {
         navigation.navigate("Home");
@@ -76,6 +77,7 @@ const SetNewPasswordScreen = ({ navigation }) => {
         throw new Error("Erro ao efetuar login. Por favor, tente novamente.");
       }
     } catch (error) {
+      console.log("Erro?", response);
       if (
         error.response &&
         error.response.data &&
@@ -158,7 +160,7 @@ const SetNewPasswordScreen = ({ navigation }) => {
                     left={<TextInput.Icon icon="account-key-outline" />}
                     right={
                       <TextInput.Icon
-                        icon={showPassword ? "eye-off-outline" : "eye-outline"}
+                        icon={!showPassword ? "eye-off-outline" : "eye-outline"}
                         onPress={() => setShowPassword(!showPassword)}
                       />
                     }
@@ -184,11 +186,17 @@ const SetNewPasswordScreen = ({ navigation }) => {
                     onBlur={onBlur}
                     right={
                       <TextInput.Icon
-                        icon={showPassword ? "eye-off-outline" : "eye-outline"}
-                        onPress={() => setShowPassword(!showPassword)}
+                        icon={
+                          !showPasswordConfirm
+                            ? "eye-off-outline"
+                            : "eye-outline"
+                        }
+                        onPress={() =>
+                          setShowPasswordConfirm(!showPasswordConfirm)
+                        }
                       />
                     }
-                    secureTextEntry={!showPassword}
+                    secureTextEntry={!showPasswordConfirm}
                     onChangeText={(value) => onChange(value)}
                     keyboardType="email-address"
                     autoCapitalize="none"
