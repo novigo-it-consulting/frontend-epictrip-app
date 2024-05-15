@@ -31,35 +31,35 @@ import {
 } from "react-native-alert-notification";
 import { useTranslation } from "react-i18next";
 
-const ForgetPasswordScreen = ({ navigation }) => {
+const ForgetPasswordScreen = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
+  const { username } = route.params;
+
   const { t } = useTranslation();
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({ defaultValues: username.username });
 
   const schema = yup.object().shape({
-    username: yup
-      .string()
-      .email("E-mail inválido")
-      .required("E-mail é obrigatório"),
+    username: yup.string(),
   });
+
+  console.log(username);
 
   const onSubmit = async (data) => {
     setLoading(true);
+    console.log(data);
+
     try {
       await schema.validate(data, { abortEarly: false });
       const response = await requestGenerateToken(data);
-      console.log("Response", response);
-
       if (response === 201) {
         navigation.navigate("EnterCode");
-        return;
       } else {
-        throw new Error("Erro ao resetar renha. Por favor, tente novamente.");
+        throw new Error("Erro ao resetar senha. Por favor, tente novamente.");
       }
     } catch (error) {
       if (
@@ -146,20 +146,21 @@ const ForgetPasswordScreen = ({ navigation }) => {
                     mode="flat"
                     onBlur={onBlur}
                     left={<TextInput.Icon icon="account-outline" />}
-                    onChangeText={(value) => onChange(value)}
+                    onChangeText={onChange}
                     keyboardType="email-address"
                     autoCapitalize="none"
                     style={styles.textEmail}
                     error={errors.username ? true : false}
+                    defaultValue={username.username} // Use defaultValue from formData
                   />
                 )}
                 name="username"
-                rules={{ required: true }}
-                defaultValue=""
+                rules={{ required: false }}
               />
-              {errors.email && (
+
+              {errors.username && (
                 <Text style={{ color: colors.error }}>
-                  {errors.email.message}
+                  {errors.username.message}
                 </Text>
               )}
               <Button

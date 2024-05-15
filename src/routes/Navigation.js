@@ -6,7 +6,7 @@ import HomeScreen from "../screens/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import SignUpScreen from "../screens/SignUpScreen";
 import EnterCode from "../screens/EnterCode";
-import FogotPassword from "../screens/ForgetPasswordScreen";
+import ForgotPassword from "../screens/ForgetPasswordScreen";
 import SetNewPassword from "../screens/SetNewPasswordScreen";
 import SplashScreen from "../screens/SplashScreen";
 
@@ -24,7 +24,7 @@ const Navigation = () => {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="EnterCode" component={EnterCode} />
-        <Stack.Screen name="FogotPassword" component={FogotPassword} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
         <Stack.Screen name="SetNewPassword" component={SetNewPassword} />
       </Stack.Navigator>
     </NavigationContainer>

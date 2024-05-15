@@ -16,7 +16,7 @@ import {
   ActivityIndicator,
 } from "react-native-paper";
 import logo from "../../assets/logo.png";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, watch } from "react-hook-form";
 import styles from "../styles/globalScreen";
 import screenNumberStyles from "../styles/ScreenNumberStyles";
 import colors from "../colors";
@@ -112,7 +112,9 @@ const LoginScreen = ({ navigation }) => {
   }, []);
 
   const handleForgotPassword = () => {
-    navigation.navigate("FogotPassword");
+    handleSubmit((data) => {
+      navigation.navigate("ForgotPassword", { username: data?.username });
+    })();
   };
 
   const handleGoToSignUp = () => {
@@ -155,12 +157,11 @@ const LoginScreen = ({ navigation }) => {
                     keyboardType="email-address"
                     autoCapitalize="none"
                     style={styles.textEmail}
-                    error={errors.email ? true : false}
+                    error={errors.username ? true : false} // Update to errors.username
                   />
                 )}
-                name="username"
+                name="username" // Update to username
                 rules={{ required: true }}
-                defaultValue=""
               />
               {errors.email && (
                 <Text style={{ color: colors.error }}>
@@ -189,7 +190,7 @@ const LoginScreen = ({ navigation }) => {
                   />
                 )}
                 name="password"
-                rules={{ required: true }}
+                rules={{ required: false }}
                 defaultValue=""
               />
               {errors.password && (
