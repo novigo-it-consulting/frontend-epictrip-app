@@ -35,14 +35,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const ForgetPasswordScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
-  const [typedUsername, setTypedUsername] = useState('')
+  const [typedUsername, setTypedUsername] = useState("");
 
   const fetchTypedUsername = async () => {
-    const typedUser = await AsyncStorage.getItem('typedUsername')
-    setTypedUsername(typedUser)
-    onChange(await AsyncStorage.getItem('typedUsername'))
-    await console.log("Typed Username: ", typedUsername)
-  }
+    const typedUser = await AsyncStorage.getItem("typedUsername");
+    setTypedUsername(typedUser);
+    // onChange(await AsyncStorage.getItem('typedUsername'))
+    // await console.log("Typed Username: ", typedUsername)
+  };
 
   const {
     control,
@@ -51,12 +51,11 @@ const ForgetPasswordScreen = ({ navigation }) => {
   } = useForm();
 
   const schema = yup.object().shape({
-    username: yup
-      .string(),
+    username: yup.string(),
   });
 
   const onSubmit = async (data) => {
-    console.log("Typed Username", typedUsername)
+    console.log("Typed Username", typedUsername);
     setLoading(true);
     try {
       await schema.validate(data, { abortEarly: false });
@@ -147,28 +146,29 @@ const ForgetPasswordScreen = ({ navigation }) => {
               <Text style={styles.linkPrivacy}>
                 {t("forgetPasswordScreen.subTitle")}
               </Text>
-              {typedUsername !== '' ? 
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    label={t("forgetPasswordScreen.emailLabel")}
-                    mode="flat"
-                    onBlur={onBlur}
-                    left={<TextInput.Icon icon="account-outline" />}
-                    onChangeText={(value) => onChange(value)}
-                    onChange={(value) => onChange(value)}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    value={() => onChange(typedUsername)}
-                    defaultValue={typedUsername}
-                    style={styles.textEmail}
-                    error={errors.username ? true : false}
-                  />
-                )}
-                name="username"
-                rules={{ required: false }}
-              /> : null}
+              {typedUsername !== "" ? (
+                <Controller
+                  control={control}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      label={t("forgetPasswordScreen.emailLabel")}
+                      mode="flat"
+                      onBlur={onBlur}
+                      left={<TextInput.Icon icon="account-outline" />}
+                      onChangeText={(value) => onChange(value)}
+                      onChange={(value) => onChange(value)}
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      value={() => onChange(typedUsername)}
+                      defaultValue={typedUsername}
+                      style={styles.textEmail}
+                      error={errors.username ? true : false}
+                    />
+                  )}
+                  name="username"
+                  rules={{ required: false }}
+                />
+              ) : null}
               {errors.email && (
                 <Text style={{ color: colors.error }}>
                   {errors.email.message}
