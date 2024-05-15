@@ -51,8 +51,8 @@ const SetNewPasswordScreen = ({ navigation }) => {
   });
 
   const onSubmit = async (data) => {
+    console.log(data)
     setLoading(true);
-
     if (data.newPassword !== data.confirmPassword) {
       const timer = setTimeout(() => {
         setLoading(false);

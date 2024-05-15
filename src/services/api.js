@@ -13,6 +13,7 @@ export const requestLogin = async (dados) => {
 };
 
 export const requestGenerateToken = async (dados) => {
+  console.log("dados: ", dados)
   try {
     const response = await axios.post(
       `${BASE_URL}passwordtokens/generatepasswordrecoverytoken`,

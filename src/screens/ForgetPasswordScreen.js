@@ -30,10 +30,19 @@ import {
   Toast,
 } from "react-native-alert-notification";
 import { useTranslation } from "react-i18next";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ForgetPasswordScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
+  const [typedUsername, setTypedUsername] = useState('')
+
+  const fetchTypedUsername = async () => {
+    const typedUser = await AsyncStorage.getItem('typedUsername')
+    setTypedUsername(typedUser)
+    onChange(await AsyncStorage.getItem('typedUsername'))
+    await console.log("Typed Username: ", typedUsername)
+  }
 
   const {
     control,
@@ -43,17 +52,16 @@ const ForgetPasswordScreen = ({ navigation }) => {
 
   const schema = yup.object().shape({
     username: yup
-      .string()
-      .email("E-mail inválido")
-      .required("E-mail é obrigatório"),
+      .string(),
   });
 
   const onSubmit = async (data) => {
+    console.log("Typed Username", typedUsername)
     setLoading(true);
     try {
       await schema.validate(data, { abortEarly: false });
       const response = await requestGenerateToken(data);
-      console.log("Response", response);
+      console.log("Responsee", response);
 
       if (response === 201) {
         navigation.navigate("EnterCode");
@@ -86,6 +94,7 @@ const ForgetPasswordScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
+    fetchTypedUsername();
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
       () => {
@@ -138,6 +147,7 @@ const ForgetPasswordScreen = ({ navigation }) => {
               <Text style={styles.linkPrivacy}>
                 {t("forgetPasswordScreen.subTitle")}
               </Text>
+              {typedUsername !== '' ? 
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
@@ -147,16 +157,18 @@ const ForgetPasswordScreen = ({ navigation }) => {
                     onBlur={onBlur}
                     left={<TextInput.Icon icon="account-outline" />}
                     onChangeText={(value) => onChange(value)}
+                    onChange={(value) => onChange(value)}
                     keyboardType="email-address"
                     autoCapitalize="none"
+                    value={() => onChange(typedUsername)}
+                    defaultValue={typedUsername}
                     style={styles.textEmail}
                     error={errors.username ? true : false}
                   />
                 )}
                 name="username"
-                rules={{ required: true }}
-                defaultValue=""
-              />
+                rules={{ required: false }}
+              /> : null}
               {errors.email && (
                 <Text style={{ color: colors.error }}>
                   {errors.email.message}
