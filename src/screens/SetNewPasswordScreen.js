@@ -52,7 +52,6 @@ const SetNewPasswordScreen = ({ navigation }) => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
     setLoading(true);
     if (data.newPassword !== data.confirmPassword) {
       const timer = setTimeout(() => {
@@ -77,7 +76,6 @@ const SetNewPasswordScreen = ({ navigation }) => {
         throw new Error("Erro ao efetuar login. Por favor, tente novamente.");
       }
     } catch (error) {
-      console.log("Erro?", response);
       if (
         error.response &&
         error.response.data &&

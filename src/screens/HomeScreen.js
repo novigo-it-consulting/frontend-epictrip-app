@@ -10,12 +10,11 @@ const HomeScreen = () => {
 
   const handleOnPressLogout = async () => {
     try {
-      // Limpe o token do AsyncStorage
       await AsyncStorage.removeItem("token");
-      // Navegue de volta para a tela de login
+      n;
       navigation.navigate("Login");
     } catch (error) {
-      console.log("Erro ao fazer logout:", error);
+      alert("Erro ao fazer logout:", error);
     }
   };
 

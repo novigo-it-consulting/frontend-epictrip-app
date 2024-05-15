@@ -40,8 +40,6 @@ const ForgetPasswordScreen = ({ navigation }) => {
   const fetchTypedUsername = async () => {
     const typedUser = await AsyncStorage.getItem("typedUsername");
     setTypedUsername(typedUser);
-    // onChange(await AsyncStorage.getItem('typedUsername'))
-    // await console.log("Typed Username: ", typedUsername)
   };
 
   const {
@@ -51,16 +49,17 @@ const ForgetPasswordScreen = ({ navigation }) => {
   } = useForm();
 
   const schema = yup.object().shape({
-    username: yup.string(),
+    username: yup
+      .string()
+      .email("E-mail inválido")
+      .required("E-mail é obrigatório"),
   });
 
   const onSubmit = async (data) => {
-    console.log("Typed Username", typedUsername);
     setLoading(true);
     try {
       await schema.validate(data, { abortEarly: false });
       const response = await requestGenerateToken(data);
-      console.log("Responsee", response);
 
       if (response === 201) {
         navigation.navigate("EnterCode");
@@ -86,7 +85,6 @@ const ForgetPasswordScreen = ({ navigation }) => {
           textBody: "Erro incomum, tente novamente mais tarde",
         });
       }
-      console.log("Error", error);
     } finally {
       setLoading(false);
     }
@@ -166,7 +164,7 @@ const ForgetPasswordScreen = ({ navigation }) => {
                     />
                   )}
                   name="username"
-                  rules={{ required: false }}
+                  rules={{ required: true }}
                 />
               ) : null}
               {errors.email && (

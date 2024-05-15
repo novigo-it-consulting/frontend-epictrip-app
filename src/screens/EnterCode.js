@@ -52,14 +52,12 @@ const EnterCodeScreen = ({ navigation }) => {
 
   const onSubmit = async (data) => {
     setLoading(true);
-    console.log(data);
 
     try {
       await schema.validate(data, { abortEarly: false });
       const response = await requestValidateToken(data);
-      // console.log(data);
+
       if (response.status === 200) {
-        // console.log(JSON.stringify(response.data.jwt));
         await AsyncStorage.setItem("token", response.data.jwt);
         navigation.navigate("SetNewPassword");
         return;
@@ -67,8 +65,6 @@ const EnterCodeScreen = ({ navigation }) => {
         throw new Error("Erro ao efetuar login. Por favor, tente novamente.");
       }
     } catch (error) {
-      console.log("Error", error);
-
       if (
         error.response &&
         error.response.data &&

@@ -34,7 +34,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [typedUsername, setTypedUsername] = useState('');
+  const [typedUsername, setTypedUsername] = useState("");
 
   const { t } = useTranslation();
 
@@ -55,18 +55,15 @@ const LoginScreen = ({ navigation }) => {
       .required("Senha é obrigatória"),
   });
 
-  const handleTypedUsernameChange = (value) =>{
-    console.log(value)
+  const handleTypedUsernameChange = (value) => {
     setTypedUsername(value);
-  }
+  };
 
   const onSubmit = async (data) => {
-    console.log('LOG: ', data.username)
     setLoading(true);
     try {
       await schema.validate(data, { abortEarly: false });
       const response = await requestLogin(data);
-      console.log(response);
 
       if (response.status === 200) {
         // Salvando as informações de login no AsyncStorage
@@ -119,8 +116,7 @@ const LoginScreen = ({ navigation }) => {
   }, []);
 
   const handleForgotPassword = async () => {
-    console.log('LOG: ', typedUsername);
-    await AsyncStorage.setItem('typedUsername', typedUsername)
+    await AsyncStorage.setItem("typedUsername", typedUsername);
     navigation.navigate("FogotPassword");
   };
 
@@ -160,7 +156,10 @@ const LoginScreen = ({ navigation }) => {
                     mode="flat"
                     left={<TextInput.Icon icon="account-outline" />}
                     onBlur={onBlur}
-                    onChangeText={(value) => {onChange(value); handleTypedUsernameChange(value)}}
+                    onChangeText={(value) => {
+                      onChange(value);
+                      handleTypedUsernameChange(value);
+                    }}
                     keyboardType="email-address"
                     autoCapitalize="none"
                     style={styles.textEmail}
