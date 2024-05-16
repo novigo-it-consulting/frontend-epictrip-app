@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 import Navigation from "./src/routes/Navigation";
 import colors from "./src/colors";
 import { I18nextProvider } from "react-i18next";
-import i18n from "./src/locales/index"; // Importa a instância do i18n que você configurou
-
+import i18n from "./src/locales/index";
 const theme = {
   ...DefaultTheme,
   colors: {
