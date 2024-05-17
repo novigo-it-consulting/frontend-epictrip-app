@@ -66,12 +66,16 @@ const LoginScreen = ({ navigation }) => {
       const response = await requestLogin(data);
 
       if (response.status === 200) {
-        // Salvando as informações de login no AsyncStorage
-        await AsyncStorage.setItem("userData", JSON.stringify(data));
-
-        // Navega para a tela HomeScreen
-        navigation.navigate("Home");
-        return;
+        const userId = response.data.data.userId;
+        if (userId) {
+          await AsyncStorage.setItem("userId", userId);
+          const storedUserId = await AsyncStorage.getItem("userId");
+          console.log("Stored userId:", storedUserId);
+          navigation.navigate("Home");
+          return;
+        } else {
+          console.error("userId não encontrado no response.data");
+        }
       } else {
         throw new Error("Erro ao efetuar login. Por favor, tente novamente."); // Lançamos um erro se o status não for 200
       }

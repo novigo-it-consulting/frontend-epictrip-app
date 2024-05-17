@@ -17,26 +17,33 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import colors from "../colors";
 import * as Location from "expo-location";
-import firebase from "../../firebase";
 import "firebase/database";
 import styles from "../styles/globalScreen";
-import { AlertNotificationRoot } from "react-native-alert-notification";
+import {
+  AlertNotificationRoot,
+  Toast,
+  ALERT_TYPE,
+} from "react-native-alert-notification";
 import { getDatabase, ref, set } from "firebase/database";
+import app from "../firebase";
 
 const HomeScreen = () => {
-  // Estado para armazenar a localização do usuário
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   const navigation = useNavigation();
 
   const handleOnPressLogout = async () => {
     try {
       await AsyncStorage.removeItem("token");
-      n;
       navigation.navigate("Login");
     } catch (error) {
-      alert("Erro ao fazer logout:", error);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Ops",
+        textBody: error.message,
+      });
     }
   };
 
@@ -48,25 +55,38 @@ const HomeScreen = () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
       setErrorMsg("Permissão para acessar a localização foi negada");
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Permissão",
+        textBody: errorMsg,
+      });
       return;
     }
 
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location.coords);
     updateLocationInFirebase(location.coords);
+
+    setUserId(await AsyncStorage.getItem("userId"));
+    console.log(userId);
   };
 
   const updateLocationInFirebase = async (coords) => {
     try {
       const db = getDatabase();
-      const userId = "userId1"; // Substitua pelo ID do usuário atual
-      await set(ref(db, `users/${userId}`), {
+      const tempUserId = userId; // Substituir pelo user.id
+      await set(ref(db, `users/${tempUserId}`), {
         latitude: coords.latitude,
         longitude: coords.longitude,
         timestamp: Date.now(),
       });
     } catch (error) {
-      console.error("Erro ao atualizar localização no Firebase:", error);
+      // console.log(error.message);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Ops",
+        textBody: error.message,
+      });
     }
   };
 
@@ -89,6 +109,8 @@ const HomeScreen = () => {
             }}
           >
             <View style={styles.container}>
+              <Text style={styles.link}>{`ID de usuário: ${userId}`}</Text>
+              <Text> </Text>
               <Text>Latitude: {location ? location.latitude : "---"}</Text>
               <Text>Longitude: {location ? location.longitude : "---"}</Text>
               {errorMsg && <Text>{errorMsg}</Text>}
