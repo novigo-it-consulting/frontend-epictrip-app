@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   SafeAreaView,
-  Platform,
+  Platform
 } from "react-native";
 import {
   TextInput,
@@ -31,6 +31,7 @@ import {
 import { Link } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
+import { Picker } from "@react-native-picker/picker"
 
 const SignUpScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
@@ -135,9 +136,27 @@ const SignUpScreen = ({ navigation }) => {
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    label={t("signUpScreen.emailLabel")}
+                    label={t("signUpScreen.nameLabel")}
                     mode="flat"
                     left={<TextInput.Icon icon="account-outline" />}
+                    onBlur={onBlur}
+                    onChangeText={(value) => onChange(value)}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    style={styles.textEmail}
+                  />
+                )}
+                name="name"
+                rules={{ required: true }}
+                defaultValue=""
+              />
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    label={t("signUpScreen.emailLabel")}
+                    mode="flat"
+                    left={<TextInput.Icon icon="at" />}
                     onBlur={onBlur}
                     onChangeText={(value) => onChange(value)}
                     keyboardType="email-address"

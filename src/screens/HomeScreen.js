@@ -65,9 +65,9 @@ const HomeScreen = () => {
 
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location.coords);
-    updateLocationInFirebase(location.coords);
 
     setUserId(await AsyncStorage.getItem("userId"));
+    updateLocationInFirebase(location.coords);
     console.log(userId);
   };
 

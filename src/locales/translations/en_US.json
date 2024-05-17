@@ -45,7 +45,8 @@
     "privacyPolicyLink": "Privacy Policy",
     "termsAndConditionsLink": "Terms & Conditions",
     "alreadyHaveAccount": "Already have an account?",
-    "signIn": "Sign In"
+    "signIn": "Sign In",
+    "nameLabel": "Full name"
   },
   "setNewPasswordScreen": {
     "title": "Set your new password",

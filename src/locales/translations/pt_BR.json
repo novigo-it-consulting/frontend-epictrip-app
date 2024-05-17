@@ -45,7 +45,8 @@
     "privacyPolicyLink": "Política de Privacidade",
     "termsAndConditionsLink": "Termos e Condições",
     "alreadyHaveAccount": "Já tem uma conta?",
-    "signIn": "Entrar"
+    "signIn": "Entrar",
+    "nameLabel": "Nome completo"
   },
   "setNewPasswordScreen": {
     "title": "Defina sua senha nova",
