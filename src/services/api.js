@@ -3,6 +3,15 @@ import axios from "axios";
 
 const BASE_URL = "https://qa-backend.myepictrip.app";
 
+export const requestSignUpGuest = async (dados) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/users/registeruserguest`, dados)
+    return response
+  }catch (error) {
+    throw error;
+  }
+};
+
 export const requestLogin = async (dados) => {
   try {
     const response = await axios.post(`${BASE_URL}/users/login`, dados);

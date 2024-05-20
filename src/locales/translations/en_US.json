@@ -46,7 +46,13 @@
     "termsAndConditionsLink": "Terms & Conditions",
     "alreadyHaveAccount": "Already have an account?",
     "signIn": "Sign In",
-    "nameLabel": "Full name"
+    "nameLabel": "Full name",
+    "languageLabel": "Language",
+    "languages": {
+      "spanish": "Spanish",
+      "english": "English",
+      "portuguese": "Portuguese"
+    }
   },
   "setNewPasswordScreen": {
     "title": "Set your new password",

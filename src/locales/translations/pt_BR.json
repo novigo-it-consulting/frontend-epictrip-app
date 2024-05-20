@@ -46,7 +46,13 @@
     "termsAndConditionsLink": "Termos e Condições",
     "alreadyHaveAccount": "Já tem uma conta?",
     "signIn": "Entrar",
-    "nameLabel": "Nome completo"
+    "nameLabel": "Nome completo",
+    "languageLabel": "Idioma",
+    "languages": {
+      "spanish": "Espanhol",
+      "english": "Inglês",
+      "portuguese": "Português"
+    }
   },
   "setNewPasswordScreen": {
     "title": "Defina sua senha nova",
