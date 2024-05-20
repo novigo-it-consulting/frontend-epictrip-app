@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   SafeAreaView,
-  Platform
+  Platform,
 } from "react-native";
 import {
   TextInput,
@@ -15,7 +15,7 @@ import {
   Provider as PaperProvider,
   DefaultTheme,
   ActivityIndicator,
-  Chip
+  Chip,
 } from "react-native-paper";
 import logo from "../../assets/logo.png";
 import { useForm, Controller } from "react-hook-form";
@@ -23,16 +23,14 @@ import styles from "../styles/globalScreen.js";
 import screenNumberStyles from "../styles/ScreenNumberStyles";
 import colors from "../colors";
 import * as yup from "yup";
+import { WebView } from "react-native-webview";
 import { requestSignUpGuest } from "../services/api";
 import {
   ALERT_TYPE,
   AlertNotificationRoot,
   Toast,
 } from "react-native-alert-notification";
-import { Link } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
-
 
 const SignUpScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
@@ -63,17 +61,17 @@ const SignUpScreen = ({ navigation }) => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      console.log(data)
-      const response = await requestSignUpGuest(data)
+      console.log(data);
+      const response = await requestSignUpGuest(data);
       if (response.status === 201) {
         navigation.navigate("Login");
         return;
       } else {
-        console.log(response.data.exception)
+        console.log(response.data.exception);
         throw new Error("Erro ao criar sua conta. Por favor, tente novamente.");
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       if (
         error.response &&
         error.response.data &&
@@ -98,8 +96,8 @@ const SignUpScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    register('language');
-    setValue('language', 'EN');
+    register("language");
+    setValue("language", "EN");
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
       () => {
@@ -230,33 +228,53 @@ const SignUpScreen = ({ navigation }) => {
                   {errors.phone.message}
                 </Text>
               )}
-              
-              <Text style={styles.textLabel}>{t("signUpScreen.languageLabel")}</Text>
+
+              <Text style={styles.textLabel}>
+                {t("signUpScreen.languageLabel")}
+              </Text>
               <View style={styles.container}>
                 <View style={styles.chipsContainer}>
                   <Chip
-                    selected={selectedLanguage === 'ES'}
-                    onPress={() => {setSelectedLanguage('ES'); setValue('language', 'ES')}}
-                    style={[styles.chip, selectedLanguage === 'ES' && styles.selectedChip]}
-                    textStyle={{ color: 'white' }}
+                    selected={selectedLanguage === "ES"}
+                    onPress={() => {
+                      setSelectedLanguage("ES");
+                      setValue("language", "ES");
+                    }}
+                    style={[
+                      styles.chip,
+                      selectedLanguage === "ES" && styles.selectedChip,
+                    ]}
+                    textStyle={{ color: "white" }}
                     selectedColor="white"
                   >
                     {t("signUpScreen.languages.spanish")}
                   </Chip>
                   <Chip
-                    selected={selectedLanguage === 'EN'}
-                    onPress={() => {setSelectedLanguage('EN'); setValue('language', 'EN')}}
-                    style={[styles.chip, selectedLanguage === 'EN' && styles.selectedChip]}
-                    textStyle={{ color: 'white' }}
+                    selected={selectedLanguage === "EN"}
+                    onPress={() => {
+                      setSelectedLanguage("EN");
+                      setValue("language", "EN");
+                    }}
+                    style={[
+                      styles.chip,
+                      selectedLanguage === "EN" && styles.selectedChip,
+                    ]}
+                    textStyle={{ color: "white" }}
                     selectedColor="white"
                   >
                     {t("signUpScreen.languages.english")}
                   </Chip>
                   <Chip
-                    selected={selectedLanguage === 'PT'}
-                    onPress={() => {setSelectedLanguage('PT'); setValue('language', 'PT')}}
-                    style={[styles.chip, selectedLanguage === 'PT' && styles.selectedChip]}
-                    textStyle={{ color: 'white' }}
+                    selected={selectedLanguage === "PT"}
+                    onPress={() => {
+                      setSelectedLanguage("PT");
+                      setValue("language", "PT");
+                    }}
+                    style={[
+                      styles.chip,
+                      selectedLanguage === "PT" && styles.selectedChip,
+                    ]}
+                    textStyle={{ color: "white" }}
                     selectedColor="white"
                   >
                     {t("signUpScreen.languages.portuguese")}
@@ -278,12 +296,22 @@ const SignUpScreen = ({ navigation }) => {
               </Button>
               <Text style={styles.linkPrivacy}>
                 {t("signUpScreen.privacyPolicy")}
-                <Text style={styles.link} onPress={() => {}}>
+                <Text
+                  style={styles.link}
+                  onPress={() => {
+                    navigation.navigate("Terms");
+                  }}
+                >
                   {" "}
                   {t("signUpScreen.privacyPolicyLink")}{" "}
                 </Text>
                 {t("signUpScreen.termsAndConditions")}
-                <Text style={styles.link} onPress={() => {}}>
+                <Text
+                  style={styles.link}
+                  onPress={() => {
+                    navigation.navigate("Terms");
+                  }}
+                >
                   {" "}
                   {t("signUpScreen.termsAndConditionsLink")}{" "}
                 </Text>

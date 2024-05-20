@@ -35,6 +35,14 @@
       "eas": {
         "projectId": "db969fca-1beb-44ee-9f79-97519a82855c"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow EpicTrip to use your location."
+        }
+      ]
+    ]
   }
 }

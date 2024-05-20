@@ -9,6 +9,7 @@ import EnterCode from "../screens/EnterCode";
 import FogotPassword from "../screens/ForgetPasswordScreen";
 import SetNewPassword from "../screens/SetNewPasswordScreen";
 import SplashScreen from "../screens/SplashScreen";
+import WebView from "../screens/WebViewPage";
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,15 @@ const Navigation = () => {
         <Stack.Screen name="EnterCode" component={EnterCode} />
         <Stack.Screen name="FogotPassword" component={FogotPassword} />
         <Stack.Screen name="SetNewPassword" component={SetNewPassword} />
+        <Stack.Screen
+          name="Terms"
+          component={WebView}
+          options={{
+            headerShown: true,
+            title: "Termos e Condições",
+            headerBackTitle: "Voltar",
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
