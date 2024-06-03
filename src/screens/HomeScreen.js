@@ -1,3 +1,4 @@
+// screens/HomeScreen.js
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -7,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import {
   Button,
@@ -15,7 +17,6 @@ import {
 } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import colors from "../colors";
 import * as Location from "expo-location";
 import styles from "../styles/globalScreen";
 import {
@@ -24,6 +25,7 @@ import {
   ALERT_TYPE,
 } from "react-native-alert-notification";
 import { getDatabase, ref, set } from "firebase/database";
+import colors from "../colors";
 
 const HomeScreen = () => {
   const [location, setLocation] = useState(null);
