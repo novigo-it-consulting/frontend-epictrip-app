@@ -25,8 +25,7 @@ export const requestGenerateToken = async (dados) => {
   console.log("dados: ", dados);
   try {
     const response = await axios.post(
-      `${BASE_URL}/passwordtokens/generatepasswordrecoverytoken`,
-      dados
+      `${BASE_URL}/passwordtokens/generatetoken/${dados.username}`,
     );
     return response.status;
   } catch (error) {
@@ -37,8 +36,7 @@ export const requestGenerateToken = async (dados) => {
 export const requestValidateToken = async (dados) => {
   try {
     const response = await axios.post(
-      `${BASE_URL}/passwordtokens/validatetoken`,
-      dados
+      `${BASE_URL}/passwordtokens/checktoken/${dados.token}`,
     );
     console.log("API", response);
     return response;
@@ -53,7 +51,7 @@ export const requestChangePassword = async (dados) => {
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
     };
     const response = await axios.post(
-      `${BASE_URL}/users/passwordreset`,
+      `${BASE_URL}/users/changepassword`,
       dados,
       {
         headers,

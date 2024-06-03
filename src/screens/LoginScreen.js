@@ -68,7 +68,7 @@ const LoginScreen = ({ navigation }) => {
       const response = await requestLogin(data);
 
       if (response.status === 200) {
-        const userId = response.data.data.userId;
+        const userId = response.data.userId;
         if (userId) {
           await AsyncStorage.setItem("userId", userId);
           const storedUserId = await AsyncStorage.getItem("userId");
