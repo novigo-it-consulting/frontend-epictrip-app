@@ -26,6 +26,7 @@ import {
 } from "react-native-alert-notification";
 import { getDatabase, ref, set } from "firebase/database";
 import colors from "../colors";
+import app from "../firebase";
 
 const HomeScreen = () => {
   const [location, setLocation] = useState(null);
@@ -34,11 +35,6 @@ const HomeScreen = () => {
   const [displayCurrentAddress, setDisplayCurrentAddress] =
     useState("Localização....");
   const [locationServicesEnabled, setLocationServicesEnabled] = useState(false);
-
-  useEffect(() => {
-    checkIfLocationEnabled();
-    getCurrentLocation();
-  }, []);
 
   const checkIfLocationEnabled = async () => {
     let enabled = await Location.hasServicesEnabledAsync(); //returns true or false
@@ -111,9 +107,23 @@ const HomeScreen = () => {
     }
   };
 
-  useEffect(() => {
-    getLocation();
-  }, []);
+  const updateLocationInFirebase = async (coords, user) => {
+    try {
+      const db = await getDatabase(app);
+      await set(ref(db, `users/${user}`), {
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        timestamp: Date.now(),
+      });
+    } catch (error) {
+      // console.log(error.message);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Ops",
+        textBody: error.message,
+      });
+    }
+  };
 
   const getLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -128,30 +138,17 @@ const HomeScreen = () => {
     }
 
     let location = await Location.getCurrentPositionAsync({});
-    setLocation(location.coords);
-
-    setUserId(await AsyncStorage.getItem("userId"));
-    updateLocationInFirebase(location.coords);
+    updateLocationInFirebase(
+      location.coords,
+      await AsyncStorage.getItem("userId")
+    );
   };
 
-  const updateLocationInFirebase = async (coords) => {
-    try {
-      const db = getDatabase();
-      const tempUserId = userId;
-      await set(ref(db, `users/${tempUserId}`), {
-        latitude: coords.latitude,
-        longitude: coords.longitude,
-        timestamp: Date.now(),
-      });
-    } catch (error) {
-      // console.log(error.message);
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Ops",
-        textBody: error.message,
-      });
-    }
-  };
+  useEffect(() => {
+    checkIfLocationEnabled();
+    getCurrentLocation();
+    getLocation();
+  }, []);
 
   return (
     <PaperProvider theme={theme}>

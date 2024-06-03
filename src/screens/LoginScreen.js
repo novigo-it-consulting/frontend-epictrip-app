@@ -30,6 +30,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect } from '@react-navigation/native';
 
 const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -41,6 +42,7 @@ const LoginScreen = ({ navigation }) => {
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm();
 
@@ -66,7 +68,7 @@ const LoginScreen = ({ navigation }) => {
       const response = await requestLogin(data);
 
       if (response.status === 200) {
-        const userId = response.data.data.userId;
+        const userId = response.data.userId;
         if (userId) {
           await AsyncStorage.setItem("userId", userId);
           const storedUserId = await AsyncStorage.getItem("userId");
@@ -77,35 +79,42 @@ const LoginScreen = ({ navigation }) => {
           console.error("userId não encontrado no response.data");
         }
       } else {
-        throw new Error("Erro ao efetuar login. Por favor, tente novamente."); // Lançamos um erro se o status não for 200
+        throw new Error("Erro ao efetuar login. Por favor, tente novamente.");
       }
     } catch (error) {
-      // Tratamento de erros
       if (
         error.response &&
         error.response.data &&
         error.response.data.message
       ) {
-        // Se o erro foi retornado pela API
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
           textBody: error.response.data.message,
         });
       } else {
-        // Se ocorreu um erro inesperado
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
           textBody:
             "Erro ao efetuar login. Por favor, tente novamente mais tarde.",
         });
-        console.error(error); // Registra o erro no console para depuração
+        console.error(error);
       }
     } finally {
       setLoading(false);
     }
   };
+
+  const clearPassword = () => {
+    setValue('password', '');
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      clearPassword();
+    }, [])
+  );
 
   useEffect(() => {
     const keyboardDidHideListener = Keyboard.addListener(
@@ -167,16 +176,17 @@ const LoginScreen = ({ navigation }) => {
                     keyboardType="email-address"
                     autoCapitalize="none"
                     style={styles.textEmail}
-                    error={errors.email ? true : false}
+                    value={value}
+                    error={errors.username ? true : false}
                   />
                 )}
                 name="username"
                 rules={{ required: true }}
                 defaultValue=""
               />
-              {errors.email && (
+              {errors.username && (
                 <Text style={{ color: colors.error }}>
-                  {errors.email.message}
+                  {errors.username.message}
                 </Text>
               )}
               <Controller
@@ -194,9 +204,10 @@ const LoginScreen = ({ navigation }) => {
                       />
                     }
                     onBlur={onBlur}
-                    onChangeText={(value) => onChange(value)}
+                    onChangeText={onChange}
                     secureTextEntry={!showPassword}
                     style={styles.textPassword}
+                    value={value}
                     error={errors.password ? true : false}
                   />
                 )}
@@ -214,9 +225,9 @@ const LoginScreen = ({ navigation }) => {
                 mode="contained"
                 onPress={handleSubmit(onSubmit)}
                 style={styles.button}
-                disabled={loading} // Desabilita o botão durante o carregamento
+                disabled={loading}
               >
-                {loading ? ( // Renderiza o texto do botão com base no estado de carregamento
+                {loading ? (
                   <ActivityIndicator color={colors.white} />
                 ) : (
                   t("loginScreen.loginButton")
