@@ -13,7 +13,7 @@ const Tab = createBottomTabNavigator();
 const HomeTabs = () => {
   return (
     <Tab.Navigator
-      initialRouteName="Homescreen"
+      initialRouteName="Home"
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
@@ -28,6 +28,7 @@ const HomeTabs = () => {
           shadowRadius: 4,
           shadowOpacity: 1,
         },
+        tabBarInactiveTintColor: "#DFE1E5", // Defina a cor do texto dos ícones inativos aqui
       }}
     >
       <Tab.Screen
@@ -36,7 +37,7 @@ const HomeTabs = () => {
         options={{
           tabBarLabel: "Home",
           tabBarIcon: ({ color }) => (
-            <Feather name="home" color={color} size={25} />
+            <Feather name="home" color={color} size={20} />
           ),
         }}
       />
@@ -46,7 +47,7 @@ const HomeTabs = () => {
         options={{
           tabBarLabel: "Groups",
           tabBarIcon: ({ color }) => (
-            <Feather name="users" color={color} size={25} />
+            <Feather name="users" color={color} size={20} />
           ),
         }}
       />
@@ -56,7 +57,7 @@ const HomeTabs = () => {
         options={{
           tabBarLabel: "Requests",
           tabBarIcon: ({ color }) => (
-            <Feather name="bell" color={color} size={25} />
+            <Feather name="bell" color={color} size={20} />
           ),
         }}
       />
@@ -66,7 +67,7 @@ const HomeTabs = () => {
         options={{
           tabBarLabel: "Schedule",
           tabBarIcon: ({ color }) => (
-            <Feather name="calendar" color={color} size={25} />
+            <Feather name="calendar" color={color} size={20} />
           ),
         }}
       />
@@ -76,7 +77,7 @@ const HomeTabs = () => {
         options={{
           tabBarLabel: "Profile",
           tabBarIcon: ({ color }) => (
-            <Feather name="user" color={color} size={25} />
+            <Feather name="user" color={color} size={20} />
           ),
         }}
       />

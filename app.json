@@ -5,11 +5,11 @@
     "version": "1.3.0",
     "orientation": "portrait",
     "icon": "./assets/img/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "#FFF",
     "splash": {
-      "image": "./assets/img//splash.png",
+      "image": "./assets/img/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFF"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -22,7 +22,8 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/img/adaptive-icon.png",
-        "backgroundColor": "#0065ff"
+        "backgroundColor": "#C2185B",
+        "translucent": false
       },
       "package": "app.myepictrip",
       "versionCode": "30"

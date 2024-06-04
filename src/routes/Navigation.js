@@ -4,7 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 
 import LoginScreen from "../screens/LoginScreen";
-import HomeTabs from "../components/HomeTabs"; // Importar o componente de abas
+import HomeTabs from "../components/HomeTabs";
 import SignUpScreen from "../screens/SignUpScreen";
 import EnterCode from "../screens/EnterCode";
 import FogotPassword from "../screens/ForgetPasswordScreen";
@@ -19,7 +19,7 @@ const Navigation = () => {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
-        initialRouteName="SplashScreen"
+        initialRouteName="Home"
       >
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
