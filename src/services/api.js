@@ -62,3 +62,129 @@ export const requestChangePassword = async (dados) => {
     throw error;
   }
 };
+
+export const requestGetUser = async(userId) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+    };
+    const response = await axios.get(
+      `${BASE_URL}/users/${userId}`,
+      { headers }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const changeProfilePic = async (dados) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+    };
+    const response = axios.post(
+      `${BASE_URL}/users/profilepic`,
+      dados.file,
+      { headers }
+    );
+    return response;
+  } catch (error) {
+    throw error
+  }
+};
+
+export const requestUpdateUser = async (dados) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+    };
+    const response = axios.put(
+      `${BASE_URL}/users/${dados.userId}`,
+      dados,
+      { headers }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const requestCreatePaymentMethod = async (dados) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+    };
+    const response = axios.post(
+      `${BASE_URL}/paymentmethods/`,
+      dados,
+      { headers }
+    )
+    return response;
+  } catch (error) {
+    throw error
+  }
+};
+
+export const requestUpdatePaymentMethod = async (dados) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+    };
+    const response = axios.put(
+      `${BASE_URL}/paymentmethods/${dados.paymentMethodId}`,
+      dados,
+      { headers }
+    )
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const requestDeletePaymentMethod = async (paymentMethodId) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+    };
+    const response = axios.delete(
+      `${BASE_URL}/paymentmethods/${paymentMethodId}`,
+      { headers }
+    )
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const requestGetMethodById = async (paymentMethodId) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+    };
+    const response = axios.get(
+      `${BASE_URL}/paymentmethods/${paymentMethodId}`,
+      { headers }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const requestGetMethodsByUser = async (userId) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+    };
+    const response = axios.get(
+      `${BASE_URL}/paymentmethods/getmethodsbyuser/${userId}`,
+      { headers }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
