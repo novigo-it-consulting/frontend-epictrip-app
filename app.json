@@ -2,14 +2,14 @@
   "expo": {
     "name": "Epic Trip",
     "slug": "epic-trip",
-    "version": "1.2.0",
+    "version": "1.4.1",
     "orientation": "portrait",
     "icon": "./assets/img/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "#FFF",
     "splash": {
-      "image": "./assets/img//splash.png",
+      "image": "./assets/img/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFF"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -17,15 +17,16 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "app.myepictrip",
-      "buildNumber": "20"
+      "buildNumber": "45"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/img/adaptive-icon.png",
-        "backgroundColor": "#0065ff"
+        "backgroundColor": "#C2185B",
+        "translucent": false
       },
       "package": "app.myepictrip",
-      "versionCode": "20"
+      "versionCode": "45"
     },
     "web": {
       "favicon": "./assets/img/favicon.png"
