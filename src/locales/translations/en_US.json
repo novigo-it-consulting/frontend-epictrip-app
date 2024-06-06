@@ -10,7 +10,11 @@
     "loginButton": "Login",
     "forgotPassword": "Forgot Password?",
     "noAccount": "Don't have an account?",
-    "signUp": "Sign Up"
+    "signUp": "Sign Up",
+    "invalidEmailAdress": "Invalid email adreess",
+    "errorBadPassword": "Username or Password is invalids",
+    "genericError": "Error logging in. Please try again later."
+
   },
   "enterCode": {
     "title": "Enter Code",
@@ -31,7 +35,9 @@
     "continueButton": "Continue",
     "passwordsDoNotMatch": "Passwords do not match",
     "errorTitle": "Oops",
-    "errorMessage": "Error setting password. Please try again."
+    "errorMessage": "Error setting password. Please try again.",
+    "unknowError": "An unexpected error occurred, please try again.",
+    "noUser": "No users found"
   },
   "signUpScreen": {
     "title": "Sign Up",
