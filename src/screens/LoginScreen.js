@@ -29,7 +29,6 @@ import {
 } from "react-native-alert-notification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 
 const LoginScreen = ({ navigation }) => {
@@ -99,7 +98,6 @@ const LoginScreen = ({ navigation }) => {
           textBody:
             "Erro ao efetuar login. Por favor, tente novamente mais tarde.",
         });
-        console.error(error);
       }
     } finally {
       setLoading(false);
@@ -137,9 +135,28 @@ const LoginScreen = ({ navigation }) => {
     navigation.navigate("SignUp");
   };
 
+  const defaultToastConfig = {
+    autoClose: 5000, // ou um booleano conforme necessário
+    titleStyle: { fontSize: 16, fontWeight: "bold" },
+    textBodyStyle: { fontSize: 14 },
+  };
+
+  const lightColors = {
+    label: "#000",
+    card: "#fcfcfc",
+    overlay: "#f0f0f0",
+    success: "#28a745",
+    danger: "rgba(255, 0, 0, 1)",
+    warning: "#ffc107",
+  };
+
   return (
     <PaperProvider theme={theme}>
-      <AlertNotificationRoot>
+      <AlertNotificationRoot
+        toastConfig={defaultToastConfig}
+        colors={[lightColors]}
+        theme={"light"}
+      >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? null : null}

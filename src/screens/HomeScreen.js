@@ -34,9 +34,10 @@ const theme = {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: colors.backGroundLight,
   },
   scrollView: {
-    flexGrow: 4,
+    flexGrow: 1,
     backgroundColor: colors.backGroundLight,
   },
 });
