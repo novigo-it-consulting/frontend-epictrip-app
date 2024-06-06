@@ -28,7 +28,7 @@ const HomeTabs = () => {
           shadowRadius: 4,
           shadowOpacity: 1,
         },
-        tabBarInactiveTintColor: "#DFE1E5", // Defina a cor do texto dos ícones inativos aqui
+        tabBarInactiveTintColor: "#DFE1E5",
       }}
     >
       <Tab.Screen

@@ -12,7 +12,6 @@ const theme = {
   colors: {
     ...DefaultTheme.colors,
     primary: colors.primary,
-    secondary: colors.secondary,
   },
 };
 
@@ -33,10 +32,10 @@ const App = () => {
   const isIOS = Platform.OS === "ios";
   return (
     <PaperProvider theme={theme}>
+      {isIOS && (
+        <IOSStatusBar backgroundColor="#fff" barStyle="light-content" />
+      )}
       <View style={styles.container}>
-        {isIOS && (
-          <IOSStatusBar backgroundColor={"#fff"} barStyle="light-content" />
-        )}
         <I18nextProvider i18n={i18n}>
           <Navigation />
         </I18nextProvider>
@@ -51,17 +50,18 @@ const APPBAR_HEIGHT = Platform.OS === "ios" ? 44 : 56;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
   },
   statusBar: {
     height: STATUSBAR_HEIGHT,
   },
   appBar: {
-    backgroundColor: "#79B45D",
+    backgroundColor: "#fff",
     height: APPBAR_HEIGHT,
   },
   content: {
     flex: 1,
-    backgroundColor: "#33373B",
+    backgroundColor: "#fff",
   },
 });
 

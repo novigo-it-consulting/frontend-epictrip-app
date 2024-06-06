@@ -30,7 +30,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from "@react-navigation/native";
 
 const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -107,7 +107,7 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const clearPassword = () => {
-    setValue('password', '');
+    setValue("password", "");
   };
 
   useFocusEffect(
@@ -139,7 +139,6 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <PaperProvider theme={theme}>
-      <SafeAreaView />
       <AlertNotificationRoot>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
