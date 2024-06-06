@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   View,
   Text,
@@ -109,6 +110,17 @@ const LoginScreen = ({ navigation }) => {
   const clearPassword = () => {
     setValue('password', '');
   };
+
+  const requestHealthCheck = async () => {
+    try{
+      const url = `https://qa-backend.myepictrip.app/users/healthcheck`
+      const response = await axios.get(url)
+      console.log("response: ", response)
+    } catch(error){
+      console.log("error: ", error)
+    }
+  }
+  
 
   useFocusEffect(
     React.useCallback(() => {
@@ -223,7 +235,7 @@ const LoginScreen = ({ navigation }) => {
 
               <Button
                 mode="contained"
-                onPress={handleSubmit(onSubmit)}
+                onPress={requestHealthCheck}
                 style={styles.button}
                 disabled={loading}
               >

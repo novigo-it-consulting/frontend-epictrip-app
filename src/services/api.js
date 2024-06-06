@@ -187,4 +187,3 @@ export const requestGetMethodsByUser = async (userId) => {
   }
 }
 
-
