@@ -147,10 +147,10 @@ const SignUpScreen = ({ navigation }) => {
                     onChangeText={(value) => onChange(value)}
                     autoCapitalize="none"
                     style={styles.textEmail}
-                    {...register("name")}
+                    {...register("fullName")}
                   />
                 )}
-                name="name"
+                name="fullName"
                 rules={{ required: true }}
                 defaultValue=""
               />
@@ -167,10 +167,10 @@ const SignUpScreen = ({ navigation }) => {
                     autoCapitalize="none"
                     style={styles.textEmail}
                     error={errors.email ? true : false}
-                    {...register("username")}
+                    {...register("email")}
                   />
                 )}
-                name="username"
+                name="email"
                 rules={{ required: true }}
                 defaultValue=""
               />
