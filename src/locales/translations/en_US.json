@@ -54,6 +54,7 @@
     "signIn": "Sign In",
     "nameLabel": "Full name",
     "languageLabel": "Language",
+    "errorCreate": "Error creating your account. Please try again later.",
     "languages": {
       "spanish": "Spanish",
       "english": "English",

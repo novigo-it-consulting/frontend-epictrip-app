@@ -137,7 +137,6 @@ const ForgetPasswordScreen = ({ navigation }) => {
               <Text style={styles.textTitle}>
                 {t("forgetPasswordScreen.title")}
               </Text>
-
               <Text style={styles.linkPrivacy}>
                 {t("forgetPasswordScreen.subTitle")}
               </Text>

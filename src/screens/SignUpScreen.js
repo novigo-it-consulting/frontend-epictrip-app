@@ -72,22 +72,18 @@ const SignUpScreen = ({ navigation }) => {
       }
     } catch (error) {
       console.log(error);
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
+      if (error.response.data.message === 500) {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: error.response.data.message,
+          textBody: (t("signUpScreen.errorCreate"))
         });
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
           textBody:
-            "Erro ao criar sua conta. Por favor, tente novamente mais tarde.",
+          (t("signUpScreen.errorCreate"))
         });
       }
     } finally {

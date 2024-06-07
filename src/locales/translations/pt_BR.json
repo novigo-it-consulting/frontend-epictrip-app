@@ -55,6 +55,7 @@
     "signIn": "Entrar",
     "nameLabel": "Nome completo",
     "languageLabel": "Idioma",
+    "errorCreate": "Erro ao criar sua conta. Por favor, tente novamente mais tarde.",
     "languages": {
       "spanish": "Espanhol",
       "english": "Inglês",
