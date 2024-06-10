@@ -5,6 +5,7 @@ import colors from "./src/colors";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./src/locales/index";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import { StatusBar } from "react-native";
 
 const theme = {
   ...DefaultTheme,
@@ -31,6 +32,7 @@ const lightColors = {
 const App = () => {
   return (
     <PaperProvider theme={theme}>
+      <StatusBar backgroundColor={"#000"} />
       <I18nextProvider i18n={i18n}>
         <AlertNotificationRoot
           toastConfig={defaultToastConfig}

@@ -2,7 +2,6 @@ import { StyleSheet, View } from "react-native";
 import React, { useEffect } from "react";
 import LottieView from "lottie-react-native";
 import { useNavigation } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
 
 const SplashScreen = () => {
   const { navigate } = useNavigation();
