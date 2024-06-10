@@ -10,7 +10,11 @@
     "loginButton": "Login",
     "forgotPassword": "Esqueceu a senha?",
     "noAccount": "Não tem uma conta?",
-    "signUp": "Cadastre-se"
+    "signUp": "Cadastre-se",
+   "invalidEmailAdress": "E-mail inválido",
+   "errorBadPassword": "Usuário ou senha inválidos",
+   "genericError": "Erro ao efetuar login. Por favor, tente novamente mais tarde."
+
   },
   "enterCode": {
     "title": "Digite seu código",
@@ -31,7 +35,10 @@
     "continueButton": "Continuar",
     "passwordsDoNotMatch": "As senhas não correspondem",
     "errorTitle": "Ops",
-    "errorMessage": "Erro ao definir a senha. Por favor, tente novamente."
+    "errorMessage": "Erro ao definir a senha. Por favor, tente novamente.",
+    "unknowError": "Ocorreu um erro inesperado, por favor tente novamente.",
+    "noUser": "Nenhum usuário encontrado"
+    
   },
   "signUpScreen": {
     "title": "Cadastre-se",
@@ -48,6 +55,7 @@
     "signIn": "Entrar",
     "nameLabel": "Nome completo",
     "languageLabel": "Idioma",
+    "errorCreate": "Erro ao criar sua conta. Por favor, tente novamente mais tarde.",
     "languages": {
       "spanish": "Espanhol",
       "english": "Inglês",
