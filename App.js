@@ -32,7 +32,7 @@ const lightColors = {
 const App = () => {
   return (
     <PaperProvider theme={theme}>
-      <StatusBar backgroundColor={"#000"} />
+      <StatusBar barStyle={"dark"} />
       <I18nextProvider i18n={i18n}>
         <AlertNotificationRoot
           toastConfig={defaultToastConfig}
