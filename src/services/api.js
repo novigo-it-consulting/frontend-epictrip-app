@@ -5,16 +5,26 @@ const BASE_URL = "https://qa-backend.myepictrip.app";
 
 export const requestSignUpGuest = async (dados) => {
   try {
-    const response = await axios.post(`${BASE_URL}/users/guests`, dados)
-    return response
-  }catch (error) {
+    const headers = {
+      "content-Type": "application/json",
+    };
+    const response = await axios.post(`${BASE_URL}/users/guests`, dados, {
+      headers,
+    });
+    return response;
+  } catch (error) {
     throw error;
   }
 };
 
 export const requestLogin = async (dados) => {
   try {
-    const response = await axios.post(`${BASE_URL}/users/login`, dados);
+    const headers = {
+      "content-Type": "application/json",
+    };
+    const response = await axios.post(`${BASE_URL}/users/login`, dados, {
+      headers,
+    });
     return response;
   } catch (error) {
     throw error;
@@ -25,7 +35,7 @@ export const requestGenerateToken = async (dados) => {
   console.log("dados: ", dados);
   try {
     const response = await axios.post(
-      `${BASE_URL}/passwordtokens/generatetoken/${dados.username}`,
+      `${BASE_URL}/passwordtokens/generatetoken/${dados.username}`
     );
     return response.status;
   } catch (error) {
@@ -36,9 +46,9 @@ export const requestGenerateToken = async (dados) => {
 export const requestValidateToken = async (dados) => {
   try {
     const response = await axios.post(
-      `${BASE_URL}/passwordtokens/checktoken/${dados.token}`,
+      `${BASE_URL}/passwordtokens/checktoken/${dados.token}`
     );
-    console.log("API", response);
+
     return response;
   } catch (error) {
     throw error;
@@ -63,15 +73,14 @@ export const requestChangePassword = async (dados) => {
   }
 };
 
-export const requestGetUser = async(userId) => {
+export const requestGetUser = async (userId) => {
   try {
     const headers = {
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
     };
-    const response = await axios.get(
-      `${BASE_URL}/users/${userId}`,
-      { headers }
-    );
+    const response = await axios.get(`${BASE_URL}/users/${userId}`, {
+      headers,
+    });
     return response;
   } catch (error) {
     throw error;
@@ -83,14 +92,12 @@ export const changeProfilePic = async (dados) => {
     const headers = {
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
     };
-    const response = axios.post(
-      `${BASE_URL}/users/profilepic`,
-      dados.file,
-      { headers }
-    );
+    const response = axios.post(`${BASE_URL}/users/profilepic`, dados.file, {
+      headers,
+    });
     return response;
   } catch (error) {
-    throw error
+    throw error;
   }
 };
 
@@ -99,11 +106,9 @@ export const requestUpdateUser = async (dados) => {
     const headers = {
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
     };
-    const response = axios.put(
-      `${BASE_URL}/users/${dados.userId}`,
-      dados,
-      { headers }
-    );
+    const response = axios.put(`${BASE_URL}/users/${dados.userId}`, dados, {
+      headers,
+    });
     return response;
   } catch (error) {
     throw error;
@@ -115,14 +120,12 @@ export const requestCreatePaymentMethod = async (dados) => {
     const headers = {
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
     };
-    const response = axios.post(
-      `${BASE_URL}/paymentmethods/`,
-      dados,
-      { headers }
-    )
+    const response = axios.post(`${BASE_URL}/paymentmethods/`, dados, {
+      headers,
+    });
     return response;
   } catch (error) {
-    throw error
+    throw error;
   }
 };
 
@@ -135,7 +138,7 @@ export const requestUpdatePaymentMethod = async (dados) => {
       `${BASE_URL}/paymentmethods/${dados.paymentMethodId}`,
       dados,
       { headers }
-    )
+    );
     return response;
   } catch (error) {
     throw error;
@@ -150,7 +153,7 @@ export const requestDeletePaymentMethod = async (paymentMethodId) => {
     const response = axios.delete(
       `${BASE_URL}/paymentmethods/${paymentMethodId}`,
       { headers }
-    )
+    );
     return response;
   } catch (error) {
     throw error;
@@ -185,6 +188,4 @@ export const requestGetMethodsByUser = async (userId) => {
   } catch (error) {
     throw error;
   }
-}
-
-
+};
