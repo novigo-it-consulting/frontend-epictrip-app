@@ -20,6 +20,7 @@
       "buildNumber": "45"
     },
     "android": {
+      "usesCleartextTraffic": false,
       "adaptiveIcon": {
         "foregroundImage": "./assets/img/adaptive-icon.png",
         "backgroundColor": "#C2185B",
@@ -44,6 +45,12 @@
           "locationAlwaysAndWhenInUsePermission": "Allow EpicTrip to use your location."
         }
       ]
-    ]
+    ],
+    "server": {
+      "androidScheme": "https",
+      "allowNavigation": [
+        "qa-backend.myepictrip.app"
+      ]
+    }
   }
 }

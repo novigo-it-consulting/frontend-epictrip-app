@@ -98,6 +98,7 @@ const LoginScreen = ({ navigation }) => {
           textBody:
             "Erro ao efetuar login. Por favor, tente novamente mais tarde.",
         });
+        console.log(error);
       }
     } finally {
       setLoading(false);
