@@ -42,6 +42,20 @@ const ForgetPasswordScreen = ({ navigation }) => {
     setTypedUsername(typedUser);
   };
 
+  const defaultToastConfig = {
+    autoClose: 3000,
+    titleStyle: { fontSize: 16, fontWeight: "bold" },
+  };
+
+  const lightColors = {
+    label: "#000",
+    card: "#fcfcfc",
+    overlay: "#f0f0f0",
+    success: "#28a745",
+    danger: "rgba(255, 0, 0, 1)",
+    warning: "#ffc107",
+  };
+
   const {
     control,
     handleSubmit,
@@ -65,21 +79,23 @@ const ForgetPasswordScreen = ({ navigation }) => {
         navigation.navigate("EnterCode");
         return;
       } else {
-        throw new Error("Ocorreu um erro inesperado, por favor tente novamente.");
+        throw new Error(
+          "Ocorreu um erro inesperado, por favor tente novamente."
+        );
       }
     } catch (error) {
       if (error.response.status === 500) {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: (t("forgetPasswordScreen.noUser"))
+          textBody: t("forgetPasswordScreen.noUser"),
         });
-        console.log(error.response.status)
+        console.log(error.response.status);
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: (t("forgetPasswordScreen.unknowError"))
+          textBody: t("forgetPasswordScreen.unknowError"),
         });
       }
     } finally {
@@ -106,7 +122,11 @@ const ForgetPasswordScreen = ({ navigation }) => {
 
   return (
     <PaperProvider theme={theme}>
-      <AlertNotificationRoot>
+      <AlertNotificationRoot
+        toastConfig={defaultToastConfig}
+        colors={[lightColors]}
+        theme={"light"}
+      >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : null}

@@ -81,20 +81,21 @@ const LoginScreen = ({ navigation }) => {
         throw new Error("Erro ao efetuar login. Por favor, tente novamente.");
       }
     } catch (error) {
-      if (error.response.data.message === "WRONG PASSWORD") {
+      if (
+        error.response.data.code === "USER_NOT_FOUND" ||
+        error.response.data.code === "BAD_PASSWORD"
+      ) {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody:(t("loginScreen.errorBadPassword"))
+          textBody: t("loginScreen.errorBadPassword"),
         });
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody:
-          (t("loginScreen.genericError"))
+          textBody: t("loginScreen.genericError"),
         });
-        console.log(error);
       }
     } finally {
       setLoading(false);

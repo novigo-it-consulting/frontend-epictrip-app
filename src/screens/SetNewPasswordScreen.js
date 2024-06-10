@@ -51,6 +51,20 @@ const SetNewPasswordScreen = ({ navigation }) => {
     confirmPassword: yup.string().required("Campo Obrigatório"),
   });
 
+  const defaultToastConfig = {
+    autoClose: 3000,
+    titleStyle: { fontSize: 16, fontWeight: "bold" },
+  };
+
+  const lightColors = {
+    label: "#000",
+    card: "#fcfcfc",
+    overlay: "#f0f0f0",
+    success: "#28a745",
+    danger: "rgba(255, 0, 0, 1)",
+    warning: "#ffc107",
+  };
+
   const onSubmit = async (data) => {
     setLoading(true);
     if (data.newPassword !== data.confirmPassword) {
@@ -117,7 +131,11 @@ const SetNewPasswordScreen = ({ navigation }) => {
   return (
     <PaperProvider theme={theme}>
       <SafeAreaView />
-      <AlertNotificationRoot>
+      <AlertNotificationRoot
+        toastConfig={defaultToastConfig}
+        colors={[lightColors]}
+        theme={"light"}
+      >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? null : null}

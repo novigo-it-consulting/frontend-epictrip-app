@@ -15,19 +15,29 @@ const theme = {
 };
 
 const defaultToastConfig = {
-  autoClose: 5000, // ou um booleano conforme necessário
+  autoClose: 3000,
   titleStyle: { fontSize: 16, fontWeight: "bold" },
-  textBodyStyle: { fontSize: 54 },
+};
+
+const lightColors = {
+  label: "#000",
+  card: "#fcfcfc",
+  overlay: "#f0f0f0",
+  success: "#28a745",
+  danger: "rgba(255, 0, 0, 1)",
+  warning: "#ffc107",
 };
 
 const App = () => {
   return (
     <PaperProvider theme={theme}>
       <I18nextProvider i18n={i18n}>
-        <AlertNotificationRoot>
-          <AlertNotificationRoot toastConfig={defaultToastConfig}>
-            <Navigation />
-          </AlertNotificationRoot>
+        <AlertNotificationRoot
+          toastConfig={defaultToastConfig}
+          colors={[lightColors]}
+          theme={"light"}
+        >
+          <Navigation />
         </AlertNotificationRoot>
       </I18nextProvider>
     </PaperProvider>
