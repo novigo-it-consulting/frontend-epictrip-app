@@ -65,24 +65,21 @@ const ForgetPasswordScreen = ({ navigation }) => {
         navigation.navigate("EnterCode");
         return;
       } else {
-        throw new Error("Erro ao resetar renha. Por favor, tente novamente.");
+        throw new Error("Ocorreu um erro inesperado, por favor tente novamente.");
       }
     } catch (error) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
+      if (error.response.status === 500) {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: error.response.data.message,
+          textBody: (t("forgetPasswordScreen.noUser"))
         });
+        console.log(error.response.status)
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: "Erro incomum, tente novamente mais tarde",
+          textBody: (t("forgetPasswordScreen.unknowError"))
         });
       }
     } finally {
@@ -140,7 +137,6 @@ const ForgetPasswordScreen = ({ navigation }) => {
               <Text style={styles.textTitle}>
                 {t("forgetPasswordScreen.title")}
               </Text>
-
               <Text style={styles.linkPrivacy}>
                 {t("forgetPasswordScreen.subTitle")}
               </Text>

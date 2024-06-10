@@ -49,7 +49,7 @@ const LoginScreen = ({ navigation }) => {
   const schema = yup.object().shape({
     username: yup
       .string()
-      .email("E-mail inválido")
+      .email(t("loginScreen.invalidEmailAdress"))
       .required("E-mail é obrigatório"),
     password: yup
       .string()
@@ -82,22 +82,18 @@ const LoginScreen = ({ navigation }) => {
         throw new Error("Erro ao efetuar login. Por favor, tente novamente.");
       }
     } catch (error) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
+      if (error.response.data.message === "WRONG PASSWORD") {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: error.response.data.message,
+          textBody:(t("loginScreen.errorBadPassword"))
         });
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
           textBody:
-            "Erro ao efetuar login. Por favor, tente novamente mais tarde.",
+          (t("loginScreen.genericError"))
         });
         console.error(error);
       }

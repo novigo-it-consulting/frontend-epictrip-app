@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // Importar os arquivos de tradução
 import ptBR from "./translations/pt_BR.json";
 import enUS from "./translations/en_US.json";
+import esES from "./translations/es_ES.json";
 
 i18n
   .use(initReactI18next) // Use initReactI18next
@@ -20,6 +21,9 @@ i18n
       },
       pt: {
         translation: ptBR,
+      },
+      es: {
+        translation: esES,
       },
     },
     interpolation: {
