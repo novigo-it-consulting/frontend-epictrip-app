@@ -4,11 +4,14 @@ import Feather from "react-native-vector-icons/Feather";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { requestGetUser } from "../services/api";
 import colors from "../colors";
-import { AlertNotificationRoot } from "react-native-alert-notification";
+import { ALERT_TYPE, AlertNotificationRoot, Toast } from "react-native-alert-notification";
+import { useTranslation } from "react-i18next";
 
 export default function ProfileHandleAccount() {
   const [profileName, setProfileName] = useState("");
   const [profilePhoto, setProfilePhoto] = useState(null);
+
+  const { t } = useTranslation();
 
   const getUserToProfile = async () => {
     const userId = await AsyncStorage.getItem("userId");
@@ -24,10 +27,22 @@ export default function ProfileHandleAccount() {
         setProfileName(fullName);
         setProfilePhoto(profilePic); // Assuming the response has a profilePic field for the user's photo
       } else {
-        console.error("Failed to fetch user profile:", response.status);
+        throw new Error("Ocorreu um erro ao atualizar as informações do usuario, por favor tente novamente mais tarde.");
       }
     } catch (error) {
-      console.error("An error occurred while fetching user profile:", error);
+      if (error.response.data.message === 500) {
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Ops",
+          textBody: t("profileHandleAccount.errorUpdating"),
+        });
+      } else {
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Ops",
+          textBody: t("profileHandleAccount.errorUpdating"),
+        })
+      }
     }
   };
 
