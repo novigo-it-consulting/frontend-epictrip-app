@@ -31,7 +31,7 @@ const ProfileScreen = () => {
     navigation.navigate("ChangePersonalInfo");
   };
   const handlePressEmBuild = () => {
-    navigation.navigate("EmConstruçãoScreen");
+    navigation.navigate("EmConstrucaoScreen");
   };
 
   const getUserToProfile = async () => {

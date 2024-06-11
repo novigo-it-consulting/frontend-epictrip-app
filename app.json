@@ -2,7 +2,7 @@
   "expo": {
     "name": "Epic Trip",
     "slug": "epic-trip",
-    "version": "1.4.2",
+    "version": "1.4.3",
     "orientation": "portrait",
     "icon": "./assets/img/icon.png",
     "userInterfaceStyle": "#FFF",
@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "app.myepictrip",
-      "buildNumber": "55"
+      "buildNumber": "60"
     },
     "android": {
       "usesCleartextTraffic": false,
@@ -27,7 +27,7 @@
         "translucent": false
       },
       "package": "app.myepictrip",
-      "versionCode": 55
+      "versionCode": 60
     },
     "web": {
       "favicon": "./assets/img/favicon.png"
