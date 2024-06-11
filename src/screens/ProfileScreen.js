@@ -30,11 +30,8 @@ const ProfileScreen = () => {
   const handlePress = () => {
     navigation.navigate("ChangePersonalInfo");
   };
-  const handlePressBooking = () => {
-    navigation.navigate("BookingScreen");
-  };
-  const handlePressPassword = () => {
-    navigation.navigate("FogotPassword");
+  const handlePressEmBuild = () => {
+    navigation.navigate("EmConstruçãoScreen");
   };
 
   const getUserToProfile = async () => {
@@ -195,7 +192,7 @@ const ProfileScreen = () => {
           </View>
           <TouchableOpacity
             style={stylesProfile.container}
-            onPress={handlePressBooking}
+            onPress={handlePressEmBuild}
           >
             <ProfileHandleBooking />
           </TouchableOpacity>
@@ -216,25 +213,25 @@ const ProfileScreen = () => {
           </View>
           <TouchableOpacity
             style={stylesProfile.container}
-            onPress={handlePressPassword}
+            onPress={handlePressEmBuild}
           >
             <ProfileHandleSettingsPassword />
           </TouchableOpacity>
           <TouchableOpacity
             style={stylesProfile.container}
-            onPress={handlePressPassword}
+            onPress={handlePressEmBuild}
           >
             <ProfileHandleSettingsPayment />
           </TouchableOpacity>
           <TouchableOpacity
             style={stylesProfile.container}
-            onPress={handlePressPassword}
+            onPress={handlePressEmBuild}
           >
             <ProfileHandleSettingsRewards />
           </TouchableOpacity>
           <TouchableOpacity
             style={stylesProfile.container}
-            onPress={handlePressPassword}
+            onPress={handlePressEmBuild}
           >
             <ProfileHandleSettingsLanguage />
           </TouchableOpacity>
