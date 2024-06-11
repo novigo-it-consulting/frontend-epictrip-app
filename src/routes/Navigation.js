@@ -11,6 +11,7 @@ import FogotPassword from "../screens/ForgetPasswordScreen";
 import SetNewPassword from "../screens/SetNewPasswordScreen";
 import SplashScreen from "../screens/SplashScreen";
 import WebView from "../screens/WebViewPage";
+import ChangePersonalInfo from "../screens/ChangePersonalInfo";
 
 const Stack = createStackNavigator();
 
@@ -24,7 +25,7 @@ const Navigation = () => {
             backgroundColor: "#FFFFFF",
           },
         }}
-        initialRouteName="SplashScreen"
+        initialRouteName="Home"
       >
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
@@ -33,6 +34,10 @@ const Navigation = () => {
         <Stack.Screen name="EnterCode" component={EnterCode} />
         <Stack.Screen name="FogotPassword" component={FogotPassword} />
         <Stack.Screen name="SetNewPassword" component={SetNewPassword} />
+        <Stack.Screen
+          name="ChangePersonalInfo"
+          component={ChangePersonalInfo}
+        />
         <Stack.Screen
           name="Terms"
           component={WebView}

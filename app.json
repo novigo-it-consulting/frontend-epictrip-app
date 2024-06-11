@@ -27,7 +27,7 @@
         "translucent": false
       },
       "package": "app.myepictrip",
-      "versionCode": "45"
+      "versionCode": 45
     },
     "web": {
       "favicon": "./assets/img/favicon.png"
@@ -42,7 +42,20 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow EpicTrip to use your location."
+          "locationAlwaysAndWhenInUsePermission": {
+            "ios": {
+              "purpose": "Allow EpicTrip to use your location."
+            },
+            "android": {
+              "reason": "Allow EpicTrip to use your location."
+            }
+          }
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
     ],

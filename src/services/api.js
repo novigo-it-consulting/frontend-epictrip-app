@@ -87,26 +87,37 @@ export const requestGetUser = async (userId) => {
   }
 };
 
-export const changeProfilePic = async (dados) => {
+export const changeProfilePic = async (file) => {
   try {
     const headers = {
+      "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
     };
-    const response = axios.post(`${BASE_URL}/users/profilepic`, dados.file, {
-      headers,
-    });
+
+    // Criar um objeto FormData para enviar a imagem
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await axios.post(
+      `${BASE_URL}/users/profilepic`,
+      formData,
+      {
+        headers,
+      }
+    );
     return response;
   } catch (error) {
     throw error;
   }
 };
 
-export const requestUpdateUser = async (dados) => {
+// api.js
+export const requestUpdateUser = async (userId, dados) => {
   try {
     const headers = {
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
     };
-    const response = axios.put(`${BASE_URL}/users/${dados.userId}`, dados, {
+    const response = await axios.put(`${BASE_URL}/users/${userId}`, dados, {
       headers,
     });
     return response;
