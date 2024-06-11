@@ -3863,12 +3863,12 @@ expo-font@~12.0.5:
 
 expo-image-loader@~4.7.0:
   version "4.7.0"
-  resolved "https://registry.yarnpkg.com/expo-image-loader/-/expo-image-loader-4.7.0.tgz#d403106822de80bda12d644c82b7a3b7983c0f0b"
+  resolved "https://registry.npmjs.org/expo-image-loader/-/expo-image-loader-4.7.0.tgz"
   integrity sha512-cx+MxxsAMGl9AiWnQUzrkJMJH4eNOGlu7XkLGnAXSJrRoIiciGaKqzeaD326IyCTV+Z1fXvIliSgNW+DscvD8g==
 
 expo-image-picker@~15.0.5:
   version "15.0.5"
-  resolved "https://registry.yarnpkg.com/expo-image-picker/-/expo-image-picker-15.0.5.tgz#8a3d4c3ecdb5bcf58f09e024597dd69edf7baa9c"
+  resolved "https://registry.npmjs.org/expo-image-picker/-/expo-image-picker-15.0.5.tgz"
   integrity sha512-Qqp16udsadx/YpNcNaWzfbmO0tbMxyX9bS1aFiDVC+Zffh8LY8S4HJJcnWqSC2TeuAl+9SxUwTloJagvPeMBBw==
   dependencies:
     expo-image-loader "~4.7.0"
@@ -6362,7 +6362,7 @@ react-native-alert-notification@^0.4.0:
 
 react-native-animated-dots-carousel@^1.0.2:
   version "1.0.2"
-  resolved "https://registry.yarnpkg.com/react-native-animated-dots-carousel/-/react-native-animated-dots-carousel-1.0.2.tgz#313881ade949f5888c8ca31def0d38072b870687"
+  resolved "https://registry.npmjs.org/react-native-animated-dots-carousel/-/react-native-animated-dots-carousel-1.0.2.tgz"
   integrity sha512-WIPyajD9iMUVKxIZgqcAMYL9WSjbaZT92piiw9GlaPflbgoGW0WRRAiMZu0QOexDffuLzlXgCnJbFpMY5frYjA==
 
 react-native-geolocation-service@^5.3.1:
@@ -6372,7 +6372,7 @@ react-native-geolocation-service@^5.3.1:
 
 react-native-gesture-handler@^2.16.2:
   version "2.16.2"
-  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.16.2.tgz#032bd2a07334292d7f6cff1dc9d1ec928f72e26d"
+  resolved "https://registry.npmjs.org/react-native-gesture-handler/-/react-native-gesture-handler-2.16.2.tgz"
   integrity sha512-vGFlrDKlmyI+BT+FemqVxmvO7nqxU33cgXVsn6IKAFishvlG3oV2Ds67D5nPkHMea8T+s1IcuMm0bF8ntZtAyg==
   dependencies:
     "@egjs/hammerjs" "^2.0.17"
@@ -6397,12 +6397,12 @@ react-native-paper@^5.12.3:
 
 react-native-reanimated-carousel@^3.5.1:
   version "3.5.1"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated-carousel/-/react-native-reanimated-carousel-3.5.1.tgz#3605b9959ffc0aa1c6b8b8736d98f91f46e36b17"
+  resolved "https://registry.npmjs.org/react-native-reanimated-carousel/-/react-native-reanimated-carousel-3.5.1.tgz"
   integrity sha512-9BBQV6JAYSQm2lV7MFtT4mzapXmW4IZO6s38gfiJL84Jg23ivGB1UykcNQauKgtHyhtW2NuZJzItb1s42lM+hA==
 
 react-native-reanimated@~3.10.1:
   version "3.10.1"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.10.1.tgz#3c37d1100bbba0065df39c96aab0c1ff1b50c0fa"
+  resolved "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-3.10.1.tgz"
   integrity sha512-sfxg6vYphrDc/g4jf/7iJ7NRi+26z2+BszPmvmk0Vnrz6FL7HYljJqTf531F1x6tFmsf+FEAmuCtTUIXFLVo9w==
   dependencies:
     "@babel/plugin-transform-arrow-functions" "^7.0.0-0"

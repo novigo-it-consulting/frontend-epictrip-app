@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   View,
   Text,
@@ -105,7 +106,7 @@ const LoginScreen = ({ navigation }) => {
   const clearPassword = () => {
     setValue('password', '');
   };
-
+  
   useFocusEffect(
     React.useCallback(() => {
       clearPassword();

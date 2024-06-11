@@ -27,7 +27,10 @@
         "translucent": false
       },
       "package": "app.myepictrip",
-      "versionCode": 60
+      "versionCode": "45",
+      "networkSecurityConfig": {
+        "cleartextTrafficPermitted": true
+      }
     },
     "web": {
       "favicon": "./assets/img/favicon.png"

@@ -8,7 +8,11 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { AlertNotificationRoot, Toast } from "react-native-alert-notification";
+import {
+  AlertNotificationRoot,
+  Toast,
+  ALERT_TYPE,
+} from "react-native-alert-notification";
 import { TextInput, RadioButton, Button, IconButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import profilePhoto from "../../assets/profile/100.png";
@@ -25,13 +29,18 @@ import * as Location from "expo-location";
 
 const ChangePersonalInfo = () => {
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
   const [autoLocation, setAutoLocation] = useState(null);
   const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
-    gender: "first",
-    age: "",
-    profilePic: null,
+    userRole: "",
+    email: "",
+    fullName: "",
+    documentNumber: "",
+    birthDate: "",
+    rental: "",
+    gender: "",
+    phone: "",
+    language: "",
   });
 
   const handleGoBack = () => {
@@ -57,17 +66,30 @@ const ChangePersonalInfo = () => {
   const getUserInfo = async () => {
     const userId = await AsyncStorage.getItem("userId");
 
-    console.log(userId);
     if (!userId) {
       console.error("User ID not found in AsyncStorage");
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: "User ID not found in AsyncStorage",
+      });
       return;
     }
 
     try {
       const response = await requestGetUser(userId);
+      console.log("Dados Recebido", response.data.data);
       if (response.status === 200) {
-        const { fullName, location, gender, birthDate, profilePic } =
-          response.data.data;
+        const {
+          fullName,
+          gender,
+          birthDate,
+          email,
+          phone,
+          userRole,
+          language,
+          rental,
+        } = response.data.data;
         const [firstName, lastName] = fullName.split(" ");
         const age =
           new Date().getFullYear() - new Date(birthDate).getFullYear();
@@ -77,13 +99,27 @@ const ChangePersonalInfo = () => {
           lastName,
           gender: gender === "Male" ? "first" : "second",
           age: age.toString(),
-          profilePic,
+          email,
+          userRole,
+          phone,
+          language,
+          rental,
         });
       } else {
         console.error("Failed to fetch user info:", response.status);
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Error",
+          textBody: `Failed to fetch user info: ${response.status}`,
+        });
       }
     } catch (error) {
       console.error("An error occurred while fetching user info:", error);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: `An error occurred while fetching user info: ${error.message}`,
+      });
     }
   };
 
@@ -91,6 +127,11 @@ const ChangePersonalInfo = () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
       console.error("Permission to access location was denied");
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: "Permission to access location was denied",
+      });
       return;
     }
 
@@ -109,33 +150,67 @@ const ChangePersonalInfo = () => {
   };
 
   const handleSave = async () => {
+    setLoading(true);
     const userId = await AsyncStorage.getItem("userId");
     if (!userId) {
       console.error("User ID not found in AsyncStorage");
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: "User ID not found in AsyncStorage",
+      });
+      setLoading(false);
       return;
     }
 
+    // Calcula a data de nascimento a partir da idade fornecida
+    const birthDate = new Date();
+    birthDate.setFullYear(birthDate.getFullYear() - parseInt(userData.age));
+    const formattedBirthDate = birthDate.toISOString().split("T")[0]; // Formato YYYY-MM-DD
+
     const updatedData = {
       fullName: `${userData.firstName} ${userData.lastName}`,
-      location: userData.location,
       gender: userData.gender === "first" ? "Male" : "Female",
-      birthDate: new Date().getFullYear() - parseInt(userData.age),
+      birthDate: formattedBirthDate,
+      phone: userData.phone || "",
+      documentNumber: userData.documentNumber || "",
+      language: userData.language || "",
+      userRole: userData.userRole || "",
+      email: userData.email || "",
+      rental: userData.rental || "",
     };
 
     try {
-      const response = await requestUpdateUser(userId, updatedData); // Pass userId and updatedData
+      const response = await requestUpdateUser(userId, updatedData);
+      console.log("Dados Enviados PUT", response);
+
       if (response.status === 200) {
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Success",
           textBody: "Your personal information has been updated successfully.",
         });
-        navigation.navigate("ProfileScreen");
+        setTimeout(() => {
+          setLoading(false);
+          navigation.navigate("ProfileScreen");
+        }, 5000);
       } else {
         console.error("Failed to update user info:", response.status);
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Error",
+          textBody: `Failed to update user info: ${response.status}`,
+        });
+        setLoading(false);
       }
     } catch (error) {
       console.error("An error occurred while updating user info:", error);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: `An error occurred while updating user info: ${error.message}`,
+      });
+      setLoading(false);
     }
   };
 
@@ -145,6 +220,11 @@ const ChangePersonalInfo = () => {
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== "granted") {
         console.error("Permission to access media library was denied");
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Error",
+          textBody: "Permission to access media library was denied",
+        });
         return;
       }
 
@@ -158,22 +238,31 @@ const ChangePersonalInfo = () => {
       if (!result.cancelled) {
         setUserData({ ...userData, profilePic: result.uri });
         try {
-          const response = await changeProfilePic(result); // Chamar a função de atualização da imagem de perfil
+          const response = await changeProfilePic(result);
           if (response.status === 200) {
             Toast.show({
               type: ALERT_TYPE.SUCCESS,
               title: "Success",
               textBody: "Your profile picture has been updated successfully.",
             });
-            // Atualizar opcionalmente a imagem de perfil do usuário no estado local ou contexto
           } else {
             console.error("Failed to update profile picture:", response.status);
+            Toast.show({
+              type: ALERT_TYPE.DANGER,
+              title: "Error",
+              textBody: `Failed to update profile picture: ${response.status}`,
+            });
           }
         } catch (error) {
           console.error(
             "An error occurred while updating profile picture:",
             error
           );
+          Toast.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Error",
+            textBody: `An error occurred while updating profile picture: ${error.message}`,
+          });
         }
       }
     } catch (error) {
@@ -181,13 +270,36 @@ const ChangePersonalInfo = () => {
         "An error occurred while accessing media library permissions:",
         error
       );
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: `An error occurred while accessing media library permissions: ${error.message}`,
+      });
     }
+  };
+
+  const defaultToastConfig = {
+    titleStyle: { fontSize: 16, fontWeight: "bold" },
+    textBodyStyle: { fontSize: 14 },
+  };
+
+  const lightColors = {
+    label: "#000",
+    card: "#fcfcfc",
+    overlay: "#f0f0f0",
+    success: "#28a745",
+    danger: "rgba(255, 0, 0, 1)",
+    warning: "#ffc107",
   };
 
   return (
     <>
-      <SafeAreaView />
-      <AlertNotificationRoot theme={"light"}>
+      <AlertNotificationRoot
+        toastConfig={defaultToastConfig}
+        colors={[lightColors]}
+        theme={"light"}
+      >
+        <SafeAreaView />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.containerAlpha}>
             <View style={styles.containerBackButton}>
@@ -271,6 +383,7 @@ const ChangePersonalInfo = () => {
               mode="contained"
               style={styles.saveButton}
               onPress={handleSave}
+              loading={loading}
             >
               Salvar
             </Button>

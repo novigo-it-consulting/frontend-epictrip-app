@@ -120,6 +120,8 @@ export const requestUpdateUser = async (userId, dados) => {
     const response = await axios.put(`${BASE_URL}/users/${userId}`, dados, {
       headers,
     });
+
+    console.log("Response", response);
     return response;
   } catch (error) {
     throw error;

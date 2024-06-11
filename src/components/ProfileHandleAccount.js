@@ -24,8 +24,9 @@ export default function ProfileHandleAccount() {
       const response = await requestGetUser(userId);
       if (response.status === 200) {
         const { fullName, profilePic } = response.data.data;
+        console.log("response: ", response.data)
         setProfileName(fullName);
-        setProfilePhoto(profilePic); // Assuming the response has a profilePic field for the user's photo
+        setProfilePhoto(profilePic);
       } else {
         throw new Error("Ocorreu um erro ao atualizar as informações do usuario, por favor tente novamente mais tarde.");
       }
