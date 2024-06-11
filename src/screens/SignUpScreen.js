@@ -46,48 +46,42 @@ const SignUpScreen = ({ navigation }) => {
     formState: { errors },
   } = useForm();
 
-  const schema = yup.object().shape({
-    email: yup
-      .string()
-      .email("E-mail inválido")
-      .required("E-mail é obrigatório"),
-    shareNumber: yup.number().required("E-mail é obrigatório"),
-    password: yup
-      .string()
-      .min(6, "Senha deve ter pelo menos 6 caracteres")
-      .required("Senha é obrigatória"),
-  });
+  const defaultToastConfig = {
+    autoClose: 3000,
+    titleStyle: { fontSize: 16, fontWeight: "bold" },
+  };
+
+  const lightColors = {
+    label: "#000",
+    card: "#fcfcfc",
+    overlay: "#f0f0f0",
+    success: "#28a745",
+    danger: "rgba(255, 0, 0, 1)",
+    warning: "#ffc107",
+  };
 
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      console.log(data);
       const response = await requestSignUpGuest(data);
       if (response.status === 201) {
         navigation.navigate("Login");
         return;
       } else {
-        console.log(response.data.exception);
         throw new Error("Erro ao criar sua conta. Por favor, tente novamente.");
       }
     } catch (error) {
-      console.log(error);
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
+      if (error.response.data.message === 500) {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: error.response.data.message,
+          textBody: t("signUpScreen.errorCreate"),
         });
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody:
-            "Erro ao criar sua conta. Por favor, tente novamente mais tarde.",
+          textBody: t("signUpScreen.errorCreate"),
         });
       }
     } finally {
@@ -116,7 +110,11 @@ const SignUpScreen = ({ navigation }) => {
   return (
     <PaperProvider theme={theme}>
       <SafeAreaView />
-      <AlertNotificationRoot>
+      <AlertNotificationRoot
+        toastConfig={defaultToastConfig}
+        colors={[lightColors]}
+        theme={"light"}
+      >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? null : null}

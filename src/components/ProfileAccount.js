@@ -1,11 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
 import profilePhoto from "../../assets/profile/1.png";
 import Feather from "react-native-vector-icons/Feather";
 import { Badge } from "react-native-paper";
 import SearchBarHome from "./SearchViewHome";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { requestGetUser } from "../services/api";
 
 export default function ProfileAccount() {
+  const [profileName, setProfileName] = useState();
+
+  const getUserToProfile = async () => {
+    const userId = await AsyncStorage.getItem("userId");
+    try {
+      const response = await requestGetUser(userId);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getUserToProfile();
+  }, []);
+
   return (
     <View style={stylesProfile.container}>
       <View style={stylesProfile.boxProfile}>
@@ -58,7 +76,7 @@ export default function ProfileAccount() {
 
 const stylesProfile = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0.5,
     flexDirection: "columm",
     alignItems: "center",
     justifyContent: "space-around",

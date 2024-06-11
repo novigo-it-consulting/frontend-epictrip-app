@@ -1,0 +1,72 @@
+{
+    "homeScreen": {
+    "title": "Pantalla de Inicio",
+    "logoutButton": "Cerrar Sesión"
+    },
+    "loginScreen": {
+    "title": "Iniciar Sesión",
+    "emailLabel": "Correo Electrónico",
+    "passwordLabel": "Contraseña",
+    "loginButton": "Iniciar Sesión",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "noAccount": "¿No tienes una cuenta?",
+    "signUp": "Regístrate",
+    "invalidEmailAdress": "Correo electrónico inválido",
+    "errorBadPassword": "Usuario o contraseña inválidos",
+    "genericError": "Error al iniciar sesión. Por favor, inténtalo de nuevo más tarde."
+    
+    },
+    "enterCode": {
+    "title": "Ingresa tu código",
+    "subTitle": "Se ha enviado un código de 6 dígitos a tu correo electrónico. Verifícalo en tu bandeja de Spam.",
+    "codeLabel": "Código",
+    "codePlaceholder": "Ingresa el código",
+    "continueButton": "Continuar",
+    "resendCode": "Reenviar Código",
+    "errorTitle": "Error",
+    "errorMessage": "Error al validar el código. Por favor, inténtalo nuevamente."
+    },
+    "forgetPasswordScreen": {
+    "title": "Ingresa tu Correo Electrónico",
+    "subTitle": "Ingresa la dirección de correo electrónico de tu cuenta Epic Trip",
+    "passwordLabel": "Nueva Contraseña",
+    "emailLabel": "Correo Electrónico",
+    "confirmPasswordLabel": "Confirmar Contraseña",
+    "continueButton": "Continuar",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden",
+    "errorTitle": "Error",
+    "errorMessage": "Error al establecer la contraseña. Por favor, inténtalo de nuevo.",
+    "unknowError": "Ha ocurrido un error inesperado, por favor intentalo de nuevo.",
+    "noUser": "No se encontró ningún usuario"
+    
+    },
+    "signUpScreen": {
+    "title": "Regístrate",
+    "emailLabel": "Correo Electrónico",
+    "shareNumberLabel": "Número de Invitado",
+    "phoneLabel": "Teléfono",
+    "passwordLabel": "Contraseña",
+    "signUpButton": "Registrarse",
+    "privacyPolicy": "Al registrarte, aceptas nuestra ",
+    "termsAndConditions": "y nuestros ",
+    "privacyPolicyLink": "Política de Privacidad",
+    "termsAndConditionsLink": "Términos y Condiciones",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+    "signIn": "Iniciar Sesión",
+    "nameLabel": "Nombre completo",
+    "languageLabel": "Idioma",
+    "errorCreate": "Error al crear tu cuenta. Por favor, inténtalo de nuevo más tarde.",
+    "languages": {
+    "spanish": "Español",
+    "english": "Inglés",
+    "portuguese": "Portugués"
+    }
+    },
+    "setNewPasswordScreen": {
+    "title": "Establecer tu nueva contraseña",
+    "passwordLabel": "Contraseña",
+    "confirmPasswordLabel": "Confirmar Contraseña",
+    "continueButton": "Continuar",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden"
+    }
+    }

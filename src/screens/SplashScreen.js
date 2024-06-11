@@ -14,16 +14,18 @@ const SplashScreen = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.animationContainer}>
-        <LottieView
-          style={styles.animation}
-          source={require("../../assets/SplashScreen_App (2).json")}
-          autoPlay
-          loop
-        />
+    <>
+      <View style={styles.container}>
+        <View style={styles.animationContainer}>
+          <LottieView
+            style={styles.animation}
+            source={require("../../assets/SplashScreen_App (2).json")}
+            autoPlay
+            loop
+          />
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 

@@ -4,12 +4,12 @@ import colors from "../colors";
 const styles = StyleSheet.create({
   chip: {
     margin: "3%",
-    backgroundColor: colors.primary
+    backgroundColor: colors.primary,
   },
   chipsContainer: {
     display: "flex",
     flexDirection: "row",
-    padding: "5%"
+    padding: "5%",
   },
   container: {
     justifyContent: "space-between",

@@ -30,8 +30,7 @@ import {
 } from "react-native-alert-notification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from "@react-navigation/native";
 
 const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -50,7 +49,7 @@ const LoginScreen = ({ navigation }) => {
   const schema = yup.object().shape({
     username: yup
       .string()
-      .email("E-mail inválido")
+      .email(t("loginScreen.invalidEmailAdress"))
       .required("E-mail é obrigatório"),
     password: yup
       .string()
@@ -70,10 +69,11 @@ const LoginScreen = ({ navigation }) => {
 
       if (response.status === 200) {
         const userId = response.data.userId;
+        await AsyncStorage.setItem("token", response.data.token);
+
         if (userId) {
           await AsyncStorage.setItem("userId", userId);
-          const storedUserId = await AsyncStorage.getItem("userId");
-          console.log("Stored userId:", storedUserId);
+
           navigation.navigate("Home");
           return;
         } else {
@@ -84,23 +84,20 @@ const LoginScreen = ({ navigation }) => {
       }
     } catch (error) {
       if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
+        error.response.data.code === "USER_NOT_FOUND" ||
+        error.response.data.code === "BAD_PASSWORD"
       ) {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: error.response.data.message,
+          textBody: t("loginScreen.errorBadPassword"),
         });
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody:
-            "Erro ao efetuar login. Por favor, tente novamente mais tarde.",
+          textBody: t("loginScreen.genericError"),
         });
-        console.error(error);
       }
     } finally {
       setLoading(false);
@@ -108,20 +105,9 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const clearPassword = () => {
-    setValue('password', '');
+    setValue("password", "");
   };
-
-  const requestHealthCheck = async () => {
-    try{
-      const url = `https://qa-backend.myepictrip.app/users/healthcheck`
-      const response = await axios.get(url)
-      console.log("response: ", response)
-    } catch(error){
-      console.log("error: ", error)
-    }
-  }
   
-
   useFocusEffect(
     React.useCallback(() => {
       clearPassword();
@@ -149,10 +135,28 @@ const LoginScreen = ({ navigation }) => {
     navigation.navigate("SignUp");
   };
 
+  const defaultToastConfig = {
+    autoClose: 5000, // ou um booleano conforme necessário
+    titleStyle: { fontSize: 16, fontWeight: "bold" },
+    textBodyStyle: { fontSize: 14 },
+  };
+
+  const lightColors = {
+    label: "#000",
+    card: "#fcfcfc",
+    overlay: "#f0f0f0",
+    success: "#28a745",
+    danger: "rgba(255, 0, 0, 1)",
+    warning: "#ffc107",
+  };
+
   return (
     <PaperProvider theme={theme}>
-      <SafeAreaView />
-      <AlertNotificationRoot>
+      <AlertNotificationRoot
+        toastConfig={defaultToastConfig}
+        colors={[lightColors]}
+        theme={"light"}
+      >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? null : null}
@@ -235,7 +239,7 @@ const LoginScreen = ({ navigation }) => {
 
               <Button
                 mode="contained"
-                onPress={requestHealthCheck}
+                onPress={handleSubmit(onSubmit)}
                 style={styles.button}
                 disabled={loading}
               >

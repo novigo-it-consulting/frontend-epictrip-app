@@ -36,7 +36,7 @@ const ExploreCategories = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 0.6,
+    flex: 0.5,
     flexDirection: "columm",
     alignItems: "flex-start",
     justifyContent: "space-between",

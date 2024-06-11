@@ -42,6 +42,20 @@ const ForgetPasswordScreen = ({ navigation }) => {
     setTypedUsername(typedUser);
   };
 
+  const defaultToastConfig = {
+    autoClose: 3000,
+    titleStyle: { fontSize: 16, fontWeight: "bold" },
+  };
+
+  const lightColors = {
+    label: "#000",
+    card: "#fcfcfc",
+    overlay: "#f0f0f0",
+    success: "#28a745",
+    danger: "rgba(255, 0, 0, 1)",
+    warning: "#ffc107",
+  };
+
   const {
     control,
     handleSubmit,
@@ -65,24 +79,23 @@ const ForgetPasswordScreen = ({ navigation }) => {
         navigation.navigate("EnterCode");
         return;
       } else {
-        throw new Error("Erro ao resetar renha. Por favor, tente novamente.");
+        throw new Error(
+          "Ocorreu um erro inesperado, por favor tente novamente."
+        );
       }
     } catch (error) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
+      if (error.response.status === 500) {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: error.response.data.message,
+          textBody: t("forgetPasswordScreen.noUser"),
         });
+        console.log(error.response.status);
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: "Erro incomum, tente novamente mais tarde",
+          textBody: t("forgetPasswordScreen.unknowError"),
         });
       }
     } finally {
@@ -109,7 +122,11 @@ const ForgetPasswordScreen = ({ navigation }) => {
 
   return (
     <PaperProvider theme={theme}>
-      <AlertNotificationRoot>
+      <AlertNotificationRoot
+        toastConfig={defaultToastConfig}
+        colors={[lightColors]}
+        theme={"light"}
+      >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : null}
@@ -140,7 +157,6 @@ const ForgetPasswordScreen = ({ navigation }) => {
               <Text style={styles.textTitle}>
                 {t("forgetPasswordScreen.title")}
               </Text>
-
               <Text style={styles.linkPrivacy}>
                 {t("forgetPasswordScreen.subTitle")}
               </Text>

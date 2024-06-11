@@ -1,45 +1,56 @@
-// screens/HomeScreen.js
+// screens/ProfileScreen.js
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  SafeAreaView,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-  Alert,
-} from "react-native";
-import {
-  Button,
-  Provider as PaperProvider,
-  DefaultTheme,
-} from "react-native-paper";
+import { View, Text, Alert, StyleSheet, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
-import styles from "../styles/globalScreen";
 import {
   AlertNotificationRoot,
   Toast,
   ALERT_TYPE,
 } from "react-native-alert-notification";
 import { getDatabase, ref, set } from "firebase/database";
-import colors from "../colors";
 import app from "../firebase";
+import { requestGetUser } from "../services/api";
+import colors from "../colors";
+import ProfileHandleAccount from "../components/ProfileHandleAccount";
+import ProfileHandleBooking from "../components/ProfileHandleBooking";
+import ProfileHandleSettingsPassword from "../components/ProfileHandleSettingsPassword";
+import ProfileHandleSettingsPayment from "../components/ProfileHandleSettingsPayment";
+import ProfileHandleSettingsRewards from "../components/ProfileHandleSettingsRewards";
+import ProfileHandleSettingsLanguage from "../components/ProfileHandleSettingsLanguage";
 
 const ProfileScreen = () => {
-  const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [userId, setUserId] = useState(null);
   const [displayCurrentAddress, setDisplayCurrentAddress] =
     useState("Localização....");
   const [locationServicesEnabled, setLocationServicesEnabled] = useState(false);
+  const navigation = useNavigation();
+
+  const handlePress = () => {
+    navigation.navigate("ChangePersonalInfo");
+  };
+  const handlePressEmBuild = () => {
+    navigation.navigate("EmConstrucaoScreen");
+  };
+
+  const getUserToProfile = async () => {
+    const userId = await AsyncStorage.getItem("userId");
+    try {
+      const response = await requestGetUser(userId);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getUserToProfile();
+  }, []);
 
   const checkIfLocationEnabled = async () => {
-    let enabled = await Location.hasServicesEnabledAsync(); //returns true or false
+    let enabled = await Location.hasServicesEnabledAsync();
     if (!enabled) {
-      //if not enable
       Alert.alert("Location not enabled", "Please enable your Location", [
         {
           text: "Cancel",
@@ -49,13 +60,13 @@ const ProfileScreen = () => {
         { text: "OK", onPress: () => console.log("OK Pressed") },
       ]);
     } else {
-      setLocationServicesEnabled(enabled); //store true into state
+      setLocationServicesEnabled(enabled);
     }
   };
 
   const getCurrentLocation = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync(); //used for the pop up box where we give permission to use location
-    console.log(status);
+    let { status } = await Location.requestForegroundPermissionsAsync();
+
     if (status !== "granted") {
       Alert.alert(
         "Permission denied",
@@ -71,52 +82,32 @@ const ProfileScreen = () => {
       );
     }
 
-    //get current position lat and long
     const { coords } = await Location.getCurrentPositionAsync();
-    console.log(coords);
 
     if (coords) {
       const { latitude, longitude } = coords;
       console.log(latitude, longitude);
 
-      //provide lat and long to get the the actual address
-      let responce = await Location.reverseGeocodeAsync({
+      let response = await Location.reverseGeocodeAsync({
         latitude,
         longitude,
       });
-      //loop on the responce to get the actual result
-      for (let item of responce) {
+      for (let item of response) {
         let address = `${item.name} ${item.city} ${item.region} ${item.country}`;
         setDisplayCurrentAddress(address);
       }
     }
   };
 
-  const navigation = useNavigation();
-
-  const handleOnPressLogout = async () => {
-    try {
-      await AsyncStorage.removeItem("token");
-      navigation.navigate("Login");
-    } catch (error) {
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Ops",
-        textBody: error.message,
-      });
-    }
-  };
-
   const updateLocationInFirebase = async (coords, user) => {
     try {
-      const db = await getDatabase(app);
+      const db = getDatabase(app);
       await set(ref(db, `users/${user}`), {
         latitude: coords.latitude,
         longitude: coords.longitude,
         timestamp: Date.now(),
       });
     } catch (error) {
-      // console.log(error.message);
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
@@ -151,52 +142,123 @@ const ProfileScreen = () => {
   }, []);
 
   return (
-    <PaperProvider theme={theme}>
-      <SafeAreaView />
-      <AlertNotificationRoot>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? null : null}
+    <AlertNotificationRoot theme={"light"}>
+      <View style={stylesProfile.containerAlpha}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "flex-start",
+            width: "85%",
+            marginTop: 50,
+          }}
+        >
+          <Text style={{ fontSize: 33, fontWeight: "bold" }}>Profile</Text>
+        </View>
+        <View style={stylesProfile.container}>
+          <View
             style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "space-around",
-              flex: 1,
-              width: "75%",
-              marginRight: "auto",
-              marginLeft: "auto",
+              flex: 4,
+              justifyContent: "center",
+              alignItems: "flex-start",
+              width: "85%",
+              marginBottom: 10,
             }}
           >
-            <View style={styles.container}>
-              <Text
-                style={{
-                  marginBottom: "5%",
-                  fontWeight: "bold",
-                  color: colors.primary,
-                }}
-              >
-                ID de usuário:
-              </Text>
-              <Text style={styles.link}>{`${userId}`}</Text>
-              <Text style={{ marginTop: "20%" }}>{displayCurrentAddress}</Text>
-              {errorMsg && <Text>{errorMsg}</Text>}
-              <Button title="Obter Localização" onPress={getLocation} />
-              <Button onPress={handleOnPressLogout}>Logout</Button>
-            </View>
-          </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
-      </AlertNotificationRoot>
-    </PaperProvider>
+            <Text
+              style={{ fontSize: 18, marginBottom: 12, fontWeight: "bold" }}
+            >
+              Account
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={stylesProfile.container}
+            onPress={handlePress}
+          >
+            <ProfileHandleAccount />
+          </TouchableOpacity>
+          <View
+            style={{
+              flex: 3,
+              justifyContent: "center",
+              alignItems: "flex-start",
+              width: "85%",
+              marginBottom: 10,
+            }}
+          >
+            <Text style={{ fontSize: 14, opacity: 0.6, marginBottom: 12 }}>
+              Booking Number
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={stylesProfile.container}
+            onPress={handlePressEmBuild}
+          >
+            <ProfileHandleBooking />
+          </TouchableOpacity>
+          <View
+            style={{
+              flex: 3,
+              justifyContent: "center",
+              alignItems: "flex-start",
+              width: "85%",
+              marginBottom: 20,
+            }}
+          >
+            <Text
+              style={{ fontSize: 18, marginBottom: 12, fontWeight: "bold" }}
+            >
+              Settings
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={stylesProfile.container}
+            onPress={handlePressEmBuild}
+          >
+            <ProfileHandleSettingsPassword />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={stylesProfile.container}
+            onPress={handlePressEmBuild}
+          >
+            <ProfileHandleSettingsPayment />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={stylesProfile.container}
+            onPress={handlePressEmBuild}
+          >
+            <ProfileHandleSettingsRewards />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={stylesProfile.container}
+            onPress={handlePressEmBuild}
+          >
+            <ProfileHandleSettingsLanguage />
+          </TouchableOpacity>
+        </View>
+      </View>
+    </AlertNotificationRoot>
   );
 };
 
-const theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: colors.primary,
+const stylesProfile = StyleSheet.create({
+  containerAlpha: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    marginRight: "auto",
+    marginLeft: "auto",
+    backgroundColor: colors.backGroundLight,
   },
-};
+  container: {
+    flex: 5,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+});
 
 export default ProfileScreen;
