@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "app.myepictrip",
-      "buildNumber": "250",
+      "buildNumber": "110",
       "infoPlist": {
         "NSLocationUsageDescription": "Need location access for updating nearby friends",
         "NSLocationWhenInUseUsageDescription": "This app will use your location to show features near you.",
