@@ -17,9 +17,10 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "app.myepictrip",
-      "buildNumber": "300",
+      "buildNumber": "350",
       "infoPlist": {
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "Allow EpicTrip to use your location to provide personalized travel recommendations."
+        "NSLocationWhenInUseUsageDescription": "Allow EpicTrip to use your location to provide personalized travel recommendations.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Allow EpicTrip to access your location always and when in use to offer better travel services even when the app is not in the foreground."
       },
       "entitlements": {
         "aps-environment": "production"
