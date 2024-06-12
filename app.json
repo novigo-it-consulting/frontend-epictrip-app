@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "app.myepictrip",
-      "buildNumber": "200",
+      "buildNumber": "300",
       "infoPlist": {
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Allow EpicTrip to use your location to provide personalized travel recommendations."
       },
@@ -33,7 +33,7 @@
         "translucent": false
       },
       "package": "app.myepictrip",
-      "versionCode": 75,
+      "versionCode": 76,
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
@@ -54,10 +54,10 @@
         {
           "locationAlwaysAndWhenInUsePermission": {
             "ios": {
-              "purpose": "Allow EpicTrip to use your location."
+              "purpose": "Allow EpicTrip to use your location to provide personalized travel recommendations."
             },
             "android": {
-              "reason": "Allow EpicTrip to use your location."
+              "reason": "Allow EpicTrip to use your location to provide personalized travel recommendations."
             }
           }
         }
