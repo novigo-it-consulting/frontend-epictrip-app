@@ -1,83 +1,16 @@
 {
-  "expo": {
-    "name": "Epic Trip",
-    "slug": "epic-trip",
-    "version": "1.5.0",
-    "orientation": "portrait",
-    "icon": "./assets/img/icon.png",
-    "userInterfaceStyle": "#FFF",
-    "splash": {
-      "image": "./assets/img/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#FFF"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": false,
-      "bundleIdentifier": "app.myepictrip",
-      "buildNumber": "200",
-      "infoPlist": {
-        "NSLocationAlwaysUsageDescription": "Allow Epic Trip to use your location.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "Allow Epic Trip to use your location.",
-        "NSPhotoLibraryUsageDescription": "Allow Epic Trip to use your photo library."
-      },
-      "entitlements": {
-        "aps-environment": "production"
+  "cli": {
+    "version": ">= 0.43.0"
+  },
+  "build": {
+    "production": {
+      "ios": {
+        "releaseChannel": "production",
+        "image": "latest"
+      }, 
+      "android": {
+        "buildType": "apk"
       }
-    },
-    "android": {
-      "usesCleartextTraffic": false,
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/img/adaptive-icon.png",
-        "backgroundColor": "#C2185B",
-        "translucent": false
-      },
-      "package": "app.myepictrip",
-      "versionCode": 76,
-      "permissions": [
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION"
-      ]
-    },
-    "web": {
-      "favicon": "./assets/img/favicon.png"
-    },
-    "owner": "novigo-it",
-    "extra": {
-      "eas": {
-        "projectId": "db969fca-1beb-44ee-9f79-97519a82855c"
-      }
-    },
-    "plugins": [
-      [
-        "expo-location",
-        {
-          "locationAlwaysAndWhenInUsePermission": {
-            "ios": {
-              "purpose": "Allow Epic Trip to use your location."
-            }
-          },
-          "locationAlwaysPermission": {
-            "ios": {
-              "purpose": "Allow Epic Trip to use your photo library."
-            }
-          }
-        }
-      ],
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "The app accesses your photos to let you share them with your friends.",
-        }
-      ]
-    ],
-    "server": {
-      "androidScheme": "https",
-      "allowNavigation": [
-        "qa-backend.myepictrip.app"
-      ]
     }
   }
 }
