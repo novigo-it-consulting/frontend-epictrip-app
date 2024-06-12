@@ -17,7 +17,13 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "app.myepictrip",
-      "buildNumber": "200"
+      "buildNumber": "200",
+      "infoPlist": {
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Allow EpicTrip to use your location to provide personalized travel recommendations."
+      },
+      "entitlements": {
+        "aps-environment": "production"
+      }
     },
     "android": {
       "usesCleartextTraffic": false,
@@ -27,7 +33,11 @@
         "translucent": false
       },
       "package": "app.myepictrip",
-      "versionCode": "75"
+      "versionCode": 75,
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/img/favicon.png"
