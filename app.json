@@ -17,11 +17,15 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "app.myepictrip",
-      "buildNumber": "150",
+      "buildNumber": "250",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Allow EpicTrip to use your location to provide personalized travel recommendations.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "Allow EpicTrip to access your location always and when in use to offer better travel services even when the app is not in the foreground.",
-        "NSPhotoLibraryUsageDescription": "Allow EpicTrip to access your library Photos."
+        "NSLocationUsageDescription": "Need location access for updating nearby friends",
+        "NSLocationWhenInUseUsageDescription": "This app will use your location to show features near you.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app will use your location to show features near you.",
+        "NSPhotoLibraryUsageDescription": "Need photo library access for saving and uploading images"
+      },
+      "entitlements": {
+        "aps-environment": "production"
       }
     },
     "android": {
