@@ -45,6 +45,7 @@ const ChangePersonalInfo = () => {
     language: "",
   });
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!initialDataLoaded) {
@@ -87,8 +88,6 @@ const ChangePersonalInfo = () => {
       throw new Error(`Failed to fetch user info: ${response.status}`);
     }
   };
-
-  const { t } = useTranslation();
 
   const handleGoBack = () => {
     navigation.navigate("ProfileScreen");
