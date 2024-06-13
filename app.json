@@ -17,12 +17,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "app.myepictrip",
-      "buildNumber": "500",
-      "infoPlist": {
-        "NSLocationAlwaysUsageDescription": "Allow Epic Trip to use your location.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "Allow Epic Trip to use your location.",
-        "NSPhotoLibraryUsageDescription": "Allow Epic Trip to use your photo library."
-      },
+      "buildNumber": "5",
       "entitlements": {
         "aps-environment": "production"
       }
