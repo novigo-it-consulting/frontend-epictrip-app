@@ -2,7 +2,7 @@
   "expo": {
     "name": "Epic Trip",
     "slug": "epic-trip",
-    "version": "1.4.3",
+    "version": "1.5.0",
     "orientation": "portrait",
     "icon": "./assets/img/icon.png",
     "userInterfaceStyle": "#FFF",
@@ -15,9 +15,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "app.myepictrip",
-      "buildNumber": "60"
+      "buildNumber": "8",
+      "entitlements": {
+        "aps-environment": "production"
+      }
     },
     "android": {
       "usesCleartextTraffic": false,
@@ -27,10 +30,11 @@
         "translucent": false
       },
       "package": "app.myepictrip",
-      "versionCode": "45",
-      "networkSecurityConfig": {
-        "cleartextTrafficPermitted": true
-      }
+      "versionCode": 76,
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/img/favicon.png"
@@ -45,12 +49,14 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": {
+          "locationWhenInUsePermission": {
             "ios": {
-              "purpose": "Allow EpicTrip to use your location."
-            },
-            "android": {
-              "reason": "Allow EpicTrip to use your location."
+              "purpose": "Allow Epic Trip to use your location."
+            }
+          },
+          "locationAlwaysPermission": {
+            "ios": {
+              "purpose": "Allow Epic Trip to use your photo library."
             }
           }
         }
