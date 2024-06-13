@@ -26,6 +26,7 @@ import {
 } from "../services/api";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
+import { useTranslation } from "react-i18next";
 
 const ChangePersonalInfo = () => {
   const navigation = useNavigation();
@@ -42,6 +43,8 @@ const ChangePersonalInfo = () => {
     phone: "",
     language: "",
   });
+
+  const { t } = useTranslation();
 
   const handleGoBack = () => {
     navigation.navigate("ProfileScreen");

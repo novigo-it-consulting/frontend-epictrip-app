@@ -69,6 +69,10 @@
     "passwordsDoNotMatch": "Passwords don't match"
   },
   "profileHandleAccount": {
-    "errorUpdating": "An error occurred while updating user information, please try again later."
+    "errorUpdate": "An error occurred while updating user information, please try again later."
+  },
+
+  "changePersonalInfo": {
+    "failedUpdate": "An error occurred while updating user information, please try again later."
   }
 }
