@@ -1,75 +1,105 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
-import profilePhoto from "../../assets/profile/1.png";
+import { StyleSheet, View, Text, Image, ActivityIndicator } from "react-native";
+import { requestGetUser } from "../services/api";
+import { useNavigation } from "@react-navigation/native";
 import Feather from "react-native-vector-icons/Feather";
 import { Badge } from "react-native-paper";
 import SearchBarHome from "./SearchViewHome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { requestGetUser } from "../services/api";
 
 export default function ProfileAccount() {
-  const [profileName, setProfileName] = useState();
+  const [profilePhoto, setProfilePhoto] = useState(null);
+  const [profileName, setProfileName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
 
   const getUserToProfile = async () => {
+    setLoading(true);
     const userId = await AsyncStorage.getItem("userId");
+    if (!userId) {
+      console.error("User ID not found in AsyncStorage");
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await requestGetUser(userId);
-      console.log(response);
+      if (response.status === 200) {
+        const { fullName, profilePic } = response.data.data;
+        setProfileName(fullName);
+        setProfilePhoto(profilePic);
+      } else {
+        console.error("Failed to fetch user profile:", response.status);
+      }
     } catch (error) {
-      console.log(error);
+      console.error("An error occurred while fetching user profile:", error);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
-    getUserToProfile();
-  }, []);
+    const unsubscribe = navigation.addListener("focus", () => {
+      getUserToProfile();
+    });
+    return unsubscribe;
+  }, [getUserToProfile]);
 
   return (
     <View style={stylesProfile.container}>
-      <View style={stylesProfile.boxProfile}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignContent: "center",
-            flexDirection: "row",
-          }}
-        >
-          <Image
-            source={profilePhoto}
-            width={48}
-            height={48}
-            borderRadius={"50%"}
-          />
-          <View style={stylesProfile.titleName}>
-            <Text style={{ fontSize: 16, textAlign: "left", color: "#364764" }}>
-              Olá,
-            </Text>
-            <Text
-              style={{
-                fontSize: 22,
-                textAlign: "left",
-                color: "#172B4D",
-                fontWeight: "bold",
-              }}
-            >
-              Polina 🖐
-            </Text>
-          </View>
-          <View style={stylesProfile.boxNotification}>
-            <View style={stylesProfile.boxColor}>
-              <Feather name="bell" color={"#172B4D"} size={15} />
-              <Badge
-                style={{ position: "absolute", top: 5, right: 5 }}
-                size={15}
+      {loading ? (
+        <ActivityIndicator size="small" color="#0000ff" />
+      ) : (
+        <View style={stylesProfile.boxProfile}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignContent: "center",
+              flexDirection: "row",
+            }}
+          >
+            <Image
+              source={
+                profilePhoto
+                  ? { uri: profilePhoto }
+                  : require("../../assets/profile/1.png")
+              }
+              width={48}
+              height={48}
+              borderRadius={"50%"}
+            />
+            <View style={stylesProfile.titleName}>
+              <Text
+                style={{ fontSize: 12, textAlign: "left", color: "#364764" }}
               >
-                3
-              </Badge>
+                Olá,
+              </Text>
+              <Text
+                style={{
+                  fontSize: 16,
+                  textAlign: "left",
+                  color: "#172B4D",
+                  fontWeight: "bold",
+                }}
+              >
+                {profileName}
+              </Text>
+            </View>
+            <View style={stylesProfile.boxNotification}>
+              <View style={stylesProfile.boxColor}>
+                <Feather name="bell" color={"#172B4D"} size={15} />
+                <Badge
+                  style={{ position: "absolute", top: 5, right: 5 }}
+                  size={15}
+                >
+                  3
+                </Badge>
+              </View>
             </View>
           </View>
+          <SearchBarHome />
         </View>
-        <SearchBarHome />
-      </View>
+      )}
     </View>
   );
 }
@@ -91,8 +121,7 @@ const stylesProfile = StyleSheet.create({
   },
   boxNotification: {
     height: 48,
-    width: "100%",
-    marginRight: "auto",
+    marginLeft: "auto",
     display: "flex",
     alignItems: "center",
     flexDirection: "column",

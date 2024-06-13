@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, ActivityIndicator } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { requestGetUser } from "../services/api";
-import colors from "../colors";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ProfileHandleAccount() {
   const [profileName, setProfileName] = useState("");
   const [profilePhoto, setProfilePhoto] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
 
   const getUserToProfile = async () => {
+    setLoading(true);
     const userId = await AsyncStorage.getItem("userId");
     if (!userId) {
       console.error("User ID not found in AsyncStorage");
+      setLoading(false);
       return;
     }
 
@@ -21,33 +25,31 @@ export default function ProfileHandleAccount() {
       const response = await requestGetUser(userId);
       if (response.status === 200) {
         const { fullName, profilePic } = response.data.data;
-        console.log("response: ", response.data)
         setProfileName(fullName);
-        setProfilePhoto(profilePic);
+        setProfilePhoto(profilePic); // Correção aplicada aqui
       } else {
         console.error("Failed to fetch user profile:", response.status);
       }
     } catch (error) {
       console.error("An error occurred while fetching user profile:", error);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
-    getUserToProfile();
-  }, []);
+    const unsubscribe = navigation.addListener("focus", () => {
+      getUserToProfile();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <AlertNotificationRoot theme={"light"}>
       <View style={stylesProfile.container}>
-        <View style={stylesProfile.boxProfile}>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignContent: "center",
-              flexDirection: "row",
-            }}
-          >
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" /> // Mostra o indicador de carregamento
+        ) : (
+          <View style={stylesProfile.boxProfile}>
             <Image
               source={
                 profilePhoto
@@ -79,12 +81,10 @@ export default function ProfileHandleAccount() {
               </Text>
             </View>
             <View style={stylesProfile.boxNotification}>
-              <View style={stylesProfile.boxColor}>
-                <Feather name="arrow-right" color={"#172B4D"} size={15} />
-              </View>
+              <Feather name="arrow-right" color={"#172B4D"} size={15} />
             </View>
           </View>
-        </View>
+        )}
       </View>
     </AlertNotificationRoot>
   );
