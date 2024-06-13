@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  ActivityIndicator,
 } from "react-native";
 import { AlertNotificationRoot, Toast } from "react-native-alert-notification";
 import { TextInput, RadioButton, Button, IconButton } from "react-native-paper";
@@ -22,8 +23,10 @@ import {
 } from "../services/api";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
+import { useTranslation } from "react-i18next";
 
 const ChangePersonalInfo = () => {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const [autoLocation, setAutoLocation] = useState(null);
   const [userData, setUserData] = useState({
@@ -33,78 +36,71 @@ const ChangePersonalInfo = () => {
     age: "",
     profilePic: null,
   });
+  const [loading, setLoading] = useState(true);
+  const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!initialDataLoaded) {
+      Promise.all([getUserInfo(), fetchLocation()])
+        .then(() => {
+          setLoading(false);
+          setInitialDataLoaded(true);
+        })
+        .catch((error) => {
+          console.error("Error loading initial data:", error);
+          Toast.show({
+            type: "error",
+            title: "Ops",
+            textBody: t("change"),
+          });
+          setLoading(false);
+        });
+    }
+  }, [initialDataLoaded]);
+
+  const getUserInfo = async () => {
+    const userId = await AsyncStorage.getItem("userId");
+    if (!userId) {
+      throw new Error("User ID not found in AsyncStorage");
+    }
+
+    const response = await requestGetUser(userId);
+    if (response.status === 200) {
+      const { fullName, gender, birthDate, profilePic } = response.data.data;
+      const [firstName, lastName] = fullName.split(" ");
+      const age = new Date().getFullYear() - new Date(birthDate).getFullYear();
+      setUserData({
+        firstName,
+        lastName,
+        gender: gender === "Male" ? "first" : "second",
+        age: age.toString(),
+        profilePic,
+      });
+    } else {
+      throw new Error(`Failed to fetch user info: ${response.status}`);
+    }
+  };
 
   const handleGoBack = () => {
     navigation.navigate("ProfileScreen");
   };
 
-  useEffect(() => {
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        Toast.hide();
-      }
-    );
-
-    getUserInfo();
-    fetchLocation();
-
-    return () => {
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-
-  const getUserInfo = async () => {
-    const userId = await AsyncStorage.getItem("userId");
-
-    console.log(userId);
-    if (!userId) {
-      console.error("User ID not found in AsyncStorage");
-      return;
-    }
-
-    try {
-      const response = await requestGetUser(userId);
-      if (response.status === 200) {
-        const { fullName, location, gender, birthDate, profilePic } =
-          response.data.data;
-        const [firstName, lastName] = fullName.split(" ");
-        const age =
-          new Date().getFullYear() - new Date(birthDate).getFullYear();
-
-        setUserData({
-          firstName,
-          lastName,
-          gender: gender === "Male" ? "first" : "second",
-          age: age.toString(),
-          profilePic,
-        });
-      } else {
-        console.error("Failed to fetch user info:", response.status);
-      }
-    } catch (error) {
-      console.error("An error occurred while fetching user info:", error);
-    }
-  };
-
   const fetchLocation = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
-      console.error("Permission to access location was denied");
-      return;
+      throw new Error("Permission to access location was denied");
     }
 
     const { coords } = await Location.getCurrentPositionAsync({});
     const { latitude, longitude } = coords;
-
     const response = await Location.reverseGeocodeAsync({
       latitude,
       longitude,
     });
 
-    for (let item of response) {
-      const address = ` ${item.region}, ${item.country}`;
-      setAutoLocation(address);
+    if (response.length > 0) {
+      const { region, country } = response[0];
+      setAutoLocation(`${region}, ${country}`);
     }
   };
 
@@ -140,47 +136,38 @@ const ChangePersonalInfo = () => {
   };
 
   const pickImage = async () => {
-    try {
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== "granted") {
-        console.error("Permission to access media library was denied");
-        return;
-      }
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      console.error("Permission to access media library was denied");
+      return;
+    }
 
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-      if (!result.cancelled) {
-        setUserData({ ...userData, profilePic: result.uri });
-        try {
-          const response = await changeProfilePic(result); // Chamar a função de atualização da imagem de perfil
-          if (response.status === 200) {
-            Toast.show({
-              type: ALERT_TYPE.SUCCESS,
-              title: "Success",
-              textBody: "Your profile picture has been updated successfully.",
-            });
-            // Atualizar opcionalmente a imagem de perfil do usuário no estado local ou contexto
-          } else {
-            console.error("Failed to update profile picture:", response.status);
-          }
-        } catch (error) {
-          console.error(
-            "An error occurred while updating profile picture:",
-            error
-          );
+    if (!result.canceled) {
+      setUserData({ ...userData, profilePic: result.uri });
+      try {
+        const response = await changeProfilePic(result);
+        if (response.status === 200) {
+          Toast.show({
+            type: "success",
+            title: "Success",
+            textBody: "Your profile picture has been updated successfully.",
+          });
+        } else {
+          console.error("Failed to update profile picture:", response.status);
         }
+      } catch (error) {
+        console.error(
+          "An error occurred while updating profile picture:",
+          error
+        );
       }
-    } catch (error) {
-      console.error(
-        "An error occurred while accessing media library permissions:",
-        error
-      );
     }
   };
 
@@ -188,94 +175,100 @@ const ChangePersonalInfo = () => {
     <>
       <SafeAreaView />
       <AlertNotificationRoot theme={"light"}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.containerAlpha}>
-            <View style={styles.containerBackButton}>
-              <TouchableOpacity onPress={handleGoBack}>
-                <IconButton icon={"arrow-left-thin"} size={30} />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.header}>
-              <Text style={styles.headerText}>Personal Info</Text>
-            </View>
-            <View style={styles.profilePicContainer}>
-              <Image
-                style={styles.profilePic}
-                source={
-                  userData.profilePic
-                    ? { uri: userData.profilePic }
-                    : profilePhoto
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={colors.primary} />
+          </View>
+        ) : (
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.containerAlpha}>
+              <View style={styles.containerBackButton}>
+                <TouchableOpacity onPress={handleGoBack}>
+                  <IconButton icon={"arrow-left-thin"} size={30} />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.header}>
+                <Text style={styles.headerText}>Personal Info</Text>
+              </View>
+              <View style={styles.profilePicContainer}>
+                <Image
+                  style={styles.profilePic}
+                  source={
+                    userData.profilePic
+                      ? { uri: userData.profilePic }
+                      : profilePhoto
+                  }
+                />
+                <Button
+                  icon="upload"
+                  mode="outlined"
+                  style={styles.uploadButton}
+                  onPress={pickImage}
+                >
+                  Upload Imagem
+                </Button>
+              </View>
+              <TextInput
+                label={"First Name"}
+                value={userData.firstName}
+                onChangeText={(text) =>
+                  setUserData({ ...userData, firstName: text })
                 }
+                keyboardType="default"
+                autoCapitalize="words"
+                mode="flat"
+                style={styles.input}
+              />
+              <TextInput
+                label={"Last Name"}
+                value={userData.lastName}
+                onChangeText={(text) =>
+                  setUserData({ ...userData, lastName: text })
+                }
+                keyboardType="default"
+                autoCapitalize="words"
+                mode="flat"
+                style={styles.input}
+              />
+              <TextInput
+                label={"Location"}
+                disabled
+                value={autoLocation}
+                keyboardType="default"
+                autoCapitalize="words"
+                mode="flat"
+                style={styles.input}
+              />
+              <RadioButton.Group
+                onValueChange={(value) =>
+                  setUserData({ ...userData, gender: value })
+                }
+                value={userData.gender}
+              >
+                <View style={styles.radioButtonContainer}>
+                  <RadioButton.Item label="Masculino" value="first" />
+                  <RadioButton.Item label="Feminino" value="second" />
+                </View>
+              </RadioButton.Group>
+              <TextInput
+                label={"Age"}
+                value={userData.age}
+                onChangeText={(text) => setUserData({ ...userData, age: text })}
+                keyboardType="numeric"
+                autoCapitalize="none"
+                mode="flat"
+                style={styles.input}
               />
               <Button
-                icon="upload"
-                mode="outlined"
-                style={styles.uploadButton}
-                onPress={pickImage}
+                mode="contained"
+                style={styles.saveButton}
+                onPress={handleSave}
               >
-                Upload Imagem
+                Salvar
               </Button>
             </View>
-            <TextInput
-              label={"First Name"}
-              value={userData.firstName}
-              onChangeText={(text) =>
-                setUserData({ ...userData, firstName: text })
-              }
-              keyboardType="default"
-              autoCapitalize="words"
-              mode="flat"
-              style={styles.input}
-            />
-            <TextInput
-              label={"Last Name"}
-              value={userData?.lastName}
-              onChangeText={(text) =>
-                setUserData({ ...userData, lastName: text })
-              }
-              keyboardType="default"
-              autoCapitalize="words"
-              mode="flat"
-              style={styles.input}
-            />
-            <TextInput
-              label={"Location"}
-              disabled
-              value={autoLocation}
-              keyboardType="default"
-              autoCapitalize="words"
-              mode="flat"
-              style={styles.input}
-            />
-            <RadioButton.Group
-              onValueChange={(value) =>
-                setUserData({ ...userData, gender: value })
-              }
-              value={userData.gender}
-            >
-              <View style={styles.radioButtonContainer}>
-                <RadioButton.Item label="Masculino" value="first" />
-                <RadioButton.Item label="Feminino" value="second" />
-              </View>
-            </RadioButton.Group>
-            <TextInput
-              label={"Age"}
-              value={userData.age}
-              onChangeText={(text) => setUserData({ ...userData, age: text })}
-              keyboardType="numeric"
-              autoCapitalize="none"
-              mode="flat"
-              style={styles.input}
-            />
-            <Button
-              mode="contained"
-              style={styles.saveButton}
-              onPress={handleSave}
-            >
-              Salvar
-            </Button>
-          </View>
-        </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
+        )}
       </AlertNotificationRoot>
     </>
   );
@@ -339,6 +332,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     padding: 12,
     marginTop: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.backGroundLight,
   },
 });
 
