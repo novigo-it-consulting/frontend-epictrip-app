@@ -73,6 +73,7 @@
   },
 
   "changePersonalInfo": {
-    "failedUpdate": "An error occurred while updating user information, please try again later."
+    "failedUpdate": "An error occurred while updating user information, please try again later.",
+    "updateSuccess": "Your personal information has been updated successfully."
   }
 }

@@ -188,10 +188,11 @@ const ChangePersonalInfo = () => {
       console.log("Dados Enviados PUT", response);
 
       if (response.status === 200) {
+        t("changePersonalInfo.failedUpdate")
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Success",
-          textBody: "Your personal information has been updated successfully.",
+          textBody: (t("changePersonalInfo.updateSuccess")),
         });
         setTimeout(() => {
           setLoading(false);
@@ -201,17 +202,18 @@ const ChangePersonalInfo = () => {
         console.error("Failed to update user info:", response.status);
         Toast.show({
           type: ALERT_TYPE.DANGER,
-          title: "Error",
+          title: "Ops",
           textBody: `Failed to update user info: ${response.status}`,
         });
         setLoading(false);
       }
     } catch (error) {
-      console.error("An error occurred while updating user info:", error);
+      if (error.response.data.message === 500)
+        t("changePersonalInfo.failedUpdate")
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        title: "Error",
-        textBody: `An error occurred while updating user info: ${error.message}`,
+        title: "Ops",
+        textBody:(t("changePersonalInfo.failedUpdate")),
       });
       setLoading(false);
     }
