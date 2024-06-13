@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  ActivityIndicator,
 } from "react-native";
 import {
   AlertNotificationRoot,
@@ -26,6 +27,7 @@ import {
 } from "../services/api";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
+import { useTranslation } from "react-i18next";
 
 const ChangePersonalInfo = () => {
   const navigation = useNavigation();
@@ -42,110 +44,85 @@ const ChangePersonalInfo = () => {
     phone: "",
     language: "",
   });
+  const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+  const { t } = useTranslation();
+
+  const defaultToastConfig = {
+    autoClose: 3000,
+    titleStyle: { fontSize: 16, fontWeight: "bold" },
+  };
+
+  const lightColors = {
+    label: "#000",
+    card: "#fcfcfc",
+    overlay: "#f0f0f0",
+    success: "#28a745",
+    danger: "rgba(255, 0, 0, 1)",
+    warning: "#ffc107",
+  };
+
+  useEffect(() => {
+    if (!initialDataLoaded) {
+      Promise.all([getUserInfo(), fetchLocation()])
+        .then(() => {
+          setLoading(false);
+          setInitialDataLoaded(true);
+        })
+        .catch((error) => {
+          console.error("Error loading initial data:", error);
+          Toast.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Ops",
+            textBody: t("change"),
+          });
+          setLoading(false);
+        });
+    }
+  }, [initialDataLoaded]);
+
+  const getUserInfo = async () => {
+    const userId = await AsyncStorage.getItem("userId");
+    if (!userId) {
+      throw new Error("User ID not found in AsyncStorage");
+    }
+
+    const response = await requestGetUser(userId);
+    if (response.status === 200) {
+      const { fullName, gender, birthDate, profilePic } = response.data.data;
+      const [firstName, lastName] = fullName.split(" ");
+      const age = new Date().getFullYear() - new Date(birthDate).getFullYear();
+      setUserData({
+        firstName,
+        lastName,
+        gender: gender === "Male" ? "first" : "second",
+        age: age.toString(),
+        profilePic,
+      });
+    } else {
+      throw new Error(`Failed to fetch user info: ${response.status}`);
+    }
+  };
 
   const handleGoBack = () => {
     navigation.navigate("ProfileScreen");
   };
 
-  useEffect(() => {
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        Toast.hide();
-      }
-    );
-
-    getUserInfo();
-    fetchLocation();
-
-    return () => {
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-
-  const getUserInfo = async () => {
-    const userId = await AsyncStorage.getItem("userId");
-
-    if (!userId) {
-      console.error("User ID not found in AsyncStorage");
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Error",
-        textBody: "User ID not found in AsyncStorage",
-      });
-      return;
-    }
-
-    try {
-      const response = await requestGetUser(userId);
-      console.log("Dados Recebido", response.data.data);
-      if (response.status === 200) {
-        const {
-          fullName,
-          gender,
-          birthDate,
-          email,
-          phone,
-          userRole,
-          language,
-          rental,
-        } = response.data.data;
-        const [firstName, lastName] = fullName.split(" ");
-        const age =
-          new Date().getFullYear() - new Date(birthDate).getFullYear();
-
-        setUserData({
-          firstName,
-          lastName,
-          gender: gender === "Male" ? "first" : "second",
-          age: age.toString(),
-          email,
-          userRole,
-          phone,
-          language,
-          rental,
-        });
-      } else {
-        console.error("Failed to fetch user info:", response.status);
-        Toast.show({
-          type: ALERT_TYPE.DANGER,
-          title: "Error",
-          textBody: `Failed to fetch user info: ${response.status}`,
-        });
-      }
-    } catch (error) {
-      console.error("An error occurred while fetching user info:", error);
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Error",
-        textBody: `An error occurred while fetching user info: ${error.message}`,
-      });
-    }
-  };
-
   const fetchLocation = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
-      console.error("Permission to access location was denied");
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Error",
-        textBody: "Permission to access location was denied",
-      });
-      return;
+      throw new Error("Permission to access location was denied");
     }
 
     const { coords } = await Location.getCurrentPositionAsync({});
     const { latitude, longitude } = coords;
-
     const response = await Location.reverseGeocodeAsync({
       latitude,
       longitude,
     });
 
-    for (let item of response) {
-      const address = ` ${item.region}, ${item.country}`;
-      setAutoLocation(address);
+    if (response.length > 0) {
+      const { region, country } = response[0];
+      setAutoLocation(`${region}, ${country}`);
     }
   };
 
@@ -185,10 +162,11 @@ const ChangePersonalInfo = () => {
       console.log("Dados Enviados PUT", response);
 
       if (response.status === 200) {
+        t("changePersonalInfo.failedUpdate");
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Success",
-          textBody: "Your personal information has been updated successfully.",
+          textBody: t("changePersonalInfo.updateSuccess"),
         });
         setTimeout(() => {
           setLoading(false);
@@ -198,98 +176,63 @@ const ChangePersonalInfo = () => {
         console.error("Failed to update user info:", response.status);
         Toast.show({
           type: ALERT_TYPE.DANGER,
-          title: "Error",
+          title: "Ops",
           textBody: `Failed to update user info: ${response.status}`,
         });
         setLoading(false);
       }
     } catch (error) {
-      console.error("An error occurred while updating user info:", error);
+      if (error.response.data.message === 500)
+        t("changePersonalInfo.failedUpdate");
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        title: "Error",
-        textBody: `An error occurred while updating user info: ${error.message}`,
+        title: "Ops",
+        textBody: t("changePersonalInfo.failedUpdate"),
       });
       setLoading(false);
     }
   };
 
   const pickImage = async () => {
-    try {
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== "granted") {
-        console.error("Permission to access media library was denied");
-        Toast.show({
-          type: ALERT_TYPE.DANGER,
-          title: "Error",
-          textBody: "Permission to access media library was denied",
-        });
-        return;
-      }
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      console.error("Permission to access media library was denied");
+      return;
+    }
 
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-      if (!result.cancelled) {
-        setUserData({ ...userData, profilePic: result.uri });
-        try {
-          const response = await changeProfilePic(result);
-          if (response.status === 200) {
-            Toast.show({
-              type: ALERT_TYPE.SUCCESS,
-              title: "Success",
-              textBody: "Your profile picture has been updated successfully.",
-            });
-          } else {
-            console.error("Failed to update profile picture:", response.status);
-            Toast.show({
-              type: ALERT_TYPE.DANGER,
-              title: "Error",
-              textBody: `Failed to update profile picture: ${response.status}`,
-            });
-          }
-        } catch (error) {
-          console.error(
-            "An error occurred while updating profile picture:",
-            error
-          );
+    if (!result.canceled) {
+      setUserData({ ...userData, profilePic: result.uri });
+      try {
+        const response = await changeProfilePic(result);
+        if (response.status === 200) {
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Success",
+            textBody: "Your profile picture has been updated successfully.",
+          });
+        } else {
+          console.error("Failed to update profile picture:", response.status);
           Toast.show({
             type: ALERT_TYPE.DANGER,
             title: "Error",
-            textBody: `An error occurred while updating profile picture: ${error.message}`,
+            textBody: `Failed to update profile picture: ${response.status}`,
           });
         }
+      } catch (error) {
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Error",
+          textBody: `An error occurred while updating profile picture: ${error.message}`,
+        });
       }
-    } catch (error) {
-      console.error(
-        "An error occurred while accessing media library permissions:",
-        error
-      );
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Error",
-        textBody: `An error occurred while accessing media library permissions: ${error.message}`,
-      });
     }
-  };
-
-  const defaultToastConfig = {
-    titleStyle: { fontSize: 16, fontWeight: "bold" },
-    textBodyStyle: { fontSize: 14 },
-  };
-
-  const lightColors = {
-    label: "#000",
-    card: "#fcfcfc",
-    overlay: "#f0f0f0",
-    success: "#28a745",
-    danger: "rgba(255, 0, 0, 1)",
-    warning: "#ffc107",
   };
 
   return (
@@ -300,95 +243,100 @@ const ChangePersonalInfo = () => {
         theme={"light"}
       >
         <SafeAreaView />
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.containerAlpha}>
-            <View style={styles.containerBackButton}>
-              <TouchableOpacity onPress={handleGoBack}>
-                <IconButton icon={"arrow-left-thin"} size={30} />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.header}>
-              <Text style={styles.headerText}>Personal Info</Text>
-            </View>
-            <View style={styles.profilePicContainer}>
-              <Image
-                style={styles.profilePic}
-                source={
-                  userData.profilePic
-                    ? { uri: userData.profilePic }
-                    : profilePhoto
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={colors.primary} />
+          </View>
+        ) : (
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.containerAlpha}>
+              <View style={styles.containerBackButton}>
+                <TouchableOpacity onPress={handleGoBack}>
+                  <IconButton icon={"arrow-left-thin"} size={30} />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.header}>
+                <Text style={styles.headerText}>Personal Info</Text>
+              </View>
+              <View style={styles.profilePicContainer}>
+                <Image
+                  style={styles.profilePic}
+                  source={
+                    userData.profilePic
+                      ? { uri: userData.profilePic }
+                      : profilePhoto
+                  }
+                />
+                <Button
+                  icon="upload"
+                  mode="outlined"
+                  style={styles.uploadButton}
+                  onPress={pickImage}
+                >
+                  Upload Imagem
+                </Button>
+              </View>
+              <TextInput
+                label={"First Name"}
+                value={userData.firstName}
+                onChangeText={(text) =>
+                  setUserData({ ...userData, firstName: text })
                 }
+                keyboardType="default"
+                autoCapitalize="words"
+                mode="flat"
+                style={styles.input}
+              />
+              <TextInput
+                label={"Last Name"}
+                value={userData.lastName}
+                onChangeText={(text) =>
+                  setUserData({ ...userData, lastName: text })
+                }
+                keyboardType="default"
+                autoCapitalize="words"
+                mode="flat"
+                style={styles.input}
+              />
+              <TextInput
+                label={"Location"}
+                disabled
+                value={autoLocation}
+                keyboardType="default"
+                autoCapitalize="words"
+                mode="flat"
+                style={styles.input}
+              />
+              <RadioButton.Group
+                onValueChange={(value) =>
+                  setUserData({ ...userData, gender: value })
+                }
+                value={userData.gender}
+              >
+                <View style={styles.radioButtonContainer}>
+                  <RadioButton.Item label="Masculino" value="first" />
+                  <RadioButton.Item label="Feminino" value="second" />
+                </View>
+              </RadioButton.Group>
+              <TextInput
+                label={"Age"}
+                value={userData.age}
+                onChangeText={(text) => setUserData({ ...userData, age: text })}
+                keyboardType="numeric"
+                autoCapitalize="none"
+                mode="flat"
+                style={styles.input}
               />
               <Button
-                icon="upload"
-                mode="outlined"
-                style={styles.uploadButton}
-                onPress={pickImage}
+                mode="contained"
+                style={styles.saveButton}
+                onPress={handleSave}
               >
-                Upload Imagem
+                Salvar
               </Button>
             </View>
-            <TextInput
-              label={"First Name"}
-              value={userData.firstName}
-              onChangeText={(text) =>
-                setUserData({ ...userData, firstName: text })
-              }
-              keyboardType="default"
-              autoCapitalize="words"
-              mode="flat"
-              style={styles.input}
-            />
-            <TextInput
-              label={"Last Name"}
-              value={userData?.lastName}
-              onChangeText={(text) =>
-                setUserData({ ...userData, lastName: text })
-              }
-              keyboardType="default"
-              autoCapitalize="words"
-              mode="flat"
-              style={styles.input}
-            />
-            <TextInput
-              label={"Location"}
-              disabled
-              value={autoLocation}
-              keyboardType="default"
-              autoCapitalize="words"
-              mode="flat"
-              style={styles.input}
-            />
-            <RadioButton.Group
-              onValueChange={(value) =>
-                setUserData({ ...userData, gender: value })
-              }
-              value={userData.gender}
-            >
-              <View style={styles.radioButtonContainer}>
-                <RadioButton.Item label="Masculino" value="first" />
-                <RadioButton.Item label="Feminino" value="second" />
-              </View>
-            </RadioButton.Group>
-            <TextInput
-              label={"Age"}
-              value={userData.age}
-              onChangeText={(text) => setUserData({ ...userData, age: text })}
-              keyboardType="numeric"
-              autoCapitalize="none"
-              mode="flat"
-              style={styles.input}
-            />
-            <Button
-              mode="contained"
-              style={styles.saveButton}
-              onPress={handleSave}
-              loading={loading}
-            >
-              Salvar
-            </Button>
-          </View>
-        </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
+        )}
       </AlertNotificationRoot>
     </>
   );
@@ -452,6 +400,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     padding: 12,
     marginTop: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.backGroundLight,
   },
 });
 

@@ -68,5 +68,14 @@
     "confirmPasswordLabel": "Confirmar Senha",
     "continueButton": "Continuar",
     "passwordsDoNotMatch": "As senhas não correspondem"
+  },
+  "profileHandleAccount": {
+    "errorUpdating": "Ocorreu um erro ao atualizar as informações do usuario, por favor tente novamente mais tarde."
+  },
+  "changePersonalInfo": {
+    "failedUpdate": "Ocorreu um erro ao atualizar as informações do usuário. Por favor tente novamente mais tarde.",
+    "updateSuccess": "Suas informações pessoais foram atualizadas com sucesso."
   }
 }
+
+
