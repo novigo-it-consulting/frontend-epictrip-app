@@ -6,15 +6,16 @@ import Feather from "react-native-vector-icons/Feather";
 import { Badge } from "react-native-paper";
 import SearchBarHome from "./SearchViewHome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SkeletonLoading from "expo-skeleton-loading";
 
 export default function ProfileAccount() {
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [profileName, setProfileName] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Mantenha sempre verdadeiro até o carregamento de dados
+
   const navigation = useNavigation();
 
   const getUserToProfile = async () => {
-    setLoading(true);
     const userId = await AsyncStorage.getItem("userId");
     if (!userId) {
       console.error("User ID not found in AsyncStorage");
@@ -42,67 +43,111 @@ export default function ProfileAccount() {
       getUserToProfile();
     });
     return unsubscribe;
-  }, [getUserToProfile]);
+  }, [navigation]);
+
+  if (loading) {
+    return (
+      <SkeletonLoading background={"#adadad"} highlight={"#ffffff"}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            padding: 20,
+          }}
+        >
+          <View
+            style={{
+              width: 48,
+              height: 48,
+              borderRadius: 24,
+              backgroundColor: "#adadad",
+            }}
+          />
+          <View style={{ flex: 1, marginLeft: 12 }}>
+            <View
+              style={{
+                backgroundColor: "#adadad",
+                height: 16,
+                marginBottom: 6,
+                borderRadius: 8,
+              }}
+            />
+            <View
+              style={{
+                backgroundColor: "#adadad",
+                height: 16,
+                borderRadius: 8,
+              }}
+            />
+          </View>
+          <View
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 25,
+              backgroundColor: "#adadad",
+            }}
+          />
+        </View>
+      </SkeletonLoading>
+    );
+  }
 
   return (
     <View style={stylesProfile.container}>
-      {loading ? (
-        <ActivityIndicator size="small" color="#0000ff" />
-      ) : (
-        <View style={stylesProfile.boxProfile}>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignContent: "center",
-              flexDirection: "row",
-            }}
-          >
-            <Image
-              source={
-                profilePhoto
-                  ? { uri: profilePhoto }
-                  : require("../../assets/profile/1.png")
-              }
-              width={48}
-              height={48}
-              borderRadius={"50%"}
-            />
-            <View style={stylesProfile.titleName}>
-              <Text
-                style={{ fontSize: 12, textAlign: "left", color: "#364764" }}
+      <View style={stylesProfile.boxProfile}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignContent: "center",
+            flexDirection: "row",
+          }}
+        >
+          <Image
+            source={
+              profilePhoto
+                ? { uri: profilePhoto }
+                : require("../../assets/profile/1.png")
+            }
+            width={48}
+            height={48}
+            borderRadius={"50%"}
+          />
+          <View style={stylesProfile.titleName}>
+            <Text style={{ fontSize: 12, textAlign: "left", color: "#364764" }}>
+              Olá,
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                textAlign: "left",
+                color: "#172B4D",
+                fontWeight: "bold",
+              }}
+            >
+              {profileName}
+            </Text>
+          </View>
+          <View style={stylesProfile.boxNotification}>
+            <View style={stylesProfile.boxColor}>
+              <Feather name="bell" color={"#172B4D"} size={15} />
+              <Badge
+                style={{ position: "absolute", top: 5, right: 5 }}
+                size={15}
               >
-                Olá,
-              </Text>
-              <Text
-                style={{
-                  fontSize: 16,
-                  textAlign: "left",
-                  color: "#172B4D",
-                  fontWeight: "bold",
-                }}
-              >
-                {profileName}
-              </Text>
-            </View>
-            <View style={stylesProfile.boxNotification}>
-              <View style={stylesProfile.boxColor}>
-                <Feather name="bell" color={"#172B4D"} size={15} />
-                <Badge
-                  style={{ position: "absolute", top: 5, right: 5 }}
-                  size={15}
-                >
-                  3
-                </Badge>
-              </View>
+                3
+              </Badge>
             </View>
           </View>
-          <SearchBarHome />
         </View>
-      )}
+        <SearchBarHome />
+      </View>
     </View>
   );
 }
+
+// Continue usando o seu StyleSheet existente
 
 const stylesProfile = StyleSheet.create({
   container: {

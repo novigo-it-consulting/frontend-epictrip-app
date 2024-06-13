@@ -47,7 +47,7 @@ export default function ProfileHandleAccount() {
     <AlertNotificationRoot theme={"light"}>
       <View style={stylesProfile.container}>
         {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" /> // Mostra o indicador de carregamento
+          <ActivityIndicator size="large" color="#0000ff" />
         ) : (
           <View style={stylesProfile.boxProfile}>
             <Image
