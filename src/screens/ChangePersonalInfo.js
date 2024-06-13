@@ -47,6 +47,20 @@ const ChangePersonalInfo = () => {
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   const { t } = useTranslation();
 
+  const defaultToastConfig = {
+    autoClose: 3000,
+    titleStyle: { fontSize: 16, fontWeight: "bold" },
+  };
+
+  const lightColors = {
+    label: "#000",
+    card: "#fcfcfc",
+    overlay: "#f0f0f0",
+    success: "#28a745",
+    danger: "rgba(255, 0, 0, 1)",
+    warning: "#ffc107",
+  };
+
   useEffect(() => {
     if (!initialDataLoaded) {
       Promise.all([getUserInfo(), fetchLocation()])
@@ -57,7 +71,7 @@ const ChangePersonalInfo = () => {
         .catch((error) => {
           console.error("Error loading initial data:", error);
           Toast.show({
-            type: "error",
+            type: ALERT_TYPE.DANGER,
             title: "Ops",
             textBody: t("change"),
           });
@@ -223,8 +237,12 @@ const ChangePersonalInfo = () => {
 
   return (
     <>
-      <SafeAreaView />
-      <AlertNotificationRoot theme={"light"}>
+      <AlertNotificationRoot
+        toastConfig={defaultToastConfig}
+        colors={[lightColors]}
+        theme={"light"}
+      >
+        <SafeAreaView />
         {loading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={colors.primary} />
