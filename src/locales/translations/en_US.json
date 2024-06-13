@@ -67,5 +67,13 @@
     "confirmPasswordLabel": "Confirm Password",
     "continueButton": "Continue",
     "passwordsDoNotMatch": "Passwords don't match"
+  },
+  "profileHandleAccount": {
+    "errorUpdate": "An error occurred while updating user information, please try again later."
+  },
+
+  "changePersonalInfo": {
+    "failedUpdate": "An error occurred while updating user information, please try again later.",
+    "updateSuccess": "Your personal information has been updated successfully."
   }
 }

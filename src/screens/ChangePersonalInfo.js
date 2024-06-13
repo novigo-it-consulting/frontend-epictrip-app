@@ -9,7 +9,11 @@ import {
   Keyboard,
   ActivityIndicator,
 } from "react-native";
-import { AlertNotificationRoot, Toast } from "react-native-alert-notification";
+import {
+  AlertNotificationRoot,
+  Toast,
+  ALERT_TYPE,
+} from "react-native-alert-notification";
 import { TextInput, RadioButton, Button, IconButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import profilePhoto from "../../assets/profile/100.png";
@@ -26,17 +30,20 @@ import * as Location from "expo-location";
 import { useTranslation } from "react-i18next";
 
 const ChangePersonalInfo = () => {
-  const { t } = useTranslation();
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
   const [autoLocation, setAutoLocation] = useState(null);
   const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
-    gender: "first",
-    age: "",
-    profilePic: null,
+    userRole: "",
+    email: "",
+    fullName: "",
+    documentNumber: "",
+    birthDate: "",
+    rental: "",
+    gender: "",
+    phone: "",
+    language: "",
   });
-  const [loading, setLoading] = useState(true);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
 
   useEffect(() => {
@@ -81,6 +88,8 @@ const ChangePersonalInfo = () => {
     }
   };
 
+  const { t } = useTranslation();
+
   const handleGoBack = () => {
     navigation.navigate("ProfileScreen");
   };
@@ -105,33 +114,69 @@ const ChangePersonalInfo = () => {
   };
 
   const handleSave = async () => {
+    setLoading(true);
     const userId = await AsyncStorage.getItem("userId");
     if (!userId) {
       console.error("User ID not found in AsyncStorage");
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: "User ID not found in AsyncStorage",
+      });
+      setLoading(false);
       return;
     }
 
+    // Calcula a data de nascimento a partir da idade fornecida
+    const birthDate = new Date();
+    birthDate.setFullYear(birthDate.getFullYear() - parseInt(userData.age));
+    const formattedBirthDate = birthDate.toISOString().split("T")[0]; // Formato YYYY-MM-DD
+
     const updatedData = {
       fullName: `${userData.firstName} ${userData.lastName}`,
-      location: userData.location,
       gender: userData.gender === "first" ? "Male" : "Female",
-      birthDate: new Date().getFullYear() - parseInt(userData.age),
+      birthDate: formattedBirthDate,
+      phone: userData.phone || "",
+      documentNumber: userData.documentNumber || "",
+      language: userData.language || "",
+      userRole: userData.userRole || "",
+      email: userData.email || "",
+      rental: userData.rental || "",
     };
 
     try {
-      const response = await requestUpdateUser(userId, updatedData); // Pass userId and updatedData
+      const response = await requestUpdateUser(userId, updatedData);
+      console.log("Dados Enviados PUT", response);
+
       if (response.status === 200) {
+        t("changePersonalInfo.failedUpdate");
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Success",
-          textBody: "Your personal information has been updated successfully.",
+          textBody: t("changePersonalInfo.updateSuccess"),
         });
-        navigation.navigate("ProfileScreen");
+        setTimeout(() => {
+          setLoading(false);
+          navigation.navigate("ProfileScreen");
+        }, 5000);
       } else {
         console.error("Failed to update user info:", response.status);
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Ops",
+          textBody: `Failed to update user info: ${response.status}`,
+        });
+        setLoading(false);
       }
     } catch (error) {
-      console.error("An error occurred while updating user info:", error);
+      if (error.response.data.message === 500)
+        t("changePersonalInfo.failedUpdate");
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Ops",
+        textBody: t("changePersonalInfo.failedUpdate"),
+      });
+      setLoading(false);
     }
   };
 
@@ -155,18 +200,24 @@ const ChangePersonalInfo = () => {
         const response = await changeProfilePic(result);
         if (response.status === 200) {
           Toast.show({
-            type: "success",
+            type: ALERT_TYPE.SUCCESS,
             title: "Success",
             textBody: "Your profile picture has been updated successfully.",
           });
         } else {
           console.error("Failed to update profile picture:", response.status);
+          Toast.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Error",
+            textBody: `Failed to update profile picture: ${response.status}`,
+          });
         }
       } catch (error) {
-        console.error(
-          "An error occurred while updating profile picture:",
-          error
-        );
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Error",
+          textBody: `An error occurred while updating profile picture: ${error.message}`,
+        });
       }
     }
   };
