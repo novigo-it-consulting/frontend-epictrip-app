@@ -69,11 +69,11 @@ const ChangePersonalInfo = () => {
           setInitialDataLoaded(true);
         })
         .catch((error) => {
-          console.error("Error loading initial data:", error);
+          console.error(error);
           Toast.show({
             type: ALERT_TYPE.DANGER,
             title: "Ops",
-            textBody: t("change"),
+            textBody: t("changePersonalInfo.loadingData"),
           });
           setLoading(false);
         });
@@ -83,7 +83,11 @@ const ChangePersonalInfo = () => {
   const getUserInfo = async () => {
     const userId = await AsyncStorage.getItem("userId");
     if (!userId) {
-      throw new Error("User ID not found in AsyncStorage");
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Ops",
+        textBody: t("User ID not found in AsyncStorage."),
+      });
     }
 
     const response = await requestGetUser(userId);
@@ -99,7 +103,11 @@ const ChangePersonalInfo = () => {
         profilePic,
       });
     } else {
-      throw new Error(`Failed to fetch user info: ${response.status}`);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Ops",
+        textBody: t("Failed to fetch user info."),
+      });
     }
   };
 
@@ -130,7 +138,6 @@ const ChangePersonalInfo = () => {
     setLoading(true);
     const userId = await AsyncStorage.getItem("userId");
     if (!userId) {
-      console.error("User ID not found in AsyncStorage");
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Error",
@@ -159,7 +166,6 @@ const ChangePersonalInfo = () => {
 
     try {
       const response = await requestUpdateUser(userId, updatedData);
-      console.log("Dados Enviados PUT", response);
 
       if (response.status === 200) {
         t("changePersonalInfo.failedUpdate");

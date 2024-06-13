@@ -74,7 +74,9 @@
   },
   "changePersonalInfo": {
     "failedUpdate": "Ocorreu um erro ao atualizar as informações do usuário. Por favor tente novamente mais tarde.",
-    "updateSuccess": "Suas informações pessoais foram atualizadas com sucesso."
+    "updateSuccess": "Suas informações pessoais foram atualizadas com sucesso.",
+    "failedUpdateUser": "Falha ao atualizar usuário.",
+    "loadingData": "Error loading initial data."
   }
 }
 
