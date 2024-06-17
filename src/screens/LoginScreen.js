@@ -31,7 +31,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from "@react-navigation/native";
 
 const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -87,14 +87,13 @@ const LoginScreen = ({ navigation }) => {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody:(t("loginScreen.errorBadPassword"))
+          textBody: t("loginScreen.errorBadPassword"),
         });
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody:
-          (t("loginScreen.genericError"))
+          textBody: t("loginScreen.genericError"),
         });
         console.error(error);
       }
@@ -104,9 +103,9 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const clearPassword = () => {
-    setValue('password', '');
+    setValue("password", "");
   };
-  
+
   useFocusEffect(
     React.useCallback(() => {
       clearPassword();
@@ -134,10 +133,28 @@ const LoginScreen = ({ navigation }) => {
     navigation.navigate("SignUp");
   };
 
+  const defaultToastConfig = {
+    autoClose: 3000,
+    titleStyle: { fontSize: 16, fontWeight: "bold" },
+  };
+
+  const lightColors = {
+    label: "#000",
+    card: "#fcfcfc",
+    overlay: "#f0f0f0",
+    success: "#28a745",
+    danger: "rgba(255, 0, 0, 1)",
+    warning: "#ffc107",
+  };
+
   return (
     <PaperProvider theme={theme}>
-      <SafeAreaView />
-      <AlertNotificationRoot>
+      <AlertNotificationRoot
+        toastConfig={defaultToastConfig}
+        colors={[lightColors]}
+        theme={"light"}
+      >
+        <SafeAreaView />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? null : null}
