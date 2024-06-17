@@ -86,7 +86,7 @@ const ChangePersonalInfo = () => {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
-        textBody: t("User ID not found in AsyncStorage."),
+        textBody: t("changePersonalInfo.notFoundAsyncStorage"),
       });
     }
 
@@ -106,7 +106,7 @@ const ChangePersonalInfo = () => {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
-        textBody: t("Failed to fetch user info."),
+        textBody: t("changePersonalInfo.failedUserInfo"),
       });
     }
   };
@@ -140,8 +140,8 @@ const ChangePersonalInfo = () => {
     if (!userId) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        title: "Error",
-        textBody: "User ID not found in AsyncStorage",
+        title: "Ops",
+        textBody: t("changePersonalInfo.notFoundAsyncStorage"),
       });
       setLoading(false);
       return;
@@ -179,11 +179,10 @@ const ChangePersonalInfo = () => {
           navigation.navigate("ProfileScreen");
         }, 5000);
       } else {
-        console.error("Failed to update user info:", response.status);
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: `Failed to update user info: ${response.status}`,
+          textBody: t("changePersonalInfo.failedUpdateUserInfo"),
         });
         setLoading(false);
       }
@@ -202,7 +201,7 @@ const ChangePersonalInfo = () => {
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      console.error("Permission to access media library was denied");
+      t("changePersonalInfo.permissionLibraryDenied");
       return;
     }
 
@@ -221,21 +220,20 @@ const ChangePersonalInfo = () => {
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Success",
-            textBody: "Your profile picture has been updated successfully.",
+            textBody: t("changePersonalInfo.pictureUpdate"),
           });
         } else {
-          console.error("Failed to update profile picture:", response.status);
           Toast.show({
             type: ALERT_TYPE.DANGER,
-            title: "Error",
-            textBody: `Failed to update profile picture: ${response.status}`,
+            title: "Ops",
+            textBody: t("changePersonalInfo.failedUpdatePicture"),
           });
         }
       } catch (error) {
         Toast.show({
           type: ALERT_TYPE.DANGER,
-          title: "Error",
-          textBody: `An error occurred while updating profile picture: ${error.message}`,
+          title: "Ops",
+          textBody:  t("changePersonalInfo.failedUpdatePicture"),
         });
       }
     }

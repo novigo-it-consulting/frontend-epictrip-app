@@ -74,6 +74,14 @@
 
   "changePersonalInfo": {
     "failedUpdate": "An error occurred while updating user information, please try again later.",
-    "updateSuccess": "Your personal information has been updated successfully."
+    "updateSuccess": "Your personal information has been updated successfully.",
+    "pictureUpdate": "Your profile picture has been updated successfully.",
+    "failedUpdateUser": "Failed to update user.",
+    "loadingData": "Error loading initial data.",
+    "failedUpdatePicture": "Failed to update profile picture",
+    "notFoundAsyncStorage": "User ID not found in AsyncStorage.",
+    "failedUserInfo": "Failed to fetch user info.",
+    "failedUpdateUserInfo": "Failed to update user info",
+    "permissionLibraryDenied": "Permission to access media library was denied"
   }
 }

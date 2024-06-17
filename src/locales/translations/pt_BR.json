@@ -76,7 +76,13 @@
     "failedUpdate": "Ocorreu um erro ao atualizar as informações do usuário. Por favor tente novamente mais tarde.",
     "updateSuccess": "Suas informações pessoais foram atualizadas com sucesso.",
     "failedUpdateUser": "Falha ao atualizar usuário.",
-    "loadingData": "Error loading initial data."
+    "loadingData": "Erro ao carregar os dados iniciais.",
+    "pictureUpdate": "Sua foto de perfil foi atualizada com sucesso.",
+    "failedUpdatePicture": "Falha ao atualizar a foto do perfil",
+    "notFoundAsyncStorage": "ID do usuário não encontrado no AsyncStorage.",
+    "failedUserInfo": "Falha ao buscar informações do usuário.",
+     "failedUpdateUserInfo": "Falha ao atualizar as informações do usuário",
+     "permissionLibraryDenied": "A permissão para acessar a biblioteca de mídia foi negada"
   }
 }
 
