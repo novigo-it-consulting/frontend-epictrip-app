@@ -9,6 +9,7 @@ import {
   AlertNotificationRoot,
 } from "react-native-alert-notification";
 import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 export default function ProfileHandleAccount(alert) {
   const [profileName, setProfileName] = useState("");

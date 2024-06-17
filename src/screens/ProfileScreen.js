@@ -13,6 +13,7 @@ import { getDatabase, ref, set } from "firebase/database";
 import app from "../firebase";
 import { requestGetUser } from "../services/api";
 import colors from "../colors";
+import { useTranslation } from "react-i18next";
 import ProfileHandleAccount from "../components/ProfileHandleAccount";
 import ProfileHandleBooking from "../components/ProfileHandleBooking";
 import ProfileHandleSettingsPassword from "../components/ProfileHandleSettingsPassword";
@@ -26,6 +27,8 @@ const ProfileScreen = () => {
     useState("Localização....");
   const [locationServicesEnabled, setLocationServicesEnabled] = useState(false);
   const navigation = useNavigation();
+
+  const { t } = useTranslation();
 
   const handlePress = () => {
     navigation.navigate("ChangePersonalInfo");
