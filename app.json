@@ -2,7 +2,7 @@
   "expo": {
     "name": "Epic Trip",
     "slug": "epic-trip",
-    "version": "1.5.0",
+    "version": "1.4.6",
     "orientation": "portrait",
     "icon": "./assets/img/icon.png",
     "userInterfaceStyle": "#FFF",
@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "app.myepictrip",
-      "buildNumber": "8",
+      "buildNumber": "111",
       "entitlements": {
         "aps-environment": "production"
       }
@@ -56,7 +56,7 @@
           },
           "locationAlwaysPermission": {
             "ios": {
-              "purpose": "Allow Epic Trip to use your photo library."
+              "purpose": "Allow Epic Trip to use your location."
             }
           }
         }
@@ -64,7 +64,7 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "The app accesses your photos to let you share them with your friends."
+          "photosPermission": "Allow Epic Trip to use your photo library."
         }
       ]
     ],

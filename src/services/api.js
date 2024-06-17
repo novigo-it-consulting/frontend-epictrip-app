@@ -89,14 +89,21 @@ export const requestGetUser = async (userId) => {
 
 export const changeProfilePic = async (file) => {
   try {
+    console.log("FILE: ", file)
     const headers = {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
     };
 
+    const selectedFile = file.assets[0];
+
     // Criar um objeto FormData para enviar a imagem
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", {
+      uri: selectedFile.uri, // A URI do arquivo
+      type: selectedFile.mimeType, // O tipo do arquivo
+      name: selectedFile.fileName // Nome do arquivo
+    });
 
     const response = await axios.post(
       `${BASE_URL}/users/profilepic`,
@@ -105,6 +112,7 @@ export const changeProfilePic = async (file) => {
         headers,
       }
     );
+    console.log("RESPONSE API: ", response)
     return response;
   } catch (error) {
     throw error;

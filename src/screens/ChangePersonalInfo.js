@@ -31,18 +31,14 @@ import { useTranslation } from "react-i18next";
 
 const ChangePersonalInfo = () => {
   const navigation = useNavigation();
-  const [loading, setLoading] = useState(false);
   const [autoLocation, setAutoLocation] = useState(null);
+  const [profilePhoto, setProfilePhoto] = useState(null);
   const [userData, setUserData] = useState({
-    userRole: "",
-    email: "",
-    fullName: "",
-    documentNumber: "",
-    birthDate: "",
-    rental: "",
-    gender: "",
-    phone: "",
-    language: "",
+    firstName: "",
+    lastName: "",
+    gender: "first",
+    age: "",
+    profilePic: null,
   });
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   const { t } = useTranslation();
@@ -80,45 +76,84 @@ const ChangePersonalInfo = () => {
     }
   }, [initialDataLoaded]);
 
-  const getUserInfo = async () => {
-    const userId = await AsyncStorage.getItem("userId");
-    if (!userId) {
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Ops",
-        textBody: t("changePersonalInfo.notFoundAsyncStorage"),
-      });
-    }
 
-    const response = await requestGetUser(userId);
-    if (response.status === 200) {
-      const { fullName, gender, birthDate, profilePic } = response.data.data;
-      const [firstName, lastName] = fullName.split(" ");
-      const age = new Date().getFullYear() - new Date(birthDate).getFullYear();
-      setUserData({
-        firstName,
-        lastName,
-        gender: gender === "Male" ? "first" : "second",
-        age: age.toString(),
-        profilePic,
-      });
-    } else {
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Ops",
-        textBody: t("changePersonalInfo.failedUserInfo"),
-      });
-    }
-  };
+  const [loading, setLoading] = useState(true);
 
   const handleGoBack = () => {
     navigation.navigate("ProfileScreen");
   };
 
+  const getUserInfo = async () => {
+    setLoading(true);
+    const userId = await AsyncStorage.getItem("userId");
+
+    if (!userId) {
+      console.error("User ID not found in AsyncStorage");
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: "User ID not found in AsyncStorage",
+      });
+      return;
+    }
+
+    try {
+      const response = await requestGetUser(userId);
+      if (response.status === 200) {
+        const { profilePic } = response.data.data;
+        setProfilePhoto(profilePic);
+        const {
+          fullName,
+          gender,
+          birthDate,
+          email,
+          phone,
+          userRole,
+          language,
+          rental,
+        } = response.data.data;
+        const [firstName, lastName] = fullName.split(" ");
+
+        const age =
+          new Date().getFullYear() - new Date(birthDate).getFullYear();
+
+        setUserData({
+          firstName,
+          lastName,
+          gender: gender === "Male" ? "first" : "second",
+          age: age.toString(),
+          email,
+          userRole,
+          phone,
+          language,
+          rental,
+        });
+        fetchLocation();
+      } else {
+        console.error("Failed to fetch user info:", response.status);
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Error",
+          textBody: `Failed to fetch user info: ${response.status}`,
+        });
+      }
+    } catch (error) {
+      console.error("An error occurred while fetching user info:", error);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: `An error occurred while fetching user info: ${error.message}`,
+      });
+      setLoading(false);
+    }
+  };
+
   const fetchLocation = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
-      throw new Error("Permission to access location was denied");
+      console.error("Permission to access location was denied");
+      setLoading(false);
+      return;
     }
 
     const { coords } = await Location.getCurrentPositionAsync({});
@@ -132,6 +167,7 @@ const ChangePersonalInfo = () => {
       const { region, country } = response[0];
       setAutoLocation(`${region}, ${country}`);
     }
+    setLoading(false);
   };
 
   const handleSave = async () => {
@@ -212,40 +248,60 @@ const ChangePersonalInfo = () => {
       quality: 1,
     });
 
-    if (!result.canceled) {
-      setUserData({ ...userData, profilePic: result.uri });
-      try {
-        const response = await changeProfilePic(result);
-        if (response.status === 200) {
-          Toast.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: "Success",
-            textBody: t("changePersonalInfo.pictureUpdate"),
-          });
-        } else {
+      if (!result.canceled) {
+        setLoading(true);
+        setUserData({ ...userData, profilePic: result.uri });
+        try {
+          const response = await changeProfilePic(result);
+          if (response.status === 200) {
+            Toast.show({
+              type: ALERT_TYPE.SUCCESS,
+              title: "Success",
+              textBody: "Your profile picture has been updated successfully.",
+            });
+            setTimeout(() => {
+              setLoading(false);
+            }, 4000);
+          } else {
+            console.error("Failed to update profile picture:", response.status);
+            Toast.show({
+              type: ALERT_TYPE.DANGER,
+              title: "Error",
+              textBody: `Failed to update profile picture: ${response.status}`,
+            });
+          }
+        } catch (error) {
+          console.error(
+            "An error occurred while updating profile picture:",
+            error
+          );
           Toast.show({
             type: ALERT_TYPE.DANGER,
             title: "Ops",
             textBody: t("changePersonalInfo.failedUpdatePicture"),
           });
         }
-      } catch (error) {
-        Toast.show({
-          type: ALERT_TYPE.DANGER,
-          title: "Ops",
-          textBody:  t("changePersonalInfo.failedUpdatePicture"),
-        });
+      } 
+    };
+
+  useEffect(() => {
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        Toast.hide();
       }
-    }
-  };
+    );
+
+    getUserInfo();
+
+    return () => {
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   return (
     <>
-      <AlertNotificationRoot
-        toastConfig={defaultToastConfig}
-        colors={[lightColors]}
-        theme={"light"}
-      >
+      <AlertNotificationRoot theme={"light"}>
         <SafeAreaView />
         {loading ? (
           <View style={styles.loadingContainer}>
@@ -266,9 +322,9 @@ const ChangePersonalInfo = () => {
                 <Image
                   style={styles.profilePic}
                   source={
-                    userData.profilePic
-                      ? { uri: userData.profilePic }
-                      : profilePhoto
+                    profilePhoto
+                      ? { uri: profilePhoto }
+                      : require("../../assets/profile/1.png")
                   }
                 />
                 <Button
@@ -345,7 +401,6 @@ const ChangePersonalInfo = () => {
     </>
   );
 };
-
 const styles = StyleSheet.create({
   containerAlpha: {
     justifyContent: "flex-start",
