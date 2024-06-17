@@ -3,7 +3,11 @@ import { StyleSheet, View, Text, Image, ActivityIndicator } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { requestGetUser } from "../services/api";
-import { ALERT_TYPE, Toast, AlertNotificationRoot } from "react-native-alert-notification";
+import {
+  ALERT_TYPE,
+  Toast,
+  AlertNotificationRoot,
+} from "react-native-alert-notification";
 import { useNavigation } from "@react-navigation/native";
 
 export default function ProfileHandleAccount(alert) {
@@ -33,13 +37,7 @@ export default function ProfileHandleAccount(alert) {
         console.error("Failed to fetch user profile:", response.status);
       }
     } catch (error) {
-      if (error.response.data.message === 500) {
-        Toast.show({
-          type: ALERT_TYPE.DANGER,
-          title: "Ops",
-          textBody: t("profileHandleAccount.errorUpdating"),
-        });
-      }
+      console.error("An error occurred while fetching user profile:", error);
     }
     setLoading(false);
   };
