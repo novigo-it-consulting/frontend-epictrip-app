@@ -70,17 +70,14 @@ const LoginScreen = ({ navigation }) => {
 
       if (response.status === 200) {
         const userId = response.data.userId;
+        await AsyncStorage.setItem("token", response.data.token);
+
         if (userId) {
           await AsyncStorage.setItem("userId", userId);
-          const storedUserId = await AsyncStorage.getItem("userId");
-          console.log("Stored userId:", storedUserId);
+
           navigation.navigate("Home");
           return;
-        } else {
-          console.error("userId não encontrado no response.data");
         }
-      } else {
-        throw new Error("Erro ao efetuar login. Por favor, tente novamente.");
       }
     } catch (error) {
       if (error.response.data.message === "WRONG PASSWORD") {
