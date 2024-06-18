@@ -4,15 +4,23 @@ import Feather from "react-native-vector-icons/Feather";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { requestGetUser } from "../services/api";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import colors from "../colors";
+import { useTranslation } from "react-i18next";
 
 export default function ProfileHandleBooking() {
   const [bookingNumber, setBookingNumber] = useState("");
   const [profilePhoto, setProfilePhoto] = useState(null);
 
+  const { t } = useTranslation();
+
   const getUserToProfile = async () => {
     const userId = await AsyncStorage.getItem("userId");
     if (!userId) {
-      console.error("User ID not found in AsyncStorage");
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Ops",
+        textBody: t("profileHandleBooking.errorUserID"),
+      });
       return;
     }
 
@@ -53,11 +61,24 @@ export default function ProfileHandleBooking() {
                 style={{
                   fontSize: 14,
                   textAlign: "left",
-                  color: "#172B4D",
-                  fontWeight: "light",
+                  color: colors.primary,
+                  fontWeight: "bold",
+                  opacity: 0.8,
                 }}
               >
-                {bookingNumber || "Carregando..."}
+                {bookingNumber || "..."}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 14,
+                  textAlign: "left",
+                  color: "#000",
+                  fontWeight: "light",
+                  marginTop: 5,
+                  opacity: 0.6,
+                }}
+              >
+                {t("profileHandleBooking.bookingInformation")}
               </Text>
             </View>
             <View style={stylesProfile.boxNotification}>

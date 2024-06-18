@@ -190,7 +190,7 @@ const ProfileScreen = () => {
             }}
           >
             <Text style={{ fontSize: 14, opacity: 0.6, marginBottom: 12 }}>
-              Booking Number
+              Sua Reserva
             </Text>
           </View>
           <TouchableOpacity
