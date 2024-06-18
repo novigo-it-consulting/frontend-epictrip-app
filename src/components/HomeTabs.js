@@ -28,7 +28,7 @@ const HomeTabs = () => {
           shadowRadius: 4,
           shadowOpacity: 1,
         },
-        tabBarInactiveTintColor: "#DFE1E5",
+        tabBarInactiveTintColor: "#696969",
       }}
     >
       <Tab.Screen
