@@ -33,10 +33,10 @@
     "errorMessage": "Error validating the code. Please try again."
   },
   "forgetPasswordScreen": {
-    "title": "Enter your Email",
-    "subTitle": "Enter the email address of your Epic Trip account",
-    "passwordLabel": "New Password",
+    "title": "Set New Password",
+    "subTitle": "Type in your Epic Trip account email address",
     "emailLabel": "Email",
+    "passwordLabel": "New Password",
     "confirmPasswordLabel": "Confirm Password",
     "continueButton": "Continue",
     "passwordsDoNotMatch": "Passwords do not match",
@@ -128,5 +128,8 @@
     "buttonUploadImage": "Upload Image",
     "personalInfo": "Personal Info",
     "errorEmptyField": "Please fill out all required fields."
+  },
+  "popularEvents": {
+    "events": "Popular Events"
   }
 }
