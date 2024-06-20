@@ -7,10 +7,12 @@ import SettingsScreen from "../screens/ProfileScreen";
 import ScheduleScreen from "../screens/ScheduleScreen";
 import RequestsScreen from "../screens/RequestsScreen";
 import GroupUsersScreen from "../screens/GroupUsersScreen";
+import { useTranslation } from "react-i18next";
 
 const Tab = createBottomTabNavigator();
 
 const HomeTabs = () => {
+  const { t } = useTranslation();
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -35,7 +37,7 @@ const HomeTabs = () => {
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarLabel: "Home",
+          tabBarLabel: t("homeTabs.homeButton"),
           tabBarIcon: ({ color }) => (
             <Feather name="home" color={color} size={20} />
           ),
@@ -45,7 +47,7 @@ const HomeTabs = () => {
         name="GroupUsersScreen"
         component={GroupUsersScreen}
         options={{
-          tabBarLabel: "Groups",
+          tabBarLabel: t("homeTabs.groupsButton"),
           tabBarIcon: ({ color }) => (
             <Feather name="users" color={color} size={20} />
           ),
@@ -55,7 +57,7 @@ const HomeTabs = () => {
         name="RequestsScreen"
         component={RequestsScreen}
         options={{
-          tabBarLabel: "Requests",
+          tabBarLabel: t("homeTabs.requestsButton"),
           tabBarIcon: ({ color }) => (
             <Feather name="bell" color={color} size={20} />
           ),
@@ -65,7 +67,7 @@ const HomeTabs = () => {
         name="ScheduleScreen"
         component={ScheduleScreen}
         options={{
-          tabBarLabel: "Schedule",
+          tabBarLabel: t("homeTabs.scheduleButton"),
           tabBarIcon: ({ color }) => (
             <Feather name="calendar" color={color} size={20} />
           ),
@@ -75,7 +77,7 @@ const HomeTabs = () => {
         name="ProfileScreen"
         component={SettingsScreen}
         options={{
-          tabBarLabel: "Profile",
+          tabBarLabel: t("homeTabs.profileButton"),
           tabBarIcon: ({ color }) => (
             <Feather name="user" color={color} size={20} />
           ),

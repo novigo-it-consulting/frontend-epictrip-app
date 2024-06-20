@@ -3,6 +3,13 @@
     "title": "Tela Inicial",
     "logoutButton": "Sair"
   },
+  "homeTabs": {
+    "homeButton": "Início", 
+    "groupsButton": "Grupos", 
+    "requestsButton": "Solicitações", 
+    "scheduleButton": "Agenda", 
+    "profileButton": "Perfil"
+  }, 
   "loginScreen": {
     "title": "Login",
     "emailLabel": "E-mail",
@@ -11,10 +18,9 @@
     "forgotPassword": "Esqueceu a senha?",
     "noAccount": "Não tem uma conta?",
     "signUp": "Cadastre-se",
-   "invalidEmailAdress": "E-mail inválido",
-   "errorBadPassword": "Usuário ou senha inválidos",
-   "genericError": "Erro ao efetuar login. Por favor, tente novamente mais tarde."
-
+    "invalidEmailAdress": "E-mail inválido",
+    "errorBadPassword": "Usuário ou senha inválidos",
+    "genericError": "Erro ao efetuar login. Por favor, tente novamente mais tarde."
   },
   "enterCode": {
     "title": "Digite seu código",
@@ -62,6 +68,32 @@
       "portuguese": "Português"
     }
   },
+  "profileScreen": {
+    "profileTitle": "Perfil",
+    "subTitleAccount": "Conta",
+    "subTitleBooking": "Reserva",
+    "errorProfileScreenGetUserInfo": "Aconteceu um erro ao carregar as suas informações",
+    "subuTitleSettings": "Configurações"
+  }, 
+  "profileHandleChangePassword": {
+   "titleChangePassword": "Mudar senha"
+  }, 
+  "profileHandleLogout": {
+   "titleHandleLogout": "Sair"
+  }, 
+  "profileHandleAccount": {
+   "titleHandleAccount": "Mudar suas informações pessoas.",
+   "errorUpdating": "Ocorreu um erro ao atualizar as informações do usuario, por favor tente novamente mais tarde."
+  }, 
+  "profileHandleHandlePayment": {
+   "titlePayment": "Pagamento"
+  }, 
+  "profileHandleChangeRewards": {
+   "titleRewards": "Recompensas"
+  }, 
+  "profileHandleSettingsLanguage": {
+   "titleLanguage": "Linguagem"
+  }, 
   "setNewPasswordScreen": {
     "title": "Defina sua senha nova",
     "passwordLabel": "Senha",
@@ -69,12 +101,11 @@
     "continueButton": "Continuar",
     "passwordsDoNotMatch": "As senhas não correspondem"
   },
-  "profileHandleAccount": {
-    "errorUpdating": "Ocorreu um erro ao atualizar as informações do usuario, por favor tente novamente mais tarde."
-  },
   "profileHandleBooking": {
     "errorUserID": "Falha ao carregar ID de usuário",
-    "bookingInformation": "Informações da sua reserva"
+    "bookingInformation": "Informações da sua reserva",
+    "errorProfileScreenGetUserInfo": "Aconteceu um erro ao carregar as suas informações",
+    "loadingBookingNumber": "Carregando..."
   },
   "changePersonalInfo": {
     "failedUpdate": "Ocorreu um erro ao atualizar as informações do usuário. Por favor tente novamente mais tarde.",

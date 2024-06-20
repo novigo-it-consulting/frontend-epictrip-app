@@ -75,7 +75,7 @@ export default function ProfileHandleAccount(alert) {
                   fontWeight: "bold",
                 }}
               >
-                {profileName || "Nome do Usuário"}
+                {profileName || "Falha ao carregar..."}
               </Text>
               <Text
                 style={{
@@ -85,7 +85,7 @@ export default function ProfileHandleAccount(alert) {
                   marginTop: 6,
                 }}
               >
-                Change your personal info
+                {t("profileHandleAccount.titleHandleAccount")}
               </Text>
             </View>
             <View style={stylesProfile.boxNotification}>
