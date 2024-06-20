@@ -306,7 +306,7 @@ const ChangePersonalInfo = () => {
                 </TouchableOpacity>
               </View>
               <View style={styles.header}>
-                <Text style={styles.headerText}>Personal Info</Text>
+                <Text style={styles.headerText}>{t("changePersonalInfo.personalInfo")}</Text>
               </View>
               <View style={styles.profilePicContainer}>
                 <Image
@@ -349,7 +349,7 @@ const ChangePersonalInfo = () => {
                 style={styles.input}
               />
               <TextInput
-                label={"Location"}
+                label={t("changePersonalInfo.labelLocation")}
                 disabled
                 value={autoLocation}
                 keyboardType="default"
@@ -375,7 +375,7 @@ const ChangePersonalInfo = () => {
                 </View>
               </RadioButton.Group>
               <TextInput
-                label={"Age"}
+                label={t("changePersonalInfo.labelAge")}
                 value={userData.age}
                 onChangeText={(text) => setUserData({ ...userData, age: text })}
                 keyboardType="numeric"

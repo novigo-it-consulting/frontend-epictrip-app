@@ -126,7 +126,8 @@
     "labelLastName": "Sobrenome",
     "labelLocation": "Localização Atual",
     "labelAge": "Idade",
-    "buttonUploadImage": "Carregar foto"
+    "buttonUploadImage": "Carregar foto",
+    "personalInfo": "Informações Pessoais "
   }
 }
 

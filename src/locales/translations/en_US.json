@@ -125,6 +125,7 @@
     "labelLastName": "Last Name",
     "labelLocation": "Current Location",
     "labelAge": "Age",
-    "buttonUploadImage": "Upload Photo"
+    "buttonUploadImage": "Upload Image",
+    "personalInfo": "Personal Info"
   }
 }
