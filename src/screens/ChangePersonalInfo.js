@@ -153,6 +153,16 @@ const ChangePersonalInfo = () => {
   };
 
   const handleSave = async () => {
+    if (!userData.firstName || !userData.lastName || !userData.age) {
+      Toast.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Atenção",
+        textBody: t("changePersonalInfo.errorEmptyField"),
+      });
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     const userId = await AsyncStorage.getItem("userId");
     if (!userId) {
@@ -165,10 +175,9 @@ const ChangePersonalInfo = () => {
       return;
     }
 
-    // Calcula a data de nascimento a partir da idade fornecida
     const birthDate = new Date();
     birthDate.setFullYear(birthDate.getFullYear() - parseInt(userData.age));
-    const formattedBirthDate = birthDate.toISOString().split("T")[0]; // Formato YYYY-MM-DD
+    const formattedBirthDate = birthDate.toISOString().split("T")[0];
 
     const updatedData = {
       fullName: `${userData.firstName} ${userData.lastName}`,
@@ -204,8 +213,6 @@ const ChangePersonalInfo = () => {
         setLoading(false);
       }
     } catch (error) {
-      if (error.response.data.message === 500)
-        t("changePersonalInfo.failedUpdate");
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
@@ -275,9 +282,26 @@ const ChangePersonalInfo = () => {
     };
   }, []);
 
+  const defaultToastConfig = {
+    autoClose: 3000,
+    titleStyle: { fontSize: 16, fontWeight: "bold" },
+  };
+
+  const lightColors = {
+    label: "#000",
+    card: "#fcfcfc",
+    overlay: "#f0f0f0",
+    success: "#28a745",
+    danger: "rgba(255, 0, 0, 1)",
+    warning: "#ffc107",
+  };
   return (
     <>
-      <AlertNotificationRoot theme={"light"}>
+      <AlertNotificationRoot
+        toastConfig={defaultToastConfig}
+        colors={[lightColors]}
+        theme={"light"}
+      >
         <SafeAreaView />
         {loading ? (
           <View style={styles.loadingContainer}>
