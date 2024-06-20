@@ -7,13 +7,15 @@ import { Badge } from "react-native-paper";
 import SearchBarHome from "./SearchViewHome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SkeletonLoading from "expo-skeleton-loading";
+import { useTranslation } from "react-i18next";
 
 export default function ProfileAccount() {
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [profileName, setProfileName] = useState("");
   const [loading, setLoading] = useState(true);
   const [imageLoading, setImageLoading] = useState(true);
-
+  
+  const { t } = useTranslation();
   const navigation = useNavigation();
 
   const getUserToProfile = async () => {
@@ -133,7 +135,7 @@ export default function ProfileAccount() {
           />
           <View style={stylesProfile.titleName}>
             <Text style={{ fontSize: 12, textAlign: "left", color: "#364764" }}>
-              Olá,
+             {t("profileAccount.welcome")}
             </Text>
             <Text
               style={{

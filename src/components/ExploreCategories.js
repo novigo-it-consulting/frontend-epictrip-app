@@ -3,15 +3,19 @@ import { View, Text, StyleSheet, Dimensions, FlatList } from "react-native";
 import ListItem from "./ListItem";
 import { sampleData } from "../data/sampleData";
 import { useSharedValue } from "react-native-reanimated";
+import { useTranslation } from "react-i18next";
+
 const ExploreCategories = () => {
   const scrollX = useSharedValue(0);
   const onScroll = (e) => {
     scrollX.value = e.nativeEvent.contentOffset.x;
   };
+  const { t } = useTranslation();
+
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titlePage}>Explore categories</Text>
+      <Text style={styles.titlePage}>{t("exploreCategories.categories")}</Text>
       <FlatList
         data={sampleData}
         horizontal

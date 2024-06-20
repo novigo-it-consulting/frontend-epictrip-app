@@ -131,6 +131,15 @@
   },
   "popularEvents": {
     "events": "Eventos Populares"
+  },
+  "exploreCategories": {
+    "categories": "Explorar Categorias"
+  },
+  "searchViewHome": {
+    "searchEvents": "Digite por Disney, Comida ou Ingressos"
+  }, 
+  "profileAccount": {
+    "welcome": "Olá,"
   }
 }
 

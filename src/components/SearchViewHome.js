@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-
 import { Searchbar } from "react-native-paper";
+import { useTranslation } from "react-i18next";
 
 const SearchBarHome = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const { t } = useTranslation();
 
   return (
     <Searchbar
@@ -13,7 +14,7 @@ const SearchBarHome = () => {
         borderRadius: 12,
         marginTop: 30,
       }}
-      placeholder="Try Disney, Food or Tickets"
+      placeholder={t("searchViewHome.searchEvents")}
       onChangeText={setSearchQuery}
       value={searchQuery}
       clearIcon

@@ -130,6 +130,15 @@
   },
   "popularEvents": {
     "events": "Popular Events"
+  },
+  "exploreCategories": {
+    "categories": "Explore Categories"
+  },
+  "searchViewHome": {
+    "searchEvents": "Try Disney, Food or Tickets"
+  }, 
+  "profileAccount": {
+    "welcome": "Hello,"
   }
 
 
