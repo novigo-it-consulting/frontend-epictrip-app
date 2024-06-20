@@ -127,7 +127,8 @@
     "labelLocation": "Localização Atual",
     "labelAge": "Idade",
     "buttonUploadImage": "Carregar foto",
-    "personalInfo": "Informações Pessoais"
+    "personalInfo": "Informações Pessoais",
+    "errorEmptyField": "Por favor, não permitido campos vazios."
   }
 }
 

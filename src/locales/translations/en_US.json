@@ -126,6 +126,7 @@
     "labelLocation": "Current Location",
     "labelAge": "Age",
     "buttonUploadImage": "Upload Image",
-    "personalInfo": "Personal Info"
+    "personalInfo": "Personal Info",
+    "errorEmptyField": "Please fill out all required fields."
   }
 }
