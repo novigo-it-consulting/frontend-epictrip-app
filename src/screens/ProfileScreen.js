@@ -20,6 +20,7 @@ import ProfileHandleSettingsPassword from "../components/ProfileHandleSettingsPa
 import ProfileHandleSettingsPayment from "../components/ProfileHandleSettingsPayment";
 import ProfileHandleSettingsRewards from "../components/ProfileHandleSettingsRewards";
 import ProfileHandleSettingsLanguage from "../components/ProfileHandleSettingsLanguage";
+import ProfileHandleLogout from "../components/ProfileHandleLogout.js";
 
 const ProfileScreen = () => {
   const [errorMsg, setErrorMsg] = useState(null);
@@ -35,6 +36,9 @@ const ProfileScreen = () => {
   };
   const handlePressEmBuild = () => {
     navigation.navigate("EmConstrucaoScreen");
+  };
+  const handlePressChangePassword = () => {
+    navigation.navigate("FogotPassword");
   };
 
   const getUserToProfile = async () => {
@@ -149,11 +153,11 @@ const ProfileScreen = () => {
       <View style={stylesProfile.containerAlpha}>
         <View
           style={{
-            flex: 1,
+            flex: 0.8,
             justifyContent: "center",
             alignItems: "flex-start",
             width: "85%",
-            marginTop: 50,
+            marginTop: 30,
           }}
         >
           <Text style={{ fontSize: 33, fontWeight: "bold" }}>Profile</Text>
@@ -165,11 +169,11 @@ const ProfileScreen = () => {
               justifyContent: "center",
               alignItems: "flex-start",
               width: "85%",
-              marginBottom: 10,
+              marginBottom: 12,
             }}
           >
             <Text
-              style={{ fontSize: 18, marginBottom: 12, fontWeight: "bold" }}
+              style={{ fontSize: 18, marginBottom: 14, fontWeight: "bold" }}
             >
               Account
             </Text>
@@ -201,7 +205,7 @@ const ProfileScreen = () => {
           </TouchableOpacity>
           <View
             style={{
-              flex: 3,
+              flex: 4,
               justifyContent: "center",
               alignItems: "flex-start",
               width: "85%",
@@ -216,7 +220,7 @@ const ProfileScreen = () => {
           </View>
           <TouchableOpacity
             style={stylesProfile.container}
-            onPress={handlePressEmBuild}
+            onPress={handlePressChangePassword}
           >
             <ProfileHandleSettingsPassword />
           </TouchableOpacity>
@@ -237,6 +241,12 @@ const ProfileScreen = () => {
             onPress={handlePressEmBuild}
           >
             <ProfileHandleSettingsLanguage />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={stylesProfile.container}
+            onPress={handlePressEmBuild}
+          >
+            <ProfileHandleLogout />
           </TouchableOpacity>
         </View>
       </View>

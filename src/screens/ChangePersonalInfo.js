@@ -76,7 +76,6 @@ const ChangePersonalInfo = () => {
     }
   }, [initialDataLoaded]);
 
-
   const [loading, setLoading] = useState(true);
 
   const handleGoBack = () => {
@@ -164,8 +163,8 @@ const ChangePersonalInfo = () => {
     });
 
     if (response.length > 0) {
-      const { region, country } = response[0];
-      setAutoLocation(`${region}, ${country}`);
+      const { city, region, country } = response[0];
+      setAutoLocation(`${city} - ${region}, ${country}`);
     }
     setLoading(false);
   };
@@ -248,41 +247,41 @@ const ChangePersonalInfo = () => {
       quality: 1,
     });
 
-      if (!result.canceled) {
-        setLoading(true);
-        setUserData({ ...userData, profilePic: result.uri });
-        try {
-          const response = await changeProfilePic(result);
-          if (response.status === 200) {
-            Toast.show({
-              type: ALERT_TYPE.SUCCESS,
-              title: "Success",
-              textBody: "Your profile picture has been updated successfully.",
-            });
-            setTimeout(() => {
-              setLoading(false);
-            }, 4000);
-          } else {
-            console.error("Failed to update profile picture:", response.status);
-            Toast.show({
-              type: ALERT_TYPE.DANGER,
-              title: "Error",
-              textBody: `Failed to update profile picture: ${response.status}`,
-            });
-          }
-        } catch (error) {
-          console.error(
-            "An error occurred while updating profile picture:",
-            error
-          );
+    if (!result.canceled) {
+      setLoading(true);
+      setUserData({ ...userData, profilePic: result.uri });
+      try {
+        const response = await changeProfilePic(result);
+        if (response.status === 200) {
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Success",
+            textBody: "Your profile picture has been updated successfully.",
+          });
+          setTimeout(() => {
+            setLoading(false);
+          }, 4000);
+        } else {
+          console.error("Failed to update profile picture:", response.status);
           Toast.show({
             type: ALERT_TYPE.DANGER,
-            title: "Ops",
-            textBody: t("changePersonalInfo.failedUpdatePicture"),
+            title: "Error",
+            textBody: `Failed to update profile picture: ${response.status}`,
           });
         }
-      } 
-    };
+      } catch (error) {
+        console.error(
+          "An error occurred while updating profile picture:",
+          error
+        );
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Ops",
+          textBody: t("changePersonalInfo.failedUpdatePicture"),
+        });
+      }
+    }
+  };
 
   useEffect(() => {
     const keyboardDidHideListener = Keyboard.addListener(
