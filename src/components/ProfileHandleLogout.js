@@ -1,9 +1,10 @@
 import React from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
-import Feather from "react-native-vector-icons/Feather";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import { useTranslation } from "react-i18next";
 
 export default function ProfileHandleLogout() {
+  const { t } = useTranslation();
   return (
     <AlertNotificationRoot theme={"light"}>
       <View style={stylesProfile.container}>
@@ -29,7 +30,7 @@ export default function ProfileHandleLogout() {
                   fontWeight: "light",
                 }}
               >
-                {"Disconnect"}
+                {t("profileHandleLogout.titleHandleLogout")}
               </Text>
             </View>
           </View>

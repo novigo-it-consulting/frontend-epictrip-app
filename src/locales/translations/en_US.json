@@ -3,56 +3,62 @@
     "title": "Home Screen",
     "logoutButton": "Logout"
   },
+  "homeTabs": {
+    "homeButton": "Home", 
+    "groupsButton": "Groups", 
+    "requestsButton": "Requests", 
+    "scheduleButton": "Schedule", 
+    "profileButton": "Profile"
+  }, 
   "loginScreen": {
     "title": "Login",
     "emailLabel": "Email",
     "passwordLabel": "Password",
     "loginButton": "Login",
-    "forgotPassword": "Forgot Password?",
+    "forgotPassword": "Forgot password?",
     "noAccount": "Don't have an account?",
     "signUp": "Sign Up",
-    "invalidEmailAdress": "Invalid email adreess",
-    "errorBadPassword": "Username or Password is invalids",
+    "invalidEmailAdress": "Invalid email",
+    "errorBadPassword": "Invalid username or password",
     "genericError": "Error logging in. Please try again later."
-
   },
   "enterCode": {
-    "title": "Enter Code",
+    "title": "Enter your code",
+    "subTitle": "A 6-digit code has been sent to your email. Check your spam folder.",
     "codeLabel": "Code",
-    "subTitle": "A 6-digit code has been sent to your email. Check your Spam folder for.",
     "codePlaceholder": "Enter the code",
     "continueButton": "Continue",
     "resendCode": "Resend Code",
     "errorTitle": "Oops",
-    "errorMessage": "Error validating code. Please try again."
+    "errorMessage": "Error validating the code. Please try again."
   },
   "forgetPasswordScreen": {
-    "title": "Set New Password",
-    "subTitle": "Type in your Epic Trip account e-mail address",
-    "emailLabel": "Email",
+    "title": "Enter your Email",
+    "subTitle": "Enter the email address of your Epic Trip account",
     "passwordLabel": "New Password",
+    "emailLabel": "Email",
     "confirmPasswordLabel": "Confirm Password",
     "continueButton": "Continue",
     "passwordsDoNotMatch": "Passwords do not match",
     "errorTitle": "Oops",
-    "errorMessage": "Error setting password. Please try again.",
+    "errorMessage": "Error setting the password. Please try again.",
     "unknowError": "An unexpected error occurred, please try again.",
-    "noUser": "No users found"
+    "noUser": "No user found"
   },
   "signUpScreen": {
     "title": "Sign Up",
     "emailLabel": "Email",
-    "shareNumberLabel": "Share Number",
+    "shareNumberLabel": "Guest Number",
     "phoneLabel": "Phone",
     "passwordLabel": "Password",
     "signUpButton": "Sign Up",
     "privacyPolicy": "By signing up, you agree to our ",
     "termsAndConditions": "and our ",
     "privacyPolicyLink": "Privacy Policy",
-    "termsAndConditionsLink": "Terms & Conditions",
+    "termsAndConditionsLink": "Terms and Conditions",
     "alreadyHaveAccount": "Already have an account?",
     "signIn": "Sign In",
-    "nameLabel": "Full name",
+    "nameLabel": "Full Name",
     "languageLabel": "Language",
     "errorCreate": "Error creating your account. Please try again later.",
     "languages": {
@@ -61,36 +67,64 @@
       "portuguese": "Portuguese"
     }
   },
+  "profileScreen": {
+    "profileTitle": "Profile",
+    "subTitleAccount": "Account",
+    "subTitleBooking": "Booking",
+    "errorProfileScreenGetUserInfo": "An error occurred while loading your information",
+    "subuTitleSettings": "Settings"
+  }, 
+  "profileHandleChangePassword": {
+   "titleChangePassword": "Change Password"
+  }, 
+  "profileHandleLogout": {
+   "titleHandleLogout": "Logout"
+  }, 
+  "profileHandleAccount": {
+   "titleHandleAccount": "Change your personal information",
+   "errorUpdating": "An error occurred while updating the user information, please try again later."
+  }, 
+  "profileHandleHandlePayment": {
+   "titlePayment": "Payment"
+  }, 
+  "profileHandleChangeRewards": {
+   "titleRewards": "Rewards"
+  }, 
+  "profileHandleSettingsLanguage": {
+   "titleLanguage": "Language"
+  }, 
   "setNewPasswordScreen": {
     "title": "Set your new password",
     "passwordLabel": "Password",
     "confirmPasswordLabel": "Confirm Password",
     "continueButton": "Continue",
-    "passwordsDoNotMatch": "Passwords don't match"
+    "passwordsDoNotMatch": "Passwords do not match"
   },
-  "profileHandleAccount": {
-    "errorUpdate": "An error occurred while updating user information, please try again later."
+  "profileHandleBooking": {
+    "errorUserID": "Failed to load user ID",
+    "bookingInformation": "Your booking information",
+    "errorProfileScreenGetUserInfo": "An error occurred while loading your information",
+    "loadingBookingNumber": "Loading..."
   },
-
   "changePersonalInfo": {
-    "failedUpdate": "An error occurred while updating user information, please try again later.",
-    "updateSuccess": "Your personal information has been updated successfully.",
-    "pictureUpdate": "Your profile picture has been updated successfully.",
+    "failedUpdate": "An error occurred while updating the user information. Please try again later.",
+    "updateSuccess": "Your personal information has been successfully updated.",
     "failedUpdateUser": "Failed to update user.",
     "loadingData": "Error loading initial data.",
+    "pictureUpdate": "Your profile picture has been successfully updated.",
     "failedUpdatePicture": "Failed to update profile picture",
     "notFoundAsyncStorage": "User ID not found in AsyncStorage.",
-    "failedUserInfo": "Failed to fetch user info.",
-    "failedUpdateUserInfo": "Failed to update user info",
-    "permissionLibraryDenied": "Permission to access media library was denied",
+    "failedUserInfo": "Failed to fetch user information.",
+    "failedUpdateUserInfo": "Failed to update user information",
+    "permissionLibraryDenied": "Permission to access the media library was denied",
     "locationPermissionDenied": "Permission to access location was denied",
     "genderM": "Male",
     "genderF": "Female",
     "buttonSave": "Save",
-    "labelFirstName": "Name",
+    "labelFirstName": "First Name",
     "labelLastName": "Last Name",
     "labelLocation": "Current Location",
     "labelAge": "Age",
-    "buttonUploadImage": "Upload Image"
+    "buttonUploadImage": "Upload Photo"
   }
 }

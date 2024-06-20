@@ -3,13 +3,12 @@ import { StyleSheet, View, Text, Image } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { requestGetUser } from "../services/api";
-import { AlertNotificationRoot } from "react-native-alert-notification";
+import { Toast, ALERT_TYPE } from "react-native-alert-notification";
 import colors from "../colors";
 import { useTranslation } from "react-i18next";
 
 export default function ProfileHandleBooking() {
   const [bookingNumber, setBookingNumber] = useState("");
-  const [profilePhoto, setProfilePhoto] = useState(null);
 
   const { t } = useTranslation();
 
@@ -27,12 +26,20 @@ export default function ProfileHandleBooking() {
     try {
       const response = await requestGetUser(userId);
       if (response.status === 200) {
-        setBookingNumber(response.data.data.shareNumber); // Assuming the response has a profilePic field for the user's photo
+        setBookingNumber(response.data.data.shareNumber);
       } else {
-        console.error("Failed to fetch user profile:", response.status);
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Ops",
+          textBody: t("profileHandleBooking.errorUserID"),
+        });
       }
     } catch (error) {
-      console.error("An error occurred while fetching user profile:", error);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Ops",
+        textBody: t("profileHandleBooking.errorProfileScreenGetUserInfo"),
+      });
     }
   };
 
@@ -41,55 +48,53 @@ export default function ProfileHandleBooking() {
   }, []);
 
   return (
-    <AlertNotificationRoot theme={"light"}>
-      <View style={stylesProfile.container}>
-        <View style={stylesProfile.boxProfile}>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "row",
-            }}
-          >
-            <Image
-              source={require("../../assets/profile/ShareIcon.png")}
-              style={{ width: 48, height: 48, borderRadius: 24, opacity: 0.7 }}
-            />
-            <View style={stylesProfile.titleName}>
-              <Text
-                style={{
-                  fontSize: 14,
-                  textAlign: "left",
-                  color: colors.primary,
-                  fontWeight: "bold",
-                  opacity: 0.8,
-                }}
-              >
-                {bookingNumber || "..."}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 14,
-                  textAlign: "left",
-                  color: "#000",
-                  fontWeight: "light",
-                  marginTop: 5,
-                  opacity: 0.6,
-                }}
-              >
-                {t("profileHandleBooking.bookingInformation")}
-              </Text>
-            </View>
-            <View style={stylesProfile.boxNotification}>
-              <View style={stylesProfile.boxColor}>
-                <Feather name="arrow-right" color={"#172B4D"} size={15} />
-              </View>
+    <View style={stylesProfile.container}>
+      <View style={stylesProfile.boxProfile}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
+          }}
+        >
+          <Image
+            source={require("../../assets/profile/ShareIcon.png")}
+            style={{ width: 48, height: 48, borderRadius: 24, opacity: 0.7 }}
+          />
+          <View style={stylesProfile.titleName}>
+            <Text
+              style={{
+                fontSize: 14,
+                textAlign: "left",
+                color: colors.primary,
+                fontWeight: "bold",
+                opacity: 0.8,
+              }}
+            >
+              {bookingNumber || t("profileHandleBooking.loadingBookingNumber")}
+            </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                textAlign: "left",
+                color: "#000",
+                fontWeight: "light",
+                marginTop: 5,
+                opacity: 0.6,
+              }}
+            >
+              {t("profileHandleBooking.bookingInformation")}
+            </Text>
+          </View>
+          <View style={stylesProfile.boxNotification}>
+            <View style={stylesProfile.boxColor}>
+              <Feather name="arrow-right" color={"#172B4D"} size={15} />
             </View>
           </View>
         </View>
       </View>
-    </AlertNotificationRoot>
+    </View>
   );
 }
 
