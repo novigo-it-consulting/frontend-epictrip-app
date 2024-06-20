@@ -88,11 +88,11 @@ const ChangePersonalInfo = () => {
     const userId = await AsyncStorage.getItem("userId");
 
     if (!userId) {
-      console.error("User ID not found in AsyncStorage");
+      t("changePersonalInfo.notFoundAsyncStorage");
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        title: "Error",
-        textBody: "User ID not found in AsyncStorage",
+        title: "Ops",
+        textBody: t("changePersonalInfo.notFoundAsyncStorage"),
       });
       return;
     }
@@ -130,19 +130,17 @@ const ChangePersonalInfo = () => {
         });
         fetchLocation();
       } else {
-        console.error("Failed to fetch user info:", response.status);
         Toast.show({
           type: ALERT_TYPE.DANGER,
-          title: "Error",
-          textBody: `Failed to fetch user info: ${response.status}`,
+          title: "Ops",
+          textBody: t("changePersonalInfo.failedUpdateUserInfo"),
         });
       }
     } catch (error) {
-      console.error("An error occurred while fetching user info:", error);
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        title: "Error",
-        textBody: `An error occurred while fetching user info: ${error.message}`,
+        title: "Ops",
+        textBody:  t("changePersonalInfo.failedUpdate"),
       });
       setLoading(false);
     }
@@ -151,7 +149,7 @@ const ChangePersonalInfo = () => {
   const fetchLocation = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
-      console.error("Permission to access location was denied");
+      t("changePersonalInfo.locationPermissionDenied");
       setLoading(false);
       return;
     }
@@ -204,7 +202,6 @@ const ChangePersonalInfo = () => {
       const response = await requestUpdateUser(userId, updatedData);
 
       if (response.status === 200) {
-        t("changePersonalInfo.failedUpdate");
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Success",
@@ -257,24 +254,19 @@ const ChangePersonalInfo = () => {
             Toast.show({
               type: ALERT_TYPE.SUCCESS,
               title: "Success",
-              textBody: "Your profile picture has been updated successfully.",
+              textBody: t("changePersonalInfo.pictureUpdate"),
             });
             setTimeout(() => {
               setLoading(false);
             }, 4000);
           } else {
-            console.error("Failed to update profile picture:", response.status);
             Toast.show({
               type: ALERT_TYPE.DANGER,
               title: "Error",
-              textBody: `Failed to update profile picture: ${response.status}`,
+              textBody: t("changePersonalInfo.failedUpdatePicture"),
             });
           }
         } catch (error) {
-          console.error(
-            "An error occurred while updating profile picture:",
-            error
-          );
           Toast.show({
             type: ALERT_TYPE.DANGER,
             title: "Ops",
@@ -374,8 +366,8 @@ const ChangePersonalInfo = () => {
                 value={userData.gender}
               >
                 <View style={styles.radioButtonContainer}>
-                  <RadioButton.Item label="Masculino" value="first" />
-                  <RadioButton.Item label="Feminino" value="second" />
+                  <RadioButton.Item label={t("changePersonalInfo.genderM")} value="first"/>
+                  <RadioButton.Item label={t("changePersonalInfo.genderF")} value="second" />
                 </View>
               </RadioButton.Group>
               <TextInput
@@ -392,7 +384,7 @@ const ChangePersonalInfo = () => {
                 style={styles.saveButton}
                 onPress={handleSave}
               >
-                Salvar
+                {t("changePersonalInfo.buttonSave")}
               </Button>
             </View>
           </TouchableWithoutFeedback>

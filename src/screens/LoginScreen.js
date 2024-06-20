@@ -181,7 +181,7 @@ const LoginScreen = ({ navigation }) => {
                     label={t("loginScreen.emailLabel")}
                     onSubmitEditing={Keyboard.dismiss}
                     mode="flat"
-                    left={<TextInput.Icon icon="account-outline" />}
+                    left={<TextInput.Icon icon="account-outline"/>}
                     onBlur={onBlur}
                     onChangeText={(value) => {
                       onChange(value);

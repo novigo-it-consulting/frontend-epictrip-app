@@ -82,6 +82,11 @@
     "notFoundAsyncStorage": "User ID not found in AsyncStorage.",
     "failedUserInfo": "Failed to fetch user info.",
     "failedUpdateUserInfo": "Failed to update user info",
-    "permissionLibraryDenied": "Permission to access media library was denied"
+    "permissionLibraryDenied": "Permission to access media library was denied",
+    "locationPermissionDenied": "Permission to access location was denied",
+    "genderM": "Male",
+    "genderF": "Female",
+    "buttonSave": "Save"
+    
   }
 }
