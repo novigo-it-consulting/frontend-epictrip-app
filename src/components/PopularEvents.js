@@ -5,6 +5,7 @@ import { Card, Title, Paragraph } from "react-native-paper";
 import Carousel from "react-native-reanimated-carousel";
 import AnimatedDotsCarousel from "react-native-animated-dots-carousel"; // Importe o componente de dots
 import colors from "../colors";
+import { useTranslation } from "react-i18next";
 
 const PopularEvents = () => {
   const width = Dimensions.get("window").width;
@@ -24,10 +25,11 @@ const PopularEvents = () => {
   ];
 
   const [index, setIndex] = useState(0);
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titlePage}>Popular Events</Text>
+      <Text style={styles.titlePage}>{t("popularEvents.events")}</Text>
       <Carousel
         loop
         width={width}

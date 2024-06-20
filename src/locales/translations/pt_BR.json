@@ -97,6 +97,9 @@
     "labelAge": "Idade",
     "buttonUploadImage": "Carregar foto",
     "personalInfo": "Informações Pessoais "
+  },
+  "popularEvents": {
+    "events": "Eventos Populares"
   }
 }
 

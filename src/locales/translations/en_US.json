@@ -28,7 +28,7 @@
   },
   "forgetPasswordScreen": {
     "title": "Set New Password",
-    "subTitle": "Type in your Epic Trip account e-mail address",
+    "subTitle": "Type in your Epic Trip account email address",
     "emailLabel": "Email",
     "passwordLabel": "New Password",
     "confirmPasswordLabel": "Confirm Password",
@@ -93,5 +93,10 @@
     "labelAge": "Age",
     "buttonUploadImage": "Upload Image",
     "personalInfo": "Personal Info"
+  },
+  "popularEvents": {
+    "events": "Popular Events"
   }
+
+
 }
