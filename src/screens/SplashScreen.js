@@ -1,7 +1,8 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import React, { useEffect } from "react";
 import LottieView from "lottie-react-native";
 import { useNavigation } from "@react-navigation/native";
+import { expo } from "../../app.json";
 
 const SplashScreen = () => {
   const { navigate } = useNavigation();
@@ -24,6 +25,16 @@ const SplashScreen = () => {
             loop
           />
         </View>
+        <Text
+          style={{
+            flex: 0.1,
+            position: "relative",
+            fontWeight: "bold",
+            color: "#FFF",
+          }}
+        >
+          v{expo?.version}
+        </Text>
       </View>
     </>
   );

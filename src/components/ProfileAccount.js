@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Image, ActivityIndicator } from "react-native";
+import { StyleSheet, View, Text, Image } from "react-native";
 import { requestGetUser } from "../services/api";
 import { useNavigation } from "@react-navigation/native";
 import Feather from "react-native-vector-icons/Feather";
@@ -11,7 +11,8 @@ import SkeletonLoading from "expo-skeleton-loading";
 export default function ProfileAccount() {
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [profileName, setProfileName] = useState("");
-  const [loading, setLoading] = useState(true); // Mantenha sempre verdadeiro até o carregamento de dados
+  const [loading, setLoading] = useState(true);
+  const [imageLoading, setImageLoading] = useState(true);
 
   const navigation = useNavigation();
 
@@ -29,13 +30,18 @@ export default function ProfileAccount() {
         const { fullName, profilePic } = response.data.data;
         setProfileName(fullName);
         setProfilePhoto(profilePic);
+        setLoading(false);
+        setImageLoading(false);
       } else {
         console.error("Failed to fetch user profile:", response.status);
+        setLoading(false);
+        setImageLoading(false);
       }
     } catch (error) {
       console.error("An error occurred while fetching user profile:", error);
+      setLoading(false);
+      setImageLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -45,7 +51,19 @@ export default function ProfileAccount() {
     return unsubscribe;
   }, [navigation]);
 
-  if (loading) {
+  useEffect(() => {
+    if (!profilePhoto) {
+      setImageLoading(false);
+    }
+  }, [profilePhoto]);
+
+  const handleImageLoadEnd = () => {
+    setTimeout(() => {
+      setImageLoading(false);
+    }, 5000); // 3 segundos de delay
+  };
+
+  if (loading || imageLoading) {
     return (
       <SkeletonLoading background={"#adadad"} highlight={"#ffffff"}>
         <View
@@ -110,9 +128,8 @@ export default function ProfileAccount() {
                 ? { uri: profilePhoto }
                 : require("../../assets/profile/1.png")
             }
-            width={48}
-            height={48}
-            borderRadius={"50%"}
+            style={{ width: 48, height: 48, borderRadius: 24 }}
+            onLoadEnd={handleImageLoadEnd}
           />
           <View style={stylesProfile.titleName}>
             <Text style={{ fontSize: 12, textAlign: "left", color: "#364764" }}>
@@ -147,12 +164,10 @@ export default function ProfileAccount() {
   );
 }
 
-// Continue usando o seu StyleSheet existente
-
 const stylesProfile = StyleSheet.create({
   container: {
     flex: 0.5,
-    flexDirection: "columm",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "space-around",
     width: "85%",

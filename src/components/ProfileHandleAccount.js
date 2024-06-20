@@ -10,6 +10,7 @@ import {
 } from "react-native-alert-notification";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
+import colors from "../colors";
 
 export default function ProfileHandleAccount(alert) {
   const [profileName, setProfileName] = useState("");
@@ -33,7 +34,7 @@ export default function ProfileHandleAccount(alert) {
       if (response.status === 200) {
         const { fullName, profilePic } = response.data.data;
         setProfileName(fullName);
-        setProfilePhoto(profilePic); // Correção aplicada aqui
+        setProfilePhoto(profilePic);
       } else {
         console.error("Failed to fetch user profile:", response.status);
       }
@@ -54,14 +55,14 @@ export default function ProfileHandleAccount(alert) {
     <AlertNotificationRoot theme={"light"}>
       <View style={stylesProfile.container}>
         {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="small" color={colors.primary} />
         ) : (
           <View style={stylesProfile.boxProfile}>
             <Image
               source={
                 profilePhoto
                   ? { uri: profilePhoto }
-                  : require("../../assets/profile/1.png")
+                  : require("../../assets/profile/profileIcon.png")
               }
               style={{ width: 48, height: 48, borderRadius: 24 }}
             />

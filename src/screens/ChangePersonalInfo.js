@@ -76,7 +76,6 @@ const ChangePersonalInfo = () => {
     }
   }, [initialDataLoaded]);
 
-
   const [loading, setLoading] = useState(true);
 
   const handleGoBack = () => {
@@ -140,7 +139,7 @@ const ChangePersonalInfo = () => {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
-        textBody:  t("changePersonalInfo.failedUpdate"),
+        textBody: t("changePersonalInfo.failedUpdate"),
       });
       setLoading(false);
     }
@@ -162,8 +161,8 @@ const ChangePersonalInfo = () => {
     });
 
     if (response.length > 0) {
-      const { region, country } = response[0];
-      setAutoLocation(`${region}, ${country}`);
+      const { city, region, country } = response[0];
+      setAutoLocation(`${city} - ${region}, ${country}`);
     }
     setLoading(false);
   };
@@ -245,36 +244,36 @@ const ChangePersonalInfo = () => {
       quality: 1,
     });
 
-      if (!result.canceled) {
-        setLoading(true);
-        setUserData({ ...userData, profilePic: result.uri });
-        try {
-          const response = await changeProfilePic(result);
-          if (response.status === 200) {
-            Toast.show({
-              type: ALERT_TYPE.SUCCESS,
-              title: "Success",
-              textBody: t("changePersonalInfo.pictureUpdate"),
-            });
-            setTimeout(() => {
-              setLoading(false);
-            }, 4000);
-          } else {
-            Toast.show({
-              type: ALERT_TYPE.DANGER,
-              title: "Error",
-              textBody: t("changePersonalInfo.failedUpdatePicture"),
-            });
-          }
-        } catch (error) {
+    if (!result.canceled) {
+      setLoading(true);
+      setUserData({ ...userData, profilePic: result.uri });
+      try {
+        const response = await changeProfilePic(result);
+        if (response.status === 200) {
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Success",
+            textBody: t("changePersonalInfo.pictureUpdate"),
+          });
+          setTimeout(() => {
+            setLoading(false);
+          }, 4000);
+        } else {
           Toast.show({
             type: ALERT_TYPE.DANGER,
-            title: "Ops",
+            title: "Error",
             textBody: t("changePersonalInfo.failedUpdatePicture"),
           });
         }
-      } 
-    };
+      } catch (error) {
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Ops",
+          textBody: t("changePersonalInfo.failedUpdatePicture"),
+        });
+      }
+    }
+  };
 
   useEffect(() => {
     const keyboardDidHideListener = Keyboard.addListener(
@@ -366,8 +365,14 @@ const ChangePersonalInfo = () => {
                 value={userData.gender}
               >
                 <View style={styles.radioButtonContainer}>
-                  <RadioButton.Item label={t("changePersonalInfo.genderM")} value="first"/>
-                  <RadioButton.Item label={t("changePersonalInfo.genderF")} value="second" />
+                  <RadioButton.Item
+                    label={t("changePersonalInfo.genderM")}
+                    value="first"
+                  />
+                  <RadioButton.Item
+                    label={t("changePersonalInfo.genderF")}
+                    value="second"
+                  />
                 </View>
               </RadioButton.Group>
               <TextInput
