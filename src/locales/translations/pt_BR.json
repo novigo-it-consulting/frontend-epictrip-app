@@ -90,7 +90,12 @@
     "locationPermissionDenied": "A permissão para acessar o local foi negada",
     "genderM": "Masculino",
     "genderF": "Feminino",
-    "buttonSave": "Salvar"
+    "buttonSave": "Salvar",
+    "labelFirstName": "Nome",
+    "labelLastName": "Sobrenome",
+    "labelLocation": "Localização Atual",
+    "labelAge": "Idade",
+    "buttonUploadImage": "Carregar foto"
   }
 }
 

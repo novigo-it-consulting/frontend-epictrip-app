@@ -16,7 +16,6 @@ import {
 } from "react-native-alert-notification";
 import { TextInput, RadioButton, Button, IconButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import profilePhoto from "../../assets/profile/100.png";
 import colors from "../colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -315,7 +314,7 @@ const ChangePersonalInfo = () => {
                   source={
                     profilePhoto
                       ? { uri: profilePhoto }
-                      : require("../../assets/profile/1.png")
+                      : require("../../assets/profile/profileIcon.png")
                   }
                 />
                 <Button
@@ -324,11 +323,11 @@ const ChangePersonalInfo = () => {
                   style={styles.uploadButton}
                   onPress={pickImage}
                 >
-                  Upload Imagem
+                  {t("changePersonalInfo.buttonUploadImage")}
                 </Button>
               </View>
               <TextInput
-                label={"First Name"}
+                label={t("changePersonalInfo.labelFirstName")}
                 value={userData.firstName}
                 onChangeText={(text) =>
                   setUserData({ ...userData, firstName: text })
@@ -339,7 +338,7 @@ const ChangePersonalInfo = () => {
                 style={styles.input}
               />
               <TextInput
-                label={"Last Name"}
+                label={t("changePersonalInfo.labelLastName")}
                 value={userData.lastName}
                 onChangeText={(text) =>
                   setUserData({ ...userData, lastName: text })

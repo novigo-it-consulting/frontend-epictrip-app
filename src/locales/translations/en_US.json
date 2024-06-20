@@ -86,7 +86,11 @@
     "locationPermissionDenied": "Permission to access location was denied",
     "genderM": "Male",
     "genderF": "Female",
-    "buttonSave": "Save"
-    
+    "buttonSave": "Save",
+    "labelFirstName": "Name",
+    "labelLastName": "Last Name",
+    "labelLocation": "Current Location",
+    "labelAge": "Age",
+    "buttonUploadImage": "Upload Image"
   }
 }
