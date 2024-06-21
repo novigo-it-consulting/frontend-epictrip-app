@@ -31,7 +31,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from "@react-navigation/native";
 
 const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -70,31 +70,27 @@ const LoginScreen = ({ navigation }) => {
 
       if (response.status === 200) {
         const userId = response.data.userId;
+        await AsyncStorage.setItem("token", response.data.token);
+
         if (userId) {
           await AsyncStorage.setItem("userId", userId);
-          const storedUserId = await AsyncStorage.getItem("userId");
-          console.log("Stored userId:", storedUserId);
+
           navigation.navigate("Home");
           return;
-        } else {
-          console.error("userId não encontrado no response.data");
         }
-      } else {
-        throw new Error("Erro ao efetuar login. Por favor, tente novamente.");
       }
     } catch (error) {
       if (error.response.data.message === "WRONG PASSWORD") {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody:(t("loginScreen.errorBadPassword"))
+          textBody: t("loginScreen.errorBadPassword"),
         });
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody:
-          (t("loginScreen.genericError"))
+          textBody: t("loginScreen.genericError"),
         });
         console.error(error);
       }
@@ -104,9 +100,9 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const clearPassword = () => {
-    setValue('password', '');
+    setValue("password", "");
   };
-  
+
   useFocusEffect(
     React.useCallback(() => {
       clearPassword();
@@ -134,10 +130,28 @@ const LoginScreen = ({ navigation }) => {
     navigation.navigate("SignUp");
   };
 
+  const defaultToastConfig = {
+    autoClose: 3000,
+    titleStyle: { fontSize: 16, fontWeight: "bold" },
+  };
+
+  const lightColors = {
+    label: "#000",
+    card: "#fcfcfc",
+    overlay: "#f0f0f0",
+    success: "#28a745",
+    danger: "rgba(255, 0, 0, 1)",
+    warning: "#ffc107",
+  };
+
   return (
     <PaperProvider theme={theme}>
-      <SafeAreaView />
-      <AlertNotificationRoot>
+      <AlertNotificationRoot
+        toastConfig={defaultToastConfig}
+        colors={[lightColors]}
+        theme={"light"}
+      >
+        <SafeAreaView />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? null : null}
@@ -164,7 +178,7 @@ const LoginScreen = ({ navigation }) => {
                     label={t("loginScreen.emailLabel")}
                     onSubmitEditing={Keyboard.dismiss}
                     mode="flat"
-                    left={<TextInput.Icon icon="account-outline" />}
+                    left={<TextInput.Icon icon="account-outline"/>}
                     onBlur={onBlur}
                     onChangeText={(value) => {
                       onChange(value);

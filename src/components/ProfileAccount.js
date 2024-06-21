@@ -1,28 +1,117 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
-import profilePhoto from "../../assets/profile/1.png";
+import { requestGetUser } from "../services/api";
+import { useNavigation } from "@react-navigation/native";
 import Feather from "react-native-vector-icons/Feather";
 import { Badge } from "react-native-paper";
 import SearchBarHome from "./SearchViewHome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { requestGetUser } from "../services/api";
+import SkeletonLoading from "expo-skeleton-loading";
+import { useTranslation } from "react-i18next";
 
 export default function ProfileAccount() {
-  const [profileName, setProfileName] = useState();
+  const [profilePhoto, setProfilePhoto] = useState(null);
+  const [profileName, setProfileName] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [imageLoading, setImageLoading] = useState(true);
+  
+  const { t } = useTranslation();
+  const navigation = useNavigation();
 
   const getUserToProfile = async () => {
     const userId = await AsyncStorage.getItem("userId");
+    if (!userId) {
+      console.error("User ID not found in AsyncStorage");
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await requestGetUser(userId);
-      console.log(response);
+      if (response.status === 200) {
+        const { fullName, profilePic } = response.data.data;
+        setProfileName(fullName);
+        setProfilePhoto(profilePic);
+        setLoading(false);
+        setImageLoading(false);
+      } else {
+        console.error("Failed to fetch user profile:", response.status);
+        setLoading(false);
+        setImageLoading(false);
+      }
     } catch (error) {
-      console.log(error);
+      console.error("An error occurred while fetching user profile:", error);
+      setLoading(false);
+      setImageLoading(false);
     }
   };
 
   useEffect(() => {
-    getUserToProfile();
-  }, []);
+    const unsubscribe = navigation.addListener("focus", () => {
+      getUserToProfile();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  useEffect(() => {
+    if (!profilePhoto) {
+      setImageLoading(false);
+    }
+  }, [profilePhoto]);
+
+  const handleImageLoadEnd = () => {
+    setTimeout(() => {
+      setImageLoading(false);
+    }, 5000); // 3 segundos de delay
+  };
+
+  if (loading || imageLoading) {
+    return (
+      <SkeletonLoading background={"#adadad"} highlight={"#ffffff"}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            padding: 20,
+          }}
+        >
+          <View
+            style={{
+              width: 48,
+              height: 48,
+              borderRadius: 24,
+              backgroundColor: "#adadad",
+            }}
+          />
+          <View style={{ flex: 1, marginLeft: 12 }}>
+            <View
+              style={{
+                backgroundColor: "#adadad",
+                height: 16,
+                marginBottom: 6,
+                borderRadius: 8,
+              }}
+            />
+            <View
+              style={{
+                backgroundColor: "#adadad",
+                height: 16,
+                borderRadius: 8,
+              }}
+            />
+          </View>
+          <View
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 25,
+              backgroundColor: "#adadad",
+            }}
+          />
+        </View>
+      </SkeletonLoading>
+    );
+  }
 
   return (
     <View style={stylesProfile.container}>
@@ -36,24 +125,27 @@ export default function ProfileAccount() {
           }}
         >
           <Image
-            source={profilePhoto}
-            width={48}
-            height={48}
-            borderRadius={"50%"}
+            source={
+              profilePhoto
+                ? { uri: profilePhoto }
+                : require("../../assets/profile/1.png")
+            }
+            style={{ width: 48, height: 48, borderRadius: 24 }}
+            onLoadEnd={handleImageLoadEnd}
           />
           <View style={stylesProfile.titleName}>
-            <Text style={{ fontSize: 16, textAlign: "left", color: "#364764" }}>
-              Olá,
+            <Text style={{ fontSize: 12, textAlign: "left", color: "#364764" }}>
+             {t("profileAccount.welcome")}
             </Text>
             <Text
               style={{
-                fontSize: 22,
+                fontSize: 16,
                 textAlign: "left",
                 color: "#172B4D",
                 fontWeight: "bold",
               }}
             >
-              Polina 🖐
+              {profileName}
             </Text>
           </View>
           <View style={stylesProfile.boxNotification}>
@@ -77,7 +169,7 @@ export default function ProfileAccount() {
 const stylesProfile = StyleSheet.create({
   container: {
     flex: 0.5,
-    flexDirection: "columm",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "space-around",
     width: "85%",
@@ -91,8 +183,7 @@ const stylesProfile = StyleSheet.create({
   },
   boxNotification: {
     height: 48,
-    width: "100%",
-    marginRight: "auto",
+    marginLeft: "auto",
     display: "flex",
     alignItems: "center",
     flexDirection: "column",

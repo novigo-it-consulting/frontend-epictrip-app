@@ -1,50 +1,55 @@
 {
-    "homeScreen": {
+  "homeScreen": {
     "title": "Pantalla de Inicio",
-    "logoutButton": "Cerrar Sesión"
-    },
-    "loginScreen": {
+    "logoutButton": "Salir"
+  },
+  "homeTabs": {
+    "homeButton": "Inicio", 
+    "groupsButton": "Grupos", 
+    "requestsButton": "Solicitudes", 
+    "scheduleButton": "Agenda", 
+    "profileButton": "Perfil"
+  }, 
+  "loginScreen": {
     "title": "Iniciar Sesión",
     "emailLabel": "Correo Electrónico",
     "passwordLabel": "Contraseña",
     "loginButton": "Iniciar Sesión",
-    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "forgotPassword": "¿Olvidaste la contraseña?",
     "noAccount": "¿No tienes una cuenta?",
     "signUp": "Regístrate",
     "invalidEmailAdress": "Correo electrónico inválido",
     "errorBadPassword": "Usuario o contraseña inválidos",
     "genericError": "Error al iniciar sesión. Por favor, inténtalo de nuevo más tarde."
-    
-    },
-    "enterCode": {
-    "title": "Ingresa tu código",
-    "subTitle": "Se ha enviado un código de 6 dígitos a tu correo electrónico. Verifícalo en tu bandeja de Spam.",
+  },
+  "enterCode": {
+    "title": "Introduce tu código",
+    "subTitle": "Se ha enviado un código de 6 dígitos a tu correo electrónico. Revisa tu carpeta de spam.",
     "codeLabel": "Código",
-    "codePlaceholder": "Ingresa el código",
+    "codePlaceholder": "Introduce el código",
     "continueButton": "Continuar",
     "resendCode": "Reenviar Código",
-    "errorTitle": "Error",
-    "errorMessage": "Error al validar el código. Por favor, inténtalo nuevamente."
-    },
-    "forgetPasswordScreen": {
-    "title": "Ingresa tu Correo Electrónico",
-    "subTitle": "Ingresa la dirección de correo electrónico de tu cuenta Epic Trip",
+    "errorTitle": "Ups",
+    "errorMessage": "Error al validar el código. Por favor, inténtalo de nuevo."
+  },
+  "forgetPasswordScreen": {
+    "title": "Introduce tu correo electrónico",
+    "subTitle": "Introduce la dirección de correo electrónico de tu cuenta Epic Trip",
     "passwordLabel": "Nueva Contraseña",
     "emailLabel": "Correo Electrónico",
     "confirmPasswordLabel": "Confirmar Contraseña",
     "continueButton": "Continuar",
     "passwordsDoNotMatch": "Las contraseñas no coinciden",
-    "errorTitle": "Error",
+    "errorTitle": "Ups",
     "errorMessage": "Error al establecer la contraseña. Por favor, inténtalo de nuevo.",
-    "unknowError": "Ha ocurrido un error inesperado, por favor intentalo de nuevo.",
+    "unknowError": "Ocurrió un error inesperado, por favor inténtalo de nuevo.",
     "noUser": "No se encontró ningún usuario"
-    
-    },
-    "signUpScreen": {
+  },
+  "signUpScreen": {
     "title": "Regístrate",
     "emailLabel": "Correo Electrónico",
-    "shareNumberLabel": "Número de Invitado",
-    "phoneLabel": "Teléfono",
+    "shareNumberLabel": "Número del Invitado",
+    "phoneLabel": "Celular",
     "passwordLabel": "Contraseña",
     "signUpButton": "Registrarse",
     "privacyPolicy": "Al registrarte, aceptas nuestra ",
@@ -53,20 +58,73 @@
     "termsAndConditionsLink": "Términos y Condiciones",
     "alreadyHaveAccount": "¿Ya tienes una cuenta?",
     "signIn": "Iniciar Sesión",
-    "nameLabel": "Nombre completo",
+    "nameLabel": "Nombre Completo",
     "languageLabel": "Idioma",
     "errorCreate": "Error al crear tu cuenta. Por favor, inténtalo de nuevo más tarde.",
     "languages": {
-    "spanish": "Español",
-    "english": "Inglés",
-    "portuguese": "Portugués"
+      "spanish": "Español",
+      "english": "Inglés",
+      "portuguese": "Portugués"
     }
-    },
-    "setNewPasswordScreen": {
-    "title": "Establecer tu nueva contraseña",
+  },
+  "profileScreen": {
+    "profileTitle": "Perfil",
+    "subTitleAccount": "Cuenta",
+    "subTitleBooking": "Reserva",
+    "errorProfileScreenGetUserInfo": "Ocurrió un error al cargar tu información",
+    "subuTitleSettings": "Configuraciones"
+  }, 
+  "profileHandleChangePassword": {
+   "titleChangePassword": "Cambiar Contraseña"
+  }, 
+  "profileHandleLogout": {
+   "titleHandleLogout": "Salir"
+  }, 
+  "profileHandleAccount": {
+   "titleHandleAccount": "Cambiar tu información personal",
+   "errorUpdating": "Ocurrió un error al actualizar la información del usuario, por favor inténtalo de nuevo más tarde."
+  }, 
+  "profileHandleHandlePayment": {
+   "titlePayment": "Pago"
+  }, 
+  "profileHandleChangeRewards": {
+   "titleRewards": "Recompensas"
+  }, 
+  "profileHandleSettingsLanguage": {
+   "titleLanguage": "Idioma"
+  }, 
+  "setNewPasswordScreen": {
+    "title": "Establece tu nueva contraseña",
     "passwordLabel": "Contraseña",
     "confirmPasswordLabel": "Confirmar Contraseña",
     "continueButton": "Continuar",
     "passwordsDoNotMatch": "Las contraseñas no coinciden"
-    }
-    }
+  },
+  "profileHandleBooking": {
+    "errorUserID": "Error al cargar el ID de usuario",
+    "bookingInformation": "Información de tu reserva",
+    "errorProfileScreenGetUserInfo": "Ocurrió un error al cargar tu información",
+    "loadingBookingNumber": "Cargando..."
+  },
+  "changePersonalInfo": {
+    "failedUpdate": "Ocurrió un error al actualizar la información del usuario. Por favor inténtalo de nuevo más tarde.",
+    "updateSuccess": "Tu información personal se ha actualizado con éxito.",
+    "failedUpdateUser": "Error al actualizar el usuario.",
+    "loadingData": "Error al cargar los datos iniciales.",
+    "pictureUpdate": "Tu foto de perfil se ha actualizado con éxito.",
+    "failedUpdatePicture": "Error al actualizar la foto de perfil",
+    "notFoundAsyncStorage": "ID de usuario no encontrado en AsyncStorage.",
+    "failedUserInfo": "Error al buscar la información del usuario.",
+    "failedUpdateUserInfo": "Error al actualizar la información del usuario",
+    "permissionLibraryDenied": "Permiso para acceder a la biblioteca de medios denegado",
+    "locationPermissionDenied": "Permiso para acceder a la ubicación denegado",
+    "genderM": "Masculino",
+    "genderF": "Femenino",
+    "buttonSave": "Guardar",
+    "labelFirstName": "Nombre",
+    "labelLastName": "Apellido",
+    "labelLocation": "Ubicación Actual",
+    "labelAge": "Edad",
+    "buttonUploadImage": "Cargar foto"
+  }
+}

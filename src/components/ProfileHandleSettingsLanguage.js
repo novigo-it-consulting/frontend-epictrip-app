@@ -1,36 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { requestGetUser } from "../services/api";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import { useTranslation } from "react-i18next";
 
 export default function ProfileHandleSettingsLanguage() {
-  const [bookingNumber, setBookingNumber] = useState("");
-  const [profilePhoto, setProfilePhoto] = useState(null);
-
-  const getUserToProfile = async () => {
-    const userId = await AsyncStorage.getItem("userId");
-    if (!userId) {
-      console.error("User ID not found in AsyncStorage");
-      return;
-    }
-
-    try {
-      const response = await requestGetUser(userId);
-      if (response.status === 200) {
-        setBookingNumber(response.data.data.shareNumber); // Assuming the response has a profilePic field for the user's photo
-      } else {
-        console.error("Failed to fetch user profile:", response.status);
-      }
-    } catch (error) {
-      console.error("An error occurred while fetching user profile:", error);
-    }
-  };
-
-  useEffect(() => {
-    getUserToProfile();
-  }, []);
+  const { t } = useTranslation();
 
   return (
     <AlertNotificationRoot theme={"light"}>
@@ -57,7 +32,7 @@ export default function ProfileHandleSettingsLanguage() {
                   fontWeight: "light",
                 }}
               >
-                {"Language"}
+                {t("profileHandleSettingsLanguage.titleLanguage")}
               </Text>
             </View>
             <View style={stylesProfile.boxNotification}>

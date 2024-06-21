@@ -1,12 +1,10 @@
 import React from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
-import Feather from "react-native-vector-icons/Feather";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import { useTranslation } from "react-i18next";
 
-export default function ProfileHandleSettingsPayment() {
+export default function ProfileHandleLogout() {
   const { t } = useTranslation();
-
   return (
     <AlertNotificationRoot theme={"light"}>
       <View style={stylesProfile.container}>
@@ -14,13 +12,13 @@ export default function ProfileHandleSettingsPayment() {
           <View
             style={{
               flex: 1,
-              justifyContent: "center",
+              justifyContent: "flex-start",
               alignItems: "center",
               flexDirection: "row",
             }}
           >
             <Image
-              source={require("../../assets/profile/PaymentIcon.png")}
+              source={require("../../assets/profile/Disconect.png")}
               style={{ width: 48, height: 48, borderRadius: 24 }}
             />
             <View style={stylesProfile.titleName}>
@@ -32,13 +30,8 @@ export default function ProfileHandleSettingsPayment() {
                   fontWeight: "light",
                 }}
               >
-                {t("profileHandleHandlePayment.titlePayment")}
+                {t("profileHandleLogout.titleHandleLogout")}
               </Text>
-            </View>
-            <View style={stylesProfile.boxNotification}>
-              <View style={stylesProfile.boxColor}>
-                <Feather name="arrow-right" color={"#172B4D"} size={15} />
-              </View>
             </View>
           </View>
         </View>

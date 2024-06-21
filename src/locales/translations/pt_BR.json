@@ -3,6 +3,13 @@
     "title": "Tela Inicial",
     "logoutButton": "Sair"
   },
+  "homeTabs": {
+    "homeButton": "Início", 
+    "groupsButton": "Grupos", 
+    "requestsButton": "Solicitações", 
+    "scheduleButton": "Agenda", 
+    "profileButton": "Perfil"
+  }, 
   "loginScreen": {
     "title": "Login",
     "emailLabel": "E-mail",
@@ -11,10 +18,9 @@
     "forgotPassword": "Esqueceu a senha?",
     "noAccount": "Não tem uma conta?",
     "signUp": "Cadastre-se",
-   "invalidEmailAdress": "E-mail inválido",
-   "errorBadPassword": "Usuário ou senha inválidos",
-   "genericError": "Erro ao efetuar login. Por favor, tente novamente mais tarde."
-
+    "invalidEmailAdress": "E-mail inválido",
+    "errorBadPassword": "Usuário ou senha inválidos",
+    "genericError": "Erro ao efetuar login. Por favor, tente novamente mais tarde."
   },
   "enterCode": {
     "title": "Digite seu código",
@@ -42,7 +48,7 @@
   },
   "signUpScreen": {
     "title": "Cadastre-se",
-    "emailLabel": "E-mail",
+    "emailLabel": "E-mail ",
     "shareNumberLabel": "Número do Convidado",
     "phoneLabel": "Celular",
     "passwordLabel": "Senha",
@@ -62,6 +68,32 @@
       "portuguese": "Português"
     }
   },
+  "profileScreen": {
+    "profileTitle": "Perfil",
+    "subTitleAccount": "Conta",
+    "subTitleBooking": "Reserva",
+    "errorProfileScreenGetUserInfo": "Aconteceu um erro ao carregar as suas informações",
+    "subuTitleSettings": "Configurações"
+  }, 
+  "profileHandleChangePassword": {
+   "titleChangePassword": "Mudar senha"
+  }, 
+  "profileHandleLogout": {
+   "titleHandleLogout": "Sair"
+  }, 
+  "profileHandleAccount": {
+   "titleHandleAccount": "Mudar suas informações pessoas.",
+   "errorUpdating": "Ocorreu um erro ao atualizar as informações do usuario, por favor tente novamente mais tarde."
+  }, 
+  "profileHandleHandlePayment": {
+   "titlePayment": "Pagamento"
+  }, 
+  "profileHandleChangeRewards": {
+   "titleRewards": "Recompensas"
+  }, 
+  "profileHandleSettingsLanguage": {
+   "titleLanguage": "Linguagem"
+  }, 
   "setNewPasswordScreen": {
     "title": "Defina sua senha nova",
     "passwordLabel": "Senha",
@@ -69,12 +101,45 @@
     "continueButton": "Continuar",
     "passwordsDoNotMatch": "As senhas não correspondem"
   },
-  "profileHandleAccount": {
-    "errorUpdating": "Ocorreu um erro ao atualizar as informações do usuario, por favor tente novamente mais tarde."
+  "profileHandleBooking": {
+    "errorUserID": "Falha ao carregar ID de usuário",
+    "bookingInformation": "Informações da sua reserva",
+    "errorProfileScreenGetUserInfo": "Aconteceu um erro ao carregar as suas informações",
+    "loadingBookingNumber": "Carregando..."
   },
   "changePersonalInfo": {
     "failedUpdate": "Ocorreu um erro ao atualizar as informações do usuário. Por favor tente novamente mais tarde.",
-    "updateSuccess": "Suas informações pessoais foram atualizadas com sucesso."
+    "updateSuccess": "Suas informações pessoais foram atualizadas com sucesso.",
+    "failedUpdateUser": "Falha ao atualizar usuário.",
+    "loadingData": "Erro ao carregar os dados iniciais.",
+    "pictureUpdate": "Sua foto de perfil foi atualizada com sucesso.",
+    "failedUpdatePicture": "Falha ao atualizar a foto do perfil",
+    "notFoundAsyncStorage": "ID do usuário não encontrado no AsyncStorage.",
+    "failedUserInfo": "Falha ao buscar informações do usuário.",
+    "failedUpdateUserInfo": "Falha ao atualizar as informações do usuário",
+    "permissionLibraryDenied": "A permissão para acessar a biblioteca de mídia foi negada",
+    "locationPermissionDenied": "A permissão para acessar o local foi negada",
+    "genderM": "Masculino",
+    "genderF": "Feminino",
+    "buttonSave": "Salvar",
+    "labelFirstName": "Nome",
+    "labelLastName": "Sobrenome",
+    "labelLocation": "Localização Atual",
+    "labelAge": "Idade",
+    "buttonUploadImage": "Carregar foto",
+    "personalInfo": "Informações Pessoais"
+  },
+  "popularEvents": {
+    "events": "Eventos Populares"
+  },
+  "exploreCategories": {
+    "categories": "Explorar Categorias"
+  },
+  "searchViewHome": {
+    "searchEvents": "Digite por Disney, Comida ou Ingressos"
+  }, 
+  "profileAccount": {
+    "welcome": "Olá,"
   }
 }
 

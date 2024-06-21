@@ -16,7 +16,6 @@ import {
 } from "react-native-alert-notification";
 import { TextInput, RadioButton, Button, IconButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import profilePhoto from "../../assets/profile/100.png";
 import colors from "../colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -31,35 +30,17 @@ import { useTranslation } from "react-i18next";
 
 const ChangePersonalInfo = () => {
   const navigation = useNavigation();
-  const [loading, setLoading] = useState(false);
   const [autoLocation, setAutoLocation] = useState(null);
+  const [profilePhoto, setProfilePhoto] = useState(null);
   const [userData, setUserData] = useState({
-    userRole: "",
-    email: "",
-    fullName: "",
-    documentNumber: "",
-    birthDate: "",
-    rental: "",
-    gender: "",
-    phone: "",
-    language: "",
+    firstName: "",
+    lastName: "",
+    gender: "first",
+    age: "",
+    profilePic: null,
   });
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   const { t } = useTranslation();
-
-  const defaultToastConfig = {
-    autoClose: 3000,
-    titleStyle: { fontSize: 16, fontWeight: "bold" },
-  };
-
-  const lightColors = {
-    label: "#000",
-    card: "#fcfcfc",
-    overlay: "#f0f0f0",
-    success: "#28a745",
-    danger: "rgba(255, 0, 0, 1)",
-    warning: "#ffc107",
-  };
 
   useEffect(() => {
     if (!initialDataLoaded) {
@@ -69,48 +50,92 @@ const ChangePersonalInfo = () => {
           setInitialDataLoaded(true);
         })
         .catch((error) => {
-          console.error("Error loading initial data:", error);
+          console.error(error);
           Toast.show({
             type: ALERT_TYPE.DANGER,
             title: "Ops",
-            textBody: t("change"),
+            textBody: t("changePersonalInfo.loadingData"),
           });
           setLoading(false);
         });
     }
   }, [initialDataLoaded]);
 
-  const getUserInfo = async () => {
-    const userId = await AsyncStorage.getItem("userId");
-    if (!userId) {
-      throw new Error("User ID not found in AsyncStorage");
-    }
-
-    const response = await requestGetUser(userId);
-    if (response.status === 200) {
-      const { fullName, gender, birthDate, profilePic } = response.data.data;
-      const [firstName, lastName] = fullName.split(" ");
-      const age = new Date().getFullYear() - new Date(birthDate).getFullYear();
-      setUserData({
-        firstName,
-        lastName,
-        gender: gender === "Male" ? "first" : "second",
-        age: age.toString(),
-        profilePic,
-      });
-    } else {
-      throw new Error(`Failed to fetch user info: ${response.status}`);
-    }
-  };
+  const [loading, setLoading] = useState(true);
 
   const handleGoBack = () => {
     navigation.navigate("ProfileScreen");
   };
 
+  const getUserInfo = async () => {
+    setLoading(true);
+    const userId = await AsyncStorage.getItem("userId");
+
+    if (!userId) {
+      t("changePersonalInfo.notFoundAsyncStorage");
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Ops",
+        textBody: t("changePersonalInfo.notFoundAsyncStorage"),
+      });
+      return;
+    }
+
+    try {
+      const response = await requestGetUser(userId);
+      if (response.status === 200) {
+        const { profilePic } = response.data.data;
+        setProfilePhoto(profilePic);
+        const {
+          fullName,
+          gender,
+          birthDate,
+          email,
+          phone,
+          userRole,
+          language,
+          rental,
+        } = response.data.data;
+        const [firstName, lastName] = fullName.split(" ");
+
+        const age =
+          new Date().getFullYear() - new Date(birthDate).getFullYear();
+
+        setUserData({
+          firstName,
+          lastName,
+          gender: gender === "Male" ? "first" : "second",
+          age: age.toString(),
+          email,
+          userRole,
+          phone,
+          language,
+          rental,
+        });
+        fetchLocation();
+      } else {
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Ops",
+          textBody: t("changePersonalInfo.failedUpdateUserInfo"),
+        });
+      }
+    } catch (error) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Ops",
+        textBody: t("changePersonalInfo.failedUpdate"),
+      });
+      setLoading(false);
+    }
+  };
+
   const fetchLocation = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
-      throw new Error("Permission to access location was denied");
+      t("changePersonalInfo.locationPermissionDenied");
+      setLoading(false);
+      return;
     }
 
     const { coords } = await Location.getCurrentPositionAsync({});
@@ -121,29 +146,38 @@ const ChangePersonalInfo = () => {
     });
 
     if (response.length > 0) {
-      const { region, country } = response[0];
-      setAutoLocation(`${region}, ${country}`);
+      const { city, region, country } = response[0];
+      setAutoLocation(`${city} - ${region}, ${country}`);
     }
+    setLoading(false);
   };
 
   const handleSave = async () => {
-    setLoading(true);
-    const userId = await AsyncStorage.getItem("userId");
-    if (!userId) {
-      console.error("User ID not found in AsyncStorage");
+    if (!userData.firstName || !userData.lastName || !userData.age) {
       Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Error",
-        textBody: "User ID not found in AsyncStorage",
+        type: ALERT_TYPE.WARNING,
+        title: "Atenção",
+        textBody: t("changePersonalInfo.errorEmptyField"),
       });
       setLoading(false);
       return;
     }
 
-    // Calcula a data de nascimento a partir da idade fornecida
+    setLoading(true);
+    const userId = await AsyncStorage.getItem("userId");
+    if (!userId) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Ops",
+        textBody: t("changePersonalInfo.notFoundAsyncStorage"),
+      });
+      setLoading(false);
+      return;
+    }
+
     const birthDate = new Date();
     birthDate.setFullYear(birthDate.getFullYear() - parseInt(userData.age));
-    const formattedBirthDate = birthDate.toISOString().split("T")[0]; // Formato YYYY-MM-DD
+    const formattedBirthDate = birthDate.toISOString().split("T")[0];
 
     const updatedData = {
       fullName: `${userData.firstName} ${userData.lastName}`,
@@ -159,10 +193,8 @@ const ChangePersonalInfo = () => {
 
     try {
       const response = await requestUpdateUser(userId, updatedData);
-      console.log("Dados Enviados PUT", response);
 
       if (response.status === 200) {
-        t("changePersonalInfo.failedUpdate");
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Success",
@@ -173,17 +205,14 @@ const ChangePersonalInfo = () => {
           navigation.navigate("ProfileScreen");
         }, 5000);
       } else {
-        console.error("Failed to update user info:", response.status);
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: `Failed to update user info: ${response.status}`,
+          textBody: t("changePersonalInfo.failedUpdateUserInfo"),
         });
         setLoading(false);
       }
     } catch (error) {
-      if (error.response.data.message === 500)
-        t("changePersonalInfo.failedUpdate");
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
@@ -196,7 +225,7 @@ const ChangePersonalInfo = () => {
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      console.error("Permission to access media library was denied");
+      t("changePersonalInfo.permissionLibraryDenied");
       return;
     }
 
@@ -208,6 +237,7 @@ const ChangePersonalInfo = () => {
     });
 
     if (!result.canceled) {
+      setLoading(true);
       setUserData({ ...userData, profilePic: result.uri });
       try {
         const response = await changeProfilePic(result);
@@ -215,26 +245,56 @@ const ChangePersonalInfo = () => {
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Success",
-            textBody: "Your profile picture has been updated successfully.",
+            textBody: t("changePersonalInfo.pictureUpdate"),
           });
+          setTimeout(() => {
+            setLoading(false);
+          }, 4000);
         } else {
-          console.error("Failed to update profile picture:", response.status);
           Toast.show({
             type: ALERT_TYPE.DANGER,
             title: "Error",
-            textBody: `Failed to update profile picture: ${response.status}`,
+            textBody: t("changePersonalInfo.failedUpdatePicture"),
           });
         }
       } catch (error) {
         Toast.show({
           type: ALERT_TYPE.DANGER,
-          title: "Error",
-          textBody: `An error occurred while updating profile picture: ${error.message}`,
+          title: "Ops",
+          textBody: t("changePersonalInfo.failedUpdatePicture"),
         });
       }
     }
   };
 
+  useEffect(() => {
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        Toast.hide();
+      }
+    );
+
+    getUserInfo();
+
+    return () => {
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  const defaultToastConfig = {
+    autoClose: 3000,
+    titleStyle: { fontSize: 16, fontWeight: "bold" },
+  };
+
+  const lightColors = {
+    label: "#000",
+    card: "#fcfcfc",
+    overlay: "#f0f0f0",
+    success: "#28a745",
+    danger: "rgba(255, 0, 0, 1)",
+    warning: "#ffc107",
+  };
   return (
     <>
       <AlertNotificationRoot
@@ -256,15 +316,17 @@ const ChangePersonalInfo = () => {
                 </TouchableOpacity>
               </View>
               <View style={styles.header}>
-                <Text style={styles.headerText}>Personal Info</Text>
+                <Text style={styles.headerText}>
+                  {t("changePersonalInfo.personalInfo")}
+                </Text>
               </View>
               <View style={styles.profilePicContainer}>
                 <Image
                   style={styles.profilePic}
                   source={
-                    userData.profilePic
-                      ? { uri: userData.profilePic }
-                      : profilePhoto
+                    profilePhoto
+                      ? { uri: profilePhoto }
+                      : require("../../assets/profile/profileIcon.png")
                   }
                 />
                 <Button
@@ -273,11 +335,11 @@ const ChangePersonalInfo = () => {
                   style={styles.uploadButton}
                   onPress={pickImage}
                 >
-                  Upload Imagem
+                  {t("changePersonalInfo.buttonUploadImage")}
                 </Button>
               </View>
               <TextInput
-                label={"First Name"}
+                label={t("changePersonalInfo.labelFirstName")}
                 value={userData.firstName}
                 onChangeText={(text) =>
                   setUserData({ ...userData, firstName: text })
@@ -288,7 +350,7 @@ const ChangePersonalInfo = () => {
                 style={styles.input}
               />
               <TextInput
-                label={"Last Name"}
+                label={t("changePersonalInfo.labelLastName")}
                 value={userData.lastName}
                 onChangeText={(text) =>
                   setUserData({ ...userData, lastName: text })
@@ -299,7 +361,7 @@ const ChangePersonalInfo = () => {
                 style={styles.input}
               />
               <TextInput
-                label={"Location"}
+                label={t("changePersonalInfo.labelLocation")}
                 disabled
                 value={autoLocation}
                 keyboardType="default"
@@ -314,12 +376,18 @@ const ChangePersonalInfo = () => {
                 value={userData.gender}
               >
                 <View style={styles.radioButtonContainer}>
-                  <RadioButton.Item label="Masculino" value="first" />
-                  <RadioButton.Item label="Feminino" value="second" />
+                  <RadioButton.Item
+                    label={t("changePersonalInfo.genderM")}
+                    value="first"
+                  />
+                  <RadioButton.Item
+                    label={t("changePersonalInfo.genderF")}
+                    value="second"
+                  />
                 </View>
               </RadioButton.Group>
               <TextInput
-                label={"Age"}
+                label={t("changePersonalInfo.labelAge")}
                 value={userData.age}
                 onChangeText={(text) => setUserData({ ...userData, age: text })}
                 keyboardType="numeric"
@@ -332,7 +400,7 @@ const ChangePersonalInfo = () => {
                 style={styles.saveButton}
                 onPress={handleSave}
               >
-                Salvar
+                {t("changePersonalInfo.buttonSave")}
               </Button>
             </View>
           </TouchableWithoutFeedback>
@@ -341,7 +409,6 @@ const ChangePersonalInfo = () => {
     </>
   );
 };
-
 const styles = StyleSheet.create({
   containerAlpha: {
     justifyContent: "flex-start",
