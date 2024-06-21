@@ -125,7 +125,10 @@
     "labelLastName": "Apellido",
     "labelLocation": "Ubicación Actual",
     "labelAge": "Edad",
-    "buttonUploadImage": "Cargar foto"
+    "buttonUploadImage": "Cargar foto",
+    "personalInfo": "Información Personal",
+    "errorEmptyField": "Por favor, completa todos los campos requeridos.",
+    "alertAttention": "Atención"
   },
   "popularEvents": {
     "events": "Eventos Populares"
@@ -137,9 +140,7 @@
     "searchEvents": "Busca por Disney, Comida o Boletos"
   },
   "profileAccount": {
-    "welcome": "Hola,",
-    "personalInfo": "Información Personal",
-    "errorEmptyField": "Por favor, completa todos los campos requeridos.",
-    "alertAttention": "Atención"
+    "welcome": "Hola,"
+
   }
 }
