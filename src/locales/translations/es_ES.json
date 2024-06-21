@@ -126,5 +126,17 @@
     "labelLocation": "Ubicación Actual",
     "labelAge": "Edad",
     "buttonUploadImage": "Cargar foto"
+  },
+  "popularEvents": {
+    "events": "Eventos Populares"
+  },
+  "exploreCategories": {
+    "categories": "Explorar Categorías"
+  },
+  "searchViewHome": {
+    "searchEvents": "Busca por Disney, Comida o Boletos"
+  },
+  "profileAccount": {
+    "welcome": "Hola,"
   }
 }
