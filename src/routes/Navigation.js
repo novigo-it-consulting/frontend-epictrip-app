@@ -13,6 +13,8 @@ import SplashScreen from "../screens/SplashScreen";
 import WebView from "../screens/WebViewPage";
 import ChangePersonalInfo from "../screens/ChangePersonalInfo";
 import EmConstrucaooScreen from "../screens/EmConstrucaooScreen";
+import PaymentScreen from "../screens/PaymentScreen";
+import ChangePaymentCard from "../screens/ChangePaymentScreen";
 
 const Stack = createStackNavigator();
 
@@ -34,6 +36,11 @@ const Navigation = () => {
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="EnterCode" component={EnterCode} />
         <Stack.Screen name="FogotPassword" component={FogotPassword} />
+        <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
+        <Stack.Screen
+          name="ChangePaymentScreen"
+          component={ChangePaymentCard}
+        />
         <Stack.Screen
           name="EmConstrucaoScreen"
           component={EmConstrucaooScreen}

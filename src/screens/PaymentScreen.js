@@ -1,0 +1,262 @@
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
+import {
+  AlertNotificationRoot,
+  Toast,
+  ALERT_TYPE,
+} from "react-native-alert-notification";
+import Carousel from "react-native-reanimated-carousel";
+import "react-native-gesture-handler";
+import colors from "../colors";
+import { IconButton } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { requestGetMethodsByUser } from "../services/api";
+
+const height = Dimensions.get("window").height;
+const width = Dimensions.get("window").width;
+
+const PaymentScreen = () => {
+  const [cards, setCards] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    fetchCards();
+  }, []);
+
+  const defaultToastConfig = {
+    autoClose: 3000,
+    titleStyle: { fontSize: 16, fontWeight: "bold" },
+  };
+
+  const lightColors = {
+    label: "#000",
+    card: "#fcfcfc",
+    overlay: "#f0f0f0",
+    success: "#28a745",
+    danger: "rgba(255, 0, 0, 1)",
+    warning: "#ffc107",
+  };
+
+  const fetchCards = async () => {
+    try {
+      const userId = await AsyncStorage.getItem("userId");
+      const response = await requestGetMethodsByUser(userId);
+      console.log(response.data.data);
+      if (response.status == 200 || response.status == 201) {
+        setCards(response.data.data);
+      } else {
+        console.error("Unexpected response format:", response.data);
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Error",
+          textBody: "Unexpected response format. Please try again.",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching cards:", error);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: "Failed to fetch cards. Please try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  console.log("CARDS", cards);
+  const handleGoBack = () => {
+    navigation.navigate("ProfileScreen");
+  };
+
+  return (
+    <AlertNotificationRoot
+      toastConfig={defaultToastConfig}
+      colors={[lightColors]}
+      theme={"light"}
+    >
+      <View style={styles.containerAlpha}>
+        {loading ? (
+          <ActivityIndicator size="medium" color={colors.primary} />
+        ) : (
+          <>
+            <View style={styles.header}>
+              <TouchableOpacity onPress={handleGoBack}>
+                <IconButton
+                  style={{ marginLeft: -15 }}
+                  icon={"arrow-left-thin"}
+                  size={30}
+                />
+              </TouchableOpacity>
+              <Text style={styles.title}>Payment</Text>
+            </View>
+
+            {cards.length === 0 ? (
+              <View style={styles.noCardsView}>
+                <Text style={styles.noCardsText}>Sem cartões...</Text>
+                <TouchableOpacity
+                  style={styles.addButton}
+                  onPress={() => navigation.navigate("ChangePaymentScreen")}
+                >
+                  <Text style={styles.addButtonText}>Adicionar Cartão</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <>
+                <View></View>
+                <Carousel
+                  loop={cards.length > 1}
+                  width={width * 0.9}
+                  height={height * 0.3}
+                  data={cards}
+                  scrollAnimationDuration={1000}
+                  renderItem={({ index }) => (
+                    <View style={styles.carouselContent}>
+                      <View
+                        style={[
+                          styles.creditCard,
+                          {
+                            backgroundColor:
+                              index % 2 === 0 ? "#000012" : "#051566",
+                          },
+                        ]}
+                      >
+                        <View style={styles.creditAndVisaView}>
+                          <Text style={styles.creditText}>{"Credit"}</Text>
+                        </View>
+                        <View style={styles.cardDetailsView}>
+                          <Text style={styles.cardDetailsText}>
+                            {cards[index].cardName || "No Name"}
+                          </Text>
+                          <Text style={styles.cardDetailsText}>
+                            {cards[index].cardNumber || "XXXX-XXXX-XXXX-XXXX"}
+                          </Text>
+                        </View>
+                        <Text style={styles.expiryText}>
+                          {cards[index].cardExpiration || "MM/YY"}
+                        </Text>
+                      </View>
+                    </View>
+                  )}
+                />
+                <View style={styles.noCardsView}>
+                  <TouchableOpacity
+                    style={styles.addButton}
+                    onPress={() => navigation.navigate("ChangePaymentScreen")}
+                  >
+                    <Text style={styles.addButtonText}>Adicionar Cartão</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+          </>
+        )}
+      </View>
+    </AlertNotificationRoot>
+  );
+};
+
+const styles = StyleSheet.create({
+  containerAlpha: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    marginRight: "auto",
+    marginLeft: "auto",
+    backgroundColor: colors.backGroundLight,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    width: "85%",
+    marginTop: 50,
+    marginBottom: 50,
+  },
+  title: {
+    fontSize: 33,
+    fontWeight: "bold",
+  },
+  creditCard: {
+    width: "100%",
+    height: height * 0.25,
+    borderRadius: 15,
+    padding: 22,
+    justifyContent: "space-between",
+    alignSelf: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  containerBackButton: {
+    backgroundColor: "red",
+    width: 100,
+  },
+  creditAndVisaView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  creditText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    letterSpacing: 2,
+  },
+  cardDetailsView: {
+    flexDirection: "column",
+  },
+  cardDetailsText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    letterSpacing: 2,
+    paddingTop: "2.5%",
+  },
+  expiryText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    letterSpacing: 2,
+    textAlign: "right",
+  },
+  carouselContent: {
+    width: "100%",
+    justifyContent: "center",
+    height: "100%",
+  },
+  noCardsView: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 0.3,
+    width: "100%",
+  },
+  noCardsText: {
+    fontSize: 18,
+    fontWeight: "400",
+  },
+  addButton: {
+    marginTop: 20,
+    backgroundColor: colors.primary,
+    padding: 15,
+    borderRadius: 10,
+    width: "80%",
+    alignItems: "center",
+  },
+  addButtonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+});
+
+export default PaymentScreen;
