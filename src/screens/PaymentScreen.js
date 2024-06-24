@@ -159,6 +159,15 @@ const PaymentScreen = () => {
                                 : require("../../assets/creditCard/mastercard.png")
                             }
                           />
+                          <TouchableOpacity
+                            onPress={() => alert("Click to Edit")}
+                          >
+                            <IconButton
+                              iconColor={"#fff"}
+                              icon={"credit-card-edit-outline"}
+                              size={20}
+                            />
+                          </TouchableOpacity>
                         </View>
                         <View style={styles.cardDetailsView}>
                           <Text style={styles.creditText}>
