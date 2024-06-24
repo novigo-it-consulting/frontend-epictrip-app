@@ -129,7 +129,9 @@
     "buttonUploadImage": "Carregar foto",
     "personalInfo": "Informações Pessoais",
     "errorEmptyField": "Por favor preencha todos os campos requeridos.",
-     "alertAttention": "Atenção"
+    "alertAttention": "Atenção",
+    "alertSuccess": "Sucesso",
+    "alertError": "Erro"
   },
   "popularEvents": {
     "events": "Eventos Populares"

@@ -197,7 +197,7 @@ const ChangePersonalInfo = () => {
       if (response.status === 200) {
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
-          title: "Success",
+          title: t("changePersonalInfo.alertSuccess"),
           textBody: t("changePersonalInfo.updateSuccess"),
         });
         setTimeout(() => {
@@ -244,7 +244,7 @@ const ChangePersonalInfo = () => {
         if (response.status === 200) {
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
-            title: "Success",
+            title: t("changePersonalInfo.alertSuccess"),
             textBody: t("changePersonalInfo.pictureUpdate"),
           });
           setTimeout(() => {
@@ -253,7 +253,7 @@ const ChangePersonalInfo = () => {
         } else {
           Toast.show({
             type: ALERT_TYPE.DANGER,
-            title: "Error",
+            title: t("changePersonalInfo.alertError"),
             textBody: t("changePersonalInfo.failedUpdatePicture"),
           });
         }
