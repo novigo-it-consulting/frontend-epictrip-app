@@ -35,10 +35,12 @@ const ChangePaymentCard = ({ navigation }) => {
         return;
       }
 
+      console.log(data);
+
       const userId = await AsyncStorage.getItem("userId");
       const cardData = {
         userId: userId,
-        cardType: "CREDITO",
+        cardType: data.brand,
         cardNumber: data.number,
         cardName: data.holder,
         cardExpiration: data.expiration,
@@ -51,10 +53,12 @@ const ChangePaymentCard = ({ navigation }) => {
         if (response.status === 200 || response.status === 201) {
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
-            title: "Success",
+            title: "Success!",
             textBody: "Card added successfully!",
           });
-          navigation.goBack();
+          setTimeout(() => {
+            navigation.goBack();
+          }, 3000);
         } else {
           console.error("Error adding card:", response.statusText);
           Toast.show({

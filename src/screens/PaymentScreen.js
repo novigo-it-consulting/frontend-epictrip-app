@@ -6,6 +6,7 @@ import {
   Dimensions,
   ActivityIndicator,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import {
   AlertNotificationRoot,
@@ -73,11 +74,33 @@ const PaymentScreen = () => {
     }
   };
 
-  console.log("CARDS", cards);
+  const getRandomDarkColor = () => {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    // Darken the color by reducing the brightness
+    let c = color.substring(1); // strip #
+    let rgb = parseInt(c, 16); // convert rrggbb to decimal
+    let r = (rgb >> 16) & 0xff; // extract red
+    let g = (rgb >> 8) & 0xff; // extract green
+    let b = (rgb >> 0) & 0xff; // extract blue
+
+    r = Math.floor(r * 0.5);
+    g = Math.floor(g * 0.5);
+    b = Math.floor(b * 0.5);
+
+    return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
+  };
+
   const handleGoBack = () => {
     navigation.navigate("ProfileScreen");
   };
 
+  const formatCardNumber = (number) => {
+    return "**** **** **** " + number.slice(-4);
+  };
   return (
     <AlertNotificationRoot
       toastConfig={defaultToastConfig}
@@ -124,21 +147,26 @@ const PaymentScreen = () => {
                       <View
                         style={[
                           styles.creditCard,
-                          {
-                            backgroundColor:
-                              index % 2 === 0 ? "#000012" : "#051566",
-                          },
+                          { backgroundColor: getRandomDarkColor() },
                         ]}
                       >
                         <View style={styles.creditAndVisaView}>
-                          <Text style={styles.creditText}>{"Credit"}</Text>
+                          <Image
+                            style={styles.cardLogo}
+                            source={
+                              cards[index].cardType === "visa"
+                                ? require("../../assets/creditCard/visa.png")
+                                : require("../../assets/creditCard/mastercard.png")
+                            }
+                          />
                         </View>
                         <View style={styles.cardDetailsView}>
                           <Text style={styles.cardDetailsText}>
                             {cards[index].cardName || "No Name"}
                           </Text>
                           <Text style={styles.cardDetailsText}>
-                            {cards[index].cardNumber || "XXXX-XXXX-XXXX-XXXX"}
+                            {formatCardNumber(cards[index].cardNumber) ||
+                              "**** **** **** ****"}
                           </Text>
                         </View>
                         <Text style={styles.expiryText}>
@@ -214,6 +242,11 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 16,
     letterSpacing: 2,
+  },
+  cardLogo: {
+    width: 70,
+    height: 70,
+    resizeMode: "contain",
   },
   cardDetailsView: {
     flexDirection: "column",
