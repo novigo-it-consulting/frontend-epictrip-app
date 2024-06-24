@@ -161,7 +161,7 @@ const PaymentScreen = () => {
                           />
                         </View>
                         <View style={styles.cardDetailsView}>
-                          <Text style={styles.cardDetailsText}>
+                          <Text style={styles.creditText}>
                             {cards[index].cardName || "No Name"}
                           </Text>
                           <Text style={styles.cardDetailsText}>
@@ -242,6 +242,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 16,
     letterSpacing: 2,
+    fontWeight: "bold",
   },
   cardLogo: {
     width: 70,
@@ -253,13 +254,14 @@ const styles = StyleSheet.create({
   },
   cardDetailsText: {
     color: "#FFFFFF",
-    fontSize: 16,
+    fontSize: 14,
     letterSpacing: 2,
     paddingTop: "2.5%",
+    fontWeight: "400",
   },
   expiryText: {
     color: "#FFFFFF",
-    fontSize: 16,
+    fontSize: 14,
     letterSpacing: 2,
     textAlign: "right",
   },
