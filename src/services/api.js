@@ -89,7 +89,7 @@ export const requestGetUser = async (userId) => {
 
 export const changeProfilePic = async (file) => {
   try {
-    console.log("FILE: ", file)
+    console.log("FILE: ", file);
     const headers = {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
@@ -102,7 +102,7 @@ export const changeProfilePic = async (file) => {
     formData.append("file", {
       uri: selectedFile.uri, // A URI do arquivo
       type: selectedFile.mimeType, // O tipo do arquivo
-      name: selectedFile.fileName // Nome do arquivo
+      name: selectedFile.fileName, // Nome do arquivo
     });
 
     const response = await axios.post(
@@ -112,7 +112,7 @@ export const changeProfilePic = async (file) => {
         headers,
       }
     );
-    console.log("RESPONSE API: ", response)
+    console.log("RESPONSE API: ", response);
     return response;
   } catch (error) {
     throw error;
@@ -206,6 +206,33 @@ export const requestGetMethodsByUser = async (userId) => {
       { headers }
     );
     return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const requestPayment = async (userId, paymentMethodId, amount) => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    const data = JSON.stringify({
+      userId: userId,
+      paymentMethod: paymentMethodId,
+      amount: amount,
+    });
+
+    const config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: `${BASE_URL}/charges`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    const response = await axios.request(config);
+    return response.data;
   } catch (error) {
     throw error;
   }

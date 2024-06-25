@@ -16,10 +16,12 @@ import {
 } from "react-native-alert-notification";
 import colors from "../colors";
 import CreditCard from "react-native-credit-card-form-ui";
-import { requestGetMethodById, requestUpdatePaymentMethod } from "../services/api";
+import {
+  requestGetMethodById,
+  requestUpdatePaymentMethod,
+} from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
-import { toNumber } from "i18n-js";
 
 const UpdateCard = ({ navigation }) => {
   const creditCardRef = useRef();
@@ -128,7 +130,9 @@ const UpdateCard = ({ navigation }) => {
           style={styles.containerAlpha}
         >
           <Text style={styles.title}>Editar Cartão</Text>
-          {!card || card === 'undefined' ? <></> : (
+          {!card || card === "undefined" ? (
+            <></>
+          ) : (
             <CreditCard
               ref={creditCardRef}
               initialValues={{
