@@ -80,22 +80,15 @@ const UpdateCard = ({ navigation }) => {
     }
   }, [navigation]);
 
-  const handleCardChange = async (card) => {
-    await setCard(card);
-  }
-
   const fetchCard = async () => {
     const cardId = await AsyncStorage.getItem("cardId");
     const response = await requestGetMethodById(cardId);
     if (response.status === 200) {
-      const data = response.data;
-      console.log("DATAAAA: ", data);
+      // ta aquiiii
+      const data = response.data.data;
+      // ta aquiiii
       setCard(data);
     }
-  };
-
-  const formatNumber = (num) => {
-    return num.replace(/\D/g, '').replace(/(.{4})/g, '$1.').slice(0, -1);
   };
 
   useEffect(() => {
@@ -135,7 +128,7 @@ const UpdateCard = ({ navigation }) => {
           style={styles.containerAlpha}
         >
           <Text style={styles.title}>Editar Cartão</Text>
-          {!card || card === 'undefined' ? <><Text>{'no data'}</Text></> : (
+          {!card || card === 'undefined' ? <></> : (
             <CreditCard
               ref={creditCardRef}
               initialValues={{
