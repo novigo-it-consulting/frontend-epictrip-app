@@ -38,7 +38,7 @@ const ForgetPasswordScreen = ({ navigation }) => {
   const [typedUsername, setTypedUsername] = useState("");
 
   const fetchTypedUsername = async () => {
-    const typedUser = await AsyncStorage.getItem("typedUsername");
+    const typedUser = await AsyncStorage.getItem("username");
     setTypedUsername(typedUser);
   };
 

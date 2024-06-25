@@ -32,7 +32,6 @@ export const requestLogin = async (dados) => {
 };
 
 export const requestGenerateToken = async (dados) => {
-  console.log("dados: ", dados);
   try {
     const response = await axios.post(
       `${BASE_URL}/passwordtokens/generatetoken/${dados.username}`
@@ -89,7 +88,7 @@ export const requestGetUser = async (userId) => {
 
 export const changeProfilePic = async (file) => {
   try {
-    console.log("FILE: ", file)
+    console.log("FILE: ", file);
     const headers = {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
@@ -102,7 +101,7 @@ export const changeProfilePic = async (file) => {
     formData.append("file", {
       uri: selectedFile.uri, // A URI do arquivo
       type: selectedFile.mimeType, // O tipo do arquivo
-      name: selectedFile.fileName // Nome do arquivo
+      name: selectedFile.fileName, // Nome do arquivo
     });
 
     const response = await axios.post(
@@ -112,7 +111,7 @@ export const changeProfilePic = async (file) => {
         headers,
       }
     );
-    console.log("RESPONSE API: ", response)
+    console.log("RESPONSE API: ", response);
     return response;
   } catch (error) {
     throw error;
