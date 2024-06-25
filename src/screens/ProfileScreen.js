@@ -11,6 +11,7 @@ import ProfileHandleSettingsPayment from "../components/ProfileHandleSettingsPay
 import ProfileHandleSettingsRewards from "../components/ProfileHandleSettingsRewards";
 import ProfileHandleSettingsLanguage from "../components/ProfileHandleSettingsLanguage";
 import ProfileHandleLogout from "../components/ProfileHandleLogout.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
