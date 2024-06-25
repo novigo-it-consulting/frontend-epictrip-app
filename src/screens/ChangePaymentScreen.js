@@ -103,7 +103,13 @@ const ChangePaymentCard = ({ navigation }) => {
           style={styles.containerAlpha}
         >
           <Text style={styles.title}>Adiconar Cartão</Text>
-          <CreditCard ref={creditCardRef} />
+          <CreditCard
+            ref={creditCardRef}
+            background={"#1a2b45"}
+            textColor={"#fff"}
+            placeholderTextColor="#ccc"
+            expirationDateFormat="MM/YYYY"
+          />
           <View
             style={{ width: "50%", marginLeft: "auto", marginRight: "auto" }}
           >
@@ -132,6 +138,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+    color: colors.primary,
   },
   addButton: {
     marginTop: 20,

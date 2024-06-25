@@ -18,6 +18,7 @@
     "@mui/material": "^5.15.15",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-native-community/datetimepicker": "^8.1.1",
     "@react-native-community/geolocation": "^3.2.1",
     "@react-native-masked-view/masked-view": "0.3.1",
     "@react-native-picker/picker": "^2.7.7",

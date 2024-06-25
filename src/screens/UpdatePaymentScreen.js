@@ -27,60 +27,63 @@ const UpdateCard = ({ navigation }) => {
   const creditCardRef = useRef();
   const [card, setCard] = useState(null);
 
-  const handleSubmit = useCallback(async (methodId) => {
-    if (creditCardRef.current) {
-      const { error, data } = creditCardRef.current.submit();
-      if (error) {
-        Toast.show({
-          type: ALERT_TYPE.DANGER,
-          title: "Erro",
-          textBody: "Please fill in all fields correctly!",
-        });
-        return;
-      }
-
-      const userId = await AsyncStorage.getItem("userId");
-      const cardData = {
-        methodId: methodId,
-        userId: userId,
-        cardType: "visa",
-        cardNumber: data.number,
-        cardName: data.holder,
-        cardExpiration: data.expiration,
-        cardCVV: data.cvv,
-        createdAt: moment().toISOString(),
-      };
-
-      try {
-        const response = await requestUpdatePaymentMethod(cardData);
-        console.log(response)
-        if (response.status === 200 || response.status === 201) {
+  const handleSubmit = useCallback(
+    async (methodId) => {
+      if (creditCardRef.current) {
+        const { error, data } = creditCardRef.current.submit();
+        if (error) {
           Toast.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: "Success!",
-            textBody: "Card added successfully!",
+            type: ALERT_TYPE.DANGER,
+            title: "Erro",
+            textBody: "Please fill in all fields correctly!",
           });
-          setTimeout(() => {
-            navigation.goBack();
-          }, 3000);
-        } else {
-          console.error("Error adding card:", response.statusText);
+          return;
+        }
+
+        const userId = await AsyncStorage.getItem("userId");
+        const cardData = {
+          methodId: methodId,
+          userId: userId,
+          cardType: "visa",
+          cardNumber: data.number,
+          cardName: data.holder,
+          cardExpiration: data.expiration,
+          cardCVV: data.cvv,
+          createdAt: moment().toISOString(),
+        };
+
+        try {
+          const response = await requestUpdatePaymentMethod(cardData);
+          console.log(response);
+          if (response.status === 200 || response.status === 201) {
+            Toast.show({
+              type: ALERT_TYPE.SUCCESS,
+              title: "Success!",
+              textBody: "Card added successfully!",
+            });
+            setTimeout(() => {
+              navigation.goBack();
+            }, 3000);
+          } else {
+            console.error("Error adding card:", response.statusText);
+            Toast.show({
+              type: ALERT_TYPE.DANGER,
+              title: "Error",
+              textBody: "Failed to add card. Please try again.",
+            });
+          }
+        } catch (error) {
+          console.error("Error adding card:", error);
           Toast.show({
             type: ALERT_TYPE.DANGER,
             title: "Error",
             textBody: "Failed to add card. Please try again.",
           });
         }
-      } catch (error) {
-        console.error("Error adding card:", error);
-        Toast.show({
-          type: ALERT_TYPE.DANGER,
-          title: "Error",
-          textBody: "Failed to add card. Please try again.",
-        });
       }
-    }
-  }, [navigation]);
+    },
+    [navigation]
+  );
 
   const fetchCard = async () => {
     const cardId = await AsyncStorage.getItem("cardId");
@@ -128,6 +131,10 @@ const UpdateCard = ({ navigation }) => {
             <>
               <CreditCard
                 ref={creditCardRef}
+                background={"#1a2b45"}
+                textColor={"#fff"}
+                placeholderTextColor="#ccc"
+                expirationDateFormat="MM/YYYY"
                 initialValues={{
                   number: card.cardNumber,
                   holder: card.cardName,
@@ -135,14 +142,23 @@ const UpdateCard = ({ navigation }) => {
                   cvv: card.cardCVV,
                 }}
               />
-              <View style={{ width: "50%", marginLeft: "auto", marginRight: "auto", marginTop: 20 }}>
-                <TouchableOpacity style={styles.addButton} onPress={() => handleSubmit(card.methodId)}>
-                  <Text style={styles.addButtonText}>Adicionar Cartão</Text>
+              <View
+                style={{
+                  width: "90%",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  marginTop: 20,
+                }}
+              >
+                <TouchableOpacity
+                  style={styles.addButton}
+                  onPress={() => handleSubmit(card.methodId)}
+                >
+                  <Text style={styles.addButtonText}>Atualizar Cartão</Text>
                 </TouchableOpacity>
               </View>
             </>
           )}
-
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
     </AlertNotificationRoot>
@@ -164,6 +180,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+    color: colors.primary,
   },
   addButton: {
     marginTop: 20,

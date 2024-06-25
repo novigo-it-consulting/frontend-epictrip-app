@@ -8,13 +8,13 @@ import {
   Platform,
   Dimensions,
   Image,
-  StyleSheet
+  StyleSheet,
 } from "react-native";
 import {
   Button,
   Provider as PaperProvider,
   DefaultTheme,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native-paper";
 import {
   ALERT_TYPE,
@@ -36,6 +36,7 @@ const Payment = () => {
   const [selectedCard, setSelectedCard] = useState(null);
   const [loading, setLoading] = useState(false);
   const [cards, setCards] = useState(null);
+  const [selectedMethodId, setSelectedMethodId] = useState(null);
   const navigation = useNavigation();
 
   const formatCardNumber = (number) => {
@@ -62,35 +63,42 @@ const Payment = () => {
   };
 
   const fetchCards = async () => {
-    try{
+    try {
       const userId = await AsyncStorage.getItem("userId");
       const response = await requestGetMethodsByUser(userId);
       if (response.status === 200) {
         setCards(response.data.data);
+        if (response.data.data.length > 0) {
+          setSelectedMethodId(response.data.data[0].methodId);
+        }
       }
-    } catch (error){
+    } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     fetchCards();
   }, [navigation]);
 
-  const handlePayment = async (cardId) => {
+  const handlePayment = async () => {
+    if (!selectedMethodId) return;
     setLoading(true);
     try {
       const userId = await AsyncStorage.getItem("userId");
       const amount = "0.1";
 
-      const response = await requestPayment(userId, cardId, amount);
-      Toast.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Success",
-        textBody: "Payment successful!",
-      });
-      alert("Compra efetuada com sucesso!")
-      navigation.navigate("Home")
+      const response = await requestPayment(userId, selectedMethodId, amount);
+      if (response.code === "CREATED" || response.status === 201) {
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Success",
+          textBody: "Payment successful!",
+        });
+        setTimeout(() => {
+          navigation.goBack();
+        }, 4000);
+      }
     } catch (error) {
       console.error(error);
       Toast.show({
@@ -103,102 +111,119 @@ const Payment = () => {
     }
   };
 
+  const defaultToastConfig = {
+    autoClose: 3000,
+    titleStyle: { fontSize: 16, fontWeight: "bold" },
+  };
+
+  const lightColors = {
+    label: "#000",
+    card: "#fcfcfc",
+    overlay: "#f0f0f0",
+    success: "#28a745",
+    danger: "rgba(255, 0, 0, 1)",
+    warning: "#ffc107",
+  };
   return (
-    <PaperProvider theme={theme}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <AlertNotificationRoot>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <KeyboardAvoidingView
-              behavior={Platform.OS === "ios" ? "padding" : null}
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-                paddingHorizontal: 20,
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontSize: 23,
-                  fontWeight: "bold",
-                  color: colors.primary,
-                }}
-              >
-                Pagamento
-              </Text>
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontSize: 50,
-                  fontWeight: "bold",
-                  color: colors.primary,
-                  marginTop: 50,
-                  marginBottom: 30,
-                }}
-              >
-                U$ 0.1
-              </Text>
-              <View style={stylesCard.cardView}>
-              {cards != null ? (
-                <Carousel
-                  loop={cards.length > 1}
-                  width={width * 0.9}
-                  height={height * 0.35} // Adjust the height to ensure it fits both card and button
-                  data={cards}
-                  scrollAnimationDuration={1000}
-                  renderItem={({ item, index }) => (
-                    <View style={stylesCard.carouselContent}>
-                      <View
-                        style={[
-                          stylesCard.creditCard,
-                          { backgroundColor: getRandomDarkColor() },
-                        ]}
-                      >
-                        <View style={stylesCard.creditAndVisaView}>
-                          <Image
-                            style={stylesCard.cardLogo}
-                            source={
-                              item.cardType === "visa"
-                                ? require("../../assets/creditCard/visa.png")
-                                : require("../../assets/creditCard/mastercard.png")
-                            }
-                          />
-                        </View>
-                        <View style={stylesCard.cardDetailsView}>
-                          <Text style={stylesCard.creditText}>
-                            {item.cardName || "No Name"}
-                          </Text>
-                          <Text style={stylesCard.cardDetailsText}>
-                            {formatCardNumber(item.cardNumber) || "**** **** **** ****"}
-                          </Text>
-                        </View>
-                        <Text style={stylesCard.expiryText}>
-                          {item.cardExpiration || "MM/YY"}
+    <AlertNotificationRoot
+      toastConfig={defaultToastConfig}
+      colors={[lightColors]}
+      theme={"light"}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : null}
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 20,
+          }}
+        >
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 23,
+              fontWeight: "bold",
+              color: colors.primary,
+            }}
+          >
+            Pagamento
+          </Text>
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 50,
+              fontWeight: "bold",
+              color: colors.primary,
+              marginTop: 50,
+              marginBottom: 30,
+            }}
+          >
+            U$ 0.1
+          </Text>
+          <View style={stylesCard.cardView}>
+            {cards != null ? (
+              <Carousel
+                loop={cards.length > 1}
+                width={width * 0.9}
+                height={height * 0.35} // Adjust the height to ensure it fits both card and button
+                data={cards}
+                scrollAnimationDuration={1000}
+                onSnapToItem={(index) =>
+                  setSelectedMethodId(cards[index].methodId)
+                }
+                renderItem={({ item, index }) => (
+                  <View style={stylesCard.carouselContent}>
+                    <View
+                      style={[
+                        stylesCard.creditCard,
+                        { backgroundColor: getRandomDarkColor() },
+                      ]}
+                    >
+                      <View style={stylesCard.creditAndVisaView}>
+                        <Image
+                          style={stylesCard.cardLogo}
+                          source={
+                            item.cardType === "visa"
+                              ? require("../../assets/creditCard/visa.png")
+                              : require("../../assets/creditCard/mastercard.png")
+                          }
+                        />
+                      </View>
+                      <View style={stylesCard.cardDetailsView}>
+                        <Text style={stylesCard.creditText}>
+                          {item.cardName || "No Name"}
+                        </Text>
+                        <Text style={stylesCard.cardDetailsText}>
+                          {formatCardNumber(item.cardNumber) ||
+                            "**** **** **** ****"}
                         </Text>
                       </View>
-                      <Button
-                        mode="contained"
-                        onPress={() => handlePayment(item.methodId)}
-                        style={stylesCard.addButton}
-                        disabled={loading}
-                      >
-                        {loading ? (
-                          <ActivityIndicator color={colors.white} />
-                        ) : (
-                          "Realizar Pagamento"
-                        )}
-                      </Button>
+                      <Text style={stylesCard.expiryText}>
+                        {item.cardExpiration || "MM/YY"}
+                      </Text>
                     </View>
-                  )}
-                />
-              ) : null}
-                </View>
-            </KeyboardAvoidingView>
-          </TouchableWithoutFeedback>
-        </AlertNotificationRoot>
-      </SafeAreaView>
-    </PaperProvider>
+                  </View>
+                )}
+              />
+            ) : null}
+          </View>
+          <Button
+            mode="contained"
+            onPress={handlePayment}
+            style={stylesCard.addButton}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color={colors.white} />
+            ) : (
+              "Realizar Pagamento"
+            )}
+          </Button>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </AlertNotificationRoot>
   );
 };
 

@@ -24,6 +24,18 @@ const ProfileScreen = () => {
   const handlePressEmBuild = () => {
     navigation.navigate("EmConstrucaoScreen");
   };
+  const handlePressLogout = async () => {
+    try {
+      await AsyncStorage.clear();
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Login" }],
+      });
+    } catch (error) {
+      alert("Error clearing AsyncStorage:", error);
+    }
+  };
+
   const handlePressPaymentScreen = () => {
     navigation.navigate("PaymentScreen");
   };
@@ -124,7 +136,7 @@ const ProfileScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={stylesProfile.container}
-          onPress={handlePressEmBuild}
+          onPress={handlePressLogout}
         >
           <ProfileHandleLogout />
         </TouchableOpacity>
