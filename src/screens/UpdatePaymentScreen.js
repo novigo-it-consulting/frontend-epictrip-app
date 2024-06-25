@@ -18,7 +18,7 @@ import colors from "../colors";
 import CreditCard from "react-native-credit-card-form-ui";
 import {
   requestGetMethodById,
-  requestUpdatePaymentMethod,
+  requestCreatePaymentMethod,
 } from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
@@ -39,8 +39,6 @@ const UpdateCard = ({ navigation }) => {
         return;
       }
 
-      console.log(data);
-
       const userId = await AsyncStorage.getItem("userId");
       const cardData = {
         userId: userId,
@@ -53,30 +51,30 @@ const UpdateCard = ({ navigation }) => {
       };
 
       try {
-        const response = await requestUpdatePaymentMethod(cardData);
+        const response = await requestCreatePaymentMethod(cardData);
         if (response.status === 200 || response.status === 201) {
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Success!",
-            textBody: "Card updated successfully!",
+            textBody: "Card added successfully!",
           });
           setTimeout(() => {
             navigation.goBack();
           }, 3000);
         } else {
-          console.error("Error updating card:", response.statusText);
+          console.error("Error adding card:", response.statusText);
           Toast.show({
             type: ALERT_TYPE.DANGER,
             title: "Error",
-            textBody: "Failed to update card. Please try again.",
+            textBody: "Failed to add card. Please try again.",
           });
         }
       } catch (error) {
-        console.error("Error updating card:", error);
+        console.error("Error adding card:", error);
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Error",
-          textBody: "Failed to update card. Please try again.",
+          textBody: "Failed to add card. Please try again.",
         });
       }
     }
@@ -86,9 +84,7 @@ const UpdateCard = ({ navigation }) => {
     const cardId = await AsyncStorage.getItem("cardId");
     const response = await requestGetMethodById(cardId);
     if (response.status === 200) {
-      // ta aquiiii
       const data = response.data.data;
-      // ta aquiiii
       setCard(data);
     }
   };
@@ -99,7 +95,7 @@ const UpdateCard = ({ navigation }) => {
 
   useEffect(() => {
     if (card) {
-      console.log("Card updated: ", card);
+      console.log("Cardddddddddddddddddddddddddd: ", card);
     }
   }, [card]);
 
@@ -135,11 +131,13 @@ const UpdateCard = ({ navigation }) => {
           ) : (
             <CreditCard
               ref={creditCardRef}
+              background={"#cccaca"}
               initialValues={{
                 number: card.cardNumber,
                 holder: card.cardName,
-                expiration: moment(card.cardExpiration).format("MM/YY"),
+                expiration: card.cardExpiration,
                 cvv: card.cardCVV,
+                brand: "",
               }}
             />
           )}
