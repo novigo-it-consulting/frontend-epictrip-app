@@ -156,7 +156,7 @@ export const requestUpdatePaymentMethod = async (dados) => {
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
     };
     const response = axios.put(
-      `${BASE_URL}/paymentmethods/${dados.paymentMethodId}`,
+      `${BASE_URL}/paymentmethods/${dados.methodId}`,
       dados,
       { headers }
     );
@@ -232,6 +232,7 @@ export const requestPayment = async (userId, paymentMethodId, amount) => {
     };
 
     const response = await axios.request(config);
+    console.log(response)
     return response.data;
   } catch (error) {
     throw error;

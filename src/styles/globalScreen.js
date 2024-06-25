@@ -81,6 +81,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     // backgroundColor: "red",
   },
+  selectView: {
+    width: "100%",
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
 
 export default styles;

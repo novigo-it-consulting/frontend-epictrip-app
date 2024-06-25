@@ -152,7 +152,6 @@ const PaymentScreen = () => {
               </View>
             ) : (
               <>
-                <View></View>
                 <Carousel
                   loop={cards.length > 1}
                   width={width * 0.9}

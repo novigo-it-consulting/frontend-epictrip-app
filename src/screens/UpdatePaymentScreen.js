@@ -27,7 +27,7 @@ const UpdateCard = ({ navigation }) => {
   const creditCardRef = useRef();
   const [card, setCard] = useState(null);
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = useCallback(async (methodId) => {
     if (creditCardRef.current) {
       const { error, data } = creditCardRef.current.submit();
       if (error) {
@@ -43,8 +43,9 @@ const UpdateCard = ({ navigation }) => {
 
       const userId = await AsyncStorage.getItem("userId");
       const cardData = {
+        methodId: methodId,
         userId: userId,
-        cardType: data.brand,
+        cardType: "visa",
         cardNumber: data.number,
         cardName: data.holder,
         cardExpiration: data.expiration,
@@ -54,6 +55,7 @@ const UpdateCard = ({ navigation }) => {
 
       try {
         const response = await requestUpdatePaymentMethod(cardData);
+        console.log(response)
         if (response.status === 200 || response.status === 201) {
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
@@ -130,26 +132,27 @@ const UpdateCard = ({ navigation }) => {
           style={styles.containerAlpha}
         >
           <Text style={styles.title}>Editar Cartão</Text>
-          {!card || card === "undefined" ? (
+          {!card ? (
             <></>
           ) : (
-            <CreditCard
-              ref={creditCardRef}
-              initialValues={{
-                number: card.cardNumber,
-                holder: card.cardName,
-                expiration: moment(card.cardExpiration).format("MM/YY"),
-                cvv: card.cardCVV,
-              }}
-            />
+            <>
+              <CreditCard
+                ref={creditCardRef}
+                initialValues={{
+                  number: card.cardNumber,
+                  holder: card.cardName,
+                  expiration: card.cardExpiration,
+                  cvv: card.cardCVV,
+                }}
+              />
+              <View style={{ width: "50%", marginLeft: "auto", marginRight: "auto", marginTop: 20 }}>
+                <TouchableOpacity style={styles.addButton} onPress={() => handleSubmit(card.methodId)}>
+                  <Text style={styles.addButtonText}>Adicionar Cartão</Text>
+                </TouchableOpacity>
+              </View>
+            </>
           )}
-          <View
-            style={{ width: "50%", marginLeft: "auto", marginRight: "auto" }}
-          >
-            <TouchableOpacity style={styles.addButton} onPress={handleSubmit}>
-              <Text style={styles.addButtonText}>Adicionar Cartão</Text>
-            </TouchableOpacity>
-          </View>
+
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
     </AlertNotificationRoot>
