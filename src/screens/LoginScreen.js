@@ -71,6 +71,7 @@ const LoginScreen = ({ navigation }) => {
       if (response.status === 200) {
         const userId = response.data.userId;
         await AsyncStorage.setItem("token", response.data.token);
+        await AsyncStorage.setItem("username", data.username);
 
         if (userId) {
           await AsyncStorage.setItem("userId", userId);
@@ -178,7 +179,7 @@ const LoginScreen = ({ navigation }) => {
                     label={t("loginScreen.emailLabel")}
                     onSubmitEditing={Keyboard.dismiss}
                     mode="flat"
-                    left={<TextInput.Icon icon="account-outline"/>}
+                    left={<TextInput.Icon icon="account-outline" />}
                     onBlur={onBlur}
                     onChangeText={(value) => {
                       onChange(value);
