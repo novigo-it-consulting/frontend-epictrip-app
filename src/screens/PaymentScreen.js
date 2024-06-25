@@ -19,7 +19,7 @@ import colors from "../colors";
 import { IconButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { requestGetMethodsByUser } from "../services/api";
+import { requestGetMethodsByUser, requestDeletePaymentMethod } from "../services/api";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -30,8 +30,11 @@ const PaymentScreen = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    fetchCards();
-  }, []);
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchCards();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const defaultToastConfig = {
     autoClose: 3000,
@@ -46,6 +49,11 @@ const PaymentScreen = () => {
     danger: "rgba(255, 0, 0, 1)",
     warning: "#ffc107",
   };
+
+  const handleEditPress = async (cardId) =>{
+    await AsyncStorage.setItem("cardId", cardId);
+    navigation.navigate("UpdateCard")
+  }
 
   const fetchCards = async () => {
     try {
@@ -98,6 +106,15 @@ const PaymentScreen = () => {
     navigation.navigate("ProfileScreen");
   };
 
+  const handleDeleteCard = async (cardId) =>{
+    response = await requestDeletePaymentMethod(cardId);
+    console.log(response)
+    if (response.status === 200){
+      alert("Cartão deletado com sucesso!");
+      await fetchCards();
+    }
+  };
+
   const formatCardNumber = (number) => {
     return "**** **** **** " + number.slice(-4);
   };
@@ -120,10 +137,10 @@ const PaymentScreen = () => {
                   size={30}
                 />
               </TouchableOpacity>
-              <Text style={styles.title}>Payment</Text>
+              <Text style={styles.title}>Wallet</Text>
             </View>
 
-            {cards.length === 0 ? (
+            {cards === null ? (
               <View style={styles.noCardsView}>
                 <Text style={styles.noCardsText}>Sem cartões...</Text>
                 <TouchableOpacity
@@ -159,15 +176,26 @@ const PaymentScreen = () => {
                                 : require("../../assets/creditCard/mastercard.png")
                             }
                           />
-                          <TouchableOpacity
-                            onPress={() => alert("Click to Edit")}
-                          >
-                            <IconButton
-                              iconColor={"#fff"}
-                              icon={"credit-card-edit-outline"}
-                              size={20}
-                            />
-                          </TouchableOpacity>
+                          <View style={styles.optionsView}>
+                            <TouchableOpacity
+                              onPress={() => handleEditPress(cards[index].methodId)}
+                            >
+                              <IconButton
+                                iconColor={"#fff"}
+                                icon={"credit-card-edit-outline"}
+                                size={20}
+                              />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              onPress={() => handleDeleteCard(cards[index].methodId)}
+                            >
+                              <IconButton
+                                iconColor={"#fff"}
+                                icon={"trash-can-outline"}
+                                size={20}
+                              />
+                            </TouchableOpacity>
+                          </View>
                         </View>
                         <View style={styles.cardDetailsView}>
                           <Text style={styles.creditText}>
@@ -257,6 +285,9 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     resizeMode: "contain",
+  },
+  optionsView: {
+    flexDirection: "row"
   },
   cardDetailsView: {
     flexDirection: "column",
