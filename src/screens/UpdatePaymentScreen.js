@@ -93,12 +93,6 @@ const UpdateCard = ({ navigation }) => {
     fetchCard();
   }, []);
 
-  useEffect(() => {
-    if (card) {
-      console.log("Cardddddddddddddddddddddddddd: ", card);
-    }
-  }, [card]);
-
   const defaultToastConfig = {
     autoClose: 3000,
     titleStyle: { fontSize: 16, fontWeight: "bold" },

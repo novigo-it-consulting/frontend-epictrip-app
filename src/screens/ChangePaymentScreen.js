@@ -26,8 +26,6 @@ const ChangePaymentCard = ({ navigation }) => {
   const handleSubmit = useCallback(async () => {
     if (creditCardRef.current) {
       const { error, data } = creditCardRef.current.submit();
-
-      console.log("ADDDDDD CARTAOOOO", data);
       if (error) {
         Toast.show({
           type: ALERT_TYPE.DANGER,
