@@ -23,6 +23,12 @@ const ProfileScreen = () => {
   const handlePressEmBuild = () => {
     navigation.navigate("EmConstrucaoScreen");
   };
+  const handlePressPaymentScreen = () => {
+    navigation.navigate("PaymentScreen");
+  };
+  const handlePressPayment = () => {
+    navigation.navigate("Payment");
+  };
   const handlePressChangePassword = () => {
     navigation.navigate("FogotPassword");
   };
@@ -99,13 +105,13 @@ const ProfileScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={stylesProfile.container}
-          onPress={handlePressEmBuild}
+          onPress={handlePressPaymentScreen}
         >
           <ProfileHandleSettingsPayment />
         </TouchableOpacity>
         <TouchableOpacity
           style={stylesProfile.container}
-          onPress={handlePressEmBuild}
+          onPress={handlePressPayment}
         >
           <ProfileHandleSettingsRewards />
         </TouchableOpacity>

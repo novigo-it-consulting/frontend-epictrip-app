@@ -107,17 +107,17 @@
     "loadingBookingNumber": "Cargando..."
   },
   "changePersonalInfo": {
-    "failedUpdate": "Ocurrió un error al actualizar la información del usuario. Por favor inténtalo de nuevo más tarde.",
-    "updateSuccess": "Tu información personal se ha actualizado con éxito.",
+    "failedUpdate": "Ocurrió un error al actualizar la información del usuario. Por favor, inténtalo de nuevo más tarde.",
+    "updateSuccess": "Tu información personal ha sido actualizada con éxito.",
     "failedUpdateUser": "Error al actualizar el usuario.",
     "loadingData": "Error al cargar los datos iniciales.",
-    "pictureUpdate": "Tu foto de perfil se ha actualizado con éxito.",
-    "failedUpdatePicture": "Error al actualizar la foto de perfil",
-    "notFoundAsyncStorage": "ID de usuario no encontrado en AsyncStorage.",
-    "failedUserInfo": "Error al buscar la información del usuario.",
+    "pictureUpdate": "Tu foto de perfil ha sido actualizada con éxito.",
+    "failedUpdatePicture": "Error al actualizar la foto del perfil",
+    "notFoundAsyncStorage": "ID del usuario no encontrado en AsyncStorage.",
+    "failedUserInfo": "Error al obtener información del usuario.",
     "failedUpdateUserInfo": "Error al actualizar la información del usuario",
-    "permissionLibraryDenied": "Permiso para acceder a la biblioteca de medios denegado",
-    "locationPermissionDenied": "Permiso para acceder a la ubicación denegado",
+    "permissionLibraryDenied": "Se denegó el permiso para acceder a la biblioteca de medios",
+    "locationPermissionDenied": "Se denegó el permiso para acceder a la ubicación",
     "genderM": "Masculino",
     "genderF": "Femenino",
     "buttonSave": "Guardar",
@@ -125,6 +125,22 @@
     "labelLastName": "Apellido",
     "labelLocation": "Ubicación Actual",
     "labelAge": "Edad",
-    "buttonUploadImage": "Cargar foto"
+    "buttonUploadImage": "Cargar foto",
+    "personalInfo": "Información Personal",
+    "errorEmptyField": "Por favor, completa todos los campos requeridos.",
+    "alertAttention": "Atención"
+  },
+  "popularEvents": {
+    "events": "Eventos Populares"
+  },
+  "exploreCategories": {
+    "categories": "Explorar Categorías"
+  },
+  "searchViewHome": {
+    "searchEvents": "Busca por Disney, Comida o Boletos"
+  },
+  "profileAccount": {
+    "welcome": "Hola,"
+
   }
 }

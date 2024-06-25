@@ -156,7 +156,7 @@ const ChangePersonalInfo = () => {
     if (!userData.firstName || !userData.lastName || !userData.age) {
       Toast.show({
         type: ALERT_TYPE.WARNING,
-        title: "Atenção",
+        title: t("changePersonalInfo.alertAttention"),
         textBody: t("changePersonalInfo.errorEmptyField"),
       });
       setLoading(false);

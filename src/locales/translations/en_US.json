@@ -127,7 +127,8 @@
     "labelAge": "Age",
     "buttonUploadImage": "Upload Image",
     "personalInfo": "Personal Info",
-    "errorEmptyField": "Please fill out all required fields."
+    "errorEmptyField": "Please fill out all required fields.",
+    "alertAttention": "Attention"
   },
   "popularEvents": {
     "events": "Popular Events"

@@ -127,7 +127,9 @@
     "labelLocation": "Localização Atual",
     "labelAge": "Idade",
     "buttonUploadImage": "Carregar foto",
-    "personalInfo": "Informações Pessoais"
+    "personalInfo": "Informações Pessoais",
+    "errorEmptyField": "Por favor preencha todos os campos requeridos.",
+     "alertAttention": "Atenção"
   },
   "popularEvents": {
     "events": "Eventos Populares"
