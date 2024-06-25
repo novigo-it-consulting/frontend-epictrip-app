@@ -209,3 +209,30 @@ export const requestGetMethodsByUser = async (userId) => {
     throw error;
   }
 };
+
+export const requestPayment = async (userId, paymentMethodId, amount) => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    const data = JSON.stringify({
+      userId: userId,
+      paymentMethod: paymentMethodId,
+      amount: amount,
+    });
+
+    const config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: `${BASE_URL}/charges`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    const response = await axios.request(config);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

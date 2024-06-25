@@ -24,6 +24,9 @@ const ProfileScreen = () => {
   const handlePressEmBuild = () => {
     navigation.navigate("EmConstrucaoScreen");
   };
+  const handlePaymentScreen = () => {
+    navigation.navigate("PaymentSelectedCard");
+  };
   const handlePressChangePassword = async () => {
     navigation.navigate("FogotPassword");
   };
@@ -106,7 +109,7 @@ const ProfileScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={stylesProfile.container}
-          onPress={handlePressEmBuild}
+          onPress={handlePaymentScreen}
         >
           <ProfileHandleSettingsRewards />
         </TouchableOpacity>
