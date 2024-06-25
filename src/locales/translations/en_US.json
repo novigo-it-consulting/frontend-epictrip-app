@@ -85,7 +85,7 @@
    "errorUpdating": "An error occurred while updating the user information, please try again later."
   }, 
   "profileHandleHandlePayment": {
-   "titlePayment": "Payment"
+   "titlePayment": "Wallet"
   }, 
   "profileHandleChangeRewards": {
    "titleRewards": "Rewards"
