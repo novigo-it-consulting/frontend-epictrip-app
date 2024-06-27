@@ -286,7 +286,6 @@ const ChangePersonalInfo = () => {
     autoClose: 3000,
     titleStyle: { fontSize: 16, fontWeight: "bold" },
   };
-
   const lightColors = {
     label: "#000",
     card: "#fcfcfc",
@@ -294,7 +293,7 @@ const ChangePersonalInfo = () => {
     success: "#28a745",
     danger: "rgba(255, 0, 0, 1)",
     warning: "#ffc107",
-  };
+}; 
   return (
     <>
       <AlertNotificationRoot
@@ -342,7 +341,7 @@ const ChangePersonalInfo = () => {
                 label={t("changePersonalInfo.labelFirstName")}
                 value={userData.firstName}
                 onChangeText={(text) =>
-                  setUserData({ ...userData, firstName: text })
+                  s
                 }
                 keyboardType="default"
                 autoCapitalize="words"

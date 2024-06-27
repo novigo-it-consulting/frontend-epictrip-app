@@ -74,18 +74,6 @@ export default function ProfileHandleBooking() {
             >
               {bookingNumber || t("profileHandleBooking.loadingBookingNumber")}
             </Text>
-            <Text
-              style={{
-                fontSize: 14,
-                textAlign: "left",
-                color: "#000",
-                fontWeight: "light",
-                marginTop: 5,
-                opacity: 0.6,
-              }}
-            >
-              {t("profileHandleBooking.bookingInformation")}
-            </Text>
           </View>
           <View style={stylesProfile.boxNotification}>
             <View style={stylesProfile.boxColor}>
