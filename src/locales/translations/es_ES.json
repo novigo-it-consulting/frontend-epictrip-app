@@ -143,6 +143,15 @@
   },
   "profileAccount": {
     "welcome": "Hola,"
+  },
+  "sampleData": {
+  "categoryBooking": "Reservas",
+  "categoryServices": "Servicios",
+  "categoryConcierge": "Conserjería",
+  "categoryTickets": "Entradas",
+  "categoryPlaces": "Lugares",
+  "categoryFood": "Comida",
+  "categoryShop": "Tienda"
 
   }
 }

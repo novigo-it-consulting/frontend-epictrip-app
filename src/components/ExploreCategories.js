@@ -1,29 +1,52 @@
-import React from "react";
-import { View, Text, StyleSheet, Dimensions, FlatList } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, FlatList } from "react-native";
 import ListItem from "./ListItem";
-import { sampleData } from "../data/sampleData";
 import { useSharedValue } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
-
+import { getSampleData } from "../data/sampleData";
 
 const ExploreCategories = () => {
+  const [data, setData] = useState([]);
   const scrollX = useSharedValue(0);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await getSampleData(t); // Certifique-se de que getSampleData retorna uma promessa
+        console.log("Data loaded:", result);
+        setData(result);
+      } catch (error) {
+        console.error("Failed to load data:", error);
+      }
+    };
+
+    fetchData();
+  }, [t]);
+
   const onScroll = (e) => {
     scrollX.value = e.nativeEvent.contentOffset.x;
   };
-  const { t } = useTranslation();
 
+  if (!data || data.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.titlePage}>{t("exploreCategories.categories")}</Text>
+        <Text>{t("loading")}</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.titlePage}>{t("exploreCategories.categories")}</Text>
       <FlatList
-        data={sampleData}
+        data={data}
         horizontal
         style={{ margin: 0 }}
         bounces={false}
-        onScroll={onScroll}
-        scrollEventThrottle={18}
+        onScroll={onScroll} 
+        scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item, index }) => (
@@ -31,7 +54,7 @@ const ExploreCategories = () => {
             uri={item.uri}
             scrollX={scrollX}
             index={index}
-            dataLength={sampleData.length}
+            dataLength={data.length}
             title={item.title}
           />
         )}
@@ -43,7 +66,7 @@ const ExploreCategories = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 0.5,
-    flexDirection: "columm",
+    flexDirection: "column", // Corrigido de "columm" para "column"
     alignItems: "flex-start",
     justifyContent: "space-between",
     width: "85%",

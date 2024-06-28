@@ -144,6 +144,16 @@
   }, 
   "profileAccount": {
     "welcome": "Olá,"
+  },
+
+  "sampleData": {
+    "categoryBooking": "Reservas",
+    "categoryServices": "Serviços",
+    "categoryConcierge": "Concierge",
+    "categoryTickets": "Ingressos",
+    "categoryPlaces": "Lugares",
+    "categoryFood": "Comida",
+    "categoryShop": "Shop"
   }
 }
 
