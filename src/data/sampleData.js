@@ -2,6 +2,7 @@ export const sampleData = [
   {
     id: 1,
     uri: "https://i.ibb.co/TgZR8cZ/Grupo-2102.png",
+    title: "Bookings"
   },
   {
     id: 2,

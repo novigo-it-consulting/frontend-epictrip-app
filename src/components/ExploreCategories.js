@@ -5,6 +5,7 @@ import { sampleData } from "../data/sampleData";
 import { useSharedValue } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
 
+
 const ExploreCategories = () => {
   const scrollX = useSharedValue(0);
   const onScroll = (e) => {
@@ -31,6 +32,7 @@ const ExploreCategories = () => {
             scrollX={scrollX}
             index={index}
             dataLength={sampleData.length}
+            title={item.title}
           />
         )}
       />
