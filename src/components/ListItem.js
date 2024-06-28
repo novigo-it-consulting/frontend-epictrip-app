@@ -48,7 +48,7 @@ const ListItem = ({ uri, scrollX, index, dataLength, title }) => {
     alignSelf: "center", // Alinhar a imagem no meio do card
   }));
 
-  console.log(sampleData.title)
+  // console.log(sampleData.title)
 
   return (
     <Card style={styles.card}>
