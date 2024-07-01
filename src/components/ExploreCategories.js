@@ -13,7 +13,7 @@ const ExploreCategories = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getSampleData(t); // Certifique-se de que getSampleData retorna uma promessa
+        const result = await getSampleData(t); 
         console.log("Data loaded:", result);
         setData(result);
       } catch (error) {
@@ -66,7 +66,7 @@ const ExploreCategories = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 0.5,
-    flexDirection: "column", // Corrigido de "columm" para "column"
+    flexDirection: "column",
     alignItems: "flex-start",
     justifyContent: "space-between",
     width: "85%",
