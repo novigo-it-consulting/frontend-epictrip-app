@@ -144,7 +144,31 @@
   }, 
   "profileAccount": {
     "welcome": "Olá,"
+  },
+  "sampleData": {
+    "categoryBooking": "Reservas",
+    "categoryServices": "Serviços",
+    "categoryConcierge": "Concierge",
+    "categoryTickets": "Ingressos",
+    "categoryPlaces": "Lugares",
+    "categoryFood": "Comida",
+    "categoryShop": "Shop"
+  },
+  "paymentScreen": {
+    "errorNotification": "Erro",
+    "errorCards": "Falha ao buscar cartões. Por favor, tente novamente.",
+    "title": "Carteira",
+    "yourCards": "Sem cartões...",
+    "addCard": "Adicionar Cartão"
+  },
+  "changePaymentScreen": {
+    "titleError": "Erro",
+    "errorFields": "Por favor preencha todos os campos corretamente",
+    "titleAddCard": "Adiconar Cartão",
+    "buttonAddCard": "Adiconar Cartão"
+  },
+  "payment": {
+    "titlePayment": "Pagamento",
+    "buttonPayment": "Realizar Pagamento"
   }
 }
-
-
