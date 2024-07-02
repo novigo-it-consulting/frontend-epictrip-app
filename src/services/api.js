@@ -251,3 +251,15 @@ export const requestPayment = async (userId, paymentMethodId, amount) => {
     throw error;
   }
 };
+
+export const requestGetBookingByUser = async (userId) => {
+  try{
+    const headers = {
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+    };
+    const response = await axios.get(`${BASE_URL}/bookings/user/${userId}`, { headers })
+    return response
+  } catch (error) {
+    throw error;
+  }
+}
