@@ -12,6 +12,7 @@ import ProfileHandleSettingsRewards from "../components/ProfileHandleSettingsRew
 import ProfileHandleSettingsLanguage from "../components/ProfileHandleSettingsLanguage";
 import ProfileHandleLogout from "../components/ProfileHandleLogout.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { requestChangePasswordToken } from "../services/api.js";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -42,8 +43,13 @@ const ProfileScreen = () => {
   const handlePressPayment = () => {
     navigation.navigate("Payment");
   };
-  const handlePressChangePassword = () => {
-    navigation.navigate("FogotPassword");
+  const handlePressChangePassword = async () => {
+    const userId = await AsyncStorage.getItem("userId")
+    const response = await requestChangePasswordToken(userId)
+    if (response.status === 200){
+      await AsyncStorage.setItem("changePasswordToken", response.data.token)
+      navigation.navigate("SetNewPassword");
+    }
   };
 
   return (

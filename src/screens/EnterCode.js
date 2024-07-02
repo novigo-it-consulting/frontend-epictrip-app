@@ -58,7 +58,7 @@ const EnterCodeScreen = ({ navigation }) => {
       const response = await requestValidateToken(data);
 
       if (response.status === 200) {
-        await AsyncStorage.setItem("token", response.data.token);
+        await AsyncStorage.setItem("changePasswordToken", response.data.token);
         navigation.navigate("SetNewPassword");
         return;
       } else {
