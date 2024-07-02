@@ -86,6 +86,20 @@ export const requestGetUser = async (userId) => {
   }
 };
 
+export const requestGetbooking = async () => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+    };
+    const response = await axios.get(`${BASE_URL}/bookings`, {
+      headers,
+    });
+    return response;
+  } catch (error) {
+    throw console.log(error);
+  }
+};
+
 export const changeProfilePic = async (file) => {
   try {
     console.log("FILE: ", file);

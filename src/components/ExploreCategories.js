@@ -18,7 +18,6 @@ const ExploreCategories = () => {
     const fetchData = async () => {
       try {
         const result = await getSampleData(t); 
-        console.log("Data loaded:", result);
         await setData(result);
       } catch (error) {
         console.error("Failed to load data:", error);
