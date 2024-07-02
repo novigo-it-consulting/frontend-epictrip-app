@@ -160,5 +160,15 @@
 "payment": {
   "titlePayment": "Payment",
   "buttonPayment": "Make Payment"
-}
+},
+  "sampleData": {
+  "categoryBooking": "Bookings",
+  "categoryServices": "Services",
+  "categoryConcierge": "Concierge",
+  "categoryTickets": "Tickets",
+  "categoryPlaces": "Places",
+  "categoryFood": "Food",
+  "categoryShop": "Shop"
+
+  }  
 }
