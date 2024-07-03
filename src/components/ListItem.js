@@ -5,14 +5,13 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { Avatar, Button, Card, Text } from "react-native-paper";
-
-const { width } = Dimensions.get("window");
+import { sampleData } from "../data/sampleData";
 
 const LARGE_IMAGE_WIDTH = 36;
 const MEDIUM_IMAGE_WIDTH = LARGE_IMAGE_WIDTH * 1;
 const SMALL_IMAGE_WIDTH = MEDIUM_IMAGE_WIDTH * 1;
 
-const ListItem = ({ uri, scrollX, index, dataLength }) => {
+const ListItem = ({ uri, scrollX, index, dataLength, title }) => {
   const inputRange = [
     (index - 2) * SMALL_IMAGE_WIDTH,
     (index - 1) * SMALL_IMAGE_WIDTH,
@@ -49,6 +48,8 @@ const ListItem = ({ uri, scrollX, index, dataLength }) => {
     alignSelf: "center", // Alinhar a imagem no meio do card
   }));
 
+  // console.log(sampleData.title)
+
   return (
     <Card style={styles.card}>
       <View style={styles.shadowContainer}>
@@ -58,7 +59,7 @@ const ListItem = ({ uri, scrollX, index, dataLength }) => {
         />
         <Card.Title
           titleStyle={{ fontSize: 12, color: "#172B4D", fontWeight: "bold" }}
-          title="Bookings"
+          title={title}
         />
       </View>
     </Card>

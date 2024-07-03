@@ -1,6 +1,6 @@
 // screens/ProfileScreen.js
 import React from "react";
-import { View, Text, Alert, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import colors from "../colors";
 import { useTranslation } from "react-i18next";
@@ -12,6 +12,7 @@ import ProfileHandleSettingsRewards from "../components/ProfileHandleSettingsRew
 import ProfileHandleSettingsLanguage from "../components/ProfileHandleSettingsLanguage";
 import ProfileHandleLogout from "../components/ProfileHandleLogout.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { requestChangePasswordToken } from "../services/api.js";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -23,6 +24,9 @@ const ProfileScreen = () => {
   };
   const handlePressEmBuild = () => {
     navigation.navigate("EmConstrucaoScreen");
+  };
+  const handlePressGoBooking = () => {
+    navigation.navigate("BookingScreen");
   };
   const handlePressLogout = async () => {
     try {
@@ -42,8 +46,13 @@ const ProfileScreen = () => {
   const handlePressPayment = () => {
     navigation.navigate("Payment");
   };
-  const handlePressChangePassword = () => {
-    navigation.navigate("FogotPassword");
+  const handlePressChangePassword = async () => {
+    const userId = await AsyncStorage.getItem("userId")
+    const response = await requestChangePasswordToken(userId)
+    if (response.status === 200){
+      await AsyncStorage.setItem("changePasswordToken", response.data.token)
+      navigation.navigate("SetNewPassword");
+    }
   };
 
   return (
@@ -93,7 +102,7 @@ const ProfileScreen = () => {
         </View>
         <TouchableOpacity
           style={stylesProfile.container}
-          onPress={handlePressEmBuild}
+          onPress={handlePressGoBooking}
         >
           <ProfileHandleBooking />
         </TouchableOpacity>

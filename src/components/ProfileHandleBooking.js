@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { requestGetUser } from "../services/api";
+import { requestGetBookingByUser } from "../services/api";
 import { Toast, ALERT_TYPE } from "react-native-alert-notification";
 import colors from "../colors";
 import { useTranslation } from "react-i18next";
@@ -12,7 +12,7 @@ export default function ProfileHandleBooking() {
 
   const { t } = useTranslation();
 
-  const getUserToProfile = async () => {
+  const getBookingByUser = async () => {
     const userId = await AsyncStorage.getItem("userId");
     if (!userId) {
       Toast.show({
@@ -24,9 +24,14 @@ export default function ProfileHandleBooking() {
     }
 
     try {
-      const response = await requestGetUser(userId);
+      const response = await requestGetBookingByUser(userId);
       if (response.status === 200) {
-        setBookingNumber(response.data.data.shareNumber);
+        const inProgressBooking = await response.data.data.find(booking => booking.status === "In progress");
+        if (inProgressBooking) {
+          setBookingNumber(inProgressBooking.shareNumber);
+          return
+        }
+        setBookingNumber("No bookings")
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
@@ -44,7 +49,7 @@ export default function ProfileHandleBooking() {
   };
 
   useEffect(() => {
-    getUserToProfile();
+    getBookingByUser();
   }, []);
 
   return (

@@ -20,6 +20,9 @@ import { IconButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { requestGetMethodsByUser, requestDeletePaymentMethod } from "../services/api";
+import { useTranslation } from "react-i18next";
+
+
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -27,6 +30,9 @@ const width = Dimensions.get("window").width;
 const PaymentScreen = () => {
   const [cards, setCards] = useState(null);
   const [loading, setLoading] = useState(true);
+  
+  const { t } = useTranslation();
+  
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -71,11 +77,10 @@ const PaymentScreen = () => {
         });
       }
     } catch (error) {
-      console.error("Error fetching cards:", error);
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        title: "Error",
-        textBody: "Failed to fetch cards. Please try again.",
+        title: t("paymentScreen.errorNotification"),
+        textBody: t("paymentScreen.errorCards"),
       });
     } finally {
       setLoading(false);
@@ -137,17 +142,17 @@ const PaymentScreen = () => {
                   size={30}
                 />
               </TouchableOpacity>
-              <Text style={styles.title}>Wallet</Text>
+              <Text style={styles.title}>{t("paymentScreen.title")}</Text>
             </View>
 
             {cards === null ? (
               <View style={styles.noCardsView}>
-                <Text style={styles.noCardsText}>Sem cartões...</Text>
+                <Text style={styles.noCardsText}>{t("paymentScreen.yourCards")}</Text>
                 <TouchableOpacity
                   style={styles.addButton}
                   onPress={() => navigation.navigate("ChangePaymentScreen")}
                 >
-                  <Text style={styles.addButtonText}>Adicionar Cartão</Text>
+                  <Text style={styles.addButtonText}>{t("paymentScreen.addCard")}</Text>
                 </TouchableOpacity>
               </View>
             ) : (

@@ -19,22 +19,25 @@ import CreditCard from "react-native-credit-card-form-ui";
 import { requestCreatePaymentMethod } from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
+
 
 const ChangePaymentCard = ({ navigation }) => {
   const creditCardRef = useRef();
-
+  const { t } = useTranslation();
+  
   const handleSubmit = useCallback(async () => {
     if (creditCardRef.current) {
       const { error, data } = creditCardRef.current.submit();
       if (error) {
         Toast.show({
           type: ALERT_TYPE.DANGER,
-          title: "Erro",
-          textBody: "Please fill in all fields correctly!",
+          title: t("changePaymentScreen.titleError"),
+          textBody: t("changePaymentScreen.errorFields"),
         });
         return;
       }
-
+      
       const userId = await AsyncStorage.getItem("userId");
       const cardData = {
         userId: userId,
@@ -102,7 +105,7 @@ const ChangePaymentCard = ({ navigation }) => {
           keyboardVerticalOffset={20}
           style={styles.containerAlpha}
         >
-          <Text style={styles.title}>Adiconar Cartão</Text>
+          <Text style={styles.title}>{t("changePaymentScreen.titleAddCard")}</Text>
           <CreditCard
             ref={creditCardRef}
             background={"#1a2b45"}
@@ -114,7 +117,7 @@ const ChangePaymentCard = ({ navigation }) => {
             style={{ width: "50%", marginLeft: "auto", marginRight: "auto" }}
           >
             <TouchableOpacity style={styles.addButton} onPress={handleSubmit}>
-              <Text style={styles.addButtonText}>Adicionar Cartão</Text>
+              <Text style={styles.addButtonText}>{t("changePaymentScreen.buttonAddCard")}</Text>
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>

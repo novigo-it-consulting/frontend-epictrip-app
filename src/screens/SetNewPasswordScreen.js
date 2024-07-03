@@ -125,7 +125,7 @@ const SetNewPasswordScreen = ({ navigation }) => {
   }, []);
 
   const handleGoBack = () => {
-    navigation.navigate("Login");
+    navigation.goBack();
   };
 
   return (

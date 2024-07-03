@@ -18,6 +18,7 @@ import ChangePaymentCard from "../screens/ChangePaymentScreen";
 import UpdateCard from "../screens/UpdatePaymentScreen";
 import Payment from "../screens/Payment";
 import PaymentSelectedCard from "../screens/PaymentSelectedCard";
+import BookingScreen from "../screens/BookingScreen";
 
 const Stack = createStackNavigator();
 
@@ -44,6 +45,10 @@ const Navigation = () => {
         <Stack.Screen
           name="ChangePaymentScreen"
           component={ChangePaymentCard}
+        />
+        <Stack.Screen
+          name="BookingScreen"
+          component={BookingScreen}
         />
         <Stack.Screen name="UpdateCard" component={UpdateCard} />
         <Stack.Screen

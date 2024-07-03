@@ -143,5 +143,32 @@
   }, 
   "profileAccount": {
     "welcome": "Hello,"
-  }
+  },
+  "paymentScreen": {
+     "errorNotification": "Error",
+    "errorCards": "Failed to fetch cards. Please try again.",
+    "title": "Wallet",
+    "yourCards": "No cards...",
+    "addCard": "Add Card"
+},
+"changePaymentScreen": {
+  "titleError": "Error",
+  "errorFields": "Please fill out all fields correctly",
+  "titleAddCard": "Add Card",
+  "buttonAddCard": "Add Card"
+},
+"payment": {
+  "titlePayment": "Payment",
+  "buttonPayment": "Make Payment"
+},
+  "sampleData": {
+  "categoryBooking": "Bookings",
+  "categoryServices": "Services",
+  "categoryConcierge": "Concierge",
+  "categoryTickets": "Tickets",
+  "categoryPlaces": "Places",
+  "categoryFood": "Food",
+  "categoryShop": "Shop"
+
+  }  
 }

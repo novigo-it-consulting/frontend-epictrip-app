@@ -28,6 +28,7 @@ import colors from "../colors";
 import styles from "../styles/globalScreen";
 import { requestPayment, requestGetMethodsByUser } from "../services/api";
 import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -38,6 +39,7 @@ const Payment = () => {
   const [cards, setCards] = useState(null);
   const [selectedMethodId, setSelectedMethodId] = useState(null);
   const navigation = useNavigation();
+  const { t } = useTranslation();
 
   const formatCardNumber = (number) => {
     return "**** **** **** " + number.slice(-4);
@@ -148,7 +150,7 @@ const Payment = () => {
               color: colors.primary,
             }}
           >
-            Pagamento
+            {t("payment.titlePayment")}
           </Text>
           <Text
             style={{
@@ -218,7 +220,7 @@ const Payment = () => {
             {loading ? (
               <ActivityIndicator color={colors.white} />
             ) : (
-              "Realizar Pagamento"
+              t("payment.buttonPayment")
             )}
           </Button>
         </KeyboardAvoidingView>

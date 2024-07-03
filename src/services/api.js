@@ -57,7 +57,7 @@ export const requestValidateToken = async (dados) => {
 export const requestChangePassword = async (dados) => {
   try {
     const headers = {
-      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+      Authorization: `Bearer ${await AsyncStorage.getItem("changePasswordToken")}`,
     };
     const response = await axios.post(
       `${BASE_URL}/users/changepassword`,
@@ -83,6 +83,20 @@ export const requestGetUser = async (userId) => {
     return response;
   } catch (error) {
     throw error;
+  }
+};
+
+export const requestGetbooking = async () => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+    };
+    const response = await axios.get(`${BASE_URL}/bookings`, {
+      headers,
+    });
+    return response;
+  } catch (error) {
+    throw console.log(error);
   }
 };
 
@@ -237,3 +251,38 @@ export const requestPayment = async (userId, paymentMethodId, amount) => {
     throw error;
   }
 };
+
+export const requestGetBookingByUser = async (userId) => {
+  try{
+    const headers = {
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+    };
+    const response = await axios.get(`${BASE_URL}/bookings/user/${userId}`, { headers })
+    return response
+  } catch (error) {
+    throw error;
+  }
+}
+export const requestGetHousesByBooking = async (houseId) => {
+  try{
+    const headers = {
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+    };
+    const response = await axios.get(`${BASE_URL}/houses/${houseId}`, { headers })
+    return response
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const requestChangePasswordToken = async (userId) => {
+  try{
+    const headers = {
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+    };
+    const response = await axios.get(`${BASE_URL}/passwordtokens/${userId}`, { headers })
+    return response
+  } catch (error) {
+    throw error;
+  }
+}

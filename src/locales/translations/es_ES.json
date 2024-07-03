@@ -143,6 +143,32 @@
   },
   "profileAccount": {
     "welcome": "Hola,"
+  },
+  "paymentScreen": {
+    "errorNotification": "Error",
+    "errorCards": "No se pudieron obtener las tarjetas. Por favor, inténtelo de nuevo.",
+    "title": "Cartera",
+    "yourCards": "Sin tarjetas...",
+    "addCard": "Agregar Tarjeta"
+},
+"changePaymentScreen": {
+  "titleError": "Error",
+  "errorFields": "Por favor, complete todos los campos correctamente",
+  "titleAddCard": "Agregar Tarjeta",
+  "buttonAddCard": "Agregar Tarjeta"
+},
+"payment": {
+  "titlePayment": "Pago",
+  "buttonPayment": "Realizar Pago"
+},
+  "sampleData": {
+  "categoryBooking": "Reservas",
+  "categoryServices": "Servicios",
+  "categoryConcierge": "Conserjería",
+  "categoryTickets": "Entradas",
+  "categoryPlaces": "Lugares",
+  "categoryFood": "Comida",
+  "categoryShop": "Tienda"
 
   }
 }
