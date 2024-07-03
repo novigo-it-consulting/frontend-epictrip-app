@@ -1,6 +1,6 @@
 // screens/ProfileScreen.js
 import React from "react";
-import { View, Text, Alert, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import colors from "../colors";
 import { useTranslation } from "react-i18next";
@@ -24,6 +24,9 @@ const ProfileScreen = () => {
   };
   const handlePressEmBuild = () => {
     navigation.navigate("EmConstrucaoScreen");
+  };
+  const handlePressGoBooking = () => {
+    navigation.navigate("BookingScreen");
   };
   const handlePressLogout = async () => {
     try {
@@ -99,7 +102,7 @@ const ProfileScreen = () => {
         </View>
         <TouchableOpacity
           style={stylesProfile.container}
-          onPress={handlePressEmBuild}
+          onPress={handlePressGoBooking}
         >
           <ProfileHandleBooking />
         </TouchableOpacity>

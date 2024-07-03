@@ -263,6 +263,17 @@ export const requestGetBookingByUser = async (userId) => {
     throw error;
   }
 }
+export const requestGetHousesByBooking = async (houseId) => {
+  try{
+    const headers = {
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+    };
+    const response = await axios.get(`${BASE_URL}/houses/${houseId}`, { headers })
+    return response
+  } catch (error) {
+    throw error;
+  }
+}
 
 export const requestChangePasswordToken = async (userId) => {
   try{
