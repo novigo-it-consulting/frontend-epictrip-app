@@ -35,12 +35,7 @@ const PaymentScreen = () => {
   
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      fetchCards();
-    });
-    return unsubscribe;
-  }, [navigation]);
+
 
   const defaultToastConfig = {
     autoClose: 3000,
@@ -65,7 +60,6 @@ const PaymentScreen = () => {
     try {
       const userId = await AsyncStorage.getItem("userId");
       const response = await requestGetMethodsByUser(userId);
-      console.log(response.data.data);
       if (response.status == 200 || response.status == 201) {
         setCards(response.data.data);
       } else {
@@ -77,11 +71,19 @@ const PaymentScreen = () => {
         });
       }
     } catch (error) {
+      if (error == 'AxiosError: Request failed with status code 404'){
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: t("paymentScreen.noCardsFound"),
+          textBody: t("paymentScreen.noCardsFound"),
+        });
+      } else {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: t("paymentScreen.errorNotification"),
         textBody: t("paymentScreen.errorCards"),
       });
+    }
     } finally {
       setLoading(false);
     }
@@ -111,18 +113,35 @@ const PaymentScreen = () => {
     navigation.navigate("ProfileScreen");
   };
 
-  const handleDeleteCard = async (cardId) =>{
-    response = await requestDeletePaymentMethod(cardId);
-    console.log(response)
-    if (response.status === 200){
-      alert("Cartão deletado com sucesso!");
-      await fetchCards();
+  const handleDeleteCard = async (cardId) => {
+    try {
+      const response = await requestDeletePaymentMethod(cardId);
+      if (response.status === 200) {
+        console.log("DELETADOOOOOOO")
+        alert("Cartão deletado com sucesso")
+        fetchCards();
+        conasole
+      } else {
+          alert("Erro ao deletar cartão")
+      }
+    } catch (error) {
+      console.error("Erro ao deletar o cartão:", error);
+      alert("Erro ao deletar cartão")
     }
   };
 
   const formatCardNumber = (number) => {
     return "**** **** **** " + number.slice(-4);
   };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchCards();
+    });
+    fetchCards();
+    return unsubscribe;
+  }, [navigation, cards]);
+
   return (
     <AlertNotificationRoot
       toastConfig={defaultToastConfig}

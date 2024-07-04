@@ -155,6 +155,7 @@
     "categoryShop": "Shop"
   },
   "paymentScreen": {
+    "noCardsFound": "Não encontramos nenhum cartão para esse usuário.",
     "errorNotification": "Erro",
     "errorCards": "Falha ao buscar cartões. Por favor, tente novamente.",
     "title": "Carteira",

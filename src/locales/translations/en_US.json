@@ -145,7 +145,8 @@
     "welcome": "Hello,"
   },
   "paymentScreen": {
-     "errorNotification": "Error",
+    "noCardsFound": "No cards found for this user",
+    "errorNotification": "Error",
     "errorCards": "Failed to fetch cards. Please try again.",
     "title": "Wallet",
     "yourCards": "No cards...",

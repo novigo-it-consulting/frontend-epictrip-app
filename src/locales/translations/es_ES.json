@@ -145,6 +145,7 @@
     "welcome": "Hola,"
   },
   "paymentScreen": {
+    "noCardsFound": "No encontramos ninguna tarjeta para este usuario.",
     "errorNotification": "Error",
     "errorCards": "No se pudieron obtener las tarjetas. Por favor, inténtelo de nuevo.",
     "title": "Cartera",
