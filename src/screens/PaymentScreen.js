@@ -22,20 +22,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { requestGetMethodsByUser, requestDeletePaymentMethod } from "../services/api";
 import { useTranslation } from "react-i18next";
 
-
-
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const PaymentScreen = () => {
-  const [cards, setCards] = useState(null);
+  const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   const { t } = useTranslation();
-  
   const navigation = useNavigation();
-
-
 
   const defaultToastConfig = {
     autoClose: 3000,
@@ -51,10 +46,10 @@ const PaymentScreen = () => {
     warning: "#ffc107",
   };
 
-  const handleEditPress = async (cardId) =>{
+  const handleEditPress = async (cardId) => {
     await AsyncStorage.setItem("cardId", cardId);
-    navigation.navigate("UpdateCard")
-  }
+    navigation.navigate("UpdateCard");
+  };
 
   const fetchCards = async () => {
     try {
@@ -71,19 +66,20 @@ const PaymentScreen = () => {
         });
       }
     } catch (error) {
-      if (error == 'AxiosError: Request failed with status code 404'){
+      if (error == 'AxiosError: Request failed with status code 404') {
+        await setCards([])
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: t("paymentScreen.noCardsFound"),
           textBody: t("paymentScreen.noCardsFound"),
         });
       } else {
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: t("paymentScreen.errorNotification"),
-        textBody: t("paymentScreen.errorCards"),
-      });
-    }
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: t("paymentScreen.errorNotification"),
+          textBody: t("paymentScreen.errorCards"),
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -117,16 +113,26 @@ const PaymentScreen = () => {
     try {
       const response = await requestDeletePaymentMethod(cardId);
       if (response.status === 200) {
-        console.log("DELETADOOOOOOO")
-        alert("Cartão deletado com sucesso")
-        fetchCards();
-        conasole
+        setCards((prevCards) => prevCards.filter((card) => card.methodId !== cardId));
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: t("paymentScreen.cardDeleted"),
+          textBody: t("paymentScreen.cardDeletedSuccessfully"),
+        });
       } else {
-          alert("Erro ao deletar cartão")
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: t("paymentScreen.deleteError"),
+          textBody: t("paymentScreen.errorDeletingCard"),
+        });
       }
     } catch (error) {
       console.error("Erro ao deletar o cartão:", error);
-      alert("Erro ao deletar cartão")
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: t("paymentScreen.deleteError"),
+        textBody: t("paymentScreen.errorDeletingCard"),
+      });
     }
   };
 
@@ -138,9 +144,8 @@ const PaymentScreen = () => {
     const unsubscribe = navigation.addListener("focus", () => {
       fetchCards();
     });
-    fetchCards();
     return unsubscribe;
-  }, [navigation, cards]);
+  }, [navigation, cards, console.log(cards)]);
 
   return (
     <AlertNotificationRoot
@@ -164,7 +169,7 @@ const PaymentScreen = () => {
               <Text style={styles.title}>{t("paymentScreen.title")}</Text>
             </View>
 
-            {cards === null ? (
+            {cards == [] || cards.length <= 0  ? (
               <View style={styles.noCardsView}>
                 <Text style={styles.noCardsText}>{t("paymentScreen.yourCards")}</Text>
                 <TouchableOpacity
@@ -225,8 +230,7 @@ const PaymentScreen = () => {
                             {cards[index].cardName || "No Name"}
                           </Text>
                           <Text style={styles.cardDetailsText}>
-                            {formatCardNumber(cards[index].cardNumber) ||
-                              "**** **** **** ****"}
+                            {formatCardNumber(cards[index].cardNumber) || "**** **** **** ****"}
                           </Text>
                         </View>
                         <Text style={styles.expiryText}>
@@ -310,7 +314,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   optionsView: {
-    flexDirection: "row"
+    flexDirection: "row",
   },
   cardDetailsView: {
     flexDirection: "column",
