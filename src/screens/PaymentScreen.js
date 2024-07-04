@@ -173,6 +173,7 @@ const PaymentScreen = () => {
               <View style={styles.noCardsView}>
                 <Text style={styles.noCardsText}>{t("paymentScreen.yourCards")}</Text>
                 <TouchableOpacity
+                  
                   style={styles.addButton}
                   onPress={() => navigation.navigate("ChangePaymentScreen")}
                 >
@@ -340,12 +341,14 @@ const styles = StyleSheet.create({
   noCardsView: {
     justifyContent: "center",
     alignItems: "center",
-    flex: 0.3,
+    flex: 1,
     width: "100%",
+    marginTop: "100%"
   },
   noCardsText: {
     fontSize: 18,
     fontWeight: "400",
+    marginBottom: "10%",
   },
   addButton: {
     marginTop: 20,
@@ -353,7 +356,11 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     width: "80%",
+    flexDirection: "column",
     alignItems: "center",
+    bottom: 0,
+    position: "relative",
+    justifyContent: "flex-end"
   },
   addButtonText: {
     color: "#fff",
