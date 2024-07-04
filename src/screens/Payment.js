@@ -5,6 +5,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
+  TouchableOpacity,
   Platform,
   Dimensions,
   Image,
@@ -29,6 +30,7 @@ import styles from "../styles/globalScreen";
 import { requestPayment, requestGetMethodsByUser } from "../services/api";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
+import { IconButton } from "react-native-paper";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -44,6 +46,7 @@ const Payment = () => {
   const formatCardNumber = (number) => {
     return "**** **** **** " + number.slice(-4);
   };
+
 
   const getRandomDarkColor = () => {
     const letters = "0123456789ABCDEF";
@@ -82,6 +85,7 @@ const Payment = () => {
   useEffect(() => {
     fetchCards();
   }, [navigation]);
+
 
   const handlePayment = async () => {
     if (!selectedMethodId) return;
@@ -142,7 +146,7 @@ const Payment = () => {
             paddingHorizontal: 20,
           }}
         >
-          <Text
+        <Text
             style={{
               textAlign: "center",
               fontSize: 23,
@@ -152,6 +156,7 @@ const Payment = () => {
           >
             {t("payment.titlePayment")}
           </Text>
+
           <Text
             style={{
               textAlign: "center",
@@ -244,6 +249,14 @@ const stylesCard = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  containerBackButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    display: "flex",
+    position: "relative",
+    flexDirection: "row",
+},
   creditCard: {
     width: "95%",
     height: "70%", // Adjusted to allow space for the button

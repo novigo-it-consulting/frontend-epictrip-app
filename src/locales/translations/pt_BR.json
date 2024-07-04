@@ -150,9 +150,9 @@
     "categoryServices": "Serviços",
     "categoryConcierge": "Concierge",
     "categoryTickets": "Ingressos",
-    "categoryPlaces": "Lugares",
-    "categoryFood": "Comida",
-    "categoryShop": "Shop"
+    "categoryPlaces": "Passeio",
+    "categoryFood": "Restaurante",
+    "categoryShop": "Compras"
   },
   "paymentScreen": {
     "errorNotification": "Erro",
