@@ -31,7 +31,7 @@ export default function ProfileHandleBooking() {
           setBookingNumber(inProgressBooking.shareNumber);
           return
         }
-        setBookingNumber("No bookings")
+        setBookingNumber (t("profileHandleBooking.reservas"))
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,

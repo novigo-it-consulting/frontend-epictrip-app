@@ -104,7 +104,8 @@
     "errorUserID": "Failed to load user ID",
     "bookingInformation": "Your booking information",
     "errorProfileScreenGetUserInfo": "An error occurred while loading your information",
-    "loadingBookingNumber": "Loading..."
+    "loadingBookingNumber": "Loading...",
+    "reservas": "No Bookings"
   },
   "changePersonalInfo": {
     "failedUpdate": "An error occurred while updating the user information. Please try again later.",
@@ -169,6 +170,9 @@
   "categoryPlaces": "Places",
   "categoryFood": "Food",
   "categoryShop": "Shop"
-
-  }  
+  },
+  "bookingScreen": {
+    "yourReservations": "No Bookings Yet",
+    "bookButton": "Make a reservation"
+  }
 }

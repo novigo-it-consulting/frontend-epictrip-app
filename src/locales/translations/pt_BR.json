@@ -105,7 +105,8 @@
     "errorUserID": "Falha ao carregar ID de usuário",
     "bookingInformation": "Informações da sua reserva",
     "errorProfileScreenGetUserInfo": "Aconteceu um erro ao carregar as suas informações",
-    "loadingBookingNumber": "Carregando..."
+    "loadingBookingNumber": "Carregando...",
+     "reservas": "Sem reservas"
   },
   "changePersonalInfo": {
     "failedUpdate": "Ocorreu um erro ao atualizar as informações do usuário. Por favor tente novamente mais tarde.",
@@ -170,5 +171,9 @@
   "payment": {
     "titlePayment": "Pagamento",
     "buttonPayment": "Realizar Pagamento"
+  },
+  "bookingScreen": {
+    "yourReservations": "Ainda não há reservas",
+    "bookButton": "Fazer Reserva"
   }
 }
