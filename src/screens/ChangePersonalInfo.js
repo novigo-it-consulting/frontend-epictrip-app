@@ -37,20 +37,18 @@ const ChangePersonalInfo = () => {
     lastName: "",
     gender: "first",
     age: "",
-    profilePic: null,
   });
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   const { t } = useTranslation();
 
   useEffect(() => {
     if (!initialDataLoaded) {
-      Promise.all([getUserInfo(), fetchLocation()])
+      Promise.all([getUserInfo(), fetchLocation(), profilePhoto])
         .then(() => {
           setLoading(false);
           setInitialDataLoaded(true);
         })
         .catch((error) => {
-          console.error(error);
           Toast.show({
             type: ALERT_TYPE.DANGER,
             title: "Ops",
@@ -80,7 +78,7 @@ const ChangePersonalInfo = () => {
       });
       return;
     }
-
+    setLoading(true)
     try {
       const response = await requestGetUser(userId);
       if (response.status === 200) {
@@ -113,6 +111,7 @@ const ChangePersonalInfo = () => {
           rental,
         });
         fetchLocation();
+        return
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
@@ -238,18 +237,16 @@ const ChangePersonalInfo = () => {
 
     if (!result.canceled) {
       setLoading(true);
-      setUserData({ ...userData, profilePic: result.uri });
       try {
         const response = await changeProfilePic(result);
+        setProfilePhoto(response.data)
         if (response.status === 200) {
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
             title: t("changePersonalInfo.alertSuccess"),
             textBody: t("changePersonalInfo.pictureUpdate"),
           });
-          setTimeout(() => {
-            setLoading(false);
-          }, 4000);
+          return setLoading(false)
         } else {
           Toast.show({
             type: ALERT_TYPE.DANGER,
@@ -276,11 +273,10 @@ const ChangePersonalInfo = () => {
     );
 
     getUserInfo();
-
     return () => {
       keyboardDidHideListener.remove();
     };
-  }, []);
+  }, [profilePhoto]);
 
   const defaultToastConfig = {
     autoClose: 3000,
