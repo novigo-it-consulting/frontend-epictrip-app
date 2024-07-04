@@ -27,6 +27,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 import { useTranslation } from "react-i18next";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const ChangePersonalInfo = () => {
   const navigation = useNavigation();
@@ -36,14 +37,36 @@ const ChangePersonalInfo = () => {
     firstName: "",
     lastName: "",
     gender: "first",
-    age: "",
+    age: new Date(), 
   });
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   const { t } = useTranslation();
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+
+ const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShow(false);
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+  const showTimepicker = () => {
+    showMode('time');
+  };
 
   useEffect(() => {
     if (!initialDataLoaded) {
-      Promise.all([getUserInfo(), fetchLocation(), profilePhoto])
+      Promise.all([getUserInfo(), fetchLocation()])
         .then(() => {
           setLoading(false);
           setInitialDataLoaded(true);
@@ -57,7 +80,7 @@ const ChangePersonalInfo = () => {
           setLoading(false);
         });
     }
-  }, [initialDataLoaded]);
+  }, [initialDataLoaded, console.log(userData.age)]);
 
   const [loading, setLoading] = useState(true);
 
@@ -78,7 +101,7 @@ const ChangePersonalInfo = () => {
       });
       return;
     }
-    setLoading(true)
+    setLoading(true);
     try {
       const response = await requestGetUser(userId);
       if (response.status === 200) {
@@ -96,14 +119,13 @@ const ChangePersonalInfo = () => {
         } = response.data.data;
         const [firstName, lastName] = fullName.split(" ");
 
-        const age =
-          new Date().getFullYear() - new Date(birthDate).getFullYear();
+        const age = new Date(birthDate);
 
         setUserData({
           firstName,
           lastName,
           gender: gender === "Male" ? "first" : "second",
-          age: age.toString(),
+          age,
           email,
           userRole,
           phone,
@@ -111,7 +133,7 @@ const ChangePersonalInfo = () => {
           rental,
         });
         fetchLocation();
-        return
+        return;
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
@@ -174,14 +196,10 @@ const ChangePersonalInfo = () => {
       return;
     }
 
-    const birthDate = new Date();
-    birthDate.setFullYear(birthDate.getFullYear() - parseInt(userData.age));
-    const formattedBirthDate = birthDate.toISOString().split("T")[0];
-
     const updatedData = {
       fullName: `${userData.firstName} ${userData.lastName}`,
       gender: userData.gender === "first" ? "Male" : "Female",
-      birthDate: formattedBirthDate,
+      birthDate: userData.age || "",
       phone: userData.phone || "",
       documentNumber: userData.documentNumber || "",
       language: userData.language || "",
@@ -239,14 +257,14 @@ const ChangePersonalInfo = () => {
       setLoading(true);
       try {
         const response = await changeProfilePic(result);
-        setProfilePhoto(response.data)
+        setProfilePhoto(response.data);
         if (response.status === 200) {
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
             title: t("changePersonalInfo.alertSuccess"),
             textBody: t("changePersonalInfo.pictureUpdate"),
           });
-          return setLoading(false)
+          return setLoading(false);
         } else {
           Toast.show({
             type: ALERT_TYPE.DANGER,
@@ -289,7 +307,15 @@ const ChangePersonalInfo = () => {
     success: "#28a745",
     danger: "rgba(255, 0, 0, 1)",
     warning: "#ffc107",
-}; 
+  };
+
+  const addOneDay = (date) => {
+    const newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + 1);
+    console.log("Data nova", newDate)
+    return newDate;
+  };
+
   return (
     <>
       <AlertNotificationRoot
@@ -337,7 +363,7 @@ const ChangePersonalInfo = () => {
                 label={t("changePersonalInfo.labelFirstName")}
                 value={userData.firstName}
                 onChangeText={(text) =>
-                  s
+                  setUserData({ ...userData, firstName: text })
                 }
                 keyboardType="default"
                 autoCapitalize="words"
@@ -374,22 +400,32 @@ const ChangePersonalInfo = () => {
                   <RadioButton.Item
                     label={t("changePersonalInfo.genderM")}
                     value="first"
+                    style={{ marginLeft: 25 }}
                   />
                   <RadioButton.Item
                     label={t("changePersonalInfo.genderF")}
                     value="second"
                   />
+                  <RadioButton.Item label={"Outro"} value="other" />
                 </View>
               </RadioButton.Group>
-              <TextInput
-                label={t("changePersonalInfo.labelAge")}
-                value={userData.age}
-                onChangeText={(text) => setUserData({ ...userData, age: text })}
-                keyboardType="numeric"
-                autoCapitalize="none"
-                mode="flat"
-                style={styles.input}
-              />
+              <TouchableOpacity onPress={() => showMode("date")}>
+                <View style={styles.input}>
+                  <Text style={{marginLeft: 14 }}>{addOneDay(userData.age).toDateString()}</Text>
+                </View>
+              </TouchableOpacity>
+              {show && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={addOneDay(userData.age)}
+                  mode={"date"}
+                  is24Hour={false}
+                  display="default"
+                  timeZoneName={"America/Sao_Paulo"}
+                  onChange={onChange}
+                  locale="pt-BR"
+                />
+              )}
               <Button
                 mode="contained"
                 style={styles.saveButton}
@@ -404,6 +440,7 @@ const ChangePersonalInfo = () => {
     </>
   );
 };
+
 const styles = StyleSheet.create({
   containerAlpha: {
     justifyContent: "flex-start",
@@ -428,7 +465,8 @@ const styles = StyleSheet.create({
     width: "85%",
   },
   headerText: {
-    fontSize: 22,
+    fontSize: 26,
+    fontWeight: "500",
   },
   profilePicContainer: {
     flex: 0.6,
@@ -449,13 +487,13 @@ const styles = StyleSheet.create({
     width: "100%",
     borderColor: colors.primary,
     backgroundColor: "transparent",
-    marginVertical: 5,
   },
   radioButtonContainer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
+    marginRight: "auto",
   },
   saveButton: {
     width: "100%",
