@@ -86,6 +86,7 @@ const Payment = () => {
     fetchCards();
   }, [navigation]);
 
+
   const handlePayment = async () => {
     if (!selectedMethodId) return;
     setLoading(true);
@@ -145,9 +146,7 @@ const Payment = () => {
             paddingHorizontal: 20,
           }}
         >
-
-             
-              <Text
+        <Text
             style={{
               textAlign: "center",
               fontSize: 23,
@@ -157,8 +156,7 @@ const Payment = () => {
           >
             {t("payment.titlePayment")}
           </Text>
-         
-          
+
           <Text
             style={{
               textAlign: "center",
