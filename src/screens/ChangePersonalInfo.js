@@ -27,7 +27,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 import { useTranslation } from "react-i18next";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DatePickerAge from "../components/DatePickerAge";
 
 const ChangePersonalInfo = () => {
   const navigation = useNavigation();
@@ -41,28 +41,6 @@ const ChangePersonalInfo = () => {
   });
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   const { t } = useTranslation();
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
-
- const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    setShow(false);
-    setDate(currentDate);
-  };
-
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
-
-  const showDatepicker = () => {
-    showMode('date');
-  };
-
-  const showTimepicker = () => {
-    showMode('time');
-  };
 
   useEffect(() => {
     if (!initialDataLoaded) {
@@ -212,6 +190,7 @@ const ChangePersonalInfo = () => {
       const response = await requestUpdateUser(userId, updatedData);
 
       if (response.status === 200) {
+        setUserData(updatedData);
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: t("changePersonalInfo.alertSuccess"),
@@ -312,7 +291,6 @@ const ChangePersonalInfo = () => {
   const addOneDay = (date) => {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + 1);
-    console.log("Data nova", newDate)
     return newDate;
   };
 
@@ -409,23 +387,7 @@ const ChangePersonalInfo = () => {
                   <RadioButton.Item label={"Outro"} value="other" />
                 </View>
               </RadioButton.Group>
-              <TouchableOpacity onPress={() => showMode("date")}>
-                <View style={styles.input}>
-                  <Text style={{marginLeft: 14 }}>{addOneDay(userData.age).toDateString()}</Text>
-                </View>
-              </TouchableOpacity>
-              {show && (
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={addOneDay(userData.age)}
-                  mode={"date"}
-                  is24Hour={false}
-                  display="default"
-                  timeZoneName={"America/Sao_Paulo"}
-                  onChange={onChange}
-                  locale="pt-BR"
-                />
-              )}
+              <DatePickerAge userData={userData} updateUserData={setUserData} />
               <Button
                 mode="contained"
                 style={styles.saveButton}
