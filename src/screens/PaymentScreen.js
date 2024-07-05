@@ -71,7 +71,6 @@ const PaymentScreen = () => {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: t("paymentScreen.noCardsFound"),
-          textBody: t("paymentScreen.noCardsFound"),
         });
       } else {
         Toast.show({
@@ -235,7 +234,7 @@ const PaymentScreen = () => {
                           </Text>
                         </View>
                         <Text style={styles.expiryText}>
-                          {cards[index].cardExpiration || "MM/YY"}
+                          {`${cards[index].cardExpiration.split("-")[1]}/${cards[index].cardExpiration.split("-")[0]}` || "MM/YY"}
                         </Text>
                       </View>
                     </View>
