@@ -288,11 +288,6 @@ const ChangePersonalInfo = () => {
     warning: "#ffc107",
   };
 
-  const addOneDay = (date) => {
-    const newDate = new Date(date);
-    newDate.setDate(newDate.getDate() + 1);
-    return newDate;
-  };
 
   return (
     <>
@@ -377,14 +372,13 @@ const ChangePersonalInfo = () => {
                 <View style={styles.radioButtonContainer}>
                   <RadioButton.Item
                     label={t("changePersonalInfo.genderM")}
-                    value="first"
-                    style={{ marginLeft: 25 }}
+                    value="male"
                   />
                   <RadioButton.Item
                     label={t("changePersonalInfo.genderF")}
-                    value="second"
+                    value="female"
                   />
-                  <RadioButton.Item label={"Outro"} value="other" />
+                  <RadioButton.Item label={t("changePersonalInfo.genderOther")} value="other" />
                 </View>
               </RadioButton.Group>
               <DatePickerAge userData={userData} updateUserData={setUserData} />
@@ -456,6 +450,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     marginRight: "auto",
+    marginLeft: 12
   },
   saveButton: {
     width: "100%",
