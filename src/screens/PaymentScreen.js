@@ -116,7 +116,6 @@ const PaymentScreen = () => {
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: t("paymentScreen.cardDeleted"),
-          textBody: t("paymentScreen.cardDeletedSuccessfully"),
         });
       } else {
         Toast.show({

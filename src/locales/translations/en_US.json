@@ -121,6 +121,7 @@
     "locationPermissionDenied": "Permission to access location was denied",
     "genderM": "Male",
     "genderF": "Female",
+    "genderOther": "Other",
     "buttonSave": "Save",
     "labelFirstName": "First Name",
     "labelLastName": "Last Name",
@@ -151,7 +152,10 @@
     "errorCards": "Failed to fetch cards. Please try again.",
     "title": "Wallet",
     "yourCards": "No cards...",
-    "addCard": "Add Card"
+    "addCard": "Add Card",
+    "cardDeleted": "Card deleted successfully.",
+    "deleteError": "Error deleting card",
+    "errorDeletingCard": "An error occurred"
 },
 "changePaymentScreen": {
   "titleError": "Error",

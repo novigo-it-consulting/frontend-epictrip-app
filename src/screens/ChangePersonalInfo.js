@@ -372,13 +372,13 @@ const ChangePersonalInfo = () => {
                 <View style={styles.radioButtonContainer}>
                   <RadioButton.Item
                     label={t("changePersonalInfo.genderM")}
-                    value="first"
+                    value="male"
                   />
                   <RadioButton.Item
                     label={t("changePersonalInfo.genderF")}
-                    value="second"
+                    value="female"
                   />
-                  <RadioButton.Item label={"Outro"} value="other" />
+                  <RadioButton.Item label={t("changePersonalInfo.genderOther")} value="other" />
                 </View>
               </RadioButton.Group>
               <DatePickerAge userData={userData} updateUserData={setUserData} />
