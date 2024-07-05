@@ -288,11 +288,6 @@ const ChangePersonalInfo = () => {
     warning: "#ffc107",
   };
 
-  const addOneDay = (date) => {
-    const newDate = new Date(date);
-    newDate.setDate(newDate.getDate() + 1);
-    return newDate;
-  };
 
   return (
     <>
@@ -378,7 +373,6 @@ const ChangePersonalInfo = () => {
                   <RadioButton.Item
                     label={t("changePersonalInfo.genderM")}
                     value="first"
-                    style={{ marginLeft: 25 }}
                   />
                   <RadioButton.Item
                     label={t("changePersonalInfo.genderF")}
@@ -456,6 +450,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     marginRight: "auto",
+    marginLeft: 12
   },
   saveButton: {
     width: "100%",
