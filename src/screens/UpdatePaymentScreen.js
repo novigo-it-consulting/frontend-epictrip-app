@@ -138,7 +138,7 @@ const UpdateCard = ({ navigation }) => {
                 initialValues={{
                   number: card.cardNumber,
                   holder: card.cardName,
-                  expiration: `${card.cardExpiration.split("-")[1]}-${card.cardExpiration.split("-")[0]}`,
+                  expiration: `${card.cardExpiration.split("-")[1]}/${card.cardExpiration.split("-")[0]}`,
                   cvv: card.cardCVV,
                 }}
               />
