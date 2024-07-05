@@ -288,11 +288,6 @@ const ChangePersonalInfo = () => {
     warning: "#ffc107",
   };
 
-  const addOneDay = (date) => {
-    const newDate = new Date(date);
-    newDate.setDate(newDate.getDate() + 1);
-    return newDate;
-  };
 
   return (
     <>
