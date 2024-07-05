@@ -180,5 +180,12 @@
   "bookingScreen": {
     "yourReservations": "Ainda não há reservas",
     "bookButton": "Fazer Reserva"
+  }, 
+  "logoutDialog": {
+    "title": "Deseja realmente sair?",
+    "content": "Ao sair, limparemos todos seus dados, e redirecionaremos para o login.",
+    "noButton": "Não",
+    "yesButton": "Sim, sair"
   }
+  
 }

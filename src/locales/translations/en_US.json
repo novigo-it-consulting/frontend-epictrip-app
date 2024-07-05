@@ -179,5 +179,12 @@
   "bookingScreen": {
     "yourReservations": "No Bookings Yet",
     "bookButton": "Make a reservation"
+  }, 
+    "logoutDialog": {
+      "title": "Do you really want to leave?",
+      "content": "When you leave, we will clear all your data and redirect you to the login.",
+      "noButton": "No",
+      "yesButton": "Yes, leave"
   }
+  
 }

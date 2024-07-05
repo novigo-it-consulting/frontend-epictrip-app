@@ -171,17 +171,30 @@ const ProfileScreen = () => {
           <ProfileHandleLogout />
         </TouchableOpacity>
         <Portal>
-          <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialog}>
-            <Dialog.Icon icon="alert" />
-            <Dialog.Title style={styles.title}>Deseja, realmente sair?</Dialog.Title>
-            <Dialog.Content>
-              <Text variant="bodyMedium">Ao sair, limparemos todos seus dados, e redirecionaremos para o login</Text>
-            </Dialog.Content>
-            <Dialog.Actions>
-              <Button textColor="#fff" background={"#0065ff"} style={styles.actionButtonNo} onPress={() => setVisible(false)}>Não</Button>
-              <Button onPress={() => handlePressLogout()}>Sim, sair</Button>
-            </Dialog.Actions>
-          </Dialog>
+        <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialog}>
+          <Dialog.Icon icon="alert" />
+          <Dialog.Title style={styles.title}>
+            {t('logoutDialog.title')}
+          </Dialog.Title>
+          <Dialog.Content>
+            <Text style={{textAlign: "center"}} variant="bodyMedium">
+              {t('logoutDialog.content')}
+            </Text>
+          </Dialog.Content>
+          <Dialog.Actions style={{marginLeft: "auto", marginRight: "auto"}}>
+            <Button
+              textColor="#fff"
+              background={"#0065ff"}
+              style={styles.actionButtonNo}
+              onPress={() => setVisible(false)}
+            >
+              {t('logoutDialog.noButton')}
+            </Button>
+            <Button onPress={() => handlePressLogout()}>
+              {t('logoutDialog.yesButton')}
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
         </Portal>
       </View>
     </View>

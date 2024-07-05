@@ -96,13 +96,12 @@ export const requestGetbooking = async () => {
     });
     return response;
   } catch (error) {
-    throw console.log(error);
+    throw error;
   }
 };
 
 export const changeProfilePic = async (file) => {
   try {
-    console.log("FILE: ", file);
     const headers = {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
@@ -125,7 +124,6 @@ export const changeProfilePic = async (file) => {
         headers,
       }
     );
-    console.log("RESPONSE API: ", response);
     return response;
   } catch (error) {
     throw error;
@@ -142,7 +140,6 @@ export const requestUpdateUser = async (userId, dados) => {
       headers,
     });
 
-    console.log("Response", response);
     return response;
   } catch (error) {
     throw error;
@@ -157,7 +154,7 @@ export const requestCreatePaymentMethod = async (dados) => {
     const response = axios.post(`${BASE_URL}/paymentmethods/`, dados, {
       headers,
     });
-    console.log(response)
+
     return response;
   } catch (error) {
     throw error;
@@ -253,7 +250,7 @@ export const requestPayment = async (userId, paymentMethodId, amount) => {
     };
 
     const response = await axios.request(config);
-    console.log(response)
+   
     return response.data;
   } catch (error) {
     throw error;
