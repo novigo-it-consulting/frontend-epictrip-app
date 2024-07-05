@@ -121,6 +121,7 @@
     "locationPermissionDenied": "Se denegó el permiso para acceder a la ubicación",
     "genderM": "Masculino",
     "genderF": "Femenino",
+    "genderOther": "Otro",
     "buttonSave": "Guardar",
     "labelFirstName": "Nombre",
     "labelLastName": "Apellido",
@@ -151,7 +152,10 @@
     "errorCards": "No se pudieron obtener las tarjetas. Por favor, inténtelo de nuevo.",
     "title": "Cartera",
     "yourCards": "Sin tarjetas...",
-    "addCard": "Agregar Tarjeta"
+    "addCard": "Agregar Tarjeta",
+    "cardDeleted": "Tarjeta eliminada con éxito.",
+    "deleteError": "Error al eliminar la tarjeta",
+    "errorDeletingCard": "Ocurrió un error"
 },
 "changePaymentScreen": {
   "titleError": "Error",

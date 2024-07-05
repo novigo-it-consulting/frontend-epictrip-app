@@ -122,6 +122,7 @@
     "locationPermissionDenied": "A permissão para acessar o local foi negada",
     "genderM": "Masculino",
     "genderF": "Feminino",
+    "genderOther": "Outro",
     "buttonSave": "Salvar",
     "labelFirstName": "Nome",
     "labelLastName": "Sobrenome",
@@ -151,9 +152,9 @@
     "categoryServices": "Serviços",
     "categoryConcierge": "Concierge",
     "categoryTickets": "Ingressos",
-    "categoryPlaces": "Lugares",
-    "categoryFood": "Comida",
-    "categoryShop": "Shop"
+    "categoryPlaces": "Passeio",
+    "categoryFood": "Restaurante",
+    "categoryShop": "Compras"
   },
   "paymentScreen": {
     "noCardsFound": "Não encontramos nenhum cartão para esse usuário.",
@@ -161,7 +162,10 @@
     "errorCards": "Falha ao buscar cartões. Por favor, tente novamente.",
     "title": "Carteira",
     "yourCards": "Sem cartões...",
-    "addCard": "Adicionar Cartão"
+    "addCard": "Adicionar Cartão",
+    "cardDeleted": "Cartão deletado com sucesso.",
+    "deleteError": "Erro ao deletar o cartão",
+    "errorDeletingCard": "Ocorreu um erro"
   },
   "changePaymentScreen": {
     "titleError": "Erro",
