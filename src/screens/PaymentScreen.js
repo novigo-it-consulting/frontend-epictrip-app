@@ -168,7 +168,7 @@ const PaymentScreen = () => {
               </TouchableOpacity>
               <Text style={styles.title}>{t("paymentScreen.title")}</Text>
             </View>
-
+            {/* Comentario apenas para ver se a mudança sobe */}
             {cards == [] || cards.length <= 0  ? (
               <View style={styles.noCardsView}>
                 <Text style={styles.noCardsText}>{t("paymentScreen.yourCards")}</Text>
