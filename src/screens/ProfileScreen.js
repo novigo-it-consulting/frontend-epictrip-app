@@ -1,6 +1,6 @@
 // screens/ProfileScreen.js
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, {useState} from "react";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import colors from "../colors";
 import { useTranslation } from "react-i18next";
@@ -13,9 +13,14 @@ import ProfileHandleSettingsLanguage from "../components/ProfileHandleSettingsLa
 import ProfileHandleLogout from "../components/ProfileHandleLogout.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { requestChangePasswordToken } from "../services/api.js";
+import { Dialog, Portal, Text, Button } from 'react-native-paper';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
+
+  const [visible, setVisible] = useState(false);
+
+  const hideDialog = () => setVisible(false);
 
   const { t } = useTranslation();
 
@@ -29,6 +34,7 @@ const ProfileScreen = () => {
     navigation.navigate("BookingScreen");
   };
   const handlePressLogout = async () => {
+    setVisible(true);
     try {
       await AsyncStorage.clear();
       navigation.reset({
@@ -55,9 +61,23 @@ const ProfileScreen = () => {
     }
   };
 
+  const defaultToastConfig = {
+    autoClose: 3000,
+    titleStyle: { fontSize: 16, fontWeight: "bold" },
+  };
+
+  const lightColors = {
+    label: "#000",
+    card: "red",
+    overlay: "#f0f0f0",
+    success: "#28a745",
+    danger: "rgba(255, 0, 0, 1)",
+    warning: "#fff",
+  };
+
   return (
     <View style={stylesProfile.containerAlpha}>
-      <View
+        <View
         style={{
           flex: 0.8,
           justifyContent: "center",
@@ -143,12 +163,26 @@ const ProfileScreen = () => {
         >
           <ProfileHandleSettingsLanguage />
         </TouchableOpacity>
+        
         <TouchableOpacity
           style={stylesProfile.container}
-          onPress={handlePressLogout}
+          onPress={() => setVisible(true)}
         >
           <ProfileHandleLogout />
         </TouchableOpacity>
+        <Portal>
+          <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialog}>
+            <Dialog.Icon icon="alert" />
+            <Dialog.Title style={styles.title}>Deseja, realmente sair?</Dialog.Title>
+            <Dialog.Content>
+              <Text variant="bodyMedium">Ao sair, limparemos todos seus dados, e redirecionaremos para o login</Text>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button textColor="#fff" background={"#0065ff"} style={styles.actionButtonNo} onPress={() => setVisible(false)}>Não</Button>
+              <Button onPress={() => handlePressLogout()}>Sim, sair</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
       </View>
     </View>
   );
@@ -173,5 +207,21 @@ const stylesProfile = StyleSheet.create({
     width: "100%",
   },
 });
+
+const styles = StyleSheet.create({
+  title: {
+    textAlign: 'center',
+  },
+  dialog: {
+    backgroundColor: colors.backGroundLight
+  }, 
+  actionButtonNo: {
+    textAlign: "center",
+    backgroundColor: colors.primary,
+    paddingRight: 12, 
+    paddingLeft: 12
+  }
+})
+
 
 export default ProfileScreen;

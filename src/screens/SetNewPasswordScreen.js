@@ -74,7 +74,7 @@ const SetNewPasswordScreen = ({ navigation }) => {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
-        textBody: "Passwords dont match",
+        textBody: t("setNewPasswordScreen.passwordsDoNotMatch"),
       });
       return () => clearTimeout(timer);
     }
@@ -130,7 +130,6 @@ const SetNewPasswordScreen = ({ navigation }) => {
 
   return (
     <PaperProvider theme={theme}>
-      <SafeAreaView />
       <AlertNotificationRoot
         toastConfig={defaultToastConfig}
         colors={[lightColors]}

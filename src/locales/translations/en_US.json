@@ -104,7 +104,8 @@
     "errorUserID": "Failed to load user ID",
     "bookingInformation": "Your booking information",
     "errorProfileScreenGetUserInfo": "An error occurred while loading your information",
-    "loadingBookingNumber": "Loading..."
+    "loadingBookingNumber": "Loading...",
+    "reservas": "No Bookings"
   },
   "changePersonalInfo": {
     "failedUpdate": "An error occurred while updating the user information. Please try again later.",
@@ -145,7 +146,8 @@
     "welcome": "Hello,"
   },
   "paymentScreen": {
-     "errorNotification": "Error",
+    "noCardsFound": "No cards found for this user",
+    "errorNotification": "Error",
     "errorCards": "Failed to fetch cards. Please try again.",
     "title": "Wallet",
     "yourCards": "No cards...",
@@ -169,6 +171,9 @@
   "categoryPlaces": "Places",
   "categoryFood": "Food",
   "categoryShop": "Shop"
-
-  }  
+  },
+  "bookingScreen": {
+    "yourReservations": "No Bookings Yet",
+    "bookButton": "Make a reservation"
+  }
 }

@@ -157,6 +157,7 @@ export const requestCreatePaymentMethod = async (dados) => {
     const response = axios.post(`${BASE_URL}/paymentmethods/`, dados, {
       headers,
     });
+    console.log(response)
     return response;
   } catch (error) {
     throw error;
@@ -218,7 +219,14 @@ export const requestGetMethodsByUser = async (userId) => {
       `${BASE_URL}/paymentmethods/getmethodsbyuser/${userId}`,
       { headers }
     );
-    return response;
+    if (response.status == 200){
+      return response;
+    } else if (response.status == 404) {
+      return "noCardsFound";
+    } else {
+      return response
+    }
+    
   } catch (error) {
     throw error;
   }
