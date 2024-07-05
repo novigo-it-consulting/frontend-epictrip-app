@@ -104,7 +104,8 @@
     "errorUserID": "Error al cargar el ID de usuario",
     "bookingInformation": "Información de tu reserva",
     "errorProfileScreenGetUserInfo": "Ocurrió un error al cargar tu información",
-    "loadingBookingNumber": "Cargando..."
+    "loadingBookingNumber": "Cargando...",
+    "reservas": "No reservaciones"
   },
   "changePersonalInfo": {
     "failedUpdate": "Ocurrió un error al actualizar la información del usuario. Por favor, inténtalo de nuevo más tarde.",
@@ -169,6 +170,9 @@
   "categoryPlaces": "Lugares",
   "categoryFood": "Comida",
   "categoryShop": "Tienda"
-
+  },
+  "bookingScreen": {
+    "yourReservations": "Aún no hay reservas",
+    "bookButton": "Hacer una reserva"
   }
 }

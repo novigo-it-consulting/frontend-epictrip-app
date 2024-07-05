@@ -139,12 +139,12 @@ const BookingScreen = () => {
           <ActivityIndicator size="large" color={colors.primary} />
         ) : house === null || house.length === 0 ? (
           <View style={stylesPayment.noCardsView}>
-            <Text style={stylesPayment.noBookingsText}>No Bookings Yet</Text>
+            <Text style={stylesPayment.noBookingsText}>{t("bookingScreen.yourReservations")}</Text>
             <TouchableOpacity
               style={stylesPayment.addButton}
               onPress={() => navigation.goBack()}
             >
-              <Text style={stylesPayment.addButtonText}>Fazer Reserva</Text>
+              <Text style={stylesPayment.addButtonText}>{t("bookingScreen.bookButton")}</Text>
             </TouchableOpacity>
           </View>
         ) : (
