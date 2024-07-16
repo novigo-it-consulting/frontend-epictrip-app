@@ -7,8 +7,10 @@ import AnimatedDotsCarousel from "react-native-animated-dots-carousel"; // Impor
 import colors from "../colors";
 import { useTranslation } from "react-i18next";
 
+
 const PopularEvents = () => {
   const width = Dimensions.get("window").width;
+  const { t } = useTranslation();
 
   const data = [
     {
@@ -17,7 +19,7 @@ const PopularEvents = () => {
       image: require("../../assets/Categories/card_1.png"),
     },
     {
-      title: "Disney Roller Coaster Park",
+      title: t("popularEvents.titleDisney"),
       description: "1525 Sugargrove, Orlando",
       image: require("../../assets/Categories/foto-1.png"),
     },
@@ -27,7 +29,7 @@ const PopularEvents = () => {
       image: require("../../assets/Categories/8.png"),
     },
     {
-      title: "Copa America 2024",
+      title: t("popularEvents.titleCup"),
       description: "Mercedes-Benz Stadium, Atlanta",
       image: require("../../assets/Categories/7.png"),
     }
@@ -36,7 +38,6 @@ const PopularEvents = () => {
   ];
 
   const [index, setIndex] = useState(0);
-  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
