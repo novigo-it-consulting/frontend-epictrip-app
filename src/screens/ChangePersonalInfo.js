@@ -58,7 +58,7 @@ const ChangePersonalInfo = () => {
           setLoading(false);
         });
     }
-  }, [initialDataLoaded, console.log(userData.age)]);
+  }, [initialDataLoaded]);
 
   const [loading, setLoading] = useState(true);
 
@@ -102,7 +102,7 @@ const ChangePersonalInfo = () => {
         setUserData({
           firstName,
           lastName,
-          gender: gender === "Male" ? "first" : "second",
+          gender,
           age,
           email,
           userRole,
@@ -176,7 +176,7 @@ const ChangePersonalInfo = () => {
 
     const updatedData = {
       fullName: `${userData.firstName} ${userData.lastName}`,
-      gender: userData.gender === "first" ? "Male" : "Female",
+      gender: userData.gender || "",
       birthDate: userData.age || "",
       phone: userData.phone || "",
       documentNumber: userData.documentNumber || "",
@@ -372,13 +372,13 @@ const ChangePersonalInfo = () => {
                 <View style={styles.radioButtonContainer}>
                   <RadioButton.Item
                     label={t("changePersonalInfo.genderM")}
-                    value="male"
+                    value="Male"
                   />
                   <RadioButton.Item
                     label={t("changePersonalInfo.genderF")}
-                    value="female"
+                    value="Female"
                   />
-                  <RadioButton.Item label={t("changePersonalInfo.genderOther")} value="other" />
+                  <RadioButton.Item label={t("changePersonalInfo.genderOther")} value="Other" />
                 </View>
               </RadioButton.Group>
               <DatePickerAge userData={userData} updateUserData={setUserData} />

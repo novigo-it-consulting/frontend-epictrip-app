@@ -104,7 +104,7 @@
     "errorUserID": "Error al cargar el ID de usuario",
     "bookingInformation": "Información de tu reserva",
     "errorProfileScreenGetUserInfo": "Ocurrió un error al cargar tu información",
-    "loadingBookingNumber": "Cargando...",
+    "loadingBookingNumber": "Sin datos de reserva",
     "reservas": "No reservaciones"
   },
   "changePersonalInfo": {
@@ -135,7 +135,9 @@
     "alertError": "Error"
   },
   "popularEvents": {
-    "events": "Eventos Populares"
+    "events": "Eventos Populares",
+    "titleDisney": "Parque Disney",
+    "titleCup": "Copa América"
   },
   "exploreCategories": {
     "categories": "Explorar Categorías"
@@ -179,5 +181,11 @@
   "bookingScreen": {
     "yourReservations": "Aún no hay reservas",
     "bookButton": "Hacer una reserva"
-  }
+  }, 
+  "logoutDialog": {
+    "title": "¿Realmente desea salir?",
+    "content": "Al salir, borraremos todos sus datos y lo redirigiremos al inicio de sesión.",
+    "noButton": "No",
+    "yesButton": "Sí, salir"
+  }  
 }

@@ -134,8 +134,10 @@
     "alertSuccess": "Success",
     "alertError": "Error"
   },
-  "popularEvents": {
-    "events": "Popular Events"
+ "popularEvents": {
+    "events": "Popular Events",
+    "titleDisney": "Disney Park",
+    "titleCup": "America Cup"
   },
   "exploreCategories": {
     "categories": "Explore Categories"
@@ -179,5 +181,12 @@
   "bookingScreen": {
     "yourReservations": "No Bookings Yet",
     "bookButton": "Make a reservation"
+  }, 
+    "logoutDialog": {
+      "title": "Do you really want to leave?",
+      "content": "When you leave, we will clear all your data and redirect you to the login.",
+      "noButton": "No",
+      "yesButton": "Yes, leave"
   }
+  
 }
