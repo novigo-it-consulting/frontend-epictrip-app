@@ -104,7 +104,7 @@
     "errorUserID": "Failed to load user ID",
     "bookingInformation": "Your booking information",
     "errorProfileScreenGetUserInfo": "An error occurred while loading your information",
-    "loadingBookingNumber": "No booking data",
+    "loadingBookingNumber": "Loading...",
     "reservas": "No Bookings"
   },
   "changePersonalInfo": {
@@ -134,8 +134,10 @@
     "alertSuccess": "Success",
     "alertError": "Error"
   },
-  "popularEvents": {
-    "events": "Popular Events"
+ "popularEvents": {
+    "events": "Popular Events",
+    "titleDisney": "Disney Park",
+    "titleCup": "America Cup"
   },
   "exploreCategories": {
     "categories": "Explore Categories"
