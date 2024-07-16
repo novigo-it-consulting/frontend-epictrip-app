@@ -145,7 +145,8 @@ export default function ProfileAccount() {
                 fontWeight: "bold",
               }}
             >
-              {profileName}
+              {profileName}👋
+       
             </Text>
           </View>
           <View style={stylesProfile.boxNotification}>
