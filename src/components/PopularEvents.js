@@ -21,6 +21,17 @@ const PopularEvents = () => {
       description: "1525 Sugargrove, Orlando",
       image: require("../../assets/Categories/foto-1.png"),
     },
+    {
+      title: "Disney Roller Coaster Park",
+      description: "1525 Sugargrove, Orlando",
+      image: require("../../assets/Categories/foto-1.png"),
+    },
+    {
+      title: "Copa America 2024",
+      description: "Mercedes-Benz Stadium, Atlanta",
+      image: require("../../assets/Categories/7.png"),
+    }
+
     // Adicione mais itens conforme necessário
   ];
 
