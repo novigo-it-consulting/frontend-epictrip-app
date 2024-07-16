@@ -22,9 +22,9 @@ const PopularEvents = () => {
       image: require("../../assets/Categories/foto-1.png"),
     },
     {
-      title: "Disney Roller Coaster Park",
-      description: "1525 Sugargrove, Orlando",
-      image: require("../../assets/Categories/foto-1.png"),
+      title: "Orlando city vs New York City",
+      description: "W Church St, Orlando",
+      image: require("../../assets/Categories/8.png"),
     },
     {
       title: "Copa America 2024",
