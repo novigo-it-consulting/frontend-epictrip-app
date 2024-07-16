@@ -104,7 +104,7 @@
     "errorUserID": "Failed to load user ID",
     "bookingInformation": "Your booking information",
     "errorProfileScreenGetUserInfo": "An error occurred while loading your information",
-    "loadingBookingNumber": "Loading...",
+    "loadingBookingNumber": "No booking data",
     "reservas": "No Bookings"
   },
   "changePersonalInfo": {

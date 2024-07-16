@@ -105,7 +105,7 @@
     "errorUserID": "Falha ao carregar ID de usuário",
     "bookingInformation": "Informações da sua reserva",
     "errorProfileScreenGetUserInfo": "Aconteceu um erro ao carregar as suas informações",
-    "loadingBookingNumber": "Carregando...",
+    "loadingBookingNumber": "Sem dados de booking",
      "reservas": "Sem reservas"
   },
   "changePersonalInfo": {
