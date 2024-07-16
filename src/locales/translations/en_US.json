@@ -135,7 +135,9 @@
     "alertError": "Error"
   },
   "popularEvents": {
-    "events": "Popular Events"
+    "events": "Popular Events",
+    "titleDisney": "Disney Park",
+    "titleCup": "America Cup"
   },
   "exploreCategories": {
     "categories": "Explore Categories"

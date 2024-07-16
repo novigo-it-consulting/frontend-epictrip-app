@@ -7,9 +7,10 @@ import AnimatedDotsCarousel from "react-native-animated-dots-carousel"; // Impor
 import colors from "../colors";
 import { useTranslation } from "react-i18next";
 
+
 const PopularEvents = () => {
   const width = Dimensions.get("window").width;
-
+  
   const data = [
     {
       title: "Minnesota Vikings vs. New...",
@@ -31,10 +32,10 @@ const PopularEvents = () => {
       description: "Mercedes-Benz Stadium, Atlanta",
       image: require("../../assets/Categories/7.png"),
     }
-
+    
     // Adicione mais itens conforme necessário
   ];
-
+  
   const [index, setIndex] = useState(0);
   const { t } = useTranslation();
 
