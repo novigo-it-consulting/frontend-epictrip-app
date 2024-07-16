@@ -10,8 +10,7 @@ import { useTranslation } from "react-i18next";
 
 const PopularEvents = () => {
   const width = Dimensions.get("window").width;
-  const { t } = useTranslation();
-
+  
   const data = [
     {
       title: "Minnesota Vikings vs. New...",
@@ -19,7 +18,7 @@ const PopularEvents = () => {
       image: require("../../assets/Categories/card_1.png"),
     },
     {
-      title: t("popularEvents.titleDisney"),
+      title: "Disney Roller Coaster Park",
       description: "1525 Sugargrove, Orlando",
       image: require("../../assets/Categories/foto-1.png"),
     },
@@ -29,15 +28,16 @@ const PopularEvents = () => {
       image: require("../../assets/Categories/8.png"),
     },
     {
-      title: t("popularEvents.titleCup"),
+      title: "Copa America 2024",
       description: "Mercedes-Benz Stadium, Atlanta",
       image: require("../../assets/Categories/7.png"),
     }
-
+    
     // Adicione mais itens conforme necessário
   ];
-
+  
   const [index, setIndex] = useState(0);
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
