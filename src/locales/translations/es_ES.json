@@ -135,8 +135,9 @@
     "alertError": "Error"
   },
   "popularEvents": {
-    "events": "Eventos Populares"
-   
+    "events": "Eventos Populares",
+    "titleDisney": "Parque Disney",
+    "titleCup": "Copa América"
   },
   "exploreCategories": {
     "categories": "Explorar Categorías"
