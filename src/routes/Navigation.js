@@ -2,7 +2,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-
+import ChatNotification from "../screens/ChatNotification";
 import LoginScreen from "../screens/LoginScreen";
 import HomeTabs from "../components/HomeTabs";
 import SignUpScreen from "../screens/SignUpScreen";
@@ -35,6 +35,7 @@ const Navigation = () => {
         initialRouteName="SplashScreen"
       >
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        <Stack.Screen name="ChatNotification" component={ChatNotification} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Home" component={HomeTabs} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />

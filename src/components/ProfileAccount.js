@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { requestGetUser } from "../services/api";
 import { useNavigation } from "@react-navigation/native";
 import Feather from "react-native-vector-icons/Feather";
@@ -8,15 +8,16 @@ import SearchBarHome from "./SearchViewHome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SkeletonLoading from "expo-skeleton-loading";
 import { useTranslation } from "react-i18next";
+import ChatNotification from "../screens/ChatNotification";
 
 export default function ProfileAccount() {
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [profileName, setProfileName] = useState("");
   const [loading, setLoading] = useState(true);
   const [imageLoading, setImageLoading] = useState(true);
-  
+
   const { t } = useTranslation();
-  const navigation = useNavigation();
+  const navigation = useNavigation(); // Use navigation
 
   const getUserToProfile = async () => {
     const userId = await AsyncStorage.getItem("userId");
@@ -32,10 +33,10 @@ export default function ProfileAccount() {
         const { fullName, profilePic } = response.data.data;
         setProfileName(fullName);
         setProfilePhoto(profilePic);
-        setLoading(false);
+        console.error("Failed to fetch user profile:", response.status);        setLoading(false);
         setImageLoading(false);
       } else {
-        console.error("Failed to fetch user profile:", response.status);
+
         setLoading(false);
         setImageLoading(false);
       }
@@ -62,7 +63,7 @@ export default function ProfileAccount() {
   const handleImageLoadEnd = () => {
     setTimeout(() => {
       setImageLoading(false);
-    }, 5000); // 3 segundos de delay
+    }, 5000); // 5 segundos de delay
   };
 
   if (loading || imageLoading) {
@@ -113,6 +114,10 @@ export default function ProfileAccount() {
     );
   }
 
+  const navigateToNotifications = () => {
+    navigation.navigate('ChatNotification');
+  };
+
   return (
     <View style={stylesProfile.container}>
       <View style={stylesProfile.boxProfile}>
@@ -146,20 +151,21 @@ export default function ProfileAccount() {
               }}
             >
               {profileName}👋
-       
             </Text>
           </View>
-          <View style={stylesProfile.boxNotification}>
-            <View style={stylesProfile.boxColor}>
-              <Feather name="bell" color={"#172B4D"} size={15} />
-              <Badge
-                style={{ position: "absolute", top: 5, right: 5 }}
-                size={15}
-              >
-                3
-              </Badge>
+          <TouchableOpacity style={{ marginLeft: 100 }} onPress={navigateToNotifications}>
+            <View style={stylesProfile.boxNotification}>
+              <View style={stylesProfile.boxColor}>
+                <Feather name="bell" color={"#172B4D"} size={15} />
+                <Badge
+                  style={{ position: "absolute", top: 5, right: 5 }}
+                  size={15}
+                >
+                  3
+                </Badge>
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
         </View>
         <SearchBarHome />
       </View>
@@ -199,7 +205,6 @@ const stylesProfile = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
-
   titleName: {
     marginLeft: 12,
   },

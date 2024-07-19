@@ -19,7 +19,7 @@ const ExploreCategories = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getSampleData(t); 
+        const result = await getSampleData(t);
         await setData(result);
       } catch (error) {
         console.error("Failed to load data:", error);
