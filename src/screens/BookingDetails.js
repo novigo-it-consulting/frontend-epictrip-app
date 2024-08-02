@@ -6,6 +6,8 @@ import {
   Dimensions,
   ActivityIndicator,
   TouchableOpacity,
+  ImageBackground,
+  StatusBar,
 } from "react-native";
 import {
   AlertNotificationRoot,
@@ -15,7 +17,7 @@ import {
 import Carousel from "react-native-reanimated-carousel";
 import "react-native-gesture-handler";
 import colors from "../colors";
-import { IconButton } from "react-native-paper";
+import { Icon, IconButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { Card, Title, Paragraph, Searchbar } from "react-native-paper";
@@ -134,6 +136,7 @@ const BookingScreen = () => {
       colors={[lightColors]}
       theme={"light"}
     >
+      <StatusBar barStyle={"light-content"} />
       <View style={stylesPayment.containerAlpha}>
         {loading ? (
           <ActivityIndicator size="large" color={colors.primary} />
@@ -149,73 +152,74 @@ const BookingScreen = () => {
           </View>
         ) : (
           <>
-            <View style={stylesPayment.header}>
-              <TouchableOpacity onPress={handleGoBack}>
-                <IconButton
-                  style={{ marginLeft: -15 }}
-                  icon={"arrow-left-thin"}
-                  size={30}
-                />
-              </TouchableOpacity>
-              <Text style={stylesPayment.title}>{t("Booking")}</Text>
-            </View>
-            <Searchbar
-              style={{
-                width: "100%",
-                backgroundColor: "#F1F5F6",
-                borderRadius: 12,
-              }}
-              placeholder={t("searchViewHome.searchEvents")}
-              onChangeText={setSearchQuery}
-              value={searchQuery}
-              clearIcon
-            />
+            
             {house.map((item, index) => (
-              <View key={index} style={stylesPayment.containerBooking}>
-                <TouchableOpacity onPress={() => navigation.navigate("BookingDetails")}>
-                  <Card style={stylesPayment.card}>
-                    <Card.Cover source={{uri: item.housePhoto}} style={stylesPayment.image} />
-                    <Card.Content>
-                      <Title style={stylesPayment.titleCard}>{item.houseName}</Title>
-                      <Paragraph style={stylesPayment.neighbourhood}>
-                        <Feather name="map-pin" color={"#000"} size={15} />{" "}
-                        {`${item.address}, ${item.number}, ${item.neighbourhood}, ${item.city}, ${item.country}`}
-                      </Paragraph>
-                    </Card.Content>
-                  </Card>
-                </TouchableOpacity>
-              </View>
-            ))}
-            <Text style={stylesPayment.latestBookingsText}>
-              {t("Latest Bookings")}
-            </Text>
-            <Carousel
-              loop={false}
-              width={width * 0.9} // Define a largura dos itens do carrossel para 90% da largura da tela
-              height={width / 2}
+              <Carousel
+              loop={true}
+              key={index}
+              width={width * 1.5} // Define a largura dos itens do carrossel para 90% da largura da tela
+              height={width / 1}
               data={latestHouse}
               mode="parallax"
               modeConfig={{
-                parallaxScrollingScale: 0.9,
-                parallaxScrollingOffset: 35,
+                parallaxScrollingScale: 1,
+                parallaxScrollingOffset: 100,
               }}
               renderItem={({ item, index }) => (
                 <View key={index} style={stylesPayment.containerBooking}>
-                <Card style={stylesPayment.card}>
-                  <Card.Cover source={{uri: item.housePhoto}} style={stylesPayment.image} />
-                  <Card.Content>
-                    <Title style={stylesPayment.titleCard}>{item.houseName}</Title>
-                    <Paragraph style={stylesPayment.neighbourhood}>
-                      <Feather name="map-pin" color={"#000"} size={15} />{" "}
-                      {`${item.address}, ${item.number}, ${item.neighbourhood}, ${item.city}, ${item.country}`}
-                    </Paragraph>
-                  </Card.Content>
-                </Card>
-              </View>
+                <ImageBackground source={{uri: item.housePhoto}} resizeMode="cover" style={{ height: 300, width: 600 }}>
+                  <View style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <TouchableOpacity onPress={handleGoBack}>
+                    <IconButton
+                      style={{ position: "absolute", left: -170, top: -100}}
+                      icon={"arrow-left-thin"}
+                      size={30}
+                      iconColor="#fff"
+                    />
+                  </TouchableOpacity>
+                  </View>
+                </ImageBackground>
+
+                </View>
               )}
             />
+            ))}
+         
           </>
         )}
+      </View>
+      <View style={{flex: 2.2, backgroundColor: "#fff", width: "100%", borderTopLeftRadius: 24, borderTopRightRadius: 24}}>
+        <View style={{display: "flex", flexDirection: "row", width: "100%", justifyContent: "center", alignItems: "baseline", paddingBottom: 40, borderBottomColor: "#F1F5F6", borderBottomWidth: 6,  marginTop: 50 }}>
+          <View style={{display: "flex", flexDirection: "column", width: "80%",  justifyContent: "flex-start" }}>
+            <Text style={{color: "#000", fontSize: 24, fontWeight: "bold", marginBottom: 6}}>Santa Apartments</Text>
+            <Text style={{color: "#000", fontSize: 16, fontWeight: "regular"}}>7007 Sea World Drive, Orlando</Text>
+          </View>
+          <Feather name="map" color={"#000"} size={22} />
+        </View>
+        <View style={{display: "flex", flexDirection: "column", width: "80%",  justifyContent: "flex-start" }}>
+          <Text style={{color: "#000", fontSize: 24, fontWeight: "bold", marginTop: 24, marginLeft: 30}}>Sobre sua reserva</Text>
+        </View>
+        <View style={{display: "flex", flexDirection: "column", width: "80%",  justifyContent: "flex-start" }}>
+          <Text style={{color: "#000", fontSize: 16, fontWeight: "bold", marginTop: 24, marginLeft: 30}}>Data da reserva</Text>
+        </View>
+        <View style={{display: "flex", flexDirection: "column", width: "88%", marginLeft: 28, marginRight: "auto",  justifyContent: "flex-start" }}>
+          <Text style={{paddingBottom: 16, paddingTop: 16, paddingLeft: 8, paddingRight: 8, backgroundColor: "#F1F5F6", marginTop: 12, borderRadius: 12, color: "#364764" }}> Nov, 13-16 - 3 Guests                                                      {<Feather name="calendar" color={"#000"} size={22}  />}</Text>
+        </View>
+        <View style={{display: "flex", flexDirection: "column", width: "80%",  justifyContent: "flex-start" }}>
+          <Text style={{color: "#0065FF", fontSize: 16, fontWeight: "500", marginTop: 14, marginLeft: 30}}>Extender Reserva</Text>
+        </View>
+        <View style={{display: "flex", flexDirection: "column", width: "80%",  justifyContent: "flex-start" }}>
+          <Text style={{color: "#000", fontSize: 16, fontWeight: "bold", marginTop: 42, marginLeft: 30}}>Número de Reserva</Text>
+        </View>
+        <View style={{display: "flex", flexDirection: "column", width: "80%",  justifyContent: "flex-start" }}>
+          <Text style={{color: "#6C798F", fontSize: 16, fontWeight: "500", marginTop: 12, marginLeft: 30}}>38741592</Text>
+        </View>
+        <View style={{display: "flex", flexDirection: "column", width: "80%",  justifyContent: "flex-start" }}>
+          <Text style={{color: "#000", fontSize: 16, fontWeight: "bold", marginTop: 42, marginLeft: 30}}>Grupo Principal</Text>
+        </View>
+        <View style={{display: "flex", flexDirection: "column", width: "80%",  justifyContent: "flex-start" }}>
+          <Text style={{color: "#6C798F", fontSize: 16, fontWeight: "500", marginTop: 12, marginLeft: 30}}>Nenhum grupo vinculado</Text>
+        </View>
       </View>
     </AlertNotificationRoot>
   );
@@ -232,14 +236,6 @@ const stylesPayment = StyleSheet.create({
     marginLeft: "auto",
     backgroundColor: colors.backGroundLight,
   },
-  header: {
-    flexDirection: "column",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-    width: "100%",
-    marginTop: 50,
-    marginBottom: 50,
-  },
   title: {
     fontSize: 33,
     fontWeight: "bold",
@@ -254,7 +250,7 @@ const stylesPayment = StyleSheet.create({
     justifyContent: "center",
     height: "100%",
     alignItems: "center",
-    flex: 1,
+    flex: 0.7,
   },
   noCardsView: {
     justifyContent: "center",
@@ -291,13 +287,6 @@ const stylesPayment = StyleSheet.create({
     elevation: 10,
     width: "100%",
     marginRight: 10,
-  },
-  image: {
-    height: 125,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    borderEndStartRadius: 0,
-    borderEndEndRadius: 0,
   },
   titleCard: {
     fontSize: 16,
