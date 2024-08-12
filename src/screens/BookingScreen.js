@@ -223,7 +223,7 @@ const BookingScreen = () => {
 
 const stylesPayment = StyleSheet.create({
   containerAlpha: {
-    flex: 1,
+    flex: 0.9,
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
@@ -237,8 +237,8 @@ const stylesPayment = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "flex-start",
     width: "100%",
-    marginTop: 50,
-    marginBottom: 50,
+    marginTop: 30,
+    marginBottom: 20,
   },
   title: {
     fontSize: 33,
@@ -293,7 +293,7 @@ const stylesPayment = StyleSheet.create({
     marginRight: 10,
   },
   image: {
-    height: 125,
+    height: 120,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     borderEndStartRadius: 0,
