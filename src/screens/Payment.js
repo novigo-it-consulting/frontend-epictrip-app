@@ -31,6 +31,7 @@ import { requestPayment, requestGetMethodsByUser } from "../services/api";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { IconButton } from "react-native-paper";
+import CustomTabBar from "../components/CustomBar";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -230,6 +231,7 @@ const Payment = () => {
           </Button>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
+      <CustomTabBar />
     </AlertNotificationRoot>
   );
 };
@@ -310,11 +312,11 @@ const stylesCard = StyleSheet.create({
     paddingBottom: 10,
   },
   addButton: {
-    marginTop: 10,
+    marginTop: -40,
     backgroundColor: colors.primary,
     padding: 10,
     borderRadius: 10,
-    width: "80%",
+    width: "90%",
     alignItems: "center",
   },
 });

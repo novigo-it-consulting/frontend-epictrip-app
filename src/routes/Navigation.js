@@ -37,44 +37,25 @@ const Navigation = () => {
       >
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Home" component={HomeTabs} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="EnterCode" component={EnterCode} />
         <Stack.Screen name="FogotPassword" component={FogotPassword} />
-        <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
-        <Stack.Screen name="Payment" component={Payment} />
-        <Stack.Screen name="BookingDetails" component={BookingDetails} />
-        <Stack.Screen
-          name="ChangePaymentScreen"
-          component={ChangePaymentCard}
-        />
-        <Stack.Screen
-          name="BookingScreen"
-          component={BookingScreen}
-        />
-        <Stack.Screen name="UpdateCard" component={UpdateCard} />
-        <Stack.Screen
-          name="EmConstrucaoScreen"
-          component={EmConstrucaooScreen}
-        />
-        <Stack.Screen
-          name="PaymentSelectedCard"
-          component={PaymentSelectedCard}
-        />
         <Stack.Screen name="SetNewPassword" component={SetNewPassword} />
-        <Stack.Screen
-          name="ChangePersonalInfo"
-          component={ChangePersonalInfo}
-        />
-        <Stack.Screen
-          name="Terms"
-          component={WebView}
-          options={{
+        <Stack.Screen name="ChangePersonalInfo" component={ChangePersonalInfo} />
+        <Stack.Screen name="Terms" component={WebView} options={{
             headerShown: true,
             title: "Termos e Condições",
             headerBackTitle: "Voltar",
-          }}
-        />
+          }} />
+        <Stack.Screen name="Home" component={HomeTabs} />
+        <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
+        <Stack.Screen name="Payment" component={Payment} />
+        <Stack.Screen name="BookingDetails" component={BookingDetails} />
+        <Stack.Screen name="ChangePaymentScreen" component={ChangePaymentCard} />
+        <Stack.Screen name="BookingScreen" component={BookingScreen} />
+        <Stack.Screen name="UpdateCard" component={UpdateCard} />
+        <Stack.Screen name="EmConstrucaoScreen" component={EmConstrucaooScreen} />
+        <Stack.Screen name="PaymentSelectedCard" component={PaymentSelectedCard} />
       </Stack.Navigator>
     </NavigationContainer>
   );

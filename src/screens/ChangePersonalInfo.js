@@ -28,6 +28,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 import { useTranslation } from "react-i18next";
 import DatePickerAge from "../components/DatePickerAge";
+import CustomTabBar from "../components/CustomBar";
 
 const ChangePersonalInfo = () => {
   const navigation = useNavigation();
@@ -392,6 +393,7 @@ const ChangePersonalInfo = () => {
             </View>
           </TouchableWithoutFeedback>
         )}
+        <CustomTabBar />
       </AlertNotificationRoot>
     </>
   );
@@ -404,7 +406,7 @@ const styles = StyleSheet.create({
     width: "85%",
     marginLeft: "auto",
     marginRight: "auto",
-    flex: 1,
+    flex: 0.98,
     backgroundColor: colors.backGroundLight,
   },
   containerBackButton: {
@@ -425,7 +427,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   profilePicContainer: {
-    flex: 0.6,
+    flex: 0.5,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",

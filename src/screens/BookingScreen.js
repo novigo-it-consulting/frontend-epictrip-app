@@ -22,6 +22,7 @@ import { Card, Title, Paragraph, Searchbar } from "react-native-paper";
 import Feather from "react-native-vector-icons/Feather";
 import { requestGetBookingByUser, requestGetHousesByBooking} from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomTabBar from "../components/CustomBar";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -217,6 +218,7 @@ const BookingScreen = () => {
           </>
         )}
       </View>
+      <CustomTabBar />
     </AlertNotificationRoot>
   );
 };

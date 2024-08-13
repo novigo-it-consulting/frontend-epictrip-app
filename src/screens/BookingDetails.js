@@ -25,6 +25,7 @@ import Feather from "react-native-vector-icons/Feather";
 import { requestGetBookingByUser, requestGetHousesByBooking } from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import CustomTabBar from "../components/CustomBar";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -461,6 +462,7 @@ const BookingScreen = () => {
           </Text>
         </View>
       </View>
+      <CustomTabBar />
     </AlertNotificationRoot>
   );
 };

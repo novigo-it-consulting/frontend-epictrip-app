@@ -21,6 +21,7 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { requestGetMethodsByUser, requestDeletePaymentMethod } from "../services/api";
 import { useTranslation } from "react-i18next";
+import CustomTabBar from "../components/CustomBar";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -252,6 +253,7 @@ const PaymentScreen = () => {
           </>
         )}
       </View>
+      <CustomTabBar />
     </AlertNotificationRoot>
   );
 };
@@ -356,7 +358,7 @@ const styles = StyleSheet.create({
     width: "80%",
     flexDirection: "column",
     alignItems: "center",
-    bottom: 0,
+    bottom: 80,
     position: "relative",
     justifyContent: "flex-end"
   },
