@@ -12,7 +12,7 @@ import ProfileHandleSettingsRewards from "../components/ProfileHandleSettingsRew
 import ProfileHandleSettingsLanguage from "../components/ProfileHandleSettingsLanguage";
 import ProfileHandleLogout from "../components/ProfileHandleLogout.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { requestChangePasswordToken } from "../services/api.js";
+import { requestChangePasswordToken, requestGetMethodsByUser } from "../services/api.js";
 import { Dialog, Portal, Text, Button } from 'react-native-paper';
 
 const ProfileScreen = () => {
@@ -45,10 +45,22 @@ const ProfileScreen = () => {
       alert("Error clearing AsyncStorage:", error);
     }
   };
+  
 
-  const handlePressPaymentScreen = () => {
-    navigation.navigate("PaymentScreen");
+  const handlePressPaymentScreen = async () => {
+    try {
+      const userId = await AsyncStorage.getItem("userId")
+      const response = await requestGetMethodsByUser(userId);
+      if (response.status === 200) {
+        navigation.navigate("ChangePaymentScreen");
+      } else {
+        navigation.navigate("PaymentScreen");
+      }
+    } catch (error) {
+      throw error;
+    } 
   };
+  
   const handlePressPayment = () => {
     navigation.navigate("Payment");
   };
