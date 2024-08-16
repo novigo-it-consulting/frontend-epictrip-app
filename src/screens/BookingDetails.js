@@ -27,8 +27,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomTabBar from "../components/CustomBar";
 
-const height = Dimensions.get("window").height;
-const width = Dimensions.get("window").width;
+const { height, width } = Dimensions.get("window");
 
 const BookingScreen = () => {
   const [loading, setLoading] = useState(true);
@@ -137,12 +136,16 @@ const BookingScreen = () => {
 
   const handleExtendBooking = () => {
     setExtendBooking(!extendBooking);
+    if (!extendBooking) {
+      setShowStartPicker(true); // Abre o seletor de data inicial imediatamente
+    }
   };
 
   const handleStartDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || startDate;
     setShowStartPicker(false);
     setStartDate(currentDate);
+    setShowEndPicker(true); // Abre o seletor de data final após selecionar a data inicial
   };
 
   const handleEndDateChange = (event, selectedDate) => {
@@ -158,75 +161,78 @@ const BookingScreen = () => {
       theme={"light"}
     >
       <StatusBar barStyle={"light-content"} />
-        <View style={stylesPayment.containerAlpha}>
-          {loading ? (
-            <ActivityIndicator size="large" color={colors.primary} />
-          ) : house === null || house.length === 0 ? (
-            <View style={stylesPayment.noCardsView}>
-              <Text style={stylesPayment.noBookingsText}>{t("bookingScreen.yourReservations")}</Text>
-              <TouchableOpacity
-                style={stylesPayment.addButton}
-                onPress={() => navigation.goBack()}
-              >
-                <Text style={stylesPayment.addButtonText}>{t("bookingScreen.bookButton")}</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <>
-              {house.map((item, index) => (
-                <Carousel
-                  loop={true}
-                  key={index}
-                  width={width * 1.5}
-                  height={width / 1}
-                  data={latestHouse}
-                  mode="parallax"
-                  modeConfig={{
-                    parallaxScrollingScale: 1,
-                    parallaxScrollingOffset: 100,
-                  }}
-                  renderItem={({ item, index }) => (
-                    <View key={index} style={stylesPayment.containerBooking}>
-                      <ImageBackground
-                        source={{ uri: item.housePhoto }}
-                        resizeMode="cover"
-                        style={{ height: 300, width: 600 }}
+      <View style={stylesPayment.containerAlpha}>
+        {loading ? (
+          <ActivityIndicator size="large" color={colors.primary} />
+        ) : house === null || house.length === 0 ? (
+          <View style={stylesPayment.noCardsView}>
+            <Text style={stylesPayment.noBookingsText}>{t("bookingScreen.yourReservations")}</Text>
+            <TouchableOpacity
+              style={stylesPayment.addButton}
+              onPress={() => navigation.goBack()}
+            >
+              <Text style={stylesPayment.addButtonText}>{t("bookingScreen.bookButton")}</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <>
+            {house.map((item, index) => (
+              <Carousel
+                loop={true}
+                key={index}
+                width={width * 1.5}
+                height={width / 1}
+                data={latestHouse}
+                mode="parallax"
+                modeConfig={{
+                  parallaxScrollingScale: 1,
+                  parallaxScrollingOffset: 100,
+                }}
+                renderItem={({ item, index }) => (
+                  <View key={index} style={stylesPayment.containerBooking}>
+                    <ImageBackground
+                      source={{ uri: item.housePhoto }}
+                      resizeMode="cover"
+                      style={{ height: 300, width: 600 }}
+                    >
+                      <View
+                        style={{
+                          flex: 1,
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
                       >
-                        <View
-                          style={{
-                            flex: 1,
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <TouchableOpacity onPress={handleGoBack}>
-                            <IconButton
-                              style={{ position: "absolute", left: -170, top: -100 }}
-                              icon={"arrow-left-thin"}
-                              size={30}
-                              iconColor="#fff"
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      </ImageBackground>
-                    </View>
-                  )}
-                />
-              ))}
-            </>
-          )}
+                        <TouchableOpacity onPress={handleGoBack}>
+                          <IconButton
+                            style={{ position: "absolute", left: -170, top: -100 }}
+                            icon={"arrow-left-thin"}
+                            size={30}
+                            iconColor="#fff"
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </ImageBackground>
+                  </View>
+                )}
+              />
+            ))}
+          </>
+        )}
       </View>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: "#fff",
-            width: "100%",
-            borderTopLeftRadius: 24,
-            borderTopRightRadius: 24,
-          }}
-        >
+
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "#fff",
+          width: "100%",
+          flexDirection: "column",
+          borderTopLeftRadius: 24,
+          borderTopRightRadius: 24,
+          paddingTop: 18,
+        }}
+      >
+        <ScrollView contentContainerStyle={{ height: "120%" }}>
           <View
             style={{
               display: "flex",
@@ -237,7 +243,7 @@ const BookingScreen = () => {
               paddingBottom: 50,
               borderBottomColor: "#F1F5F6",
               borderBottomWidth: 6,
-              marginTop: 50,
+              marginTop: 30,
             }}
           >
             <View
@@ -263,15 +269,15 @@ const BookingScreen = () => {
               </Text>
             </View>
             <Feather name="map" color={"#000"} size={22} />
-        </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: "80%",
-            justifyContent: "flex-start",
-          }}
-        >
+          </View>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: "80%",
+              justifyContent: "flex-start",
+            }}
+          >
             <Text
               style={{
                 color: "#000",
@@ -304,82 +310,34 @@ const BookingScreen = () => {
               {t("bookingScreen.reservationDate")}
             </Text>
           </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "88%",
-              marginLeft: 28,
-              marginRight: "auto",
-              justifyContent: "flex-start",
-            }}
-          >
-            <Text
+          <TouchableOpacity onPress={handleExtendBooking}>
+            <View
               style={{
-                paddingBottom: 16,
-                paddingTop: 16,
-                paddingLeft: 8,
-                paddingRight: 8,
-                backgroundColor: "#F1F5F6",
-                marginTop: 12,
-                borderRadius: 12,
-                color: "#364764",
+                display: "flex",
+                flexDirection: "column",
+                width: "88%",
+                marginLeft: 28,
+                marginRight: "auto",
+                justifyContent: "flex-start",
               }}
             >
-              {startDate.toDateString()} - {endDate.toDateString()} - 3 Guests
-            </Text>
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "80%",
-              justifyContent: "flex-start",
-            }}
-          >
-            <TouchableOpacity onPress={handleExtendBooking}>
               <Text
                 style={{
-                  color: "#0065FF",
-                  fontSize: 16,
-                  fontWeight: "500",
-                  marginTop: 22,
-                  marginLeft: 30,
+                  paddingBottom: 16,
+                  paddingTop: 16,
+                  paddingLeft: 8,
+                  paddingRight: 8,
+                  backgroundColor: "#F1F5F6",
+                  marginTop: 12,
+                  borderRadius: 12,
+                  color: "#364764",
                 }}
               >
-                {t("bookingScreen.extendReservation")}
+                {startDate.toDateString()} - {endDate.toDateString()} - 3 Guests
               </Text>
-            </TouchableOpacity>
-          </View>
-          {extendBooking && (
-            <View style={{ width: "80%", marginLeft: 30, marginTop: 10 }}>
-              <Text style={{ color: "#000", fontSize: 16, fontWeight: "bold" }}>
-                {t("bookingScreen.selectDates")}
-              </Text>
-              <TouchableOpacity onPress={() => setShowStartPicker(true)}>
-                <Text style={{ marginTop: 10 }}>{t("bookingScreen.startDate")}: {startDate.toDateString()}</Text>
-              </TouchableOpacity>
-              {showStartPicker && (
-                <DateTimePicker
-                  value={startDate}
-                  mode="date"
-                  display="default"
-                  onChange={handleStartDateChange}
-                />
-              )}
-              <TouchableOpacity onPress={() => setShowEndPicker(true)}>
-                <Text style={{ marginTop: 10 }}>{t("bookingScreen.endDate")}: {endDate.toDateString()}</Text>
-              </TouchableOpacity>
-              {showEndPicker && (
-                <DateTimePicker
-                  value={endDate}
-                  mode="date"
-                  display="default"
-                  onChange={handleEndDateChange}
-                />
-              )}
             </View>
-          )}
+          </TouchableOpacity>
+          
           <View
             style={{
               display: "flex",
@@ -460,16 +418,15 @@ const BookingScreen = () => {
               {t("bookingScreen.noLinkedGroup")}
             </Text>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
         <CustomTabBar />
+      </View>
     </AlertNotificationRoot>
   );
 };
-
 const stylesPayment = StyleSheet.create({
   containerAlpha: {
-    flex: 0.1,
+    flex: 0.4,
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
