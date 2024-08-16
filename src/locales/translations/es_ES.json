@@ -80,6 +80,9 @@
   "profileHandleLogout": {
    "titleHandleLogout": "Salir"
   }, 
+  "profileHandleBack": {
+    "titleHandleBack": "Para volver"
+  },
   "profileHandleAccount": {
    "titleHandleAccount": "Cambiar tu información personal",
    "errorUpdating": "Ocurrió un error al actualizar la información del usuario, por favor inténtalo de nuevo más tarde."
@@ -187,5 +190,9 @@
     "content": "Al salir, borraremos todos sus datos y lo redirigiremos al inicio de sesión.",
     "noButton": "No",
     "yesButton": "Sí, salir"
+  },
+  "experienceScreen": {
+    "titleScreen": "Experiencia",
+    "noExperience": "Sin Experiencia"
   }  
 }

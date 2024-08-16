@@ -80,7 +80,10 @@
   }, 
   "profileHandleLogout": {
    "titleHandleLogout": "Sair"
-  }, 
+  },
+  "profileHandleBack": {
+    "titleHandleBack": "Voltar"
+  },
   "profileHandleAccount": {
    "titleHandleAccount": "Mudar suas informações pessoas.",
    "errorUpdating": "Ocorreu um erro ao atualizar as informações do usuario, por favor tente novamente mais tarde."
@@ -141,7 +144,8 @@
     "titleCup": "Copa América"
   },
   "exploreCategories": {
-    "categories": "Explorar Categorias"
+    "categories": "Explorar Categorias",
+    "categoriesWithOutExplor": "Categorias" 
   },
   "searchViewHome": {
     "searchEvents": "Digite por Disney, Comida ou Ingressos"
@@ -188,6 +192,9 @@
     "content": "Ao sair, limparemos todos seus dados, e redirecionaremos para o login.",
     "noButton": "Não",
     "yesButton": "Sim, sair"
+  },
+  "experienceScreen": {
+    "titleScreen": "Experiência",
+    "noExperience": "Sem Experiência"
   }
-  
 }
