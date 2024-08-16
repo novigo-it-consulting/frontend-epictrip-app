@@ -180,8 +180,17 @@
   },
   "bookingScreen": {
     "yourReservations": "No Bookings Yet",
-    "bookButton": "Make a reservation"
-  }, 
+    "bookButton": "Make a reservation",
+    "aboutReservation": "About Your Reservation",
+    "reservationDate": "Reservation Date",
+    "extendReservation": "Extend Reservation",
+    "selectDates": "Select Dates",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "reservationNumber": "Reservation Number",
+    "mainGroup": "Main Group",
+    "noLinkedGroup": "No Linked Group"
+  },
     "logoutDialog": {
       "title": "Do you really want to leave?",
       "content": "When you leave, we will clear all your data and redirect you to the login.",
