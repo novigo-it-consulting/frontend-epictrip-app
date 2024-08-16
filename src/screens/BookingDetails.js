@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   StatusBar,
+  ScrollView,
 } from "react-native";
 import {
   AlertNotificationRoot,
@@ -17,10 +18,9 @@ import {
 import Carousel from "react-native-reanimated-carousel";
 import "react-native-gesture-handler";
 import colors from "../colors";
-import { Icon, IconButton } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
-import { Card, Title, Paragraph, Searchbar } from "react-native-paper";
 import Feather from "react-native-vector-icons/Feather";
 import { requestGetBookingByUser, requestGetHousesByBooking } from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -135,8 +135,6 @@ const BookingScreen = () => {
     navigation.goBack();
   };
 
-  const [searchQuery, setSearchQuery] = useState("");
-
   const handleExtendBooking = () => {
     setExtendBooking(!extendBooking);
   };
@@ -160,87 +158,132 @@ const BookingScreen = () => {
       theme={"light"}
     >
       <StatusBar barStyle={"light-content"} />
-      <View style={stylesPayment.containerAlpha}>
-        {loading ? (
-          <ActivityIndicator size="large" color={colors.primary} />
-        ) : house === null || house.length === 0 ? (
-          <View style={stylesPayment.noCardsView}>
-            <Text style={stylesPayment.noBookingsText}>{t("bookingScreen.yourReservations")}</Text>
-            <TouchableOpacity
-              style={stylesPayment.addButton}
-              onPress={() => navigation.goBack()}
-            >
-              <Text style={stylesPayment.addButtonText}>{t("bookingScreen.bookButton")}</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <>
-            {house.map((item, index) => (
-              <Carousel
-                loop={true}
-                key={index}
-                width={width * 1.5}
-                height={width / 1}
-                data={latestHouse}
-                mode="parallax"
-                modeConfig={{
-                  parallaxScrollingScale: 1,
-                  parallaxScrollingOffset: 100,
-                }}
-                renderItem={({ item, index }) => (
-                  <View key={index} style={stylesPayment.containerBooking}>
-                    <ImageBackground
-                      source={{ uri: item.housePhoto }}
-                      resizeMode="cover"
-                      style={{ height: 300, width: 600 }}
-                    >
-                      <View
-                        style={{
-                          flex: 1,
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
+        <View style={stylesPayment.containerAlpha}>
+          {loading ? (
+            <ActivityIndicator size="large" color={colors.primary} />
+          ) : house === null || house.length === 0 ? (
+            <View style={stylesPayment.noCardsView}>
+              <Text style={stylesPayment.noBookingsText}>{t("bookingScreen.yourReservations")}</Text>
+              <TouchableOpacity
+                style={stylesPayment.addButton}
+                onPress={() => navigation.goBack()}
+              >
+                <Text style={stylesPayment.addButtonText}>{t("bookingScreen.bookButton")}</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <>
+              {house.map((item, index) => (
+                <Carousel
+                  loop={true}
+                  key={index}
+                  width={width * 1.5}
+                  height={width / 1}
+                  data={latestHouse}
+                  mode="parallax"
+                  modeConfig={{
+                    parallaxScrollingScale: 1,
+                    parallaxScrollingOffset: 100,
+                  }}
+                  renderItem={({ item, index }) => (
+                    <View key={index} style={stylesPayment.containerBooking}>
+                      <ImageBackground
+                        source={{ uri: item.housePhoto }}
+                        resizeMode="cover"
+                        style={{ height: 300, width: 600 }}
                       >
-                        <TouchableOpacity onPress={handleGoBack}>
-                          <IconButton
-                            style={{ position: "absolute", left: -170, top: -100 }}
-                            icon={"arrow-left-thin"}
-                            size={30}
-                            iconColor="#fff"
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    </ImageBackground>
-                  </View>
-                )}
-              />
-            ))}
-          </>
-        )}
+                        <View
+                          style={{
+                            flex: 1,
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <TouchableOpacity onPress={handleGoBack}>
+                            <IconButton
+                              style={{ position: "absolute", left: -170, top: -100 }}
+                              icon={"arrow-left-thin"}
+                              size={30}
+                              iconColor="#fff"
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      </ImageBackground>
+                    </View>
+                  )}
+                />
+              ))}
+            </>
+          )}
       </View>
-      <View
-        style={{
-          flex: 2.2,
-          backgroundColor: "#fff",
-          width: "100%",
-          borderTopLeftRadius: 24,
-          borderTopRightRadius: 24,
-        }}
-      >
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "#fff",
+            width: "100%",
+            borderTopLeftRadius: 24,
+            borderTopRightRadius: 24,
+          }}
+        >
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              width: "100%",
+              justifyContent: "center",
+              alignItems: "baseline",
+              paddingBottom: 50,
+              borderBottomColor: "#F1F5F6",
+              borderBottomWidth: 6,
+              marginTop: 50,
+            }}
+          >
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "80%",
+                justifyContent: "flex-start",
+              }}
+            >
+              <Text
+                style={{
+                  color: "#000",
+                  fontSize: 24,
+                  fontWeight: "bold",
+                  marginBottom: 6,
+                }}
+              >
+                Santa Apartments
+              </Text>
+              <Text style={{ color: "#000", fontSize: 16, fontWeight: "regular" }}>
+                7007 Sea World Drive, Orlando
+              </Text>
+            </View>
+            <Feather name="map" color={"#000"} size={22} />
+        </View>
         <View
           style={{
             display: "flex",
-            flexDirection: "row",
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "baseline",
-            paddingBottom: 40,
-            borderBottomColor: "#F1F5F6",
-            borderBottomWidth: 6,
-            marginTop: 50,
+            flexDirection: "column",
+            width: "80%",
+            justifyContent: "flex-start",
           }}
         >
+            <Text
+              style={{
+                color: "#000",
+                fontSize: 24,
+                fontWeight: "bold",
+                marginTop: 22,
+                marginLeft: 30,
+              }}
+            >
+              {t("bookingScreen.aboutReservation")}
+            </Text>
+          </View>
           <View
             style={{
               display: "flex",
@@ -252,224 +295,181 @@ const BookingScreen = () => {
             <Text
               style={{
                 color: "#000",
-                fontSize: 24,
-                fontWeight: "bold",
-                marginBottom: 6,
-              }}
-            >
-              Santa Apartments
-            </Text>
-            <Text style={{ color: "#000", fontSize: 16, fontWeight: "regular" }}>
-              7007 Sea World Drive, Orlando
-            </Text>
-          </View>
-          <Feather name="map" color={"#000"} size={22} />
-        </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: "80%",
-            justifyContent: "flex-start",
-          }}
-        >
-          <Text
-            style={{
-              color: "#000",
-              fontSize: 24,
-              fontWeight: "bold",
-              marginTop: 22,
-              marginLeft: 30,
-            }}
-          >
-            Sobre sua reserva
-          </Text>
-        </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: "80%",
-            justifyContent: "flex-start",
-          }}
-        >
-          <Text
-            style={{
-              color: "#000",
-              fontSize: 16,
-              fontWeight: "bold",
-              marginTop: 22,
-              marginLeft: 30,
-            }}
-          >
-            Data da reserva
-          </Text>
-        </View>
-        {/* <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: "88%",
-            marginLeft: 28,
-            marginRight: "auto",
-            justifyContent: "flex-start",
-          }}
-        >
-          <Text
-            style={{
-              paddingBottom: 16,
-              paddingTop: 16,
-              paddingLeft: 8,
-              paddingRight: 8,
-              backgroundColor: "#F1F5F6",
-              marginTop: 12,
-              borderRadius: 12,
-              color: "#364764",
-            }}
-          >
-            Nov, 13-16 - 3 Guests
-          </Text>
-        </View> */}
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: "80%",
-            justifyContent: "flex-start",
-          }}
-        >
-          <TouchableOpacity onPress={handleExtendBooking}>
-            <Text
-              style={{
-                color: "#0065FF",
                 fontSize: 16,
-                fontWeight: "500",
+                fontWeight: "bold",
                 marginTop: 22,
                 marginLeft: 30,
               }}
             >
-              Estender Reserva
+              {t("bookingScreen.reservationDate")}
             </Text>
-          </TouchableOpacity>
-        </View>
-        {extendBooking && (
-          <View style={{ width: "80%", marginLeft: 30, marginTop: 10 }}>
-            <Text style={{ color: "#000", fontSize: 16, fontWeight: "bold" }}>
-              Selecione as datas
-            </Text>
-            <TouchableOpacity onPress={() => setShowStartPicker(true)}>
-              <Text style={{ marginTop: 10 }}>Data de Ida: {startDate.toDateString()}</Text>
-            </TouchableOpacity>
-            {showStartPicker && (
-              <DateTimePicker
-                value={startDate}
-                mode="date"
-                display="default"
-                onChange={handleStartDateChange}
-              />
-            )}
-            <TouchableOpacity onPress={() => setShowEndPicker(true)}>
-              <Text style={{ marginTop: 10 }}>Data de Volta: {endDate.toDateString()}</Text>
-            </TouchableOpacity>
-            {showEndPicker && (
-              <DateTimePicker
-                value={endDate}
-                mode="date"
-                display="default"
-                onChange={handleEndDateChange}
-              />
-            )}
           </View>
-        )}
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: "80%",
-            justifyContent: "flex-start",
-          }}
-        >
-          <Text
+          <View
             style={{
-              color: "#000",
-              fontSize: 16,
-              fontWeight: "bold",
-              marginTop: 42,
-              marginLeft: 30,
+              display: "flex",
+              flexDirection: "column",
+              width: "88%",
+              marginLeft: 28,
+              marginRight: "auto",
+              justifyContent: "flex-start",
             }}
           >
-            Número de Reserva
-          </Text>
-        </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: "80%",
-            justifyContent: "flex-start",
-          }}
-        >
-          <Text
+            <Text
+              style={{
+                paddingBottom: 16,
+                paddingTop: 16,
+                paddingLeft: 8,
+                paddingRight: 8,
+                backgroundColor: "#F1F5F6",
+                marginTop: 12,
+                borderRadius: 12,
+                color: "#364764",
+              }}
+            >
+              {startDate.toDateString()} - {endDate.toDateString()} - 3 Guests
+            </Text>
+          </View>
+          <View
             style={{
-              color: "#6C798F",
-              fontSize: 16,
-              fontWeight: "500",
-              marginTop: 10,
-              marginLeft: 30,
+              display: "flex",
+              flexDirection: "column",
+              width: "80%",
+              justifyContent: "flex-start",
             }}
           >
-            38741592
-          </Text>
-        </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: "80%",
-            justifyContent: "flex-start",
-          }}
-        >
-          <Text
+            <TouchableOpacity onPress={handleExtendBooking}>
+              <Text
+                style={{
+                  color: "#0065FF",
+                  fontSize: 16,
+                  fontWeight: "500",
+                  marginTop: 22,
+                  marginLeft: 30,
+                }}
+              >
+                {t("bookingScreen.extendReservation")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {extendBooking && (
+            <View style={{ width: "80%", marginLeft: 30, marginTop: 10 }}>
+              <Text style={{ color: "#000", fontSize: 16, fontWeight: "bold" }}>
+                {t("bookingScreen.selectDates")}
+              </Text>
+              <TouchableOpacity onPress={() => setShowStartPicker(true)}>
+                <Text style={{ marginTop: 10 }}>{t("bookingScreen.startDate")}: {startDate.toDateString()}</Text>
+              </TouchableOpacity>
+              {showStartPicker && (
+                <DateTimePicker
+                  value={startDate}
+                  mode="date"
+                  display="default"
+                  onChange={handleStartDateChange}
+                />
+              )}
+              <TouchableOpacity onPress={() => setShowEndPicker(true)}>
+                <Text style={{ marginTop: 10 }}>{t("bookingScreen.endDate")}: {endDate.toDateString()}</Text>
+              </TouchableOpacity>
+              {showEndPicker && (
+                <DateTimePicker
+                  value={endDate}
+                  mode="date"
+                  display="default"
+                  onChange={handleEndDateChange}
+                />
+              )}
+            </View>
+          )}
+          <View
             style={{
-              color: "#000",
-              fontSize: 16,
-              fontWeight: "bold",
-              marginTop: 42,
-              marginLeft: 30,
+              display: "flex",
+              flexDirection: "column",
+              width: "80%",
+              justifyContent: "flex-start",
             }}
           >
-            Grupo Principal
-          </Text>
-        </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: "80%",
-            justifyContent: "flex-start",
-          }}
-        >
-          <Text
+            <Text
+              style={{
+                color: "#000",
+                fontSize: 16,
+                fontWeight: "bold",
+                marginTop: 42,
+                marginLeft: 30,
+              }}
+            >
+              {t("bookingScreen.reservationNumber")}
+            </Text>
+          </View>
+          <View
             style={{
-              color: "#6C798F",
-              fontSize: 16,
-              fontWeight: "500",
-              marginTop: 12,
-              marginLeft: 30,
+              display: "flex",
+              flexDirection: "column",
+              width: "80%",
+              justifyContent: "flex-start",
             }}
           >
-            Nenhum grupo vinculado
-          </Text>
+            <Text
+              style={{
+                color: "#6C798F",
+                fontSize: 16,
+                fontWeight: "500",
+                marginTop: 10,
+                marginLeft: 30,
+              }}
+            >
+              38741592
+            </Text>
+          </View>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: "80%",
+              justifyContent: "flex-start",
+            }}
+          >
+            <Text
+              style={{
+                color: "#000",
+                fontSize: 16,
+                fontWeight: "bold",
+                marginTop: 42,
+                marginLeft: 30,
+              }}
+            >
+              {t("bookingScreen.mainGroup")}
+            </Text>
+          </View>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: "80%",
+              justifyContent: "flex-start",
+            }}
+          >
+            <Text
+              style={{
+                color: "#6C798F",
+                fontSize: 16,
+                fontWeight: "500",
+                marginTop: 12,
+                marginLeft: 30,
+              }}
+            >
+              {t("bookingScreen.noLinkedGroup")}
+            </Text>
+          </View>
         </View>
-      </View>
-      <CustomTabBar />
+      </ScrollView>
+        <CustomTabBar />
     </AlertNotificationRoot>
   );
 };
 
 const stylesPayment = StyleSheet.create({
   containerAlpha: {
-    flex: 1,
+    flex: 0.1,
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
