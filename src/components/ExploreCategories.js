@@ -30,8 +30,13 @@ const ExploreCategories = () => {
   }, []);
 
   const handlePress = (id) => {
-    if (id === 1) {
-      navigation.navigate('BookingScreen');
+    switch(id) {
+      case 1:
+        navigation.navigate('BookingScreen');
+      break;
+      case 5:
+        navigation.navigate('ExperienceScreen');
+      break;
     }
   };
 
@@ -63,6 +68,7 @@ const ExploreCategories = () => {
               <ListItem
                 style={styles.listItem}
                 uri={item.uri}
+                withIcon
                 scrollX={scrollX}
                 index={0}
                 dataLength={data.length}
