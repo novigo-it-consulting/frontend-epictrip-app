@@ -137,7 +137,7 @@ const BookingScreen = () => {
   const handleExtendBooking = () => {
     setExtendBooking(!extendBooking);
     if (!extendBooking) {
-      setShowStartPicker(true); // Abre o seletor de data inicial imediatamente
+      setShowStartPicker(true);
     }
   };
 
@@ -145,13 +145,30 @@ const BookingScreen = () => {
     const currentDate = selectedDate || startDate;
     setShowStartPicker(false);
     setStartDate(currentDate);
-    setShowEndPicker(true); // Abre o seletor de data final após selecionar a data inicial
+    setShowEndPicker(true);
   };
 
   const handleEndDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || endDate;
     setShowEndPicker(false);
     setEndDate(currentDate);
+  };
+
+  const showDatePicker = () => {
+    setShowStartPicker(true);
+  };
+
+  const handleDateChange = (event, selectedDate) => {
+    if (showStartPicker) {
+      const currentDate = selectedDate || startDate;
+      setStartDate(currentDate);
+      setShowStartPicker(false);
+      setShowEndPicker(true);
+    } else if (showEndPicker) {
+      const currentDate = selectedDate || endDate;
+      setEndDate(currentDate);
+      setShowEndPicker(false);
+    }
   };
 
   return (
@@ -254,16 +271,6 @@ const BookingScreen = () => {
                 justifyContent: "flex-start",
               }}
             >
-              <Text
-                style={{
-                  color: "#000",
-                  fontSize: 24,
-                  fontWeight: "bold",
-                  marginBottom: 6,
-                }}
-              >
-                Santa Apartments
-              </Text>
               <Text style={{ color: "#000", fontSize: 16, fontWeight: "regular" }}>
                 7007 Sea World Drive, Orlando
               </Text>
@@ -310,7 +317,7 @@ const BookingScreen = () => {
               {t("bookingScreen.reservationDate")}
             </Text>
           </View>
-          <TouchableOpacity onPress={handleExtendBooking}>
+          <TouchableOpacity onPress={showDatePicker}>
             <View
               style={{
                 display: "flex",
@@ -337,7 +344,7 @@ const BookingScreen = () => {
               </Text>
             </View>
           </TouchableOpacity>
-          
+
           <View
             style={{
               display: "flex",
@@ -421,9 +428,29 @@ const BookingScreen = () => {
         </ScrollView>
         <CustomTabBar />
       </View>
+
+      {showStartPicker && (
+        <DateTimePicker
+          testID="dateTimePickerStart"
+          value={startDate}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
+        />
+      )}
+      {showEndPicker && (
+        <DateTimePicker
+          testID="dateTimePickerEnd"
+          value={endDate}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
+        />
+      )}
     </AlertNotificationRoot>
   );
 };
+
 const stylesPayment = StyleSheet.create({
   containerAlpha: {
     flex: 0.4,
