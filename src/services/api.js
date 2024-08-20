@@ -216,14 +216,14 @@ export const requestGetMethodsByUser = async (userId) => {
       `${BASE_URL}/paymentmethods/getmethodsbyuser/${userId}`,
       { headers }
     );
-    if (response.status == 200){
+    if (response.status == 200) {
       return response;
     } else if (response.status == 404) {
       return "noCardsFound";
     } else {
       return response
     }
-    
+
   } catch (error) {
     throw error;
   }
@@ -250,7 +250,7 @@ export const requestPayment = async (userId, paymentMethodId, amount) => {
     };
 
     const response = await axios.request(config);
-   
+
     return response.data;
   } catch (error) {
     throw error;
@@ -258,7 +258,7 @@ export const requestPayment = async (userId, paymentMethodId, amount) => {
 };
 
 export const requestGetBookingByUser = async (userId) => {
-  try{
+  try {
     const headers = {
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
     };
@@ -269,7 +269,7 @@ export const requestGetBookingByUser = async (userId) => {
   }
 }
 export const requestGetHousesByBooking = async (houseId) => {
-  try{
+  try {
     const headers = {
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
     };
@@ -281,7 +281,7 @@ export const requestGetHousesByBooking = async (houseId) => {
 }
 
 export const requestChangePasswordToken = async (userId) => {
-  try{
+  try {
     const headers = {
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
     };
@@ -291,3 +291,32 @@ export const requestChangePasswordToken = async (userId) => {
     throw error;
   }
 }
+
+export const getAllPlaces = async () => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+    };
+    const response = await axios.get(`${BASE_URL}/places`, { headers })
+    console.log(response)
+    return response
+  } catch (error) {
+    console.log('error', error)
+    throw error;
+  }
+}
+
+export const getPlaceById = async (placeId) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+    };
+    const response = await axios.get(`${BASE_URL}/places/${placeId}`, { headers })
+    console.log(response)
+    return response
+  } catch (error) {
+    console.log('error', error)
+    throw error;
+  }
+}
+
