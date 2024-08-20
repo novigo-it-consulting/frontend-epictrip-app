@@ -183,8 +183,17 @@
   },
   "bookingScreen": {
     "yourReservations": "Aún no hay reservas",
-    "bookButton": "Hacer una reserva"
-  }, 
+    "bookButton": "Hacer una reserva",
+    "aboutReservation": "Sobre tu Reserva",
+    "reservationDate": "Fecha de Reserva",
+    "extendReservation": "Extender Reserva",
+    "selectDates": "Seleccionar Fechas",
+    "startDate": "Fecha de Inicio",
+    "endDate": "Fecha de Fin",
+    "reservationNumber": "Número de Reserva",
+    "mainGroup": "Grupo Principal",
+    "noLinkedGroup": "Sin Grupo Vinculado"
+  },
   "logoutDialog": {
     "title": "¿Realmente desea salir?",
     "content": "Al salir, borraremos todos sus datos y lo redirigiremos al inicio de sesión.",

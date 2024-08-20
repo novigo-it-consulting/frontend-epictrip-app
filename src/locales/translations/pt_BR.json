@@ -185,7 +185,16 @@
   },
   "bookingScreen": {
     "yourReservations": "Ainda não há reservas",
-    "bookButton": "Fazer Reserva"
+    "bookButton": "Fazer Reserva",
+    "aboutReservation": "Sobre a sua reserva",
+    "reservationDate": "Data da Reserva",
+    "extendReservation": "Estender Reserva",
+    "selectDates": "Selecionar Datas",
+    "startDate": "Data de Início",
+    "endDate": "Data de Término",
+    "reservationNumber": "Número da Reserva",
+    "mainGroup": "Grupo Principal",
+    "noLinkedGroup": "Sem grupo vinculado"
   }, 
   "logoutDialog": {
     "title": "Deseja realmente sair?",

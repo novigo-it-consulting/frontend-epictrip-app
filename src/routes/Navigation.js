@@ -62,12 +62,12 @@ const Navigation = () => {
           }} 
         />
         <Stack.Screen name="Home" component={HomeTabs} options={noGestureScreenOptions}/>
-        <Stack.Screen name="PaymentScreen" component={PaymentScreen} options={noGestureScreenOptions}/>
-        <Stack.Screen name="Payment" component={Payment} options={noGestureScreenOptions}/>
+        <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
+        <Stack.Screen name="Payment" component={Payment} />
         <Stack.Screen name="BookingDetails" component={BookingDetails} options={noGestureScreenOptions}/>
-        <Stack.Screen name="ChangePaymentScreen" component={ChangePaymentCard} options={noGestureScreenOptions}/>
+        <Stack.Screen name="ChangePaymentScreen" component={ChangePaymentCard} />
         <Stack.Screen name="BookingScreen" component={BookingScreen} options={noGestureScreenOptions}/>
-        <Stack.Screen name="UpdateCard" component={UpdateCard} options={noGestureScreenOptions}/>
+        <Stack.Screen name="UpdateCard" component={UpdateCard} />
         <Stack.Screen name="EmConstrucaoScreen" component={EmConstrucaooScreen} options={noGestureScreenOptions}/>
         <Stack.Screen name="PaymentSelectedCard" component={PaymentSelectedCard} options={noGestureScreenOptions}/>
         <Stack.Screen name="ExperienceScreen" component={ExperienceScreen} options={noGestureScreenOptions}/>
