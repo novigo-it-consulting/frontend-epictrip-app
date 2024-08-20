@@ -23,7 +23,7 @@ import styles from "../styles/globalScreen.js";
 import screenNumberStyles from "../styles/ScreenNumberStyles.js";
 import colors from "../colors.js";
 import * as yup from "yup";
-import { requestValidateToken } from "../services/api.js";
+import { requestValidateToken, getPlaceById, getAllPlaces } from "../services/api.js";
 import {
   ALERT_TYPE,
   AlertNotificationRoot,
@@ -49,6 +49,14 @@ const EnterCodeScreen = ({ navigation }) => {
       .required("E-mail é obrigatório")
       .min(6, "Máximo de 6 digitos"),
   });
+
+  const callFunction = async () => {
+    console.log("CARAIO")
+    response = await getAllPlaces();
+    response2 = await getPlaceById("139e3f6d-a324-480a-aa64-44b9c99aef7d");
+    console.log("all", response)
+    console.log("by id", response2)
+  }
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -129,6 +137,7 @@ const EnterCodeScreen = ({ navigation }) => {
                 fontWeight: "bold",
                 color: colors.primary,
               }}
+              onPress={callFunction}
             >
               Em Construção...
             </Text>
