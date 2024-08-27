@@ -20,6 +20,7 @@ import PaymentSelectedCard from "../screens/PaymentSelectedCard";
 import BookingScreen from "../screens/BookingScreen";
 import BookingDetails from "../screens/BookingDetails";
 import ExperienceScreen from "../screens/ExperienceScreen";
+import PlacesScreen from "../screens/PlacesScreen";
 
 const Stack = createStackNavigator();
 
@@ -70,7 +71,7 @@ const Navigation = () => {
         <Stack.Screen name="UpdateCard" component={UpdateCard} />
         <Stack.Screen name="EmConstrucaoScreen" component={EmConstrucaooScreen} options={noGestureScreenOptions}/>
         <Stack.Screen name="PaymentSelectedCard" component={PaymentSelectedCard} options={noGestureScreenOptions}/>
-        <Stack.Screen name="ExperienceScreen" component={ExperienceScreen} options={noGestureScreenOptions}/>
+        <Stack.Screen name="PlacesScreen" component={PlacesScreen} options={noGestureScreenOptions}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

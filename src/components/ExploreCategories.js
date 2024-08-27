@@ -35,7 +35,7 @@ const ExploreCategories = () => {
         navigation.navigate('BookingScreen');
       break;
       case 5:
-        navigation.navigate('ExperienceScreen');
+        navigation.navigate('PlacesScreen');
       break;
     }
   };
