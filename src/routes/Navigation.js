@@ -19,6 +19,7 @@ import Payment from "../screens/Payment";
 import PaymentSelectedCard from "../screens/PaymentSelectedCard";
 import BookingScreen from "../screens/BookingScreen";
 import BookingDetails from "../screens/BookingDetails";
+import ExperienceScreen from "../screens/Experience";
 
 const Stack = createStackNavigator();
 
@@ -37,7 +38,7 @@ const Navigation = () => {
             backgroundColor: "#FFFFFF",
           },
         }}
-        initialRouteName="SplashScreen"
+        initialRouteName="Experience"
       >
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen 
@@ -69,6 +70,7 @@ const Navigation = () => {
         <Stack.Screen name="UpdateCard" component={UpdateCard} options={noGestureScreenOptions}/>
         <Stack.Screen name="EmConstrucaoScreen" component={EmConstrucaooScreen} options={noGestureScreenOptions}/>
         <Stack.Screen name="PaymentSelectedCard" component={PaymentSelectedCard} options={noGestureScreenOptions}/>
+        <Stack.Screen name="Experience" component={ExperienceScreen} options={noGestureScreenOptions}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

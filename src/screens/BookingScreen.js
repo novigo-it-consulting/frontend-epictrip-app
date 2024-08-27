@@ -192,7 +192,7 @@ const BookingScreen = () => {
             </Text>
             <Carousel
               loop={false}
-              width={width * 0.9} // Define a largura dos itens do carrossel para 90% da largura da tela
+              width={width * 0.9}
               height={width / 2}
               data={latestHouse}
               mode="parallax"
