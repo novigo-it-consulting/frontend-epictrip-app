@@ -11,6 +11,7 @@ import SetNewPassword from "../screens/SetNewPasswordScreen";
 import SplashScreen from "../screens/SplashScreen";
 import WebView from "../screens/WebViewPage";
 import ChangePersonalInfo from "../screens/ChangePersonalInfo";
+import ChatAmico from "../screens/ChatAmico";
 import EmConstrucaooScreen from "../screens/EmConstrucaooScreen";
 import PaymentScreen from "../screens/PaymentScreen";
 import ChangePaymentCard from "../screens/ChangePaymentScreen";
@@ -51,6 +52,7 @@ const Navigation = () => {
         <Stack.Screen name="FogotPassword" component={FogotPassword} options={noGestureScreenOptions}/>
         <Stack.Screen name="SetNewPassword" component={SetNewPassword} options={noGestureScreenOptions}/>
         <Stack.Screen name="ChangePersonalInfo" component={ChangePersonalInfo}options={noGestureScreenOptions}/>
+        <Stack.Screen name="ChatAmico" component={ChatAmico}/>
         <Stack.Screen 
           name="Terms" 
           component={WebView} 
