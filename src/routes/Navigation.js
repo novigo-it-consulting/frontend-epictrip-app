@@ -39,7 +39,7 @@ const Navigation = () => {
             backgroundColor: "#FFFFFF",
           },
         }}
-        initialRouteName="Experience"
+        initialRouteName="Home"
       >
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen 

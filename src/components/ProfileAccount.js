@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { requestGetUser } from "../services/api";
 import { useNavigation } from "@react-navigation/native";
 import Feather from "react-native-vector-icons/Feather";
@@ -149,17 +149,20 @@ export default function ProfileAccount() {
        
             </Text>
           </View>
-          <View style={stylesProfile.boxNotification}>
-            <View style={stylesProfile.boxColor}>
-              <Feather name="bell" color={"#172B4D"} size={15} />
-              <Badge
-                style={{ position: "absolute", top: 5, right: 5 }}
-                size={15}
-              >
-                3
-              </Badge>
-            </View>
+         <TouchableOpacity
+          style={stylesProfile.boxNotification}
+          onPress={() => navigation.navigate('ChatAmico')} // Navegar para a tela do chat
+        >
+          <View style={stylesProfile.boxColor}>
+            <Feather name="bell" color={"#172B4D"} size={15} />
+            <Badge
+              style={{ position: "absolute", top: 5, right: 5 }}
+              size={15}
+            >
+              3
+            </Badge>
           </View>
+        </TouchableOpacity>
         </View>
         <SearchBarHome />
       </View>
