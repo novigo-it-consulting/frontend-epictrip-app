@@ -12,115 +12,54 @@ import {
   Toast,
   ALERT_TYPE,
 } from "react-native-alert-notification";
-import "react-native-gesture-handler";
 import ListItem from "../components/ListItem";
 import colors from "../colors";
 import { IconButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
-import { Card, Title, Paragraph, Searchbar } from "react-native-paper";
+import { Searchbar } from "react-native-paper";
 import Feather from "react-native-vector-icons/Feather";
-import { requestGetBookingByUser, requestGetHousesByBooking} from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSharedValue } from "react-native-reanimated";
 import CustomTabBar from "../components/CustomBar";
+import { getAllPlaces } from "../services/api";  // Import the API function
 
 const ExperienceScreen = () => {
-  const [data, setData] = useState([{id: 1, title: "Parks"}, {id: 2, title: "Shows"}, {id: 3, title: "Sports"}, {id: 4, title: "Car"}, {id: 5, title: "Tours"}])
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [bookingId, setBookingId] = useState("");
   const scrollX = useSharedValue(0);
   const [house, setHouse] = useState([]);
-  
+
   const { t } = useTranslation();
   const navigation = useNavigation();
 
-  const getBookingByUser = async () => {
-    const userId = await AsyncStorage.getItem("userId");
-    if (!userId) {
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Ops",
-        textBody: t("profileHandleBooking.errorUserID"),
-      });
-      setLoading(false);
-      return;
-    }
-
+  const fetchPlacesData = async () => {
     try {
-      const response = await requestGetBookingByUser(userId);
+      setLoading(true);
+      const response = await getAllPlaces();  // Call the API to get places
       if (response.status === 200) {
-        const inProgressBooking = response.data.data.filter(statusBooking => statusBooking.status === "In progress");
-        const latestBookings = response.data.data.filter(statusBooking => statusBooking.status === "Finished");
-
-        if (inProgressBooking.length > 0 && inProgressBooking[0].houseId.length > 0) {
-          const houseId = inProgressBooking[0].houseId;
-          setBookingId(houseId);
-          if (houseId) {
-            const responseHouse = await requestGetHousesByBooking(houseId);
-            if (responseHouse.status === 200) {
-              setHouse([responseHouse.data.data]);
-            } else {
-              setHouse([]);
-            }
-          }
-        } else {
-          setHouse([]);
-        }
-
-        if (latestBookings.length > 0) {
-          const latestHouseData = [];
-          for (const booking of latestBookings) {
-            if (booking.houseId) {
-              const responseHouse = await requestGetHousesByBooking(booking.houseId);
-              if (responseHouse.status === 200) {
-                latestHouseData.push(responseHouse.data.data);
-              }
-            }
-          }
-          setLatestHouse(latestHouseData);
-        } else {
-          setLatestHouse([]);
-        }
+        setData(response.data);  // Assuming the API returns an array of places
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: t("profileHandleBooking.errorUserID"),
+          textBody: t("experienceScreen.errorFetchingPlaces"),
         });
-        setHouse([]);
-        setLatestHouse([]);
       }
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
-        textBody: t("profileHandleBooking.errorProfileScreenGetUserInfo"),
+        textBody: t("experienceScreen.errorFetchingPlaces"),
       });
-      setHouse([]);
-      setLatestHouse([]);
     } finally {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
-    getBookingByUser();
+    fetchPlacesData();  // Fetch places when the component loads
   }, []);
-
-  const defaultToastConfig = {
-    autoClose: 3000,
-    titleStyle: { fontSize: 16, fontWeight: "bold" },
-  };
-
-  const lightColors = {
-    label: "#000",
-    card: "#fcfcfc",
-    overlay: "#f0f0f0",
-    success: "#28a745",
-    danger: "rgba(255, 0, 0, 1)",
-    warning: "#ffc107",
-  };
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -133,96 +72,71 @@ const ExperienceScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <AlertNotificationRoot
-      toastConfig={defaultToastConfig}
-      colors={[lightColors]}
-      theme={"light"}
-    >
-    <View style={stylesPayment.containerAlpha}>
-      {loading ? (
-        <ActivityIndicator size="large" color={colors.primary} />
-      ) : house === null || house.length === 0 ? (
-        <View style={stylesPayment.noCardsView}>
-            <Text style={stylesPayment.noBookingsText}>{t("experienceScreen.noExperience")}</Text>
+    <AlertNotificationRoot toastConfig={{ autoClose: 3000 }} theme={"light"}>
+      <View style={styles.containerAlpha}>
+        {loading ? (
+          <ActivityIndicator size="large" color={colors.primary} />
+        ) : data.length === 0 ? (
+          <View style={styles.noDataView}>
+            <Text style={styles.noDataText}>{t("experienceScreen.noExperience")}</Text>
             <TouchableOpacity
-              style={stylesPayment.addButton}
-              onPress={() => navigation.goBack()}
+              style={styles.addButton}
+              onPress={handleGoBack}
             >
-              <Text style={stylesPayment.addButtonText}>{t("profileHandleBack.titleHandleBack")}</Text>
+              <Text style={styles.addButtonText}>{t("profileHandleBack.titleHandleBack")}</Text>
             </TouchableOpacity>
           </View>
-      ) : (
-        <>
-        <View style={stylesPayment.header}> 
-          <TouchableOpacity onPress={handleGoBack}>
+        ) : (
+          <>
+            <View style={styles.header}>
+              <TouchableOpacity onPress={handleGoBack}>
                 <IconButton
                   style={{ marginLeft: -15 }}
                   icon={"arrow-left-thin"}
                   size={30}
                 />
-            </TouchableOpacity>
-            <Text style={stylesPayment.title}>{t("experienceScreen.titleScreen")}</Text>
-        </View>
-        <Searchbar
-              style={{
-                width: "100%",
-                backgroundColor: "#F1F5F6",
-                borderRadius: 12,
-                marginBottom: 30,
-              }}
+              </TouchableOpacity>
+              <Text style={styles.title}>{t("experienceScreen.titleScreen")}</Text>
+            </View>
+            <Searchbar
+              style={styles.searchbar}
               placeholder={t("searchViewHome.searchEvents")}
               onChangeText={setSearchQuery}
               value={searchQuery}
               clearIcon
-        />
-        <View style={styles.container}>
-        <Text style={styles.titlePage}>{t("exploreCategories.categoriesWithOutExplor")}</Text>
-        <FlatList
-          data={data}
-          horizontal
-          bounces={false}
-          onScroll={onScroll}
-          scrollEventThrottle={16}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={item => item.id.toString()}
-          renderItem={({ item }) => (
-              <ListItem
-                style={styles.listItem}
-                scrollX={scrollX}
-                index={0}
-                dataLength={data.length}
-                title={item.title}
-                id={item.id}
-                onPress={() => {}}
+            />
+            <View style={styles.container}>
+              <Text style={styles.titlePage}>{t("exploreCategories.categoriesWithOutExplor")}</Text>
+              <FlatList
+                data={data}  // Use fetched data
+                horizontal
+                bounces={false}
+                onScroll={onScroll}
+                scrollEventThrottle={16}
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <ListItem
+                    style={styles.listItem}
+                    scrollX={scrollX}
+                    index={0}
+                    dataLength={data.length}
+                    title={item.title}
+                    id={item.id}
+                    onPress={() => {}}
+                  />
+                )}
               />
-          )}
-        />
-        </View>
-        {house.map((item, index) => (
-            <View key={index} style={stylesPayment.containerBooking}>
-                <TouchableOpacity onPress={() => {}}>
-                  <Card style={stylesPayment.card}>
-                    <Card.Cover source={{uri: item.housePhoto}} style={stylesPayment.image} />
-                    <Card.Content>
-                      <Title style={stylesPayment.titleCard}>{item.houseName}</Title>
-                      <Paragraph style={stylesPayment.neighbourhood}>
-                        <Feather name="map-pin" color={"#000"} size={15} />{" "}
-                        {`${item.address}, ${item.number}, ${item.neighbourhood}, ${item.city}, ${item.country}`}
-                      </Paragraph>
-                    </Card.Content>
-                  </Card>
-                </TouchableOpacity>
-              </View>
-            ))}   
-        </>
-      )}         
+            </View>
+          </>
+        )}
       </View>
       <CustomTabBar />
     </AlertNotificationRoot>
   );
 };
 
-const stylesPayment = StyleSheet.create({
+const styles = StyleSheet.create({
   containerAlpha: {
     flex: 0.9,
     flexDirection: "column",
@@ -245,24 +159,35 @@ const stylesPayment = StyleSheet.create({
     fontSize: 33,
     fontWeight: "bold",
   },
-  carouselContent: {
-    justifyContent: "center",
-    height: "100%",
-    alignItems: "center",
+  container: {
+    flex: 0.3,
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    width: "95%",
+    height: "20%",
+    marginRight: "auto",
+    marginLeft: "auto",
   },
-  containerBooking: {
+  titlePage: {
+    color: "#172B4D",
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  searchbar: {
     width: "100%",
-    height: "100%",
-    alignItems: "center",
-    flex: 1,
+    backgroundColor: "#F1F5F6",
+    borderRadius: 12,
+    marginBottom: 30,
   },
-  noCardsView: {
+  noDataView: {
     justifyContent: "center",
     alignItems: "center",
     flex: 0.3,
     width: "100%",
   },
-  noCardsText: {
+  noDataText: {
     fontSize: 18,
     fontWeight: "400",
   },
@@ -272,100 +197,12 @@ const stylesPayment = StyleSheet.create({
     borderRadius: 10,
     width: "50%",
     alignItems: "center",
-    marginTop: 50
+    marginTop: 50,
   },
   addButtonText: {
     color: "#fff",
     fontSize: 16,
   },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 24,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 10,
-    width: "100%",
-    marginRight: 10,
-  },
-  image: {
-    height: 120,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    borderEndStartRadius: 0,
-    borderEndEndRadius: 0,
-  },
-  titleCard: {
-    fontSize: 16,
-    fontWeight: "bold",
-    textAlign: "left",
-    color: "#172B4D",
-  },
-  description: {
-    textAlign: "left",
-    color: "#6C798F",
-    fontSize: 14,
-  },
-  noBookingsText: {
-    fontSize: 33,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginTop: 20,
-  },
-  latestBookingsText: {
-    fontSize: 18,
-    flex: 0.1,
-    width: "100%",
-    fontWeight: "bold",
-  },
 });
-
-const styles = StyleSheet.create({
-    containerText: {
-      backgroundColor: "green",
-      width: 100,
-      height: 100,
-    },
-    itemText: {
-      fontSize: 16,
-      fontWeight: "bold",
-      color: "white",
-    },
-    container: {
-      flex: 0.3,
-      flexDirection: "column",
-      alignItems: "flex-start",
-      justifyContent: "space-between",
-      width: "95%",
-      height: "20%",
-      marginRight: "auto",
-      marginLeft: "auto",
-    },
-    titlePage: {
-      color: "#172B4D",
-      fontSize: 18,
-      fontWeight: "bold",
-      marginBottom: 20,
-    },
-    itemContainer: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    image: {
-      width: 80,
-      height: 80,
-      marginBottom: 10,
-    },
-    title: {
-      fontSize: 16,
-      fontWeight: "bold",
-      textAlign: "center",
-    },
-  });
 
 export default ExperienceScreen;

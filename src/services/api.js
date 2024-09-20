@@ -298,7 +298,6 @@ export const getAllPlaces = async () => {
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
     };
     const response = await axios.get(`${BASE_URL}/places`, { headers })
-    console.log(response)
     return response
   } catch (error) {
     console.log('error', error)

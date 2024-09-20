@@ -39,7 +39,7 @@ const Navigation = () => {
             backgroundColor: "#FFFFFF",
           },
         }}
-        initialRouteName="Home"
+        initialRouteName="SplashScreen"
       >
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen 
@@ -72,7 +72,7 @@ const Navigation = () => {
         <Stack.Screen name="UpdateCard" component={UpdateCard} />
         <Stack.Screen name="EmConstrucaoScreen" component={EmConstrucaooScreen} options={noGestureScreenOptions}/>
         <Stack.Screen name="PaymentSelectedCard" component={PaymentSelectedCard} options={noGestureScreenOptions}/>
-        <Stack.Screen name="Experience" component={ExperienceScreen} options={noGestureScreenOptions}/>
+        <Stack.Screen name="ExperienceScreen" component={ExperienceScreen} options={noGestureScreenOptions}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

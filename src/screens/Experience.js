@@ -1,13 +1,38 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, Dimensions, StatusBar } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, Dimensions, StatusBar, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Card, Title, Paragraph } from 'react-native-paper';
+import { getAllPlaces } from '../services/api'; // Supondo que você tenha essa função de API implementada
 
 const { width } = Dimensions.get('window');
 
 const ExperienceScreen = ({ navigation }) => {
   const [activeItem, setActiveItem] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [places, setPlaces] = useState([]);
+  const [categories, setCategories] = useState(["Parks", "Shows", "Sports", "Tours", "Events"]); // Exemplo de categorias
+
+  // Função para buscar os dados da API
+  const fetchPlacesData = async () => {
+    try {
+      const response = await getAllPlaces();
+      if (response.status === 200) {
+        setPlaces(response.data.data);
+        console.log(response.data.data); // Supondo que `response.data` seja a lista de lugares
+      } else {
+        console.error('Erro ao buscar dados: ', response.status);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar dados da API:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPlacesData(); // Buscar os dados quando o componente for montado
+  }, []);
 
   const handleBackPress = () => {
     if (navigation && navigation.goBack) {
@@ -15,17 +40,12 @@ const ExperienceScreen = ({ navigation }) => {
     }
   };
 
-  const latestHouse = [
-    { housePhoto: 'https://example.com/house1.jpg', houseName: 'House 1', address: '123 Main St', number: '1', neighbourhood: 'Downtown', city: 'City', country: 'Country' },
-    { housePhoto: 'https://example.com/house2.jpg', houseName: 'House 2', address: '456 Elm St', number: '2', neighbourhood: 'Uptown', city: 'City', country: 'Country' },
-  ];
-
   const renderCardItem = (item) => (
     <View style={styles.cardContainer}>
       <Card style={styles.card}>
-        <Card.Cover source={{ uri: item.housePhoto }} style={styles.cardImage} />
+        <Card.Cover source={{ uri: item.pics[0] }} style={styles.cardImage} />
         <Card.Content>
-          <Title style={styles.cardTitle}>{item.houseName}</Title>
+          <Title style={styles.cardTitle}>{item.overview}</Title>
           <Paragraph style={styles.cardParagraph}>
             <Icon name="location-outline" size={15} color="#000" />{' '}
             {`${item.address}, ${item.number}, ${item.neighbourhood}, ${item.city}, ${item.country}`}
@@ -45,6 +65,7 @@ const ExperienceScreen = ({ navigation }) => {
           </TouchableOpacity>
           <Text style={styles.title}>Experiences</Text>
         </View>
+
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchBar}
@@ -53,40 +74,46 @@ const ExperienceScreen = ({ navigation }) => {
           <Icon name="search" size={20} color="#333" style={styles.searchIcon} />
         </View>
       </View>
+
       <Text style={styles.categoriesText}>Categories</Text>
-      <View style={styles.itemsWrapper}>
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false} 
-          contentContainerStyle={styles.itemsContainer}
-        >
-          {Array.from({ length: 7 }, (_, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[
-                styles.item,
-                activeItem === index && styles.itemActive
-              ]}
-              onPressIn={() => setActiveItem(index)}
-              onPressOut={() => setActiveItem(null)}
-            >
-              <Text style={styles.itemText}>Item {index + 1}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
-      <ScrollView
-        contentContainerStyle={styles.carouselContainer}
-        showsVerticalScrollIndicator={false}
+
+      {/* Renderizando as Categorias como um menu horizontal */}
+      <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false} 
+        contentContainerStyle={styles.itemsContainer}
       >
-        <View style={styles.verticalContainer}>
-          {latestHouse.map((house, index) => (
-            <View key={index} style={styles.cardWrapper}>
-              {renderCardItem(house)}
-            </View>
-          ))}
-        </View>
+        {categories.map((category, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[
+              styles.item,
+              activeItem === index && styles.itemActive
+            ]}
+            onPress={() => setActiveItem(index)}
+          >
+            <Text style={styles.itemText}>{category}</Text>
+          </TouchableOpacity>
+        ))}
       </ScrollView>
+
+      {loading ? (
+        <ActivityIndicator size="large" color="#007bff" />
+      ) : (
+        <ScrollView contentContainerStyle={styles.carouselContainer} showsVerticalScrollIndicator={false}>
+          <View style={styles.verticalContainer}>
+            {places.length > 0 ? (
+              places.map((place, index) => (
+                <View key={index} style={styles.cardWrapper}>
+                  {renderCardItem(place)}
+                </View>
+              ))
+            ) : (
+              <Text style={styles.noDataText}>No places found.</Text>
+            )}
+          </View>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -102,20 +129,20 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center', // Centraliza o conteúdo horizontalmente
+    justifyContent: 'center',
     marginBottom: 15,
   },
   backButton: {
-    position: 'absolute', // Faz o botão ficar na esquerda
+    position: 'absolute',
     left: 0,
     padding: 10,
   },
   title: {
-    fontSize: 20, // Diminuído o tamanho da fonte de 24 para 20
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#333',
     textAlign: 'center',
-    marginHorizontal: 40, // Adiciona margem para centralizar o texto
+    marginHorizontal: 40,
   },
   searchContainer: {
     flexDirection: 'row',
@@ -142,17 +169,14 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginBottom: 10,
   },
-  itemsWrapper: {
-    marginBottom: 20,
-    alignItems: 'center',
-  },
   itemsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
+    marginBottom: 15, // Espaçamento abaixo das categorias
   },
   item: {
-    width: 70,
+    width: 100,
     height: 40,
     backgroundColor: '#fff',
     borderWidth: 1,
@@ -167,7 +191,7 @@ const styles = StyleSheet.create({
     borderColor: '#007bff',
   },
   itemText: {
-    fontSize: 12,
+    fontSize: 14,
     color: '#333',
   },
   carouselContainer: {
@@ -190,15 +214,24 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     width: '100%',
     height: 200,
+    paddingBottom: 10
   },
   cardImage: {
     height: '60%',
   },
   cardTitle: {
     fontSize: 16,
+    fontWeight: "bold",
+    paddingTop: 10
   },
   cardParagraph: {
     fontSize: 14,
+  },
+  noDataText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginTop: 20,
   },
 });
 
