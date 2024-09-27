@@ -21,10 +21,10 @@ import PaymentSelectedCard from "../screens/PaymentSelectedCard";
 import BookingScreen from "../screens/BookingScreen";
 import BookingDetails from "../screens/BookingDetails";
 import ExperienceScreen from "../screens/Experience";
+import ServiceScreen from "../screens/ServiceScreen";
 
 const Stack = createStackNavigator();
 
-// Utility function to create screen options with gestures disabled
 const noGestureScreenOptions = {
   gestureEnabled: false,
 };
@@ -39,7 +39,7 @@ const Navigation = () => {
             backgroundColor: "#FFFFFF",
           },
         }}
-        initialRouteName="SplashScreen"
+        initialRouteName="Home"
       >
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen 
@@ -53,6 +53,7 @@ const Navigation = () => {
         <Stack.Screen name="SetNewPassword" component={SetNewPassword} options={noGestureScreenOptions}/>
         <Stack.Screen name="ChangePersonalInfo" component={ChangePersonalInfo}options={noGestureScreenOptions}/>
         <Stack.Screen name="ChatAmico" component={ChatAmico}/>
+        <Stack.Screen name="ServicesScreen" component={ServiceScreen}/>
         <Stack.Screen 
           name="Terms" 
           component={WebView} 
