@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, Image, StatusBar } from 'react-native';
+import { ScrollView, View, StyleSheet, Image, StatusBar, Text } from 'react-native';
 import ProblemInput from '../components/ProblemInput';
 import BookingInfo from '../components/BookingInfo';
 import CustomBar from '../components/CustomBar';
@@ -7,14 +7,13 @@ import mockData from '../data/mockServiceDetails';
 
 const ServiceDetails = () => {
   const { bookingInfo } = mockData;
-  
+
   return (
     <>
       <StatusBar barStyle={"light-content"} />
       <View style={styles.imageContainer}>
         <Image 
-          src="https://img.freepik.com/fotos-gratis/um-eletricista-trabalha-em-uma-mesa-telefonica-com-um-cabo-eletrico-de-conexao_169016-16570.jpg" 
-          alt="Electric Maintenance" 
+          source={{ uri: "https://img.freepik.com/fotos-gratis/um-eletricista-trabalha-em-uma-mesa-telefonica-com-um-cabo-eletrico-de-conexao_169016-16570.jpg" }} 
           style={styles.image}
         />
       </View>
@@ -44,7 +43,17 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
-    objectFit: 'cover',
+    resizeMode: 'cover', // Corrigido para o React Native
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginVertical: 16,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#888',
+    marginBottom: 24,
   },
 });
 

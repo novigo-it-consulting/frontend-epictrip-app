@@ -22,6 +22,7 @@ import BookingScreen from "../screens/BookingScreen";
 import BookingDetails from "../screens/BookingDetails";
 import ExperienceScreen from "../screens/Experience";
 import ServiceDetails from "../screens/ServiceDetails";
+import ServicesScreen from "../screens/ServiceScreen";
 
 const Stack = createStackNavigator();
 
@@ -54,6 +55,7 @@ const Navigation = () => {
         <Stack.Screen name="ChangePersonalInfo" component={ChangePersonalInfo}options={noGestureScreenOptions}/>
         <Stack.Screen name="ChatAmico" component={ChatAmico}/>
         <Stack.Screen name="ServiceDetails" component={ServiceDetails}/>
+        <Stack.Screen name="ServiceScreen" component={ServicesScreen}/>
         <Stack.Screen 
           name="Terms" 
           component={WebView} 

@@ -35,15 +35,11 @@ const ExploreCategories = () => {
         navigation.navigate('BookingScreen');
       break;
       case 2:
-        navigation.navigate('ServicesScreen');
+        navigation.navigate('ServiceScreen');
       break;
       case 5:
         navigation.navigate('ExperienceScreen');
         break;
-      // TESTE de Visualização
-      case 3:
-        navigation.navigate('ServiceDetails');
-      break;
     }
   };
 
