@@ -12,7 +12,7 @@ const SearchBarHome = () => {
         width: "100%",
         backgroundColor: "#F1F5F6",
         borderRadius: 12,
-        marginTop: 30,
+        // marginTop: 30,
       }}
       placeholder={t("searchViewHome.searchEvents")}
       onChangeText={setSearchQuery}

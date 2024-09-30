@@ -122,6 +122,7 @@ export default function ProfileAccount() {
             justifyContent: "center",
             alignContent: "center",
             flexDirection: "row",
+            marginBottom: 30, 
           }}
         >
           <Image
