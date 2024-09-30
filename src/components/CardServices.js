@@ -1,11 +1,11 @@
-import { TouchableOpacity, Image, Text, StyleSheet } from "react-native"
+import { View, Image, Text, StyleSheet } from "react-native"
 
 const CardService = ({ title, image }) => {
   return (
-    <TouchableOpacity style={styles.serviceCardContainer}>
+    <View style={styles.serviceCardContainer}>
       <Image style={styles.serviceImage} source={{ uri: image }} />
       <Text style={styles.serviceTitle}>{title}</Text>
-    </TouchableOpacity>
+    </View>
   );
 };
 
@@ -24,6 +24,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 5,
   },
-})
+});
 
-export default CardService
+export default CardService;
