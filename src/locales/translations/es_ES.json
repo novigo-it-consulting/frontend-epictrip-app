@@ -203,5 +203,25 @@
   "experienceScreen": {
     "titleScreen": "Experiencia",
     "noExperience": "Sin Experiencia"
-  }  
+  },
+  "problemInput": {
+    "title": "Mantenimiento Eléctrico",
+    "placeholder": "Describe tu problema...",
+    "helperText": "Por favor, adjunta una foto o archivo para una mejor resolución del problema"
+  },
+  "bookingInfo": {
+    "titlePage": "Información de Reserva", 
+    "acordionOne":{
+      "title": "Datos de acceso",
+      "content": "Aquí puedes encontrar tus datos de acceso..."
+    },
+    "acordionTwo":{
+      "title": "Compartición de datos",
+      "content": "Cómo compartimos tus datos con terceros..."
+    },
+    "acordionThree":{
+      "title": "Teléfonos útiles",
+      "content": "Lista de números de teléfono importantes..."
+    }
+  }
 }
