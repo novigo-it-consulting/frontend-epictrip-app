@@ -203,7 +203,25 @@
   "experienceScreen": {
     "titleScreen": "Experience",
     "noExperience": "No Experience"
+  },
+  "problemInput": {
+    "title": "Electrics Maintenance",
+    "placeholder": "Describe your problem...",
+    "helperText": "Please attach photo or file for better resolution of the problem"
+  },
+  "bookingInfo": {
+    "titlePage": "Booking Info", 
+    "acordionOne":{
+      "title": "Access data",
+      "content": "You can find your access data here..."
+    },
+    "acordionTwo":{
+      "title": "Sharing data",
+      "content": "How we share your data with third parties..."
+    },
+    "acordionThree":{
+      "title": "Useful phones",
+      "content": "List of important phone numbers..."
+    }
   }
-  
-  
 }

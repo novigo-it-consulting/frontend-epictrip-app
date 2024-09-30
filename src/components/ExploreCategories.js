@@ -36,6 +36,10 @@ const ExploreCategories = () => {
       break;
       case 5:
         navigation.navigate('ExperienceScreen');
+        break;
+      // TESTE de Visualização
+      case 3:
+        navigation.navigate('ServiceDetails');
       break;
     }
   };

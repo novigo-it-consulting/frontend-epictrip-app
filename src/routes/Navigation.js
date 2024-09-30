@@ -21,6 +21,7 @@ import PaymentSelectedCard from "../screens/PaymentSelectedCard";
 import BookingScreen from "../screens/BookingScreen";
 import BookingDetails from "../screens/BookingDetails";
 import ExperienceScreen from "../screens/Experience";
+import ServiceDetails from "../screens/ServiceDetails";
 
 const Stack = createStackNavigator();
 
@@ -53,6 +54,7 @@ const Navigation = () => {
         <Stack.Screen name="SetNewPassword" component={SetNewPassword} options={noGestureScreenOptions}/>
         <Stack.Screen name="ChangePersonalInfo" component={ChangePersonalInfo}options={noGestureScreenOptions}/>
         <Stack.Screen name="ChatAmico" component={ChatAmico}/>
+        <Stack.Screen name="ServiceDetails" component={ServiceDetails}/>
         <Stack.Screen 
           name="Terms" 
           component={WebView} 
