@@ -40,42 +40,42 @@ const Navigation = () => {
             backgroundColor: "#FFFFFF",
           },
         }}
-        initialRouteName="Home"
+        initialRouteName="SplashScreen"
       >
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
-        <Stack.Screen 
-          name="Login" 
-          component={LoginScreen} 
-          options={noGestureScreenOptions} 
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={noGestureScreenOptions}
         />
-        <Stack.Screen name="SignUp" component={SignUpScreen} options={noGestureScreenOptions}/>
-        <Stack.Screen name="EnterCode" component={EnterCode} options={noGestureScreenOptions}/>
-        <Stack.Screen name="FogotPassword" component={FogotPassword} options={noGestureScreenOptions}/>
-        <Stack.Screen name="SetNewPassword" component={SetNewPassword} options={noGestureScreenOptions}/>
-        <Stack.Screen name="ChangePersonalInfo" component={ChangePersonalInfo}options={noGestureScreenOptions}/>
-        <Stack.Screen name="ChatAmico" component={ChatAmico}/>
-        <Stack.Screen name="ServiceDetails" component={ServiceDetails}/>
-        <Stack.Screen name="ServiceScreen" component={ServicesScreen}/>
-        <Stack.Screen 
-          name="Terms" 
-          component={WebView} 
+        <Stack.Screen name="SignUp" component={SignUpScreen} options={noGestureScreenOptions} />
+        <Stack.Screen name="EnterCode" component={EnterCode} options={noGestureScreenOptions} />
+        <Stack.Screen name="FogotPassword" component={FogotPassword} options={noGestureScreenOptions} />
+        <Stack.Screen name="SetNewPassword" component={SetNewPassword} options={noGestureScreenOptions} />
+        <Stack.Screen name="ChangePersonalInfo" component={ChangePersonalInfo} options={noGestureScreenOptions} />
+        <Stack.Screen name="ChatAmico" component={ChatAmico} />
+        <Stack.Screen name="ServiceDetails" component={ServiceDetails} />
+        <Stack.Screen name="ServiceScreen" component={ServicesScreen} />
+        <Stack.Screen
+          name="Terms"
+          component={WebView}
           options={{
             headerShown: true,
             title: "Termos e Condições",
             headerBackTitle: "Voltar",
-            
-          }} 
+
+          }}
         />
-        <Stack.Screen name="Home" component={HomeTabs} options={noGestureScreenOptions}/>
+        <Stack.Screen name="Home" component={HomeTabs} options={noGestureScreenOptions} />
         <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
         <Stack.Screen name="Payment" component={Payment} />
-        <Stack.Screen name="BookingDetails" component={BookingDetails} options={noGestureScreenOptions}/>
+        <Stack.Screen name="BookingDetails" component={BookingDetails} options={noGestureScreenOptions} />
         <Stack.Screen name="ChangePaymentScreen" component={ChangePaymentCard} />
-        <Stack.Screen name="BookingScreen" component={BookingScreen} options={noGestureScreenOptions}/>
+        <Stack.Screen name="BookingScreen" component={BookingScreen} options={noGestureScreenOptions} />
         <Stack.Screen name="UpdateCard" component={UpdateCard} />
-        <Stack.Screen name="EmConstrucaoScreen" component={EmConstrucaooScreen} options={noGestureScreenOptions}/>
-        <Stack.Screen name="PaymentSelectedCard" component={PaymentSelectedCard} options={noGestureScreenOptions}/>
-        <Stack.Screen name="ExperienceScreen" component={ExperienceScreen} options={noGestureScreenOptions}/>
+        <Stack.Screen name="EmConstrucaoScreen" component={EmConstrucaooScreen} options={noGestureScreenOptions} />
+        <Stack.Screen name="PaymentSelectedCard" component={PaymentSelectedCard} options={noGestureScreenOptions} />
+        <Stack.Screen name="ExperienceScreen" component={ExperienceScreen} options={noGestureScreenOptions} />
       </Stack.Navigator>
     </NavigationContainer>
   );
