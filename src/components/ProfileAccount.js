@@ -4,6 +4,7 @@ import { requestGetUser } from "../services/api";
 import { useNavigation } from "@react-navigation/native";
 import Feather from "react-native-vector-icons/Feather";
 import { Badge } from "react-native-paper";
+import Entypo from '@expo/vector-icons/Entypo';
 import SearchBarHome from "./SearchViewHome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SkeletonLoading from "expo-skeleton-loading";
@@ -14,7 +15,7 @@ export default function ProfileAccount() {
   const [profileName, setProfileName] = useState("");
   const [loading, setLoading] = useState(true);
   const [imageLoading, setImageLoading] = useState(true);
-  
+
   const { t } = useTranslation();
   const navigation = useNavigation();
 
@@ -122,7 +123,7 @@ export default function ProfileAccount() {
             justifyContent: "center",
             alignContent: "center",
             flexDirection: "row",
-            marginBottom: 30, 
+            marginBottom: 30,
           }}
         >
           <Image
@@ -136,7 +137,7 @@ export default function ProfileAccount() {
           />
           <View style={stylesProfile.titleName}>
             <Text style={{ fontSize: 12, textAlign: "left", color: "#364764" }}>
-             {t("profileAccount.welcome")}
+              {t("profileAccount.welcome")}
             </Text>
             <Text
               style={{
@@ -146,24 +147,24 @@ export default function ProfileAccount() {
                 fontWeight: "bold",
               }}
             >
-              {profileName}👋
-       
+              {profileName}<Entypo name="hand" size={24} color="black" />
+
             </Text>
           </View>
-         <TouchableOpacity
-          style={stylesProfile.boxNotification}
-          onPress={() => navigation.navigate('ChatAmico')} // Navegar para a tela do chat
-        >
-          <View style={stylesProfile.boxColor}>
-            <Feather name="bell" color={"#172B4D"} size={15} />
-            <Badge
-              style={{ position: "absolute", top: 5, right: 5 }}
-              size={15}
-            >
-              3
-            </Badge>
-          </View>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={stylesProfile.boxNotification}
+            onPress={() => navigation.navigate('ChatAmico')} // Navegar para a tela do chat
+          >
+            <View style={stylesProfile.boxColor}>
+              <Entypo name="bell" size={24} color="black" />
+              <Badge
+                style={{ position: "absolute", top: 5, right: 5 }}
+                size={15}
+              >
+                3
+              </Badge>
+            </View>
+          </TouchableOpacity>
         </View>
         <SearchBarHome />
       </View>

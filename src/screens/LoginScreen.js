@@ -22,7 +22,7 @@ import styles from "../styles/globalScreen";
 import screenNumberStyles from "../styles/ScreenNumberStyles";
 import colors from "../colors";
 import * as yup from "yup";
-import { requestLogin } from "../services/api";
+// import { requestLogin } from "../services/api"; // Função de login comentada
 import {
   ALERT_TYPE,
   AlertNotificationRoot,
@@ -66,36 +66,32 @@ const LoginScreen = ({ navigation }) => {
     setLoading(true);
     try {
       await schema.validate(data, { abortEarly: false });
-      const response = await requestLogin(data);
 
-      if (response.status === 200) {
-        const userId = response.data.userId;
-        await AsyncStorage.setItem("token", response.data.token);
-        await AsyncStorage.setItem("username", data.username);
+      // Navegação direta para a tela inicial "Home" sem validar o login com o backend
+      navigation.navigate("Home");
 
-        if (userId) {
-          await AsyncStorage.setItem("userId", userId);
+      // Função de login comentada:
+      // const response = await requestLogin(data);
 
-          navigation.navigate("Home");
-          return;
-        }
-      }
+      // if (response.status === 200) {
+      //   const userId = response.data.userId;
+      //   await AsyncStorage.setItem("token", response.data.token);
+      //   await AsyncStorage.setItem("username", data.username);
+
+      //   if (userId) {
+      //     await AsyncStorage.setItem("userId", userId);
+      //     navigation.navigate("Home");
+      //     return;
+      //   }
+      // }
     } catch (error) {
-      if (error.response.data.message === "WRONG PASSWORD") {
-        Toast.show({
-          type: ALERT_TYPE.DANGER,
-          title: "Ops",
-          textBody: t("loginScreen.errorBadPassword"),
-        });
-      } else {
-        Toast.show({
-          type: ALERT_TYPE.DANGER,
-          title: "Ops",
-          textBody: t("loginScreen.genericError"),
-        });
-        console.error(error);
-      }
-    } finally {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Ops",
+        textBody: t("loginScreen.genericError"),
+      });
+      console.error(error);
+    } finally {""
       setLoading(false);
     }
   };
