@@ -1,39 +1,48 @@
+import Entypo from '@expo/vector-icons/Entypo';
+import AntDesign from '@expo/vector-icons/AntDesign';
+
 export const getSampleData = (t) => {
   return [
     {
       id: 1,
-      uri: "https://epictrip-dev.s3.amazonaws.com/category-icons/1.png",
       title: t("sampleData.categoryBooking"),
+      icon: () => <Entypo name="home" size={24} color="black" />,
     },
     {
       id: 2,
-      uri: "https://epictrip-dev.s3.amazonaws.com/category-icons/2.png",
       title: t("sampleData.categoryServices"),
+      icon: () => < Entypo name="suitcase" size={24} color="black" />
     },
     {
       id: 3,
-      uri: "https://epictrip-dev.s3.amazonaws.com/category-icons/6.png",
       title: t("sampleData.categoryConcierge"),
+      icon: () => < AntDesign name = "customerservice" size = { 24} color = "black" />
     },
     {
       id: 4,
-      uri: "https://epictrip-dev.s3.amazonaws.com/category-icons/6.png",
       title: t("sampleData.categoryTickets"),
+      icon: () => < Entypo name="ticket" size={24} color="black" />
     },
     {
       id: 5,
-      uri: "https://epictrip-dev.s3.amazonaws.com/category-icons/3.png",
       title: t("sampleData.categoryPlaces"),
+      icon: () => < Entypo name = "location" size = { 24} color = "black" />
+
     },
     {
       id: 6,
-      uri: "https://epictrip-dev.s3.amazonaws.com/category-icons/4.png",
       title: t("sampleData.categoryFood"),
+      icon: () => < Entypo name="bowl" size={24} color="black" />
     },
     {
       id: 7,
-      uri: "https://epictrip-dev.s3.amazonaws.com/category-icons/5.png",
       title: t("sampleData.categoryShop"),
+      icon: () => <Entypo name="shopping-basket" size={24} color="black" />
+    },
+    {
+      id: 8,
+      title: "Claim",
+      icon: () => < Entypo name = "megaphone" size = { 24} color = "black" />
     },
   ];
 };

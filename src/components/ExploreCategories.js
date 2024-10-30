@@ -12,15 +12,11 @@ const ExploreCategories = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
 
-  const backupData = [
-    { id: 0, title: "sampleData.categoryBooking", uri: "https://epictrip-dev.s3.amazonaws.com/category-icons/1.png" }
-  ]
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getSampleData(t); 
-        await setData(result);
+        const result = await getSampleData(t);
+        setData(result);
       } catch (error) {
         console.error("Failed to load data:", error);
       }
@@ -30,16 +26,17 @@ const ExploreCategories = () => {
   }, []);
 
   const handlePress = (id) => {
-    switch(id) {
+    switch (id) {
       case 1:
         navigation.navigate('BookingScreen');
-      break;
+        break;
       case 2:
         navigation.navigate('ServiceScreen');
-      break;
+        break;
       case 5:
         navigation.navigate('ExperienceScreen');
         break;
+      // Outros casos, se necessário
     }
   };
 
@@ -59,71 +56,49 @@ const ExploreCategories = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.titlePage}>{t("exploreCategories.categories")}</Text>
-        <FlatList
-          data={data}
-          horizontal
-          bounces={false}
-          onScroll={onScroll}
-          scrollEventThrottle={16}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={item => item.id.toString()}
-          renderItem={({ item }) => (
-              <ListItem
-                style={styles.listItem}
-                uri={item.uri}
-                withIcon
-                scrollX={scrollX}
-                index={0}
-                dataLength={data.length}
-                title={item.title}
-                id={item.id}
-                onPress={handlePress}
-              />
-          )}
-        />
+      <FlatList
+        data={data}
+        horizontal
+        bounces={false}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={styles.flatListContent}
+        renderItem={({ item, index }) => (
+          <ListItem
+            uri={item.uri}
+            withIcon={!!item.icon}
+            icon={item.icon}
+            scrollX={scrollX}
+            index={index}
+            dataLength={data.length}
+            title={item.title}
+            id={item.id}
+            onPress={handlePress}
+          />
+        )}
+      />
     </View>
-)}
+  );
+};
 
 const styles = StyleSheet.create({
-  containerText: {
-    backgroundColor: "green",
-    width: 100,
-    height: 100,
-  },
-  itemText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "white",
-  },
   container: {
-    flex: 0.5,
-    flexDirection: "column",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    width: "85%",
-    marginRight: "auto",
-    marginLeft: "auto",
+    flex: 1,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    backgroundColor: "#F8F8F8",
   },
   titlePage: {
     color: "#172B4D",
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 16,
+    textAlign: "left",
   },
-  itemContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  image: {
-    width: 80,
-    height: 80,
-    marginBottom: 10,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "bold",
-    textAlign: "center",
+  flatListContent: {
+    paddingVertical: 16,
   },
 });
 

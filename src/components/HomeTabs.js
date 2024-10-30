@@ -1,7 +1,7 @@
 // HomeTabs.js
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Feather from "react-native-vector-icons/Feather";
+import Entypo from '@expo/vector-icons/Entypo';
 import HomeScreen from "../screens/HomeScreen";
 import SettingsScreen from "../screens/ProfileScreen";
 import ScheduleScreen from "../screens/ScheduleScreen";
@@ -39,7 +39,7 @@ const HomeTabs = () => {
         options={{
           tabBarLabel: t("homeTabs.homeButton"),
           tabBarIcon: ({ color }) => (
-            <Feather name="home" color={color} size={20} />
+            <Entypo name="home" size={24} color="black" />
           ),
         }}
       />
@@ -49,7 +49,7 @@ const HomeTabs = () => {
         options={{
           tabBarLabel: t("homeTabs.groupsButton"),
           tabBarIcon: ({ color }) => (
-            <Feather name="users" color={color} size={20} />
+            <Entypo name="users" size={24} color="black" />
           ),
         }}
       />
@@ -59,7 +59,7 @@ const HomeTabs = () => {
         options={{
           tabBarLabel: t("homeTabs.requestsButton"),
           tabBarIcon: ({ color }) => (
-            <Feather name="bell" color={color} size={20} />
+            <Entypo name="bell" size={24} color="black" />
           ),
         }}
       />
@@ -69,7 +69,7 @@ const HomeTabs = () => {
         options={{
           tabBarLabel: t("homeTabs.scheduleButton"),
           tabBarIcon: ({ color }) => (
-            <Feather name="calendar" color={color} size={20} />
+            <Entypo name="calendar" size={24} color="black" />
           ),
         }}
       />
@@ -79,7 +79,7 @@ const HomeTabs = () => {
         options={{
           tabBarLabel: t("homeTabs.profileButton"),
           tabBarIcon: ({ color }) => (
-            <Feather name="user" color={color} size={20} />
+            <Entypo name="v-card" size={24} color="black" />
           ),
         }}
       />
