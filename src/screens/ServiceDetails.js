@@ -5,15 +5,20 @@ import BookingInfo from '../components/BookingInfo';
 import CustomBar from '../components/CustomBar';
 import mockData from '../data/mockServiceDetails';
 
-const ServiceDetails = () => {
+const ServiceDetails = ({ navigation }) => {
   const { bookingInfo } = mockData;
+
+  const goToChat = (screen) => {
+    console.log("CHAMAAA")
+    navigation.navigate(screen);
+  }
 
   return (
     <>
       <StatusBar barStyle={"light-content"} />
       <View style={styles.imageContainer}>
-        <Image 
-          source={{ uri: "https://img.freepik.com/fotos-gratis/um-eletricista-trabalha-em-uma-mesa-telefonica-com-um-cabo-eletrico-de-conexao_169016-16570.jpg" }} 
+        <Image
+          source={{ uri: "https://img.freepik.com/fotos-gratis/um-eletricista-trabalha-em-uma-mesa-telefonica-com-um-cabo-eletrico-de-conexao_169016-16570.jpg" }}
           style={styles.image}
         />
       </View>
@@ -21,7 +26,7 @@ const ServiceDetails = () => {
         <ProblemInput />
         <BookingInfo bookingInfo={bookingInfo} />
       </ScrollView>
-      <CustomBar/>
+      <CustomBar />
     </>
   );
 };
