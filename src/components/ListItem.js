@@ -4,7 +4,6 @@ import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated
 import { Card } from "react-native-paper";
 
 const ListItem = ({ scrollX, index, dataLength, title, id, onPress, withIcon, icon }) => {
-
   const inputRange = [
     (index - 2) * 36,
     (index - 1) * 36,
@@ -33,9 +32,16 @@ const ListItem = ({ scrollX, index, dataLength, title, id, onPress, withIcon, ic
           {withIcon && icon && (
             <View style={styles.iconContainer}>{icon()}</View>
           )}
-          <Animated.Text style={[styles.title, animatedStyle]}>
-            {title}
-          </Animated.Text>
+          <View style={styles.titleContainer}>
+            <Animated.Text
+              style={[styles.title, animatedStyle]}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              maxFontSizeMultiplier={1}
+            >
+              {title}
+            </Animated.Text>
+          </View>
         </View>
       </Card>
     </TouchableOpacity>
@@ -46,26 +52,27 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
     borderRadius: 16,
-    padding: 8,
-    height: 110,
-    width: 110, // Aumente a largura para dar mais espaço para o texto
+    height: 112,
+    width: 96,
     marginHorizontal: 4,
     marginBottom: -70,
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
   },
   shadowContainer: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    height: 112,
+    width: 96,
   },
   iconContainer: {
     marginBottom: 4,
+    alignItems: "center",
+  },
+  titleContainer: {
+    maxWidth: 80, // largura máxima para uniformizar o tamanho
+    width: "100%", // para preencher o espaço disponível
     alignItems: "center",
   },
   title: {
@@ -73,27 +80,6 @@ const styles = StyleSheet.create({
     color: "#172B4D",
     textAlign: "center",
     fontWeight: "bold",
-    maxWidth: "100%",
-    whiteSpace: "nowrap", // evita quebra de linha
-    overflow: "hidden",
-  },
-});
-
-const stylesWithOutIcon = StyleSheet.create({
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    height: 110,
-    width: 95,
-    marginHorizontal: 4,
-    marginBottom: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
   },
 });
 

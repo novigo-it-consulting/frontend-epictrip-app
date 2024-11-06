@@ -38,8 +38,8 @@ const HomeTabs = () => {
         component={HomeScreen}
         options={{
           tabBarLabel: t("homeTabs.homeButton"),
-          tabBarIcon: ({ color }) => (
-            <Entypo name="home" size={24} color="black" />
+          tabBarIcon: ({ color, focused }) => (
+            <Entypo name="home" size={24} color={focused ? "#0065FF" : "#DFE1E5"} />
           ),
         }}
       />
@@ -48,8 +48,8 @@ const HomeTabs = () => {
         component={GroupUsersScreen}
         options={{
           tabBarLabel: t("homeTabs.groupsButton"),
-          tabBarIcon: ({ color }) => (
-            <Entypo name="users" size={24} color="black" />
+          tabBarIcon: ({ color, focused }) => (
+            <Entypo name="users" size={24} color={focused ? "#0065FF" : "#DFE1E5"} />
           ),
         }}
       />
@@ -58,8 +58,8 @@ const HomeTabs = () => {
         component={RequestsScreen}
         options={{
           tabBarLabel: t("homeTabs.requestsButton"),
-          tabBarIcon: ({ color }) => (
-            <Entypo name="bell" size={24} color="black" />
+          tabBarIcon: ({ color, focused }) => (
+            <Entypo name="bell" size={24} color={focused ? "#0065FF" : "#DFE1E5"} />
           ),
         }}
       />
@@ -68,8 +68,8 @@ const HomeTabs = () => {
         component={ScheduleScreen}
         options={{
           tabBarLabel: t("homeTabs.scheduleButton"),
-          tabBarIcon: ({ color }) => (
-            <Entypo name="calendar" size={24} color="black" />
+          tabBarIcon: ({ color, focused }) => (
+            <Entypo name="calendar" size={24} color={focused ? "#0065FF" : "#DFE1E5"} />
           ),
         }}
       />
@@ -78,8 +78,8 @@ const HomeTabs = () => {
         component={SettingsScreen}
         options={{
           tabBarLabel: t("homeTabs.profileButton"),
-          tabBarIcon: ({ color }) => (
-            <Entypo name="v-card" size={24} color="black" />
+          tabBarIcon: ({ color, focused }) => (
+            <Entypo name="v-card" size={24} color={focused ? "#0065FF" : "#DFE1E5"} />
           ),
         }}
       />

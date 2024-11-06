@@ -20,11 +20,10 @@ import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { Card, Title, Paragraph, Searchbar } from "react-native-paper";
 import Feather from "react-native-vector-icons/Feather";
-import { requestGetBookingByUser, requestGetHousesByBooking} from "../services/api";
+import { requestGetBookingByUser, requestGetHousesByBooking } from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import CustomTabBar from "../components/CustomBar";
+import ContactCard from "../components/ContactCard";
 
-const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const BookingScreen = () => {
@@ -32,7 +31,7 @@ const BookingScreen = () => {
   const [bookingId, setBookingId] = useState("");
   const [latestHouse, setLatestHouse] = useState([]);
   const [house, setHouse] = useState([]);
-  
+
   const { t } = useTranslation();
   const navigation = useNavigation();
 
@@ -104,7 +103,7 @@ const BookingScreen = () => {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     getBookingByUser();
   }, []);
@@ -149,7 +148,7 @@ const BookingScreen = () => {
             </TouchableOpacity>
           </View>
         ) : (
-          <>
+          <View style={stylesPayment.content}>
             <View style={stylesPayment.header}>
               <TouchableOpacity onPress={handleGoBack}>
                 <IconButton
@@ -175,7 +174,7 @@ const BookingScreen = () => {
               <View key={index} style={stylesPayment.containerBooking}>
                 <TouchableOpacity onPress={() => navigation.navigate("BookingDetails")}>
                   <Card style={stylesPayment.card}>
-                    <Card.Cover source={{uri: item.housePhoto}} style={stylesPayment.image} />
+                    <Card.Cover source={{ uri: item.housePhoto }} style={stylesPayment.image} />
                     <Card.Content>
                       <Title style={stylesPayment.titleCard}>{item.houseName}</Title>
                       <Paragraph style={stylesPayment.neighbourhood}>
@@ -202,37 +201,42 @@ const BookingScreen = () => {
               }}
               renderItem={({ item, index }) => (
                 <View key={index} style={stylesPayment.containerBooking}>
-                <Card style={stylesPayment.card}>
-                  <Card.Cover source={{uri: item.housePhoto}} style={stylesPayment.image} />
-                  <Card.Content>
-                    <Title style={stylesPayment.titleCard}>{item.houseName}</Title>
-                    <Paragraph style={stylesPayment.neighbourhood}>
-                      <Feather name="map-pin" color={"#000"} size={15} />{" "}
-                      {`${item.address}, ${item.number}, ${item.neighbourhood}, ${item.city}, ${item.country}`}
-                    </Paragraph>
-                  </Card.Content>
-                </Card>
-              </View>
+                  <Card style={stylesPayment.card}>
+                    <Card.Cover source={{ uri: item.housePhoto }} style={stylesPayment.image} />
+                    <Card.Content>
+                      <Title style={stylesPayment.titleCard}>{item.houseName}</Title>
+                      <Paragraph style={stylesPayment.neighbourhood}>
+                        <Feather name="map-pin" color={"#000"} size={15} />{" "}
+                        {`${item.address}, ${item.number}, ${item.neighbourhood}, ${item.city}, ${item.country}`}
+                      </Paragraph>
+                    </Card.Content>
+                  </Card>
+                </View>
               )}
             />
-          </>
+          </View>
         )}
+        <ContactCard style={stylesPayment.contactCard} />
       </View>
-      <CustomTabBar />
     </AlertNotificationRoot>
   );
 };
 
 const stylesPayment = StyleSheet.create({
   containerAlpha: {
-    flex: 0.9,
+    flex: 1,
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
-    width: "90%",
-    marginRight: "auto",
-    marginLeft: "auto",
+    width: "100%",
     backgroundColor: colors.backGroundLight,
+  },
+  content: {
+    flex: 1,
+    width: "100%",
+    paddingHorizontal: 16,
+  },
+  contactCard: {
+    width: "100%", 
   },
   header: {
     flexDirection: "column",
@@ -246,22 +250,16 @@ const stylesPayment = StyleSheet.create({
     fontSize: 33,
     fontWeight: "bold",
   },
-  carouselContent: {
-    justifyContent: "center",
-    height: "100%",
-    alignItems: "center",
-  },
   containerBooking: {
     width: "100%",
     justifyContent: "center",
-    height: "100%",
     alignItems: "center",
     flex: 1,
   },
   noCardsView: {
     justifyContent: "center",
     alignItems: "center",
-    flex: 0.3,
+    flex: 1,
     width: "100%",
   },
   noCardsText: {
@@ -274,7 +272,7 @@ const stylesPayment = StyleSheet.create({
     borderRadius: 10,
     width: "50%",
     alignItems: "center",
-    marginTop: 50
+    marginTop: 50,
   },
   addButtonText: {
     color: "#fff",
@@ -298,19 +296,12 @@ const stylesPayment = StyleSheet.create({
     height: 120,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    borderEndStartRadius: 0,
-    borderEndEndRadius: 0,
   },
   titleCard: {
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "left",
     color: "#172B4D",
-  },
-  description: {
-    textAlign: "left",
-    color: "#6C798F",
-    fontSize: 14,
   },
   noBookingsText: {
     fontSize: 33,
@@ -320,7 +311,6 @@ const stylesPayment = StyleSheet.create({
   },
   latestBookingsText: {
     fontSize: 18,
-    flex: 0.1,
     width: "100%",
     fontWeight: "bold",
   },

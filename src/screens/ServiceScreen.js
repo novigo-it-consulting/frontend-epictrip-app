@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
-import CustomBar from '../components/CustomBar';
+import ContactCard from '../components/ContactCard';
 import SearchBarHome from '../components/SearchViewHome';
 import { useNavigation } from '@react-navigation/native';
 import { IconButton } from 'react-native-paper';
@@ -107,7 +107,7 @@ const ServicesScreen = () => {
           </View>
         </ScrollView>
       </View>
-      <CustomBar />
+      <ContactCard />
     </>
   );
 };

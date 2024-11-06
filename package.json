@@ -12,6 +12,7 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@expo/metro-runtime": "~3.2.1",
+    "@expo/vector-icons": "^14.0.4",
     "@fontsource/roboto": "^5.0.12",
     "@lottiefiles/react-lottie-player": "^3.5.3",
     "@mui/icons-material": "^5.15.15",
