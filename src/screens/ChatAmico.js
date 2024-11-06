@@ -100,10 +100,10 @@ const ChatScreen = () => {
               <Text style={styles.userStatus}>Online</Text>
             </View>
           </View>
-          <View style={styles.headerIcons}>
+          {/* <View style={styles.headerIcons}>
             <Button icon="phone" compact onPress={() => { }} />
             <Button icon="video" compact onPress={() => { }} />
-          </View>
+          </View> */}
         </View>
 
         <ScrollView
@@ -128,7 +128,7 @@ const ChatScreen = () => {
 
         <View style={styles.footer}>
           <View style={styles.textAndSendButtonView}>
-            <Icon name="attach-file" size={24} style={styles.iconStyle} color="#364764" />
+            {/* <Icon name="attach-file" size={24} style={styles.iconStyle} color="#364764" /> */}
             <TextInput
               style={styles.textInput}
               placeholder="Type a message"
