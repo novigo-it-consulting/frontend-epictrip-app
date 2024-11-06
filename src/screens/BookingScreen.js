@@ -20,7 +20,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { Card, Title, Paragraph, Searchbar } from "react-native-paper";
 import Feather from "react-native-vector-icons/Feather";
-import { requestGetBookingByUser, requestGetHousesByBooking} from "../services/api";
+import { requestGetBookingByUser, requestGetHousesByBooking } from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomTabBar from "../components/CustomBar";
 
@@ -32,7 +32,7 @@ const BookingScreen = () => {
   const [bookingId, setBookingId] = useState("");
   const [latestHouse, setLatestHouse] = useState([]);
   const [house, setHouse] = useState([]);
-  
+
   const { t } = useTranslation();
   const navigation = useNavigation();
 
@@ -104,7 +104,7 @@ const BookingScreen = () => {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     getBookingByUser();
   }, []);
@@ -175,7 +175,7 @@ const BookingScreen = () => {
               <View key={index} style={stylesPayment.containerBooking}>
                 <TouchableOpacity onPress={() => navigation.navigate("BookingDetails")}>
                   <Card style={stylesPayment.card}>
-                    <Card.Cover source={{uri: item.housePhoto}} style={stylesPayment.image} />
+                    <Card.Cover source={{ uri: item.housePhoto }} style={stylesPayment.image} />
                     <Card.Content>
                       <Title style={stylesPayment.titleCard}>{item.houseName}</Title>
                       <Paragraph style={stylesPayment.neighbourhood}>
@@ -192,7 +192,7 @@ const BookingScreen = () => {
             </Text>
             <Carousel
               loop={false}
-              width={width * 0.9} // Define a largura dos itens do carrossel para 90% da largura da tela
+              width={width * 0.9}
               height={width / 2}
               data={latestHouse}
               mode="parallax"
@@ -202,17 +202,17 @@ const BookingScreen = () => {
               }}
               renderItem={({ item, index }) => (
                 <View key={index} style={stylesPayment.containerBooking}>
-                <Card style={stylesPayment.card}>
-                  <Card.Cover source={{uri: item.housePhoto}} style={stylesPayment.image} />
-                  <Card.Content>
-                    <Title style={stylesPayment.titleCard}>{item.houseName}</Title>
-                    <Paragraph style={stylesPayment.neighbourhood}>
-                      <Feather name="map-pin" color={"#000"} size={15} />{" "}
-                      {`${item.address}, ${item.number}, ${item.neighbourhood}, ${item.city}, ${item.country}`}
-                    </Paragraph>
-                  </Card.Content>
-                </Card>
-              </View>
+                  <Card style={stylesPayment.card}>
+                    <Card.Cover source={{ uri: item.housePhoto }} style={stylesPayment.image} />
+                    <Card.Content>
+                      <Title style={stylesPayment.titleCard}>{item.houseName}</Title>
+                      <Paragraph style={stylesPayment.neighbourhood}>
+                        <Feather name="map-pin" color={"#000"} size={15} />{" "}
+                        {`${item.address}, ${item.number}, ${item.neighbourhood}, ${item.city}, ${item.country}`}
+                      </Paragraph>
+                    </Card.Content>
+                  </Card>
+                </View>
               )}
             />
           </>
