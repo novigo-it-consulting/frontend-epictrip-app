@@ -41,6 +41,7 @@ export const getSampleData = (t) => {
     {
       id: 8,
       title: "Claim",
+
       icon: () => < Entypo name="megaphone" size={24} color= "#0065FF" />
     },
   ];
