@@ -4,12 +4,12 @@
     "logoutButton": "Sair"
   },
   "homeTabs": {
-    "homeButton": "Início", 
-    "groupsButton": "Grupos", 
-    "requestsButton": "Solicitações", 
-    "scheduleButton": "Agenda", 
+    "homeButton": "Início",
+    "groupsButton": "Grupos",
+    "requestsButton": "Solicitações",
+    "scheduleButton": "Agenda",
     "profileButton": "Perfil"
-  }, 
+  },
   "loginScreen": {
     "title": "Login",
     "emailLabel": "E-mail",
@@ -44,7 +44,6 @@
     "errorMessage": "Erro ao definir a senha. Por favor, tente novamente.",
     "unknowError": "Ocorreu um erro inesperado, por favor tente novamente.",
     "noUser": "Nenhum usuário encontrado"
-    
   },
   "signUpScreen": {
     "title": "Cadastre-se",
@@ -74,29 +73,29 @@
     "subTitleBooking": "Reserva",
     "errorProfileScreenGetUserInfo": "Aconteceu um erro ao carregar as suas informações",
     "subuTitleSettings": "Configurações"
-  }, 
+  },
   "profileHandleChangePassword": {
-   "titleChangePassword": "Mudar senha"
-  }, 
+    "titleChangePassword": "Mudar senha"
+  },
   "profileHandleLogout": {
-   "titleHandleLogout": "Sair"
+    "titleHandleLogout": "Sair"
   },
   "profileHandleBack": {
     "titleHandleBack": "Voltar"
   },
   "profileHandleAccount": {
-   "titleHandleAccount": "Mudar suas informações pessoas.",
-   "errorUpdating": "Ocorreu um erro ao atualizar as informações do usuario, por favor tente novamente mais tarde."
-  }, 
+    "titleHandleAccount": "Mudar suas informações pessoas.",
+    "errorUpdating": "Ocorreu um erro ao atualizar as informações do usuario, por favor tente novamente mais tarde."
+  },
   "profileHandleHandlePayment": {
-   "titlePayment": "Carteira"
-  }, 
+    "titlePayment": "Carteira"
+  },
   "profileHandleChangeRewards": {
-   "titleRewards": "Recompensas"
-  }, 
+    "titleRewards": "Recompensas"
+  },
   "profileHandleSettingsLanguage": {
-   "titleLanguage": "Linguagem"
-  }, 
+    "titleLanguage": "Linguagem"
+  },
   "setNewPasswordScreen": {
     "title": "Defina sua senha nova",
     "passwordLabel": "Senha",
@@ -109,7 +108,7 @@
     "bookingInformation": "Informações da sua reserva",
     "errorProfileScreenGetUserInfo": "Aconteceu um erro ao carregar as suas informações",
     "loadingBookingNumber": "Sem dados de booking",
-     "reservas": "Sem reservas"
+    "reservas": "Sem reservas"
   },
   "changePersonalInfo": {
     "failedUpdate": "Ocorreu um erro ao atualizar as informações do usuário. Por favor tente novamente mais tarde.",
@@ -145,11 +144,11 @@
   },
   "exploreCategories": {
     "categories": "Explorar Categorias",
-    "categoriesWithOutExplor": "Categorias" 
+    "categoriesWithOutExplor": "Categorias"
   },
   "searchViewHome": {
     "searchEvents": "Digite por Disney, Comida ou Ingressos"
-  }, 
+  },
   "profileAccount": {
     "welcome": "Olá,"
   },
@@ -195,7 +194,7 @@
     "reservationNumber": "Número da Reserva",
     "mainGroup": "Grupo Principal",
     "noLinkedGroup": "Sem grupo vinculado"
-  }, 
+  },
   "logoutDialog": {
     "title": "Deseja realmente sair?",
     "content": "Ao sair, limparemos todos seus dados, e redirecionaremos para o login.",
@@ -212,16 +211,16 @@
     "helperText": "Por favor, anexe uma foto ou arquivo para melhor resolução do problema"
   },
   "bookingInfo": {
-    "titlePage": "Informações da Reserva", 
-    "acordionOne":{
+    "titlePage": "Informações da Reserva",
+    "acordionOne": {
       "title": "Dados de acesso",
       "content": "Você pode encontrar seus dados de acesso aqui..."
     },
-    "acordionTwo":{
+    "acordionTwo": {
       "title": "Compartilhamento de dados",
       "content": "Como compartilhamos seus dados com terceiros..."
     },
-    "acordionThree":{
+    "acordionThree": {
       "title": "Telefones úteis",
       "content": "Lista de números de telefones importantes..."
     }

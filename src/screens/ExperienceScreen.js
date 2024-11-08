@@ -30,7 +30,6 @@ const ExperienceScreen = () => {
   const scrollX = useSharedValue(0);
   const [house, setHouse] = useState([]);
 
-  const { t } = useTranslation();
   const navigation = useNavigation();
 
   const fetchPlacesData = async () => {
@@ -123,7 +122,7 @@ const ExperienceScreen = () => {
                     dataLength={data.length}
                     title={item.title}
                     id={item.id}
-                    onPress={() => {}}
+                    onPress={() => { }}
                   />
                 )}
               />
