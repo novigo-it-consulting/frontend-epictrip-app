@@ -20,12 +20,12 @@ const ProblemInput = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{t('problemInput.title')}</Text>
+      <Text style={styles.label}>{t('conciergeInput.title')}</Text>
       <View style={[styles.inputContainer, isFocused || problem ? styles.inputContainerFocused : {}]}>
         <Feather name="paperclip" size={18} color="#6e6e6e" style={styles.iconLeft} />
         <TextInput
           style={styles.input}
-          placeholder={t('problemInput.placeholder')}
+          placeholder={t('conciergeInput.placeholder')}
           placeholderTextColor="#aaa"
           value={problem}
           onChangeText={(text) => setProblem(text)}
@@ -36,9 +36,6 @@ const ProblemInput = () => {
           <Feather name="send" size={16} color={problem ? "#0066ff" : "#6e6e6e"} style={styles.iconRight} />
         </TouchableOpacity>
       </View>
-      <Text style={styles.helperText}>
-        {t('problemInput.helperText')}
-      </Text>
     </View>
   );
 };

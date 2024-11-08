@@ -20,53 +20,59 @@ const ChatScreen = () => {
   const [chatState, setChatState] = useState('');
   const scrollViewRef = useRef();
 
-  useEffect(async () => {
-    setClientMessage(await AsyncStorage.getItem("preMessage"));
-    const amiko = new Amiko("3");
+  const gerarInteiroAleatorio = () => {
+    return Math.floor(Math.random() * 1000) + 1;
+  }
 
-    amiko.onChatStateReceived = (newChatState) => {
-      console.log("Novo estado do chat recebido:", newChatState);
-      setChatState(newChatState);
+  useEffect(() => {
+    const initializeAmiko = async () => {
+      setClientMessage(await AsyncStorage.getItem("preMessage"));
+      const amiko = new Amiko(`${gerarInteiroAleatorio()}`);
+
+      amiko.onChatStateReceived = (newChatState) => {
+        console.log("Novo estado do chat recebido:", newChatState);
+        setChatState(newChatState);
+      };
+
+      amiko.onMessageReceived = (ServerMessageDto) => {
+        console.log("Mensagem recebida do servidor:", ServerMessageDto);
+        setChatState("");
+        if (ServerMessageDto.direction !== 'outgoing') {
+          const incomingMessage = {
+            id: ServerMessageDto.id,
+            type: 'reply',
+            content: ServerMessageDto.content,
+            createdAt: new Date(ServerMessageDto.createdAt),
+          };
+
+          setMessages((prevMessages) => {
+            const messageExists = prevMessages.some(msg => msg.id === incomingMessage.id);
+            if (!messageExists) {
+              console.log("Adicionando nova mensagem:", incomingMessage);
+              return [...prevMessages, incomingMessage];
+            }
+            return prevMessages;
+          });
+        }
+      };
+
+      amiko.onInitMessageList = (initialMessages) => {
+        const formattedMessages = initialMessages.map((msg) => ({ from: msg.from, content: msg.content }));
+        setMessages(formattedMessages);
+      };
+
+      setAmikoInstance(amiko);
     };
 
-    amiko.onMessageReceived = (ServerMessageDto) => {
-      console.log("Mensagem recebida do servidor:", ServerMessageDto);
-      setChatState("")
-      if (ServerMessageDto.direction !== 'outgoing') {
-        const incomingMessage = {
-          id: ServerMessageDto.id,
-          type: 'reply',
-          content: ServerMessageDto.content,
-          createdAt: new Date(ServerMessageDto.createdAt),
-        };
-
-        setMessages((prevMessages) => {
-          const messageExists = prevMessages.some(msg => msg.id === incomingMessage.id);
-          if (!messageExists) {
-            console.log("Adicionando nova mensagem:", incomingMessage);
-            return [...prevMessages, incomingMessage];
-          }
-          return prevMessages;
-        });
-      }
-    };
-
-    amiko.onInitMessageList = (initialMessages) => {
-      const formattedMessages = initialMessages.map((msg) => ({ from: msg.from, content: msg.content }));
-      setMessages(formattedMessages);
-    };
-
-    setAmikoInstance(amiko);
+    initializeAmiko();
 
     return () => {
-      // Limpar listeners se necessário
-      amiko.onChatStateReceived = null;
-      amiko.onMessageReceived = null;
-      amiko.onInitMessageList = null;
+      if (amikoInstance && typeof amikoInstance.destroy === 'function') {
+        amikoInstance.destroy();
+      }
     };
   }, []);
 
-  // Efeito para rolar para o fim do ScrollView quando as mensagens mudam
   useEffect(() => {
     scrollViewRef.current.scrollToEnd({ animated: true });
   }, [messages]);
@@ -100,10 +106,6 @@ const ChatScreen = () => {
               <Text style={styles.userStatus}>Online</Text>
             </View>
           </View>
-          {/* <View style={styles.headerIcons}>
-            <Button icon="phone" compact onPress={() => { }} />
-            <Button icon="video" compact onPress={() => { }} />
-          </View> */}
         </View>
 
         <ScrollView
@@ -128,7 +130,6 @@ const ChatScreen = () => {
 
         <View style={styles.footer}>
           <View style={styles.textAndSendButtonView}>
-            {/* <Icon name="attach-file" size={24} style={styles.iconStyle} color="#364764" /> */}
             <TextInput
               style={styles.textInput}
               placeholder="Type a message"

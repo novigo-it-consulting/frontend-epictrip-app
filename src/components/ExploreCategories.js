@@ -36,6 +36,9 @@ const ExploreCategories = () => {
       case 5:
         navigation.navigate('ExperienceScreen');
         break;
+      case 3:
+        navigation.navigate('ConciergeDetails');
+        break;
       // Outros casos, se necessário
     }
   };
