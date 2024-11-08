@@ -10,7 +10,7 @@ const SearchBarHome = () => {
   return (
     <Searchbar
       style={{
-        width: "100%",
+        width: "90%",
         backgroundColor: "#F1F5F6",
         borderRadius: 12,
       }}
@@ -18,6 +18,7 @@ const SearchBarHome = () => {
       onChangeText={setSearchQuery}
       value={searchQuery}
       icon={() => <Entypo name="magnifying-glass" size={24} color="black" />}
+      iconPosition="right"
     />
   );
 };

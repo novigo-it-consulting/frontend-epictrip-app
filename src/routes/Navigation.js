@@ -24,6 +24,7 @@ import ExperienceScreen from "../screens/Experience";
 import ServiceDetails from "../screens/ServiceDetails";
 import ServicesScreen from "../screens/ServiceScreen";
 import ConciergeDetails from "../screens/ConciergeDetails";
+import ConciergeList from "../screens/ConciergeList";
 
 const Stack = createStackNavigator();
 
@@ -78,6 +79,7 @@ const Navigation = () => {
         <Stack.Screen name="PaymentSelectedCard" component={PaymentSelectedCard} options={noGestureScreenOptions} />
         <Stack.Screen name="ExperienceScreen" component={ExperienceScreen} options={noGestureScreenOptions} />
         <Stack.Screen name="ConciergeDetails" component={ConciergeDetails} options={noGestureScreenOptions} />
+        <Stack.Screen name="ConciergeList" component={ConciergeList} options={noGestureScreenOptions} />
       </Stack.Navigator>
     </NavigationContainer>
   );
