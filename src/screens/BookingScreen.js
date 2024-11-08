@@ -14,7 +14,7 @@ const BookingScreen = ({ navigation }) => {
           icon="arrow-left"
           size={24}
           style={styles.backButton}
-          onPress={() => console.log("Voltar")}
+          onPress={() => navigation.goBack()}
         />
 
         <Text style={styles.title}>Bookings</Text>
@@ -30,7 +30,7 @@ const BookingScreen = ({ navigation }) => {
 
         <View style={styles.bottomSpace} />
       </ScrollView>
-      
+
       <ContactCard />
     </View>
   );
@@ -39,14 +39,16 @@ const BookingScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FEFEFE", // Cor de fundo da tela
+    backgroundColor: "#FEFEFE",
+    paddingTop: 30, // Adicionado um paddingTop para afastar o conteúdo do topo da tela
   },
   scrollContent: {
-    paddingBottom: 100, // Espaço para evitar sobreposição do ContactCard no conteúdo
+    paddingBottom: 100,
   },
   backButton: {
     alignSelf: "flex-start",
-    margin: 10,
+    marginTop: 10, // Adicionado um marginTop para descer o ícone
+    marginLeft: 10,
   },
   title: {
     fontSize: 28,
@@ -67,7 +69,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   bottomSpace: {
-    height: 100, // Espaço extra para evitar que o conteúdo fique atrás do ContactCard
+    height: 100,
   },
 });
 

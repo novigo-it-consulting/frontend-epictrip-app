@@ -6,7 +6,7 @@ const FeaturedHouseCard = ({ onPress }) => {
     return (
         <TouchableOpacity style={styles.container} onPress={onPress}>
             <Image
-                source={{ uri: "https://via.placeholder.com/150" }}
+                source={{ uri: "https://as2.ftcdn.net/v2/jpg/08/47/86/71/1000_F_847867133_DTWN3PO7iHI6XyDJx7yWgyUgJWdxO4Jk.jpg" }}
                 style={styles.image}
             />
             <Text style={styles.name}>Santa Apartments</Text>
