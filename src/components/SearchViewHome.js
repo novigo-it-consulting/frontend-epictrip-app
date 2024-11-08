@@ -17,8 +17,8 @@ const SearchBarHome = () => {
       placeholder={t("searchViewHome.searchEvents")}
       onChangeText={setSearchQuery}
       value={searchQuery}
-      icon={() => <Entypo name="magnifying-glass" size={24} color="black" />}
-    />
+      icon={() => <Entypo name="magnifying-glass" size={24} color="#6C798F" />}
+      />
   );
 };
 
