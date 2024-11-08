@@ -4,12 +4,12 @@
     "logoutButton": "Logout"
   },
   "homeTabs": {
-    "homeButton": "Home", 
-    "groupsButton": "Groups", 
-    "requestsButton": "Requests", 
-    "scheduleButton": "Schedule", 
+    "homeButton": "Home",
+    "groupsButton": "Groups",
+    "requestsButton": "Requests",
+    "scheduleButton": "Schedule",
     "profileButton": "Profile"
-  }, 
+  },
   "loginScreen": {
     "title": "Login",
     "emailLabel": "Email",
@@ -73,29 +73,29 @@
     "subTitleBooking": "Booking",
     "errorProfileScreenGetUserInfo": "An error occurred while loading your information",
     "subuTitleSettings": "Settings"
-  }, 
+  },
   "profileHandleChangePassword": {
-   "titleChangePassword": "Change Password"
-  }, 
+    "titleChangePassword": "Change Password"
+  },
   "profileHandleLogout": {
-   "titleHandleLogout": "Logout"
-  }, 
+    "titleHandleLogout": "Logout"
+  },
   "profileHandleBack": {
     "titleHandleBack": "Back"
   },
   "profileHandleAccount": {
-   "titleHandleAccount": "Change your personal information",
-   "errorUpdating": "An error occurred while updating the user information, please try again later."
-  }, 
+    "titleHandleAccount": "Change your personal information",
+    "errorUpdating": "An error occurred while updating the user information, please try again later."
+  },
   "profileHandleHandlePayment": {
-   "titlePayment": "Wallet"
-  }, 
+    "titlePayment": "Wallet"
+  },
   "profileHandleChangeRewards": {
-   "titleRewards": "Rewards"
-  }, 
+    "titleRewards": "Rewards"
+  },
   "profileHandleSettingsLanguage": {
-   "titleLanguage": "Language"
-  }, 
+    "titleLanguage": "Language"
+  },
   "setNewPasswordScreen": {
     "title": "Set your new password",
     "passwordLabel": "Password",
@@ -137,7 +137,7 @@
     "alertSuccess": "Success",
     "alertError": "Error"
   },
- "popularEvents": {
+  "popularEvents": {
     "events": "Popular Events",
     "titleDisney": "Disney Park",
     "titleCup": "America Cup"
@@ -147,7 +147,7 @@
   },
   "searchViewHome": {
     "searchEvents": "Try Disney, Food or Tickets"
-  }, 
+  },
   "profileAccount": {
     "welcome": "Hello,"
   },
@@ -161,25 +161,25 @@
     "cardDeleted": "Card deleted successfully.",
     "deleteError": "Error deleting card",
     "errorDeletingCard": "An error occurred"
-},
-"changePaymentScreen": {
-  "titleError": "Error",
-  "errorFields": "Please fill out all fields correctly",
-  "titleAddCard": "Add Card",
-  "buttonAddCard": "Add Card"
-},
-"payment": {
-  "titlePayment": "Payment",
-  "buttonPayment": "Make Payment"
-},
+  },
+  "changePaymentScreen": {
+    "titleError": "Error",
+    "errorFields": "Please fill out all fields correctly",
+    "titleAddCard": "Add Card",
+    "buttonAddCard": "Add Card"
+  },
+  "payment": {
+    "titlePayment": "Payment",
+    "buttonPayment": "Make Payment"
+  },
   "sampleData": {
-  "categoryBooking": "Bookings",
-  "categoryServices": "Services",
-  "categoryConcierge": "Concierge",
-  "categoryTickets": "Tickets",
-  "categoryPlaces": "Places",
-  "categoryFood": "Food",
-  "categoryShop": "Shop"
+    "categoryBooking": "Bookings",
+    "categoryServices": "Services",
+    "categoryConcierge": "Concierge",
+    "categoryTickets": "Tickets",
+    "categoryPlaces": "Places",
+    "categoryFood": "Food",
+    "categoryShop": "Shop"
   },
   "bookingScreen": {
     "yourReservations": "No Bookings Yet",
@@ -194,11 +194,11 @@
     "mainGroup": "Main Group",
     "noLinkedGroup": "No Linked Group"
   },
-    "logoutDialog": {
-      "title": "Do you really want to leave?",
-      "content": "When you leave, we will clear all your data and redirect you to the login.",
-      "noButton": "No",
-      "yesButton": "Yes, leave"
+  "logoutDialog": {
+    "title": "Do you really want to leave?",
+    "content": "When you leave, we will clear all your data and redirect you to the login.",
+    "noButton": "No",
+    "yesButton": "Yes, leave"
   },
   "experienceScreen": {
     "titleScreen": "Experience",
@@ -210,16 +210,16 @@
     "helperText": "Please attach photo or file for better resolution of the problem"
   },
   "bookingInfo": {
-    "titlePage": "Booking Info", 
-    "acordionOne":{
+    "titlePage": "Booking Info",
+    "acordionOne": {
       "title": "Access data",
       "content": "You can find your access data here..."
     },
-    "acordionTwo":{
+    "acordionTwo": {
       "title": "Sharing data",
       "content": "How we share your data with third parties..."
     },
-    "acordionThree":{
+    "acordionThree": {
       "title": "Useful phones",
       "content": "List of important phone numbers..."
     }

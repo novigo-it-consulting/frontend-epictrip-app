@@ -22,7 +22,7 @@ import styles from "../styles/globalScreen";
 import screenNumberStyles from "../styles/ScreenNumberStyles";
 import colors from "../colors";
 import * as yup from "yup";
-// import { requestLogin } from "../services/api"; // Função de login comentada
+
 import {
   ALERT_TYPE,
   AlertNotificationRoot,
@@ -71,19 +71,19 @@ const LoginScreen = ({ navigation }) => {
       navigation.navigate("Home");
 
       // Função de login comentada:
-      // const response = await requestLogin(data);
+      const response = await requestLogin(data);
 
-      // if (response.status === 200) {
-      //   const userId = response.data.userId;
-      //   await AsyncStorage.setItem("token", response.data.token);
-      //   await AsyncStorage.setItem("username", data.username);
+      if (response.status === 200) {
+        const userId = response.data.userId;
+        await AsyncStorage.setItem("token", response.data.token);
+        await AsyncStorage.setItem("username", data.username);
 
-      //   if (userId) {
-      //     await AsyncStorage.setItem("userId", userId);
-      //     navigation.navigate("Home");
-      //     return;
-      //   }
-      // }
+        if (userId) {
+          await AsyncStorage.setItem("userId", userId);
+          navigation.navigate("Home");
+          return;
+        }
+      }
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
@@ -91,7 +91,8 @@ const LoginScreen = ({ navigation }) => {
         textBody: t("loginScreen.genericError"),
       });
       console.error(error);
-    } finally {""
+    } finally {
+      ""
       setLoading(false);
     }
   };

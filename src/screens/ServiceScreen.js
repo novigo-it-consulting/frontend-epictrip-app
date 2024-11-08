@@ -2,12 +2,16 @@ import React from 'react';
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 import CustomBar from '../components/CustomBar';
 import SearchBarHome from '../components/SearchViewHome';
+import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import { IconButton } from 'react-native-paper';
 import CardService from '../components/CardServices';
 
+
 const ServicesScreen = () => {
   const navigation = useNavigation();
+
+  const { t } = useTranslation();
 
   const handleServicePress = (serviceId, serviceTitle) => {
     navigation.navigate('ServiceDetails', { serviceId, serviceTitle });
@@ -40,44 +44,44 @@ const ServicesScreen = () => {
             <Text style={styles.sectionTitle}>Access</Text>
             <ScrollView horizontal>
               <TouchableOpacity onPress={() => handleServicePress(1, 'Condo')}>
-                <CardService 
-                  title="Condo" 
-                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg" 
+                <CardService
+                  title="Condo"
+                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg"
                 />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleServicePress(2, 'Home')}>
-                <CardService 
-                  title="Home" 
-                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg" 
+                <CardService
+                  title="Home"
+                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg"
                 />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleServicePress(3, 'Wifi')}>
-                <CardService 
-                  title="Wifi" 
-                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg" 
+                <CardService
+                  title="Wifi"
+                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg"
                 />
               </TouchableOpacity>
             </ScrollView>
           </View>
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Maintenance</Text>
+            <Text style={styles.sectionTitle}>Manutenção</Text>
             <ScrollView horizontal>
               <TouchableOpacity onPress={() => handleServicePress(4, 'Air Cond')}>
-                <CardService 
-                  title="Air Cond" 
-                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg" 
+                <CardService
+                  title="Air Cond"
+                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg"
                 />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleServicePress(5, 'Electrics')}>
-                <CardService 
-                  title="Electrics" 
-                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg" 
+                <CardService
+                  title="Electrics"
+                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg"
                 />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleServicePress(6, 'Hydro')}>
-                <CardService 
-                  title="Hydro" 
-                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg" 
+                <CardService
+                  title="Hydro"
+                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg"
                 />
               </TouchableOpacity>
             </ScrollView>
@@ -86,21 +90,21 @@ const ServicesScreen = () => {
             <Text style={styles.sectionTitle}>Cleaning</Text>
             <ScrollView horizontal>
               <TouchableOpacity onPress={() => handleServicePress(4, 'Air Cond')}>
-                <CardService 
-                  title="Air Cond" 
-                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg" 
+                <CardService
+                  title="Air Cond"
+                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg"
                 />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleServicePress(5, 'Electrics')}>
-                <CardService 
-                  title="Electrics" 
-                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg" 
+                <CardService
+                  title="Electrics"
+                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg"
                 />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleServicePress(6, 'Hydro')}>
-                <CardService 
-                  title="Hydro" 
-                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg" 
+                <CardService
+                  title="Hydro"
+                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg"
                 />
               </TouchableOpacity>
             </ScrollView>
@@ -129,7 +133,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: "center",
     width: "100%",
-    marginLeft: -40, 
+    marginLeft: -40,
     color: "#172B4D"
   },
   searchContainer: {
