@@ -7,8 +7,11 @@ import Entypo from '@expo/vector-icons/Entypo';
 import CardService from '../components/CardServices';
 import ContactCard from '../components/ContactCard';
 
+
 const ServicesScreen = () => {
   const navigation = useNavigation();
+  const { t } = useTranslation();
+
   const { t } = useTranslation();
 
   const handleServicePress = (serviceId, serviceTitle) => {
@@ -49,42 +52,66 @@ const ServicesScreen = () => {
               <TouchableOpacity onPress={() => handleServicePress(1, 'Condo')}>
                 <CardService
                   title="Condo"
+<<<<<<< HEAD
                   image="https://img.freepik.com/fotos-premium/praia-da-ilha-de-cantor-em-palm-beach-florida-us_79295-5856.jpg?w=996"
+=======
+                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg"
+>>>>>>> 49710e40409b669c3a9b80018771eddd9a2a76fc
                 />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleServicePress(2, 'Home')}>
                 <CardService
                   title="Home"
+<<<<<<< HEAD
                   image="https://img.freepik.com/fotos-premium/jardim-com-vegetacao-natural-com-muitas-arvores-e-piscina-que-cria-uma-atmosfera-harmoniosa_949060-902.jpg?w=996"
+=======
+                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg"
+>>>>>>> 49710e40409b669c3a9b80018771eddd9a2a76fc
                 />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleServicePress(3, 'Wifi')}>
                 <CardService
                   title="Wifi"
+<<<<<<< HEAD
                   image="https://img.freepik.com/fotos-gratis/switch-de-rede-com-cabos_1137-6.jpg?t=st=1731096726~exp=1731100326~hmac=aad259303f56d41b37660fe419f2156bce98466be9854df07bf86135a067ba01&w=996"
+=======
+                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg"
+>>>>>>> 49710e40409b669c3a9b80018771eddd9a2a76fc
                 />
               </TouchableOpacity>
             </ScrollView>
           </View>
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Maintenance</Text>
+            <Text style={styles.sectionTitle}>Manutenção</Text>
             <ScrollView horizontal>
               <TouchableOpacity onPress={() => handleServicePress(4, 'Air Cond')}>
                 <CardService
                   title="Air Cond"
+<<<<<<< HEAD
                   image="https://img.freepik.com/fotos-gratis/mulher-jovem-usando-tecnologia-domestica_23-2149216631.jpg?t=st=1731096824~exp=1731100424~hmac=432e3c5f902ea33e2eb32d72bffc4cae482371c40cea2be6bb50a0ca3259641b&w=360"
+=======
+                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg"
+>>>>>>> 49710e40409b669c3a9b80018771eddd9a2a76fc
                 />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleServicePress(5, 'Electrics')}>
                 <CardService
                   title="Electrics"
+<<<<<<< HEAD
                   image="https://img.freepik.com/fotos-premium/reparador-de-conexoes-wi-fi_151013-1519.jpg?w=996"
+=======
+                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg"
+>>>>>>> 49710e40409b669c3a9b80018771eddd9a2a76fc
                 />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleServicePress(6, 'Hydro')}>
                 <CardService
                   title="Hydro"
+<<<<<<< HEAD
                   image="https://img.freepik.com/fotos-premium/encanador-que-fixa-o-tubo-da-pia-com-uma-chave-ajustavel_34936-2978.jpg?w=996"
+=======
+                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg"
+>>>>>>> 49710e40409b669c3a9b80018771eddd9a2a76fc
                 />
               </TouchableOpacity>
             </ScrollView>
@@ -92,6 +119,7 @@ const ServicesScreen = () => {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Cleaning</Text>
             <ScrollView horizontal>
+<<<<<<< HEAD
               <TouchableOpacity onPress={() => handleServicePress(7, 'Home')}>
                 <CardService
                   title="Home"
@@ -108,6 +136,24 @@ const ServicesScreen = () => {
                 <CardService
                   title="Yard"
                   image="https://img.freepik.com/fotos-premium/um-homem-com-um-ancinho-pega-folhas-outono-paisagem-dourado-outono_93200-4627.jpg?w=996"
+=======
+              <TouchableOpacity onPress={() => handleServicePress(4, 'Air Cond')}>
+                <CardService
+                  title="Air Cond"
+                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleServicePress(5, 'Electrics')}>
+                <CardService
+                  title="Electrics"
+                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleServicePress(6, 'Hydro')}>
+                <CardService
+                  title="Hydro"
+                  image="https://www.shutterstock.com/image-vector/example-stamp-red-rubber-on-260nw-2420575109.jpg"
+>>>>>>> 49710e40409b669c3a9b80018771eddd9a2a76fc
                 />
               </TouchableOpacity>
             </ScrollView>
@@ -136,7 +182,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
+<<<<<<< HEAD
     color: "#172B4D",
+=======
+    textAlign: "center",
+    width: "100%",
+    marginLeft: -40,
+    color: "#172B4D"
+>>>>>>> 49710e40409b669c3a9b80018771eddd9a2a76fc
   },
   searchContainer: {
     flexDirection: 'row',

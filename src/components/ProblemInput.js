@@ -1,34 +1,41 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { useTranslation } from 'react-i18next'; 
+import { useTranslation } from 'react-i18next';
+import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const ProblemInput = () => {
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
   const [problem, setProblem] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
+  const navigation = useNavigation();
+
+  const navigateChat = async () => {
+    await AsyncStorage.setItem("preMessage", problem);
+    navigation.navigate("ChatAmico")
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{t('problemInput.title')}</Text> 
+      <Text style={styles.label}>{t('conciergeInput.title')}</Text>
       <View style={[styles.inputContainer, isFocused || problem ? styles.inputContainerFocused : {}]}>
         <Feather name="paperclip" size={18} color="#6e6e6e" style={styles.iconLeft} />
         <TextInput
           style={styles.input}
-          placeholder={t('problemInput.placeholder')} 
+          placeholder={t('conciergeInput.placeholder')}
           placeholderTextColor="#aaa"
           value={problem}
           onChangeText={(text) => setProblem(text)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
         />
-        <TouchableOpacity onPress={() => console.log('Problem submitted:', problem)}>
+        <TouchableOpacity onPress={() => navigateChat()}>
           <Feather name="send" size={16} color={problem ? "#0066ff" : "#6e6e6e"} style={styles.iconRight} />
         </TouchableOpacity>
       </View>
-      <Text style={styles.helperText}>
-        {t('problemInput.helperText')} 
-      </Text>
     </View>
   );
 };
@@ -55,7 +62,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   inputContainerFocused: {
-    borderColor: '#0066ff', 
+    borderColor: '#0066ff',
   },
   input: {
     flex: 1,

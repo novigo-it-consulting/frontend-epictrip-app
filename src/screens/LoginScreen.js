@@ -69,8 +69,7 @@ const LoginScreen = ({ navigation }) => {
 
       navigation.navigate("Home");
 
-      
-       const response = await requestLogin(data);
+const response = await requestLogin(data);
 
        if (response.status === 200) {
          const userId = response.data.userId;
@@ -83,7 +82,21 @@ const LoginScreen = ({ navigation }) => {
           return;
          }
       }
-      
+    
+      // Função de login comentada:
+      const response = await requestLogin(data);
+
+      if (response.status === 200) {
+        const userId = response.data.userId;
+        await AsyncStorage.setItem("token", response.data.token);
+        await AsyncStorage.setItem("username", data.username);
+
+        if (userId) {
+          await AsyncStorage.setItem("userId", userId);
+          navigation.navigate("Home");
+          return;
+        }
+      }
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
@@ -91,7 +104,8 @@ const LoginScreen = ({ navigation }) => {
         textBody: t("loginScreen.genericError"),
       });
       console.error(error);
-    } finally {""
+    } finally {
+      ""
       setLoading(false);
     }
   };
