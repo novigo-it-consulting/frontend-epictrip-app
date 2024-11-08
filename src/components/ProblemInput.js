@@ -33,7 +33,7 @@ const ProblemInput = () => {
           onBlur={() => setIsFocused(false)}
         />
         <TouchableOpacity onPress={() => navigateChat()}>
-          <Feather name="send" size={16} color={problem ? "#0066ff" : "#6e6e6e"} style={styles.iconRight} />
+          <Feather name="send" size={24} color={problem ? "#0066ff" : "#6e6e6e"} style={styles.iconRight} />
         </TouchableOpacity>
       </View>
     </View>

@@ -12,6 +12,7 @@ import { TextInput, Button, Avatar } from 'react-native-paper';
 import Amiko from "../services/amiko/amiko.js";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import GoBackArrow from "../components/GoBackArrow.js";
 
 const ChatScreen = () => {
   const [clientMessage, setClientMessage] = useState();
@@ -96,6 +97,7 @@ const ChatScreen = () => {
         keyboardVerticalOffset={20}
       >
         <View style={styles.header}>
+          <GoBackArrow />
           <View style={styles.userInfo}>
             <Avatar.Image
               size={50}
@@ -161,7 +163,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     padding: 10,
     paddingTop: 5,
     shadowColor: '#000',
@@ -173,12 +175,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
     borderBottomRightRadius: 24,
-    borderBottomLeftRadius: 24,
+    borderBottomLeftRadius: 24
   },
   userInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 10,
+    marginLeft: 25,
   },
   userName: {
     fontSize: 16,

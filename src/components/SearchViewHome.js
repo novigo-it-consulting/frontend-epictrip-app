@@ -10,7 +10,7 @@ const SearchBarHome = () => {
   return (
     <Searchbar
       style={{
-        width: "100%",
+        width: "90%",
         backgroundColor: "#F1F5F6",
         borderRadius: 12,
       }}

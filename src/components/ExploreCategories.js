@@ -37,7 +37,7 @@ const ExploreCategories = () => {
         navigation.navigate('ExperienceScreen');
         break;
       case 3:
-        navigation.navigate('ConciergeDetails');
+        navigation.navigate('ConciergeList');
         break;
       case 8:
         navigation.navigate('ChatAmico');
