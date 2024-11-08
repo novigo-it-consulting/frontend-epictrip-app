@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useSharedValue } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
 import { getSampleData } from "../data/sampleData";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ExploreCategories = () => {
   const [data, setData] = useState(null);
@@ -25,7 +26,7 @@ const ExploreCategories = () => {
     fetchData();
   }, []);
 
-  const handlePress = (id) => {
+  const handlePress = async (id) => {
     switch (id) {
       case 1:
         navigation.navigate('BookingScreen');
@@ -40,6 +41,7 @@ const ExploreCategories = () => {
         navigation.navigate('ConciergeList');
         break;
       case 8:
+        await AsyncStorage.setItem("preMessage", "")
         navigation.navigate('ChatAmico');
         break;
       // Outros casos, se necessário
