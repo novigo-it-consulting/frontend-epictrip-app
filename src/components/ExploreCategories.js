@@ -33,12 +33,9 @@ const ExploreCategories = () => {
       case 2:
         navigation.navigate('ServiceScreen');
         break;
-      case 3:
-        navigation.navigate('BookingDetails');
-        break;
       case 5:
         navigation.navigate('ExperienceScreen');
-        break;z
+        break;
     }
   };
 
