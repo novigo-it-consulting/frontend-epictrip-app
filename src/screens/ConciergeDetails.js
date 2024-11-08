@@ -5,7 +5,7 @@ import BookingInfo from '../components/BookingInfo';
 import CustomBar from '../components/CustomBar';
 import mockData from '../data/mockServiceDetails';
 
-const ServiceDetails = ({ navigation }) => {
+const ConciergeDetails = ({ navigation }) => {
   const { bookingInfo } = mockData;
 
   const goToChat = (screen) => {
@@ -18,7 +18,7 @@ const ServiceDetails = ({ navigation }) => {
       <StatusBar barStyle={"light-content"} />
       <View style={styles.imageContainer}>
         <Image
-          source={{ uri: "https://img.freepik.com/fotos-gratis/um-eletricista-trabalha-em-uma-mesa-telefonica-com-um-cabo-eletrico-de-conexao_169016-16570.jpg" }}
+          source={{ uri: "https://img.freepik.com/free-photo/concierge-assists-with-checkin-hotel_482257-90464.jpg?t=st=1730936507~exp=1730940107~hmac=ce7beabe60ff090357534141f33e0c83537b0020832680ccc86df3aef4e9124c&w=1380" }}
           style={styles.image}
         />
       </View>
@@ -62,4 +62,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ServiceDetails;
+export default ConciergeDetails;
