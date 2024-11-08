@@ -39,6 +39,9 @@ const ExploreCategories = () => {
       case 3:
         navigation.navigate('ConciergeList');
         break;
+      case 8:
+        navigation.navigate('ChatAmico');
+        break;
       // Outros casos, se necessário
     }
   };

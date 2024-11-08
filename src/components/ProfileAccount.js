@@ -147,8 +147,7 @@ export default function ProfileAccount() {
                 fontWeight: "bold",
               }}
             >
-              {profileName}<Entypo name="hand" size={24} color="black" />
-
+              {profileName}<Entypo name="hand" size={24} color="#172B4D" />
             </Text>
           </View>
           <TouchableOpacity
@@ -156,7 +155,7 @@ export default function ProfileAccount() {
             onPress={() => navigation.navigate('ChatAmico')} // Navegar para a tela do chat
           >
             <View style={stylesProfile.boxColor}>
-              <Entypo name="bell" size={24} color="black" />
+              <Entypo name="bell" size={24} color="#172B4D" />
               <Badge
                 style={{ position: "absolute", top: 5, right: 5 }}
                 size={15}
