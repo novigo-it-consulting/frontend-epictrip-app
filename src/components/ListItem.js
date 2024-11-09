@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import React from "react";
 import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated";
 import { Card } from "react-native-paper";
@@ -33,14 +33,7 @@ const ListItem = ({ scrollX, index, dataLength, title, id, onPress, withIcon, ic
             <View style={styles.iconContainer}>{icon()}</View>
           )}
           <View style={styles.titleContainer}>
-            <Animated.Text
-              style={[styles.title, animatedStyle]}
-              numberOfLines={1}
-              adjustsFontSizeToFit
-              maxFontSizeMultiplier={1}
-            >
-              {title}
-            </Animated.Text>
+            <Text style={styles.title}>{title}</Text>
           </View>
         </View>
       </Card>
@@ -61,7 +54,6 @@ const styles = StyleSheet.create({
   },
   shadowContainer: {
     flex: 1,
-    alignItems: "center",
     justifyContent: "center",
     height: 112,
     width: 96,
@@ -71,14 +63,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   titleContainer: {
-    maxWidth: 80, // largura máxima para uniformizar o tamanho
-    width: "100%", // para preencher o espaço disponível
     alignItems: "center",
+    width: 96,
+    height: 20
   },
   title: {
-    fontSize: 10,
+    fontSize: 14,
     color: "#172B4D",
-    textAlign: "center",
     fontWeight: "bold",
   },
 });

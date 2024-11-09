@@ -60,7 +60,7 @@ const ConciergeList = () => {
                     <Text style={styles.titleText}>Concierge</Text>
                 </View>
                 <View style={styles.centeredViews}>
-                    <SearchBarHome />
+                    <SearchBarHome widthDesired={"90%"} />
                 </View>
                 <View style={styles.centeredViews}>
                     <View style={styles.textContainer}>

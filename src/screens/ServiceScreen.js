@@ -3,9 +3,8 @@ import { ScrollView, View, Text, TouchableOpacity, StyleSheet, SafeAreaView } fr
 import SearchBarHome from '../components/SearchViewHome';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
-import Entypo from '@expo/vector-icons/Entypo';
 import CardService from '../components/CardServices';
-import ContactCard from '../components/ContactCard';
+import GoBackArrow from '../components/GoBackArrow';
 
 
 const ServicesScreen = () => {
@@ -18,14 +17,6 @@ const ServicesScreen = () => {
     navigation.navigate('ServiceDetails', { serviceId, serviceTitle });
   };
 
-  const handleGoBack = () => {
-    navigation.goBack();
-  };
-
-  const handleFilterPress = () => {
-
-    console.log("Filter Pressed");
-  };
 
   return (
     <>
@@ -33,18 +24,11 @@ const ServicesScreen = () => {
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.headerIcons}>
-            <TouchableOpacity onPress={handleGoBack}>
-              <Entypo name="arrow-left" size={24} color="#364764" />
-            </TouchableOpacity>
+            <GoBackArrow />
             <Text style={styles.title}>Services</Text>
-            <TouchableOpacity onPress={handleFilterPress}>
-              <Entypo name="funnel" size={24} color="#172B4D" />
-            </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.searchContainer}>
-          <SearchBarHome />
-        </View>
+        <SearchBarHome />
         <ScrollView>
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Access</Text>
@@ -117,7 +101,6 @@ const ServicesScreen = () => {
           </View>
         </ScrollView>
       </View>
-      <ContactCard />
     </>
   );
 };
@@ -129,7 +112,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   header: {
-    marginBottom: 10,
+    marginBottom: 10
   },
   headerIcons: {
     flexDirection: 'row',
@@ -142,7 +125,7 @@ const styles = StyleSheet.create({
     color: "#172B4D",
     textAlign: "center",
     width: "100%",
-    marginLeft: -40,
+    marginLeft: -80,
     color: "#172B4D"
   },
   searchContainer: {
