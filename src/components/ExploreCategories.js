@@ -72,7 +72,6 @@ const ExploreCategories = () => {
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.flatListContent}
         renderItem={({ item, index }) => (
           <ListItem
             uri={item.uri}
@@ -104,10 +103,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 16,
     textAlign: "left",
-  },
-  flatListContent: {
-    paddingVertical: 16,
-  },
+  }
 });
 
 export default ExploreCategories;
