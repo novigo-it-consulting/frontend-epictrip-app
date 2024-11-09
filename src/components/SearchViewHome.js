@@ -2,12 +2,23 @@ import React, { useState } from "react";
 import { Searchbar } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import Entypo from '@expo/vector-icons/Entypo';
+import {
+  StyleSheet
+} from "react-native";
 
-const SearchBarHome = ({ wid }) => {
+const SearchBarHome = ({ widthDesired }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchbarWidth, setSearchbarWidth] = useState(0);
   const { t } = useTranslation();
   const placeholderText = t("searchViewHome.searchEvents");
+
+  const styles = StyleSheet.create({
+    searchBar: {
+      width: widthDesired,
+      backgroundColor: "#F1F5F6",
+      borderRadius: 12,
+    }
+  });
 
   const getTruncatedText = () => {
     const charWidthEstimate = 8;
@@ -17,11 +28,7 @@ const SearchBarHome = ({ wid }) => {
 
   return (
     <Searchbar
-      style={{
-        width: "100%",
-        backgroundColor: "#F1F5F6",
-        borderRadius: 12,
-      }}
+      style={styles.searchBar}
       placeholder={getTruncatedText()}
       onLayout={(event) => setSearchbarWidth(event.nativeEvent.layout.width)}
       onChangeText={setSearchQuery}
