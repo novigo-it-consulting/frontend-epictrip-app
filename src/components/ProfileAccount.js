@@ -165,7 +165,7 @@ export default function ProfileAccount() {
             </View>
           </TouchableOpacity>
         </View>
-        <SearchBarHome />
+        <SearchBarHome wid={"100%"} />
       </View>
     </View>
   );
@@ -184,7 +184,7 @@ const stylesProfile = StyleSheet.create({
   boxProfile: {
     width: "100%",
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column"
   },
   boxNotification: {
     height: 48,
