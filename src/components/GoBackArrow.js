@@ -10,6 +10,7 @@ const GoBackArrow = ({ colorArrow }) => {
     const navigation = useNavigation();
 
     const goBack = () => {
+        console.log("PORRA")
         if (navigation.canGoBack()) {
             navigation.goBack();
         } else {
@@ -19,8 +20,11 @@ const GoBackArrow = ({ colorArrow }) => {
 
     return (
         <View style={styles.containerBackButton}>
-            <TouchableOpacity style={styles.touchableArrow} onPress={() => (goBack())}>
-                <AntDesign name="arrowleft" size={40} color={colorArrow === null ? '#364764' : colorArrow} />
+            <TouchableOpacity style={styles.touchableArrow} onPress={() => {
+                console.log("Botão pressionado");
+                goBack();
+            }}>
+                <AntDesign name="arrowleft" size={32} color={colorArrow || '#364764'} />
             </TouchableOpacity>
         </View>
     )
@@ -28,13 +32,14 @@ const GoBackArrow = ({ colorArrow }) => {
 
 const styles = StyleSheet.create({
     containerBackButton: {
-        justifyContent: "space-around",
+        justifyContent: "center",
         alignItems: "flex-start",
         flexDirection: "column",
         flex: 0.1,
+        zIndex: 1
     },
     touchableArrow: {
-        width: 100
+        width: 50
     }
 });
 

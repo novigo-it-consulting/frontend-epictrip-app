@@ -18,7 +18,7 @@ const SearchBarHome = ({ wid }) => {
   return (
     <Searchbar
       style={{
-        width: wid === null ? "90%" : wid,
+        width: "100%",
         backgroundColor: "#F1F5F6",
         borderRadius: 12,
       }}
