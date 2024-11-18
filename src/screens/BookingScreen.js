@@ -10,20 +10,23 @@ const BookingScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <IconButton
-          icon="arrow-left"
-          size={24}
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        />
-
-        <Text style={styles.title}>Bookings</Text>
+        <View style={styles.header}>
+          <IconButton
+            icon="arrow-left"
+            size={24}
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          />
+          <Text style={styles.title}>Bookings</Text>
+        </View>
 
         <View style={styles.searchBarContainer}>
           <SearchBarHome />
         </View>
 
-        <FeaturedHouseCard onPress={() => navigation.navigate("BookingDetails")} />
+        <View style={styles.featuredContainer}>
+          <FeaturedHouseCard onPress={() => navigation.navigate("BookingDetails")} />
+        </View>
 
         <Text style={styles.subtitle}>Latest bookings</Text>
         <HouseCarousel />
@@ -40,33 +43,47 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FEFEFE",
-    paddingTop: 30, // Adicionado um paddingTop para afastar o conteúdo do topo da tela
+    paddingTop: 30,
   },
   scrollContent: {
     paddingBottom: 100,
   },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 20,
+    marginTop: 10,
+  },
   backButton: {
-    alignSelf: "flex-start",
-    marginTop: 10, // Adicionado um marginTop para descer o ícone
-    marginLeft: 10,
+    marginRight: 10,
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     color: "#172B4D",
-    marginHorizontal: 20,
-    marginBottom: 10,
   },
   searchBarContainer: {
     marginHorizontal: 20,
-    marginBottom: 20,
+    marginTop: 10,
+  },
+  featuredContainer: {
+    marginHorizontal: 20,
+    marginTop: 20,
+    borderRadius: 12,
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   subtitle: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#172B4D",
     marginHorizontal: 20,
-    marginVertical: 10,
+    marginTop: 20,
+    marginBottom: 10,
   },
   bottomSpace: {
     height: 100,
