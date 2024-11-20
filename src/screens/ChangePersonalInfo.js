@@ -38,7 +38,7 @@ const ChangePersonalInfo = () => {
     firstName: "",
     lastName: "",
     gender: "first",
-    age: new Date(), 
+    age: new Date(),
   });
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   const { t } = useTranslation();

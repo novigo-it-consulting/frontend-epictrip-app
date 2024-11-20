@@ -78,9 +78,9 @@ const ExperienceScreen = ({ navigation }) => {
       <Text style={styles.categoriesText}>Categories</Text>
 
       {/* Renderizando as Categorias como um menu horizontal */}
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false} 
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.itemsContainer}
       >
         {categories.map((category, index) => (
