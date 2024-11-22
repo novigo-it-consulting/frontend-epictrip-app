@@ -15,7 +15,7 @@
       "ios": {
         "releaseChannel": "production",
         "image": "latest"
-      }, 
+      },
       "android": {
         "buildType": "apk"
       }

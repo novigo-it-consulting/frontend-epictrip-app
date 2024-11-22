@@ -5,6 +5,7 @@ import SearchBarHome from "../components/SearchViewHome";
 import ContactCard from "../components/ContactCard";
 import FeaturedHouseCard from "../components/FeaturedHouseCard";
 import HouseCarousel from "../components/HouseCarousel";
+import FooterNavBar from "../components/FooterNavBar";
 
 const BookingScreen = ({ navigation }) => {
   return (
@@ -31,7 +32,6 @@ const BookingScreen = ({ navigation }) => {
         <View style={styles.bottomSpace} />
       </ScrollView>
 
-      <ContactCard />
     </View>
   );
 };

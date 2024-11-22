@@ -14,6 +14,7 @@ import CardServicesCategoriesInside from '../components/CardServicesCategoriesIn
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from '@react-navigation/native';
+import FooterNavBar from '../components/FooterNavBar';
 
 
 const ConciergeList = () => {
@@ -85,6 +86,7 @@ const ConciergeList = () => {
                         ))}
                     </ScrollView>
                 </View>
+                <FooterNavBar />
             </SafeAreaView>
         </PaperProvider>
     );

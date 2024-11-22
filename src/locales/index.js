@@ -7,22 +7,35 @@ import ptBR from "./translations/pt_BR.json";
 import enUS from "./translations/en_US.json";
 import esES from "./translations/es_ES.json";
 
+// Função para obter o idioma do dispositivo
+const getDeviceLanguage = () => {
+  let locale = "pt_BR"; // Idioma padrão
+
+  if (Platform.OS === "ios") {
+    const { SettingsManager } = NativeModules;
+    const settings = SettingsManager?.settings;
+    locale = settings?.AppleLocale || settings?.AppleLanguages[0] || locale;
+  } else if (Platform.OS === "android") {
+    const { I18nManager } = NativeModules;
+    locale = I18nManager?.localeIdentifier || locale;
+  }
+
+  return locale.replace("_", "-"); // Substitui underscore por hífen
+};
+
 i18n
-  .use(initReactI18next) // Use initReactI18next
+  .use(initReactI18next) // Integrar com React
   .init({
-    lng:
-      Platform.OS === "ios"
-        ? NativeModules.SettingsManager.settings.AppleLocale // Adquire o idioma no dispositivo iOS
-        : NativeModules.I18nManager.localeIdentifier, // Idioma padrão
-    fallbackLng: "pt_BR", // Se a tradução não estiver disponível para o idioma atual, fallback para este idioma
+    lng: getDeviceLanguage(), // Define o idioma inicial
+    fallbackLng: "pt-BR", // Idioma de fallback
     resources: {
-      en: {
+      "en-US": {
         translation: enUS,
       },
-      pt: {
+      "pt-BR": {
         translation: ptBR,
       },
-      es: {
+      "es-ES": {
         translation: esES,
       },
     },
@@ -31,6 +44,7 @@ i18n
     },
   });
 
+// Verifica se há um idioma salvo no AsyncStorage
 AsyncStorage.getItem("language").then((language) => {
   if (language) {
     i18n.changeLanguage(language);
