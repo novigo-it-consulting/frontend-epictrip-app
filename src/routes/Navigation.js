@@ -25,6 +25,7 @@ import ServiceDetails from "../screens/ServiceDetails";
 import ServicesScreen from "../screens/ServiceScreen";
 import ConciergeDetails from "../screens/ConciergeDetails";
 import ConciergeList from "../screens/ConciergeList";
+import HomeScreen from "../screens/HomeScreen";
 
 const Stack = createStackNavigator();
 
@@ -68,7 +69,7 @@ const Navigation = () => {
 
           }}
         />
-        <Stack.Screen name="Home" component={HomeTabs} options={noGestureScreenOptions} />
+        <Stack.Screen name="Home" component={HomeScreen} options={noGestureScreenOptions} />
         <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
         <Stack.Screen name="Payment" component={Payment} />
         <Stack.Screen name="BookingDetails" component={BookingDetails} options={noGestureScreenOptions} />

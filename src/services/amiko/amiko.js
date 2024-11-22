@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 
 class Amiko {
-    constructor(uniqueRoomId) {
+    constructor(uniqueRoomId, contextString) {
         this.chatId = '478ae18a-596c-4ee8-b6a7-6422cf2571ca';
         this.token = '99jWB13psRBWs5CwcbssGG';
 
@@ -15,10 +15,22 @@ class Amiko {
             },
         });
 
+        this.contextString = contextString; // Inicializa com o contexto, se disponível
         this.initializeListeners();
     }
 
     initializeListeners() {
+        this.socket.on('EVENT_SET_CONTEXT', (ContextSetterDto) => {
+            const { context } = ContextSetterDto;
+
+            // Atualiza o contexto interno com a string recebida
+            this.contextString = context;
+
+            if (typeof this.onContextReceived === 'function') {
+                this.onContextReceived(context); // Invoca o callback com a string do contexto
+            }
+        });
+
         this.socket.on('EVENT_SERVER_SEND_MESSAGE', (ServerMessageDto) => {
             if (typeof this.onMessageReceived === 'function') {
                 this.onMessageReceived(ServerMessageDto);
@@ -69,6 +81,11 @@ class Amiko {
                 callback(response);
             }
         });
+    }
+
+    // Método para obter o contexto atual
+    getContext() {
+        return this.contextString || 'No context available';
     }
 }
 
