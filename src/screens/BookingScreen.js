@@ -31,7 +31,6 @@ const BookingScreen = ({ navigation }) => {
         <View style={styles.bottomSpace} />
       </ScrollView>
 
-      <ContactCard />
     </View>
   );
 };
@@ -40,14 +39,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FEFEFE",
-    paddingTop: 30, // Adicionado um paddingTop para afastar o conteúdo do topo da tela
+    paddingTop: 30,
   },
   scrollContent: {
     paddingBottom: 100,
   },
   backButton: {
     alignSelf: "flex-start",
-    marginTop: 10, // Adicionado um marginTop para descer o ícone
+    marginTop: 10,
     marginLeft: 10,
   },
   title: {

@@ -1,35 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { ScrollView, View, StyleSheet, Image, StatusBar, Text } from 'react-native';
 import ProblemInput from '../components/ProblemInput';
 import BookingInfo from '../components/BookingInfo';
 import CustomBar from '../components/CustomBar';
 import mockData from '../data/mockServiceDetails';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import GoBackArrow from '../components/GoBackArrow';
 
 const ConciergeDetails = ({ navigation }) => {
-  const [imageUri, setImageUri] = useState();
-
-  useEffect(() => {
-    const fetchImageUri = async () => {
-      const uri = await AsyncStorage.getItem('conciergeUri');
-      setImageUri(uri);
-    };
-
-    fetchImageUri();
-  }, []);
-
   const { bookingInfo } = mockData;
+
+  const goToChat = (screen) => {
+    console.log("CHAMAAA")
+    navigation.navigate(screen);
+  }
 
   return (
     <>
       <StatusBar barStyle={"light-content"} />
       <View style={styles.imageContainer}>
-        <View style={styles.arrowView}>
-          <GoBackArrow colorArrow={'white'} />
-        </View>
         <Image
-          source={{ uri: imageUri }}
+          source={{ uri: "https://img.freepik.com/free-photo/concierge-assists-with-checkin-hotel_482257-90464.jpg?t=st=1730936507~exp=1730940107~hmac=ce7beabe60ff090357534141f33e0c83537b0020832680ccc86df3aef4e9124c&w=1380" }}
           style={styles.image}
         />
       </View>
@@ -55,7 +44,6 @@ const styles = StyleSheet.create({
     height: 300,
     overflow: 'hidden',
     marginBottom: -50,
-    position: 'relative'
   },
   image: {
     width: '100%',
@@ -72,12 +60,6 @@ const styles = StyleSheet.create({
     color: '#888',
     marginBottom: 24,
   },
-  arrowView: {
-    position: 'absolute', // Adiciona a posição absoluta para sobreposição
-    top: 60, // Ajuste conforme necessário para posicionar o arrow
-    left: 20, // Ajuste conforme necessário para posicionar o arrow
-    zIndex: 1, // Certifique-se de que o arrow fica na frente da imagem
-  }
 });
 
 export default ConciergeDetails;
