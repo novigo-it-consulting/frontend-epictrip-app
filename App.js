@@ -6,6 +6,8 @@ import { I18nextProvider } from "react-i18next";
 import i18n from "./src/locales/index";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import { StatusBar } from "react-native";
+import 'intl-pluralrules';
+
 
 const theme = {
   ...DefaultTheme,

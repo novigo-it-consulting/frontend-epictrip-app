@@ -21,24 +21,27 @@ const ChatScreen = () => {
   const [chatState, setChatState] = useState('');
   const scrollViewRef = useRef();
 
-  const contextAmiko = "House Details: House Name: Sunset Villa, Type: Single House, Location: 123 Beach Ave, Unit 5, Seaside, Miami, FL, 33101, USA, Coordinates: Latitude 25.7617, Longitude -80.1918, Managed by: Vacation Rentals Inc., Amenities: Pool, BBQ Grill, Garage with Automatic Doors, WiFi, Air Conditioning, Heating, Washing Machine, Dryer, Dishwasher, Cable TV, Smart TV, Shower Type: Walk-in, Maximum Guests: 8, Minimum Age: 21, Smoking Allowed: No, Parties Allowed: No, Pets Allowed: No. Traveler Details: Booking Name: Summer Vacation, Booking Status: Confirmed, Check - In Date: 2024-06 - 15T15:00:00, Check - Out Date: 2024-06 - 22T11:00:00, Traveler Name: Alice Johnson, Email: alice.johnson@example.com, Phone: +1 - 555-0123, Share Number: AB123.";
-
   const gerarInteiroAleatorio = () => {
     return Math.floor(Math.random() * 1000) + 1;
   }
 
   useEffect(() => {
+    const contextAmiko = { context: "House Details: House Name: Sunset Villa, Type: Single House, Location: 123 Beach Ave, Unit 5, Seaside, Miami, FL, 33101, USA, Coordinates: Latitude 25.7617, Longitude -80.1918, Managed by: Vacation Rentals Inc., Amenities: Pool, BBQ Grill, Garage with Automatic Doors, WiFi, Air Conditioning, Heating, Washing Machine, Dryer, Dishwasher, Cable TV, Smart TV, Shower Type: Walk-in, Maximum Guests: 8, Minimum Age: 21, Smoking Allowed: No, Parties Allowed: No, Pets Allowed: No. Traveler Details: Booking Name: Summer Vacation, Booking Status: Confirmed, Check - In Date: 2024-06 - 15T15:00:00, Check - Out Date: 2024-06 - 22T11:00:00, Traveler Name: Alice Johnson, Email: alice.johnson@example.com, Phone: +1 - 555-0123, Share Number: AB123." };
     const initializeAmiko = async () => {
       setClientMessage(await AsyncStorage.getItem("preMessage"));
-      const amiko = new Amiko(`${gerarInteiroAleatorio()}`, contextAmiko);
+      const amiko = new Amiko(`34524 `, contextAmiko);
 
       amiko.onChatStateReceived = (newChatState) => {
+        console.log("--------------------------------------------------")
         console.log("Novo estado do chat recebido:", newChatState);
+        console.log("--------------------------------------------------")
         setChatState(newChatState);
       };
 
       amiko.onMessageReceived = (ServerMessageDto) => {
+        console.log("--------------------------------------------------")
         console.log("Mensagem recebida do servidor:", ServerMessageDto);
+        console.log("--------------------------------------------------")
         setChatState("");
         if (ServerMessageDto.direction !== 'outgoing') {
           const incomingMessage = {
@@ -68,7 +71,6 @@ const ChatScreen = () => {
     };
 
     initializeAmiko();
-
     return () => {
       if (amikoInstance && typeof amikoInstance.destroy === 'function') {
         amikoInstance.destroy();

@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/img/icon.png",
     "userInterfaceStyle": "#FFF",
+    "newArchEnabled": true,
     "splash": {
       "image": "./assets/img/splash.png",
       "resizeMode": "contain",
@@ -15,6 +16,7 @@
       "**/*"
     ],
     "ios": {
+      "newArchEnabled": true,
       "supportsTablet": false,
       "bundleIdentifier": "app.myepictrip",
       "buildNumber": "563",
@@ -23,6 +25,7 @@
       }
     },
     "android": {
+      "newArchEnabled": true,
       "usesCleartextTraffic": false,
       "adaptiveIcon": {
         "foregroundImage": "./assets/img/adaptive-icon.png",
