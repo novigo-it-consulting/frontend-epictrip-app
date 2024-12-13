@@ -22,21 +22,11 @@ const PopularEvents = () => {
       title: t("popularEvents.titleDisney"),
       description: "1525 Sugargrove, Orlando",
       image: require("../../assets/Categories/foto-1.png"),
-    },
-    {
-      title: "Orlando city vs New York City",
-      description: "W Church St, Orlando",
-      image: require("../../assets/Categories/8.png"),
-    },
-    {
-      title: t("popularEvents.titleCup"),
-      description: "Mercedes-Benz Stadium, Atlanta",
-      image: require("../../assets/Categories/7.png"),
     }
-    
+
     // Adicione mais itens conforme necessário
   ];
-  
+
   const [index, setIndex] = useState(0);
 
 
