@@ -5,6 +5,7 @@ import { AlertNotificationRoot } from "react-native-alert-notification";
 import ExploreCategories from "../components/ExploreCategories";
 import PopularEvents from "../components/PopularEvents";
 import ProfileAccount from "../components/ProfileAccount";
+import FooterNavBar from "../components/FooterNavBar";
 import colors from "../colors";
 
 const HomeScreen = () => {
@@ -17,6 +18,7 @@ const HomeScreen = () => {
             <ExploreCategories />
             <PopularEvents />
           </ScrollView>
+          <FooterNavBar />
         </AlertNotificationRoot>
       </SafeAreaView>
     </PaperProvider>

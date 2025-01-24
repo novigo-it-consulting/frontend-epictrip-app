@@ -109,7 +109,7 @@ const EnterCodeScreen = ({ navigation }) => {
   }, []);
 
   const handleGoBack = () => {
-    navigation.navigate("Login");
+    navigation.navigate("Home");
   };
 
   return (
@@ -137,9 +137,9 @@ const EnterCodeScreen = ({ navigation }) => {
                 fontWeight: "bold",
                 color: colors.primary,
               }}
-              onPress={callFunction}
+              onPress={handleGoBack}
             >
-              Em Construção...
+              Em Construção... Clique aqui para voltar
             </Text>
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
