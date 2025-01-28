@@ -1,22 +1,101 @@
-import React from 'react';
-import { ScrollView, View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-native';
 import SearchBarHome from '../components/SearchViewHome';
 import { useTranslation } from 'react-i18next';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import CardService from '../components/CardServices';
 import GoBackArrow from '../components/GoBackArrow';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const ServicesScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { group } = route.params || {};
 
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // Estado de carregamento
 
   const { t } = useTranslation();
 
-  const handleServicePress = (serviceId, serviceTitle) => {
-    navigation.navigate('ServiceDetails', { serviceId, serviceTitle });
+  const handleServicePress = (serviceId) => {
+    navigation.navigate('ServiceDetails', { serviceId });
   };
 
+  const fetchCategories = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const urlCategories = 'https://homol-api.fertech.dev.br/categories/';
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      const response = await axios.get(urlCategories, { headers });
+      return response.data.data;
+    } catch (error) {
+      console.error('Erro ao buscar categorias:', error);
+      return [];
+    }
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const urlProducts = `https://homol-api.fertech.dev.br/products/groups/${group}`;
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      const response = await axios.get(urlProducts, { headers });
+      const products = response.data;
+
+      const prds = [];
+      for (const prd of products) {
+        const urlUploads = `https://homol-api.fertech.dev.br/uploads?productId=${prd.id}`;
+        const responseUpload = await axios.get(urlUploads, { headers });
+
+        if (responseUpload.status === 200) {
+          const upload = responseUpload.data;
+          prds.push({
+            id: prd.id,
+            name: prd.name,
+            category: prd.category,
+            upload,
+          });
+        }
+      }
+      return prds;
+    } catch (error) {
+      console.error('Erro ao buscar produtos:', error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true); // Começa o carregamento
+        const categoriesList = await fetchCategories();
+        const productsList = await fetchProducts();
+        setProducts(productsList);
+        setCategories(categoriesList);
+        console.log(products)
+      } catch (error) {
+        console.error('Erro ao buscar dados iniciais:', error);
+      } finally {
+        setIsLoading(false); // Finaliza o carregamento
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#172B4D" />
+        <Text style={styles.loadingText}>Carregando...</Text>
+      </View>
+    );
+  }
 
   return (
     <>
@@ -30,75 +109,29 @@ const ServicesScreen = () => {
         </View>
         <SearchBarHome />
         <ScrollView>
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Access</Text>
-            <ScrollView horizontal>
-              <TouchableOpacity onPress={() => handleServicePress(1, 'Condo')}>
-                <CardService
-                  title="Condo"
-                  image="https://img.freepik.com/fotos-premium/praia-da-ilha-de-cantor-em-palm-beach-florida-us_79295-5856.jpg?w=996"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleServicePress(2, 'Home')}>
-                <CardService
-                  title="Home"
-                  image="https://img.freepik.com/fotos-premium/jardim-com-vegetacao-natural-com-muitas-arvores-e-piscina-que-cria-uma-atmosfera-harmoniosa_949060-902.jpg?w=996"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleServicePress(3, 'Wifi')}>
-                <CardService
-                  title="Wifi"
-                  image="https://img.freepik.com/fotos-gratis/switch-de-rede-com-cabos_1137-6.jpg?t=st=1731096726~exp=1731100326~hmac=aad259303f56d41b37660fe419f2156bce98466be9854df07bf86135a067ba01&w=996"
-                />
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Manutenção</Text>
-            <ScrollView horizontal>
-              <TouchableOpacity onPress={() => handleServicePress(4, 'Air Cond')}>
-                <CardService
-                  title="Air Cond"
-                  image="https://img.freepik.com/fotos-gratis/mulher-jovem-usando-tecnologia-domestica_23-2149216631.jpg?t=st=1731096824~exp=1731100424~hmac=432e3c5f902ea33e2eb32d72bffc4cae482371c40cea2be6bb50a0ca3259641b&w=360"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleServicePress(5, 'Electrics')}>
-                <CardService
-                  title="Electrics"
-                  image="https://img.freepik.com/fotos-premium/reparador-de-conexoes-wi-fi_151013-1519.jpg?w=996"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleServicePress(6, 'Hydro')}>
-                <CardService
-                  title="Hydro"
-                  image="https://img.freepik.com/fotos-premium/encanador-que-fixa-o-tubo-da-pia-com-uma-chave-ajustavel_34936-2978.jpg?w=996"
-                />
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Cleaning</Text>
-            <ScrollView horizontal>
-              <TouchableOpacity onPress={() => handleServicePress(7, 'Home')}>
-                <CardService
-                  title="Home"
-                  image="https://img.freepik.com/fotos-premium/jardim-com-vegetacao-natural-com-muitas-arvores-e-piscina-que-cria-uma-atmosfera-harmoniosa_949060-902.jpg?w=996"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleServicePress(8, 'Pool')}>
-                <CardService
-                  title="Pool"
-                  image="https://img.freepik.com/fotos-premium/trabalhador-de-limpeza-de-piscina-ao-ar-livre-com-vacuo-subaquatico_495423-32387.jpg?w=360"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleServicePress(9, 'Yard')}>
-                <CardService
-                  title="Yard"
-                  image="https://img.freepik.com/fotos-premium/um-homem-com-um-ancinho-pega-folhas-outono-paisagem-dourado-outono_93200-4627.jpg?w=996"
-                />
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
+          {categories.map((cat) => (
+            <View key={cat.categoryId} style={styles.section}>
+              <Text style={styles.sectionTitle}>{cat.categoryName}</Text>
+              <ScrollView horizontal>
+                {products
+                  .filter((prd) => prd.category === cat.categoryId) // Certifique-se que os campos são correspondentes
+                  .map((prd) => (
+                    <TouchableOpacity
+                      key={prd.id}
+                      onPress={() => handleServicePress(prd.id)}
+                    >
+                      <CardService
+                        title={prd.name}
+                        image={
+                          prd.upload?.data?.[0]?.filePath || // Use optional chaining para evitar erros
+                          'https://img.freepik.com/fotos-premium/praia-da-ilha-de-cantor-em-palm-beach-florida-us_79295-5856.jpg?w=996'
+                        }
+                      />
+                    </TouchableOpacity>
+                  ))}
+              </ScrollView>
+            </View>
+          ))}
         </ScrollView>
       </View>
     </>
@@ -112,7 +145,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   header: {
-    marginBottom: 10
+    marginBottom: 10,
   },
   headerIcons: {
     flexDirection: 'row',
@@ -122,18 +155,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: "#172B4D",
-    textAlign: "center",
-    width: "100%",
+    color: '#172B4D',
+    textAlign: 'center',
+    width: '100%',
     marginLeft: -80,
-    color: "#172B4D"
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
-    borderRadius: 10,
-    marginVertical: 10,
   },
   section: {
     marginBottom: 20,
@@ -143,6 +168,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#172B4D',
   },
 });
 

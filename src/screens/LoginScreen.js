@@ -67,8 +67,6 @@ const LoginScreen = ({ navigation }) => {
     try {
       await schema.validate(data, { abortEarly: false });
 
-      navigation.navigate("Home");
-
       const response = await requestLogin(data);
 
       if (response.status === 200) {
