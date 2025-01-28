@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-const BASE_URL = "https://qa-backend.myepictrip.app";
+const BASE_URL = "https://homol-api.fertech.dev.br";
 
 export const requestSignUpGuest = async (dados) => {
   try {

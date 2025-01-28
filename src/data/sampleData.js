@@ -16,7 +16,7 @@ export const getSampleData = (t) => {
     {
       id: 3,
       title: t("sampleData.categoryConcierge"),
-      icon: () => < AntDesign name="customerservice" size={24} color= "#0065FF" />
+      icon: () => < AntDesign name="customerservice" size={24} color="#0065FF" />
     },
     {
       id: 4,
@@ -26,7 +26,7 @@ export const getSampleData = (t) => {
     {
       id: 5,
       title: t("sampleData.categoryPlaces"),
-      icon: () => < Entypo name="location" size={24} color= "#0065FF" />
+      icon: () => < Entypo name="location" size={24} color="#0065FF" />
     },
     {
       id: 6,
@@ -41,8 +41,7 @@ export const getSampleData = (t) => {
     {
       id: 8,
       title: "Claim",
-
-      icon: () => < Entypo name="megaphone" size={24} color= "#0065FF" />
+      icon: () => < Entypo name="megaphone" size={24} color="#0065FF" />
     },
   ];
 };
