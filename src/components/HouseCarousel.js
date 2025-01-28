@@ -11,7 +11,7 @@ const HouseCarousel = () => {
             location: "North End",
             rating: 4.5,
             reviews: 342,
-            imageUrl: "https://img.freepik.com/fotos-gratis/arvores-perto-de-casas-brancas_417767-97.jpg?t=st=1731096396~exp=1731099996~hmac=c902541f1047fc7eeb16561d3d9ff1eff339940dad2d787585d219ab88a84909&w=996", 
+            imageUrl: "https://img.freepik.com/fotos-gratis/arvores-perto-de-casas-brancas_417767-97.jpg?t=st=1731096396~exp=1731099996~hmac=c902541f1047fc7eeb16561d3d9ff1eff339940dad2d787585d219ab88a84909&w=996",
         },
         {
             id: 2,
@@ -19,7 +19,7 @@ const HouseCarousel = () => {
             location: "North End",
             rating: 4.5,
             reviews: 342,
-            imageUrl: "https://img.freepik.com/fotos-gratis/arvores-perto-de-casas-brancas_417767-97.jpg?t=st=1731096396~exp=1731099996~hmac=c902541f1047fc7eeb16561d3d9ff1eff339940dad2d787585d219ab88a84909&w=996", 
+            imageUrl: "https://img.freepik.com/fotos-gratis/arvores-perto-de-casas-brancas_417767-97.jpg?t=st=1731096396~exp=1731099996~hmac=c902541f1047fc7eeb16561d3d9ff1eff339940dad2d787585d219ab88a84909&w=996",
         },
     ];
 
@@ -60,7 +60,8 @@ const styles = StyleSheet.create({
         paddingRight: 20,
     },
     card: {
-        width: 200,
+        width: "240pt",
+        height: "256pt",
         marginRight: 15,
         borderRadius: 10,
         backgroundColor: "#F9F9F9",
