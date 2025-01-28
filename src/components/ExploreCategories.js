@@ -81,7 +81,7 @@ const ExploreCategories = () => {
         navigation.navigate('BookingScreen');
         break;
       case "9c0ca801-0fab-4f60-a1a2-37d2c4935fb7":
-        navigation.navigate('ServiceScreen');
+        navigation.navigate('ServiceScreen', { group: '9c0ca801-0fab-4f60-a1a2-37d2c4935fb7' });
         break;
       case 5:
         navigation.navigate('ExperienceScreen');

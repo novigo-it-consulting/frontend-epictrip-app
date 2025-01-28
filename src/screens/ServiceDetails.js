@@ -6,17 +6,36 @@ import CustomBar from '../components/CustomBar';
 import mockData from '../data/mockServiceDetails';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GoBackArrow from '../components/GoBackArrow';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import axios from "axios";
 
-const ConciergeDetails = ({ navigation }) => {
-  const [imageUri, setImageUri] = useState();
+const ConciergeDetails = () => {
+  const route = useRoute();
+  const { serviceId } = route.params || {};
+
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true); // Gerencie o estado de carregamento
+
+  const fetchData = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const url = `https://homol-api.fertech.dev.br/uploads?productId=${serviceId}`;
+      const headers = {
+        Authorization: `Bearer ${token}`
+      };
+      const response = await axios.get(url, { headers });
+      if (response.status === 200) {
+        setData(response.data);
+        setLoading(false); // Atualize o estado de carregamento
+      }
+    } catch (error) {
+      alert(`Erro ao carregar dados: ${error.message}`);
+      setLoading(false); // Mesmo no erro, o carregamento termina
+    }
+  };
 
   useEffect(() => {
-    const fetchImageUri = async () => {
-      const uri = await AsyncStorage.getItem('conciergeUri');
-      setImageUri(uri);
-    };
-
-    fetchImageUri();
+    fetchData();
   }, []);
 
   const { bookingInfo } = mockData;
@@ -28,10 +47,12 @@ const ConciergeDetails = ({ navigation }) => {
         <View style={styles.arrowView}>
           <GoBackArrow colorArrow={'white'} />
         </View>
-        <Image
-          source={{ uri: "https://img.freepik.com/fotos-gratis/um-eletricista-trabalha-em-uma-mesa-telefonica-com-um-cabo-eletrico-de-conexao_169016-16570.jpg" }}
-          style={styles.image}
-        />
+        {!loading && data ? ( // Verifique se os dados estão disponíveis e o carregamento terminou
+          <Image
+            source={{ uri: data.data[0].filePath }}
+            style={styles.image}
+          />
+        ) : null}
       </View>
       <ScrollView style={styles.container}>
         <ProblemInput />
@@ -73,10 +94,10 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   arrowView: {
-    position: 'absolute', // Adiciona a posição absoluta para sobreposição
-    top: 60, // Ajuste conforme necessário para posicionar o arrow
-    left: 20, // Ajuste conforme necessário para posicionar o arrow
-    zIndex: 1, // Certifique-se de que o arrow fica na frente da imagem
+    position: 'absolute',
+    top: 60,
+    left: 20,
+    zIndex: 1,
   }
 });
 
