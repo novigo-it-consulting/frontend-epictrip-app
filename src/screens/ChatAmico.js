@@ -13,6 +13,7 @@ import Amiko from "../services/amiko/amiko.js";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GoBackArrow from "../components/GoBackArrow.js";
+import { requestGetBookingByUser, requestGetHousesByBooking, requestGetUser } from "../services/api";
 
 const ChatScreen = () => {
   const [clientMessage, setClientMessage] = useState();
@@ -21,7 +22,63 @@ const ChatScreen = () => {
   const [chatState, setChatState] = useState('');
   const scrollViewRef = useRef();
 
-  const contextAmiko = "House Details: House Name: Sunset Villa, Type: Single House, Location: 123 Beach Ave, Unit 5, Seaside, Miami, FL, 33101, USA, Coordinates: Latitude 25.7617, Longitude -80.1918, Managed by: Vacation Rentals Inc., Amenities: Pool, BBQ Grill, Garage with Automatic Doors, WiFi, Air Conditioning, Heating, Washing Machine, Dryer, Dishwasher, Cable TV, Smart TV, Shower Type: Walk-in, Maximum Guests: 8, Minimum Age: 21, Smoking Allowed: No, Parties Allowed: No, Pets Allowed: No. Traveler Details: Booking Name: Summer Vacation, Booking Status: Confirmed, Check - In Date: 2024-06 - 15T15:00:00, Check - Out Date: 2024-06 - 22T11:00:00, Traveler Name: Alice Johnson, Email: alice.johnson@example.com, Phone: +1 - 555-0123, Share Number: AB123.";
+  const buildContext = async () => {
+    alert("Chama porra")
+    let contextString = ""
+    let houseDetails = "House Details: House Name: {houseName}, Is condo house: {houseType}, Location: {number} {address}, {neighbourhood}, {City}, {State}, {ZipCode}, {Country}, Maximum Capacity: {maxCapacity}, Pets Allowed: {petsAllowed}, Smoking Allowed: {smokingAllowed}, Parties Allowed: {partiesAllowed}"
+    let amenities = "Amenities: Has Pool: {hasPool}, Has Babercue Grill: {hasBabercueGrill}, Has Central Air Conditioner: {hasCentralAirConditioner}, Has Splitter Air Conditioner: {hasSplitterAirConditioner}, Has Dryer: {hasDryer}, Has Washing Machine: {hasWashingMachine}, Has Wi-fi: {hasWiFi}"
+    let maxCapacity = "Maximum Guests: {maximumCapacity}, Total Rooms: {totalRooms}, Total Bath Rooms: {totalBathRooms}"
+    let travelerDetails = "Traveler Details: Booking Name: {BookingName}, Booking Status: {statusBooking}, Check - In Date: {checkinDate}, Check - Out Date: {checkoutDate}, Traveler Name: {fullName}, Email: {email}, Phone: {phoneNumber}, Share Number: {shareNumber}."
+
+    const bookings = await requestGetBookingByUser(await AsyncStorage.getItem("userId"))
+    for (const bk of bookings) {
+      if (bk.status === 'Active') {
+        const house = await requestGetHousesByBooking(bk.houseId)
+        const user = await requestGetUser(await AsyncStorage.getItem("userId"))
+
+        houseDetails = houseDetails.replace("{houseName}", house.houseName)
+        houseDetails = houseDetails.replace("{houseType}", house.isCondoHouse)
+        houseDetails = houseDetails.replace("{number}", house.number)
+        houseDetails = houseDetails.replace("{address}", house.address)
+        houseDetails = houseDetails.replace("{neighbourhood}", house.neighbourhood)
+        houseDetails = houseDetails.replace("{City}", house.city)
+        houseDetails = houseDetails.replace("{State}", house.state)
+        houseDetails = houseDetails.replace("{ZipCode}", house.zipCode)
+        houseDetails = houseDetails.replace("{Country}", house.country)
+        houseDetails = houseDetails.replace("{maxCapacity}", house.maximumCapacity)
+        houseDetails = houseDetails.replace("{petsAllowed}", house.petsAllowed)
+        houseDetails = houseDetails.replace("{smokingAllowed}", house.smokingAllowed)
+        houseDetails = houseDetails.replace("{partiesAllowed}", house.partiesAllowed)
+
+        amenities = amenities.replace("{hasPool}", house.hasPool)
+        amenities = amenities.replace("{hasBabercueGrill}", house.hasBabercueGrill)
+        amenities = amenities.replace("{hasCentralAirConditioner}", house.hasCentralAirConditioner)
+        amenities = amenities.replace("{hasSplitterAirConditioner}", house.hasSplitterAirConditioner)
+        amenities = amenities.replace("{hasDryer}", house.hasDryer)
+        amenities = amenities.replace("{hasWashingMachine}", house.hasWashingMachine)
+        amenities = amenities.replace("{hasWiFi}", house.hasWifi)
+
+        maxCapacity = maxCapacity.replace("{maximumCapacity}", house.maximumCapacity)
+        maxCapacity = maxCapacity.replace("{totalRooms}", house.totalRooms)
+        maxCapacity = maxCapacity.replace("{totalBathRooms}", house.totalBathRooms)
+
+        travelerDetails = travelerDetails.replace("{BookingName}", bk.bookingName)
+        travelerDetails = travelerDetails.replace("{statusBooking}", bk.status)
+        travelerDetails = travelerDetails.replace("{checkinDate}", bk.checkIn)
+        travelerDetails = travelerDetails.replace("{checkoutDate}", bk.checkOut)
+        travelerDetails = travelerDetails.replace("{fullName}", user.fullName)
+        travelerDetails = travelerDetails.replace("{email}", user.email)
+        travelerDetails = travelerDetails.replace("{phoneNumber}", user.phone)
+        travelerDetails = travelerDetails.replace("{shareNumber}", bk.shareNumber)
+
+        contextString = `${houseDetails}. ${amenities}. ${maxCapacity}. ${travelerDetails}`
+
+        console.log(contextString)
+
+        return contextString
+      }
+    }
+  }
 
   const gerarInteiroAleatorio = () => {
     return Math.floor(Math.random() * 1000) + 1;
@@ -29,8 +86,9 @@ const ChatScreen = () => {
 
   useEffect(() => {
     const initializeAmiko = async () => {
+      const context = await buildContext();
       setClientMessage(await AsyncStorage.getItem("preMessage"));
-      const amiko = new Amiko(`${gerarInteiroAleatorio()}`, contextAmiko);
+      const amiko = new Amiko(`${gerarInteiroAleatorio()}`, context);
 
       amiko.onChatStateReceived = (newChatState) => {
         console.log("Novo estado do chat recebido:", newChatState);

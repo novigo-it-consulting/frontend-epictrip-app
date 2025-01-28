@@ -80,7 +80,7 @@ export const requestGetUser = async (userId) => {
     const response = await axios.get(`${BASE_URL}/users/${userId}`, {
       headers,
     });
-    return response;
+    return response.data.data;
   } catch (error) {
     throw error;
   }
@@ -263,7 +263,7 @@ export const requestGetBookingByUser = async (userId) => {
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
     };
     const response = await axios.get(`${BASE_URL}/bookings/user/${userId}`, { headers })
-    return response
+    return response.data.data
   } catch (error) {
     throw error;
   }
@@ -274,7 +274,7 @@ export const requestGetHousesByBooking = async (houseId) => {
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
     };
     const response = await axios.get(`${BASE_URL}/houses/${houseId}`, { headers })
-    return response
+    return response.data.data
   } catch (error) {
     throw error;
   }
@@ -319,3 +319,16 @@ export const getPlaceById = async (placeId) => {
   }
 }
 
+export const getRentalById = async (rentalId) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+    };
+    const response = await axios.get(`${BASE_URL}/rentals/${rentalId}`, { headers })
+    console.log(response)
+    return response.data.data
+  } catch (error) {
+    console.log('error', error)
+    throw error
+  }
+}
