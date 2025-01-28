@@ -15,63 +15,61 @@ class Amiko {
             },
         });
 
-        this.contextString = contextString; // Inicializa com o contexto, se disponível
+        this.contextString = contextString;
         this.initializeListeners();
+        this.sendContext(contextString);
     }
 
-    initializeListeners() {
-        this.socket.on('EVENT_SET_CONTEXT', (ContextSetterDto) => {
-            const { context } = ContextSetterDto;
+    async initializeListeners() {
 
-            // Atualiza o contexto interno com a string recebida
-            this.contextString = context;
-
-            if (typeof this.onContextReceived === 'function') {
-                this.onContextReceived(context); // Invoca o callback com a string do contexto
-            }
-        });
-
-        this.socket.on('EVENT_SERVER_SEND_MESSAGE', (ServerMessageDto) => {
+        await this.socket.on('EVENT_SERVER_SEND_MESSAGE', (ServerMessageDto) => {
             if (typeof this.onMessageReceived === 'function') {
                 this.onMessageReceived(ServerMessageDto);
             }
         });
 
-        this.socket.on('EVENT_SERVER_INIT_MESSAGE_LIST', (messages) => {
+        await this.socket.on('EVENT_SERVER_INIT_MESSAGE_LIST', (messages) => {
             if (typeof this.onInitMessageList === 'function') {
                 this.onInitMessageList(messages);
             }
         });
 
-        this.socket.on('EVENT_SERVER_SEND_CHAT_STATE', (chatState) => {
+        await this.socket.on('EVENT_SERVER_SEND_CHAT_STATE', (chatState) => {
             if (typeof this.onChatStateReceived === 'function') {
                 this.onChatStateReceived(chatState);
             }
         });
 
-        this.socket.on('EVENT_SERVER_SEND_MESSAGE_STATUS', (status) => {
+        await this.socket.on('EVENT_SERVER_SEND_MESSAGE_STATUS', (status) => {
             if (typeof this.onMessageStatusUpdated === 'function') {
                 this.onMessageStatusUpdated(status);
             }
         });
 
-        this.socket.on('EVENT_SERVER_SEND_USER_DATA', (userData) => {
+        await this.socket.on('EVENT_SERVER_SEND_USER_DATA', (userData) => {
             if (typeof this.onUserDataReceived === 'function') {
                 this.onUserDataReceived(userData);
             }
         });
 
-        this.socket.on('EVENT_INIT_ROOM', (roomId) => {
+        await this.socket.on('EVENT_INIT_ROOM', (roomId) => {
             if (typeof this.onRoomInit === 'function') {
                 this.onRoomInit(roomId);
             }
         });
 
-        this.socket.on('EVENT_ERROR', (error) => {
+        await this.socket.on('EVENT_ERROR', (error) => {
             if (typeof this.onError === 'function') {
                 this.onError(error);
             }
         });
+
+    }
+
+    sendContext(context) {
+        setTimeout(() => {
+            this.socket.emit('EVENT_SET_CONTEXT', { context: context });
+        }, 1700);
     }
 
     sendMessage(content, callback) {
@@ -83,10 +81,6 @@ class Amiko {
         });
     }
 
-    // Método para obter o contexto atual
-    getContext() {
-        return this.contextString || 'No context available';
-    }
 }
 
 export default Amiko;
