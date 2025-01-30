@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -6,17 +6,23 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const ProblemInput = () => {
+const ProblemInput = ({ productData }) => {
+
   const { t } = useTranslation();
   const [problem, setProblem] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [data, setData] = useState()
 
   const navigation = useNavigation();
 
   const navigateChat = async () => {
     await AsyncStorage.setItem("preMessage", problem);
-    navigation.navigate("ChatAmico")
+    navigation.navigate("ChatAmico", { productData: productData })
   }
+
+  useEffect(() => {
+    setData(productData);
+  }, [productData]);
 
   return (
     <View style={styles.container}>

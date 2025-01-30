@@ -4,12 +4,16 @@ import ProblemInput from '../components/ProblemInput';
 import BookingInfo from '../components/BookingInfo';
 import CustomBar from '../components/CustomBar';
 import mockData from '../data/mockServiceDetails';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const ConciergeDetails = ({ navigation }) => {
   const { bookingInfo } = mockData;
 
+  const route = useRoute();
+  const { data } = route.params || {};
+  const { clickedImage } = route.params || {};
+
   const goToChat = (screen) => {
-    console.log("CHAMAAA")
     navigation.navigate(screen);
   }
 
@@ -18,12 +22,12 @@ const ConciergeDetails = ({ navigation }) => {
       <StatusBar barStyle={"light-content"} />
       <View style={styles.imageContainer}>
         <Image
-          source={{ uri: "https://img.freepik.com/free-photo/concierge-assists-with-checkin-hotel_482257-90464.jpg?t=st=1730936507~exp=1730940107~hmac=ce7beabe60ff090357534141f33e0c83537b0020832680ccc86df3aef4e9124c&w=1380" }}
+          source={{ uri: clickedImage }}
           style={styles.image}
         />
       </View>
       <ScrollView style={styles.container}>
-        <ProblemInput />
+        <ProblemInput productData={data} />
         <BookingInfo bookingInfo={bookingInfo} />
       </ScrollView>
       <CustomBar />

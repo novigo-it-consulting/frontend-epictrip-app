@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { requestGetUser } from "../services/api";
 import { useNavigation } from "@react-navigation/native";
-import Feather from "react-native-vector-icons/Feather";
-import { Badge } from "react-native-paper";
 import Entypo from '@expo/vector-icons/Entypo';
 import SearchBarHome from "./SearchViewHome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SkeletonLoading from "expo-skeleton-loading";
 import { useTranslation } from "react-i18next";
+import { Badge } from "react-native-paper";
 
 export default function ProfileAccount() {
   const [profilePhoto, setProfilePhoto] = useState(null);
@@ -33,24 +32,17 @@ export default function ProfileAccount() {
         const { fullName, profilePic } = response.data.data;
         setProfileName(fullName);
         setProfilePhoto(profilePic);
-        setLoading(false);
-        setImageLoading(false);
-      } else {
-        console.error("Failed to fetch user profile:", response.status);
-        setLoading(false);
-        setImageLoading(false);
       }
     } catch (error) {
       console.error("An error occurred while fetching user profile:", error);
+    } finally {
       setLoading(false);
       setImageLoading(false);
     }
   };
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      getUserToProfile();
-    });
+    const unsubscribe = navigation.addListener("focus", getUserToProfile);
     return unsubscribe;
   }, [navigation]);
 
@@ -63,52 +55,19 @@ export default function ProfileAccount() {
   const handleImageLoadEnd = () => {
     setTimeout(() => {
       setImageLoading(false);
-    }, 5000); // 3 segundos de delay
+    }, 5000);
   };
 
   if (loading || imageLoading) {
     return (
       <SkeletonLoading background={"#adadad"} highlight={"#ffffff"}>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            padding: 20,
-          }}
-        >
-          <View
-            style={{
-              width: 48,
-              height: 48,
-              borderRadius: 24,
-              backgroundColor: "#adadad",
-            }}
-          />
+        <View style={{ flexDirection: "row", justifyContent: "space-between", padding: 20 }}>
+          <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: "#adadad" }} />
           <View style={{ flex: 1, marginLeft: 12 }}>
-            <View
-              style={{
-                backgroundColor: "#adadad",
-                height: 16,
-                marginBottom: 6,
-                borderRadius: 8,
-              }}
-            />
-            <View
-              style={{
-                backgroundColor: "#adadad",
-                height: 16,
-                borderRadius: 8,
-              }}
-            />
+            <View style={{ backgroundColor: "#adadad", height: 16, marginBottom: 6, borderRadius: 8 }} />
+            <View style={{ backgroundColor: "#adadad", height: 16, borderRadius: 8 }} />
           </View>
-          <View
-            style={{
-              width: 50,
-              height: 50,
-              borderRadius: 25,
-              backgroundColor: "#adadad",
-            }}
-          />
+          <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: "#adadad" }} />
         </View>
       </SkeletonLoading>
     );
@@ -117,51 +76,20 @@ export default function ProfileAccount() {
   return (
     <View style={stylesProfile.container}>
       <View style={stylesProfile.boxProfile}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignContent: "center",
-            flexDirection: "row",
-            marginBottom: 30,
-          }}
-        >
+        <View style={{ flex: 1, justifyContent: "center", flexDirection: "row", marginBottom: 30 }}>
           <Image
-            source={
-              profilePhoto
-                ? { uri: profilePhoto }
-                : require("../../assets/profile/1.png")
-            }
+            source={profilePhoto ? { uri: profilePhoto } : require("../../assets/profile/1.png")}
             style={{ width: 48, height: 48, borderRadius: 24 }}
             onLoadEnd={handleImageLoadEnd}
           />
           <View style={stylesProfile.titleName}>
-            <Text style={{ fontSize: 12, textAlign: "left", color: "#364764" }}>
-              {t("profileAccount.welcome")}
-            </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                textAlign: "left",
-                color: "#172B4D",
-                fontWeight: "bold",
-              }}
-            >
-              {profileName}
-            </Text>
+            <Text style={{ fontSize: 12, textAlign: "left", color: "#364764" }}>{t("profileAccount.welcome")}</Text>
+            <Text style={{ fontSize: 16, textAlign: "left", color: "#172B4D", fontWeight: "bold" }}>{profileName}</Text>
           </View>
-          <TouchableOpacity
-            style={stylesProfile.boxNotification}
-            onPress={() => navigation.navigate('ChatAmico')} // Navegar para a tela do chat
-          >
+          <TouchableOpacity style={stylesProfile.boxNotification} onPress={() => navigation.navigate('ChatAmico')}>
             <View style={stylesProfile.boxColor}>
               <Entypo name="bell" size={24} color="#172B4D" />
-              <Badge
-                style={{ position: "absolute", top: 5, right: 5 }}
-                size={15}
-              >
-                3
-              </Badge>
+              <Badge style={{ position: "absolute", top: 5, right: 5 }} size={15}>3</Badge>
             </View>
           </TouchableOpacity>
         </View>
@@ -184,7 +112,7 @@ const stylesProfile = StyleSheet.create({
   boxProfile: {
     width: "100%",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   boxNotification: {
     height: 48,
@@ -203,7 +131,6 @@ const stylesProfile = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
-
   titleName: {
     marginLeft: 12,
   },

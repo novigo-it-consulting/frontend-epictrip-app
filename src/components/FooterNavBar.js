@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather'; // Alteramos para Feather Icons
+import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 
 const FooterNavBar = ({ onPress }) => {
@@ -15,8 +15,8 @@ const FooterNavBar = ({ onPress }) => {
     ];
 
     const handleOnPress = (route) => {
-        navigation.navigate(route)
-    }
+        navigation.navigate(route);
+    };
 
     return (
         <View style={styles.container}>
@@ -44,16 +44,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         borderTopWidth: 3,
         borderTopColor: '#172B4D14',
-        // Adicionando sombra
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: -5 }, // Sombra na parte de cima
-        shadowOpacity: 0.1,
-        shadowRadius: 10,
-        elevation: 4, // Para Android
-        // Bordas arredondadas
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
-        // Garante que o conteúdo siga as bordas arredondadas
     },
     button: {
         alignItems: 'center',

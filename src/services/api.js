@@ -332,3 +332,34 @@ export const getRentalById = async (rentalId) => {
     throw error
   }
 }
+
+export const getProductsByGroup = async (groupId) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const urlProducts = `https://homol-api.fertech.dev.br/products/groups/${groupId}`;
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    const response = await axios.get(urlProducts, { headers });
+    return response.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
+export const getUploadByProduct = async (productId) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    const urlUploads = `https://homol-api.fertech.dev.br/uploads?productId=${productId}`;
+    const response = await axios.get(urlUploads, { headers });
+    console.log(response.data.data)
+    return response.data.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}

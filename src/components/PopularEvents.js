@@ -3,10 +3,9 @@ import React from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { Card, Title, Paragraph } from "react-native-paper";
 import Carousel from "react-native-reanimated-carousel";
-import AnimatedDotsCarousel from "react-native-animated-dots-carousel"; // Importe o componente de dots
+import AnimatedDotsCarousel from "react-native-animated-dots-carousel";
 import colors from "../colors";
 import { useTranslation } from "react-i18next";
-
 
 const PopularEvents = () => {
   const width = Dimensions.get("window").width;
@@ -23,22 +22,9 @@ const PopularEvents = () => {
       description: "1525 Sugargrove, Orlando",
       image: require("../../assets/Categories/foto-1.png"),
     },
-    {
-      title: "Orlando city vs New York City",
-      description: "W Church St, Orlando",
-      image: require("../../assets/Categories/8.png"),
-    },
-    {
-      title: t("popularEvents.titleCup"),
-      description: "Mercedes-Benz Stadium, Atlanta",
-      image: require("../../assets/Categories/7.png"),
-    }
-    
-    // Adicione mais itens conforme necessário
   ];
-  
-  const [index, setIndex] = useState(0);
 
+  const [index, setIndex] = useState(0);
 
   return (
     <View style={styles.container}>
@@ -57,49 +43,23 @@ const PopularEvents = () => {
             <Card.Cover source={item.image} style={styles.image} />
             <Card.Content>
               <Title style={styles.title}>{item.title}</Title>
-              <Paragraph style={styles.description}>
-                {item.description}
-              </Paragraph>
+              <Paragraph style={styles.description}>{item.description}</Paragraph>
             </Card.Content>
           </Card>
         )}
         onSnapToItem={(index) => setIndex(index)}
       />
-      <View
-        style={{
-          marginTop: -30,
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-        }}
-      >
+      <View style={{ marginTop: -30, flex: 1, justifyContent: "center", alignItems: "center", width: "100%" }}>
         <AnimatedDotsCarousel
           length={data.length}
           currentIndex={index}
           maxIndicators={4}
           interpolateOpacityAndColor={true}
-          activeIndicatorConfig={{
-            color: colors.primary,
-            margin: 3,
-            opacity: 1,
-            size: 6,
-          }}
-          inactiveIndicatorConfig={{
-            color: "grey",
-            margin: 3,
-            opacity: 0.2,
-            size: 6,
-          }}
+          activeIndicatorConfig={{ color: colors.primary, margin: 3, opacity: 1, size: 6 }}
+          inactiveIndicatorConfig={{ color: "grey", margin: 3, opacity: 0.2, size: 6 }}
           decreasingDots={[
-            {
-              config: { color: "white", margin: 3, opacity: 0.5, size: 6 },
-              quantity: 1,
-            },
-            {
-              config: { color: "white", margin: 3, opacity: 0.5, size: 4 },
-              quantity: 1,
-            },
+            { config: { color: "white", margin: 3, opacity: 0.5, size: 6 }, quantity: 1 },
+            { config: { color: "white", margin: 3, opacity: 0.5, size: 4 }, quantity: 1 },
           ]}
         />
       </View>
@@ -110,7 +70,7 @@ const PopularEvents = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "columm",
+    flexDirection: "column",
     alignItems: "flex-start",
     justifyContent: "space-between",
     width: "85%",
@@ -126,14 +86,6 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
     borderRadius: 24,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 2,
-      height: 3,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 10,
     width: "85%",
   },
   image: {
@@ -142,12 +94,10 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 24,
   },
   title: {
-    fontSize: 16,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "#172B4D",
-    textAlign: "left",
     fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "left",
+    color: "#172B4D",
   },
   description: {
     textAlign: "left",

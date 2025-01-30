@@ -16,11 +16,12 @@ const ServicesScreen = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // Estado de carregamento
+  const [productData, setProductData] = useState()
 
   const { t } = useTranslation();
 
   const handleServicePress = (serviceId) => {
-    navigation.navigate('ServiceDetails', { serviceId });
+    navigation.navigate('ServiceDetails', { serviceId: serviceId, productData: productData });
   };
 
   const fetchCategories = async () => {
@@ -40,6 +41,7 @@ const ServicesScreen = () => {
 
   const fetchProducts = async () => {
     try {
+      const objsToSendAmiko = [];
       const token = await AsyncStorage.getItem('token');
       const urlProducts = `https://homol-api.fertech.dev.br/products/groups/${group}`;
       const headers = {
@@ -49,20 +51,28 @@ const ServicesScreen = () => {
       const products = response.data;
 
       const prds = [];
-      for (const prd of products) {
-        const urlUploads = `https://homol-api.fertech.dev.br/uploads?productId=${prd.id}`;
+      for (const product of products) {
+        const urlUploads = `https://homol-api.fertech.dev.br/uploads?productId=${product.id}`;
         const responseUpload = await axios.get(urlUploads, { headers });
 
         if (responseUpload.status === 200) {
           const upload = responseUpload.data;
+          const obj = {
+            productData: {
+              product
+            },
+            imageUrl: upload[0]?.filePath // Evita erro caso `filePath` não exista
+          };
+          objsToSendAmiko.push(obj)
           prds.push({
-            id: prd.id,
-            name: prd.name,
-            category: prd.category,
+            id: product.id,
+            name: product.name,
+            category: product.category,
             upload,
           });
         }
       }
+      setProductData(objsToSendAmiko)
       return prds;
     } catch (error) {
       console.error('Erro ao buscar produtos:', error);

@@ -14,8 +14,12 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GoBackArrow from "../components/GoBackArrow.js";
 import { requestGetBookingByUser, requestGetHousesByBooking, requestGetUser } from "../services/api";
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const ChatScreen = () => {
+  const route = useRoute();
+  const { productData } = route.params || {};
+
   const [clientMessage, setClientMessage] = useState();
   const [messages, setMessages] = useState([]);
   const [amikoInstance, setAmikoInstance] = useState(null);
@@ -23,60 +27,81 @@ const ChatScreen = () => {
   const scrollViewRef = useRef();
 
   const buildContext = async () => {
-    alert("Chama porra")
-    let contextString = ""
-    let houseDetails = "House Details: House Name: {houseName}, Is condo house: {houseType}, Location: {number} {address}, {neighbourhood}, {City}, {State}, {ZipCode}, {Country}, Maximum Capacity: {maxCapacity}, Pets Allowed: {petsAllowed}, Smoking Allowed: {smokingAllowed}, Parties Allowed: {partiesAllowed}"
-    let amenities = "Amenities: Has Pool: {hasPool}, Has Babercue Grill: {hasBabercueGrill}, Has Central Air Conditioner: {hasCentralAirConditioner}, Has Splitter Air Conditioner: {hasSplitterAirConditioner}, Has Dryer: {hasDryer}, Has Washing Machine: {hasWashingMachine}, Has Wi-fi: {hasWiFi}"
-    let maxCapacity = "Maximum Guests: {maximumCapacity}, Total Rooms: {totalRooms}, Total Bath Rooms: {totalBathRooms}"
-    let travelerDetails = "Traveler Details: Booking Name: {BookingName}, Booking Status: {statusBooking}, Check - In Date: {checkinDate}, Check - Out Date: {checkoutDate}, Traveler Name: {fullName}, Email: {email}, Phone: {phoneNumber}, Share Number: {shareNumber}."
+    try {
+      let contextString = ""
+      let houseDetails = "House Details: House Name: {houseName}, Is condo house: {houseType}, Location: {number} {address}, {neighbourhood}, {City}, {State}, {ZipCode}, {Country}, Maximum Capacity: {maxCapacity}, Pets Allowed: {petsAllowed}, Smoking Allowed: {smokingAllowed}, Parties Allowed: {partiesAllowed}"
+      let amenities = "Amenities: Has Pool: {hasPool}, Has Babercue Grill: {hasBabercueGrill}, Has Central Air Conditioner: {hasCentralAirConditioner}, Has Splitter Air Conditioner: {hasSplitterAirConditioner}, Has Dryer: {hasDryer}, Has Washing Machine: {hasWashingMachine}, Has Wi-fi: {hasWiFi}"
+      let maxCapacity = "Maximum Guests: {maximumCapacity}, Total Rooms: {totalRooms}, Total Bath Rooms: {totalBathRooms}"
+      let travelerDetails = "Traveler Details: Booking Name: {BookingName}, Booking Status: {statusBooking}, Check - In Date: {checkinDate}, Check - Out Date: {checkoutDate}, Traveler Name: {fullName}, Email: {email}, Phone: {phoneNumber}, Share Number: {shareNumber}."
+      let offer = "The following is a offer: The product name {productName}. {description}. the severity is {severity}\n\n"
 
-    const bookings = await requestGetBookingByUser(await AsyncStorage.getItem("userId"))
-    for (const bk of bookings) {
-      if (bk.status === 'Active') {
-        const house = await requestGetHousesByBooking(bk.houseId)
-        const user = await requestGetUser(await AsyncStorage.getItem("userId"))
+      const bookings = await requestGetBookingByUser(await AsyncStorage.getItem("userId"))
+      for (const bk of bookings) {
+        if (bk.status === 'Active') {
+          const house = await requestGetHousesByBooking(bk.houseId)
+          const user = await requestGetUser(await AsyncStorage.getItem("userId"))
 
-        houseDetails = houseDetails.replace("{houseName}", house.houseName)
-        houseDetails = houseDetails.replace("{houseType}", house.isCondoHouse)
-        houseDetails = houseDetails.replace("{number}", house.number)
-        houseDetails = houseDetails.replace("{address}", house.address)
-        houseDetails = houseDetails.replace("{neighbourhood}", house.neighbourhood)
-        houseDetails = houseDetails.replace("{City}", house.city)
-        houseDetails = houseDetails.replace("{State}", house.state)
-        houseDetails = houseDetails.replace("{ZipCode}", house.zipCode)
-        houseDetails = houseDetails.replace("{Country}", house.country)
-        houseDetails = houseDetails.replace("{maxCapacity}", house.maximumCapacity)
-        houseDetails = houseDetails.replace("{petsAllowed}", house.petsAllowed)
-        houseDetails = houseDetails.replace("{smokingAllowed}", house.smokingAllowed)
-        houseDetails = houseDetails.replace("{partiesAllowed}", house.partiesAllowed)
+          houseDetails = houseDetails.replace("{houseName}", house.houseName)
+          houseDetails = houseDetails.replace("{houseType}", house.isCondoHouse)
+          houseDetails = houseDetails.replace("{number}", house.number)
+          houseDetails = houseDetails.replace("{address}", house.address)
+          houseDetails = houseDetails.replace("{neighbourhood}", house.neighbourhood)
+          houseDetails = houseDetails.replace("{City}", house.city)
+          houseDetails = houseDetails.replace("{State}", house.state)
+          houseDetails = houseDetails.replace("{ZipCode}", house.zipCode)
+          houseDetails = houseDetails.replace("{Country}", house.country)
+          houseDetails = houseDetails.replace("{maxCapacity}", house.maximumCapacity)
+          houseDetails = houseDetails.replace("{petsAllowed}", house.petsAllowed)
+          houseDetails = houseDetails.replace("{smokingAllowed}", house.smokingAllowed)
+          houseDetails = houseDetails.replace("{partiesAllowed}", house.partiesAllowed)
 
-        amenities = amenities.replace("{hasPool}", house.hasPool)
-        amenities = amenities.replace("{hasBabercueGrill}", house.hasBabercueGrill)
-        amenities = amenities.replace("{hasCentralAirConditioner}", house.hasCentralAirConditioner)
-        amenities = amenities.replace("{hasSplitterAirConditioner}", house.hasSplitterAirConditioner)
-        amenities = amenities.replace("{hasDryer}", house.hasDryer)
-        amenities = amenities.replace("{hasWashingMachine}", house.hasWashingMachine)
-        amenities = amenities.replace("{hasWiFi}", house.hasWifi)
+          amenities = amenities.replace("{hasPool}", house.hasPool)
+          amenities = amenities.replace("{hasBabercueGrill}", house.hasBabercueGrill)
+          amenities = amenities.replace("{hasCentralAirConditioner}", house.hasCentralAirConditioner)
+          amenities = amenities.replace("{hasSplitterAirConditioner}", house.hasSplitterAirConditioner)
+          amenities = amenities.replace("{hasDryer}", house.hasDryer)
+          amenities = amenities.replace("{hasWashingMachine}", house.hasWashingMachine)
+          amenities = amenities.replace("{hasWiFi}", house.hasWifi)
 
-        maxCapacity = maxCapacity.replace("{maximumCapacity}", house.maximumCapacity)
-        maxCapacity = maxCapacity.replace("{totalRooms}", house.totalRooms)
-        maxCapacity = maxCapacity.replace("{totalBathRooms}", house.totalBathRooms)
+          maxCapacity = maxCapacity.replace("{maximumCapacity}", house.maximumCapacity)
+          maxCapacity = maxCapacity.replace("{totalRooms}", house.totalRooms)
+          maxCapacity = maxCapacity.replace("{totalBathRooms}", house.totalBathRooms)
 
-        travelerDetails = travelerDetails.replace("{BookingName}", bk.bookingName)
-        travelerDetails = travelerDetails.replace("{statusBooking}", bk.status)
-        travelerDetails = travelerDetails.replace("{checkinDate}", bk.checkIn)
-        travelerDetails = travelerDetails.replace("{checkoutDate}", bk.checkOut)
-        travelerDetails = travelerDetails.replace("{fullName}", user.fullName)
-        travelerDetails = travelerDetails.replace("{email}", user.email)
-        travelerDetails = travelerDetails.replace("{phoneNumber}", user.phone)
-        travelerDetails = travelerDetails.replace("{shareNumber}", bk.shareNumber)
+          travelerDetails = travelerDetails.replace("{BookingName}", bk.bookingName)
+          travelerDetails = travelerDetails.replace("{statusBooking}", bk.status)
+          travelerDetails = travelerDetails.replace("{checkinDate}", bk.checkIn)
+          travelerDetails = travelerDetails.replace("{checkoutDate}", bk.checkOut)
+          travelerDetails = travelerDetails.replace("{fullName}", user.fullName)
+          travelerDetails = travelerDetails.replace("{email}", user.email)
+          travelerDetails = travelerDetails.replace("{phoneNumber}", user.phone)
+          travelerDetails = travelerDetails.replace("{shareNumber}", bk.shareNumber)
 
-        contextString = `${houseDetails}. ${amenities}. ${maxCapacity}. ${travelerDetails}`
+          let offers = ""; // Nova variável para acumular as ofertas
 
-        console.log(contextString)
+          for (const prd of productData) {
+            // Verifica se prd possui a estrutura esperada
+            const name = prd.productData?.product?.name ?? "Nome não disponível";
+            const description = prd.productData?.product?.description ?? "Descrição não disponível";
+            const severity = prd.productData?.product?.severity ?? "Severidade não disponível";
 
-        return contextString
+            // Realiza as substituições na string offer
+            let offerPrd = offer.replace("{productName}", name)
+              .replace("{description}", description)
+              .replace("{severity}", severity);
+
+            // Acumula o resultado em offers
+            offers += offerPrd;
+          }
+
+          contextString = `${houseDetails}. ${amenities}. ${maxCapacity}. ${travelerDetails}. ${offers}`
+
+          console.log(contextString)
+
+          return contextString
+        }
       }
+    } catch (error) {
+      alert(error)
     }
   }
 

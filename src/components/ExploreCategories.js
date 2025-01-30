@@ -34,7 +34,7 @@ const ExploreCategories = () => {
             title: group.name,
             icon: () => (
               <Image
-                source={{ uri: iconData.data[0].filePath }} // Substitua "responseIcon.data.url" pelo campo correto retornado pela API
+                source={{ uri: iconData.data[0].filePath }}
                 style={{ width: 32, height: 32 }}
                 resizeMode="contain"
               />
@@ -47,7 +47,7 @@ const ExploreCategories = () => {
       }
     }
 
-    setData(assembled); // Atualizando o estado com os dados montados
+    setData(assembled);
   };
 
   useEffect(() => {
@@ -81,13 +81,13 @@ const ExploreCategories = () => {
         navigation.navigate('BookingScreen');
         break;
       case "9c0ca801-0fab-4f60-a1a2-37d2c4935fb7":
-        navigation.navigate('ServiceScreen', { group: '9c0ca801-0fab-4f60-a1a2-37d2c4935fb7' });
+        navigation.navigate('ServiceScreen', { group: id });
         break;
       case 5:
         navigation.navigate('ExperienceScreen');
         break;
-      case 3:
-        navigation.navigate('ConciergeList');
+      case "b5621786-3c52-44fc-9dac-f4ebbca3915d":
+        navigation.navigate('ConciergeList', { group: id });
         break;
       case 8:
         await AsyncStorage.setItem("preMessage", "");
@@ -132,7 +132,7 @@ const ExploreCategories = () => {
             dataLength={data.length}
             title={item.title}
             id={item.id}
-            onPress={handlePress}
+            onPress={() => handlePress(item.id)}
           />
         )}
       />
