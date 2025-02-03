@@ -6,24 +6,27 @@ import {
     StyleSheet,
     View,
     TouchableOpacity,
-    ActivityIndicator
+    ActivityIndicator,
+    ScrollView // Usei o ScrollView do react-native
 } from "react-native";
 import colors from "../colors";
 import SearchBarHome from '../components/SearchViewHome';
 import GoBackArrow from '../components/GoBackArrow';
 import CardServicesCategoriesInside from '../components/CardServicesCategoriesInside';
-import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { getProductsByGroup, getUploadByProduct } from '../services/api';
+import { getProductsByGroup, getUploadByProduct, getCategoryByGroup, getUploadByCategory } from '../services/api';
+import ExploreCategoriesProducts from '../components/ExploreCategoriesProducts';
 
-const ConciergeList = () => {
+const OffersList = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const { group } = route.params || {};
+    const { groupData } = route.params || {};
 
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [categories, setCategories] = useState([]);
 
     const getProducts = async () => {
         try {
@@ -37,7 +40,6 @@ const ConciergeList = () => {
                         product: product,
                         upload: upload[0] // Evita erro caso `filePath` não exista
                     };
-                    console.log(obj)
                     prds.push(obj);
                 } catch (error) {
                     console.warn(`Erro ao obter imagem para o produto ${product.id}:`, error);
@@ -50,11 +52,38 @@ const ConciergeList = () => {
         }
     };
 
+    const getCategoriesData = async () => {
+        try {
+            let cats = [];
+            const categories = await getCategoryByGroup(group);
+            for (const cat of categories) {
+                try {
+                    const upload = await getUploadByCategory(cat.categoryId);
+                    const obj = {
+                        categoryData: {
+                            cat // Mantive a estrutura original
+                        },
+                        uri: upload[0]?.filePath
+                    };
+                    cats.push(obj);
+                } catch (error) {
+                    console.warn("Erro ao obter conteúdo:", error);
+                }
+            }
+            return cats;
+        } catch (error) {
+            console.error('Erro ao buscar categorias:', error);
+            return [];
+        }
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-                const products = await getProducts(); // Agora `getProducts()` retorna os produtos corretamente
+                const categories = await getCategoriesData();
+                setCategories(categories);
+                const products = await getProducts();
                 setData(products);
             } catch (error) {
                 console.error('Erro ao buscar dados iniciais:', error);
@@ -81,22 +110,22 @@ const ConciergeList = () => {
     return (
         <PaperProvider theme={theme}>
             <SafeAreaView style={styles.safeArea}>
-                <View style={styles.textContainerTitle}>
+                <View style={styles.headerContainer}>
                     <GoBackArrow />
-                    <Text style={styles.titleText}>Concierge</Text>
+                    <Text style={styles.titleText}>{groupData?.title || "Categoria"}</Text>
                 </View>
-                <View style={styles.centeredViews}>
+                <View style={styles.searchContainer}>
                     <SearchBarHome widthDesired={"90%"} />
                 </View>
-                <View style={styles.centeredViews}>
-                    <View style={styles.textContainer}>
-                        <Text style={styles.categoryText}>Categories</Text>
+                <ScrollView style={styles.scrollView}>
+                    <View style={styles.sectionContainer}>
+                        <Text style={styles.sectionTitle}>Categorias</Text>
+                        <ExploreCategoriesProducts data={categories} />
                     </View>
-                </View>
-                <View style={styles.containerCategoryCards}>
-                    <ScrollView horizontal style={styles.scrollView}>
-                        {data.length > 0 ? (
-                            data.map((prd) => (
+                    <View style={[styles.sectionContainer, { paddingTop: 8 }]}>
+                        <Text style={styles.sectionTitle}>Recomendados</Text>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                            {data.map((prd) => (
                                 <TouchableOpacity key={prd.product.id} onPress={() => handlePressCard(prd.upload.filePath, prd)}>
                                     <CardServicesCategoriesInside
                                         title={prd.product.name}
@@ -104,12 +133,10 @@ const ConciergeList = () => {
                                         description={prd.product.description}
                                     />
                                 </TouchableOpacity>
-                            ))
-                        ) : (
-                            <Text style={{ padding: 20, color: "#172B4D" }}>Nenhum item encontrado</Text>
-                        )}
-                    </ScrollView>
-                </View>
+                            ))}
+                        </ScrollView>
+                    </View>
+                </ScrollView>
             </SafeAreaView>
         </PaperProvider>
     );
@@ -128,44 +155,34 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: colors.backGroundLight,
     },
-    scrollView: {
-        flexGrow: 1,
-        alignSelf: 'stretch',
-        backgroundColor: colors.backGroundLight
-    },
-    centeredViews: {
-        alignItems: 'center',
-        width: '100%',
-    },
-    textContainer: {
-        alignItems: 'flex-start',
-        width: '100%',
-        padding: '7%',
-        paddingTop: '10%',
-    },
-    textContainerTitle: {
+    headerContainer: {
         flexDirection: 'row',
-        alignItems: 'flex-start',
-        width: '67%',
-        padding: '7%',
-        color: '#172B4D',
-        justifyContent: 'space-between',
-    },
-    categoryText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#172B4D'
+        alignItems: 'center',
+        padding: 16,
+        backgroundColor: colors.backGroundLight,
     },
     titleText: {
-        fontSize: 32,
+        fontSize: 24,
         fontWeight: 'bold',
-        color: '#172B4D'
+        color: '#172B4D',
+        marginLeft: 16,
     },
-    containerCategoryCards: {
-        alignItems: 'flex-start',
-        padding: '7%',
-        paddingTop: '1%',
-        flexDirection: 'row',
+    searchContainer: {
+        alignItems: 'center',
+        padding: 16,
+    },
+    scrollView: {
+        flex: 1,
+    },
+    sectionContainer: {
+        paddingHorizontal: 16,
+        paddingBottom: 8,
+    },
+    sectionTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#172B4D',
+        marginBottom: 8,
     },
     loadingContainer: {
         flex: 1,
@@ -180,4 +197,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ConciergeList;
+export default OffersList;

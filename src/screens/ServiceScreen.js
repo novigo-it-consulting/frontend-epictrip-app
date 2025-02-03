@@ -20,8 +20,8 @@ const ServicesScreen = () => {
 
   const { t } = useTranslation();
 
-  const handleServicePress = (serviceId) => {
-    navigation.navigate('ServiceDetails', { serviceId: serviceId, productData: productData });
+  const handleServicePress = (serviceId, prd) => {
+    navigation.navigate('ServiceDetails', { serviceId: serviceId, productData: productData, clickedProduct: prd });
   };
 
   const fetchCategories = async () => {
@@ -58,17 +58,13 @@ const ServicesScreen = () => {
         if (responseUpload.status === 200) {
           const upload = responseUpload.data;
           const obj = {
-            productData: {
-              product
-            },
-            imageUrl: upload[0]?.filePath // Evita erro caso `filePath` não exista
+            product: product,
+            upload: upload.data[0] // Evita erro caso `filePath` não exista
           };
           objsToSendAmiko.push(obj)
           prds.push({
-            id: product.id,
-            name: product.name,
-            category: product.category,
-            upload,
+            product: product,
+            upload: upload.data[0]
           });
         }
       }
@@ -92,6 +88,7 @@ const ServicesScreen = () => {
       } catch (error) {
         console.error('Erro ao buscar dados iniciais:', error);
       } finally {
+        console.log(products)
         setIsLoading(false); // Finaliza o carregamento
       }
     };
@@ -119,29 +116,31 @@ const ServicesScreen = () => {
         </View>
         <SearchBarHome />
         <ScrollView>
-          {categories.map((cat) => (
-            <View key={cat.categoryId} style={styles.section}>
-              <Text style={styles.sectionTitle}>{cat.categoryName}</Text>
-              <ScrollView horizontal>
-                {products
-                  .filter((prd) => prd.category === cat.categoryId) // Certifique-se que os campos são correspondentes
-                  .map((prd) => (
-                    <TouchableOpacity
-                      key={prd.id}
-                      onPress={() => handleServicePress(prd.id)}
-                    >
-                      <CardService
-                        title={prd.name}
-                        image={
-                          prd.upload?.data?.[0]?.filePath || // Use optional chaining para evitar erros
-                          'https://img.freepik.com/fotos-premium/praia-da-ilha-de-cantor-em-palm-beach-florida-us_79295-5856.jpg?w=996'
-                        }
-                      />
-                    </TouchableOpacity>
-                  ))}
-              </ScrollView>
-            </View>
-          ))}
+          {categories
+            .filter((cat) => cat.groupId == '9c0ca801-0fab-4f60-a1a2-37d2c4935fb7')
+            .map((cat) => (
+              <View key={cat.categoryId} style={styles.section}>
+                <Text style={styles.sectionTitle}>{cat.categoryName}</Text>
+                <ScrollView horizontal>
+                  {products
+                    .filter((prd) => prd.product.category === cat.categoryId) // Certifique-se que os campos são correspondentes
+                    .map((prd) => (
+                      <TouchableOpacity
+                        key={prd.product.id}
+                        onPress={() => handleServicePress(prd.product.id, prd)}
+                      >
+                        <CardService
+                          title={prd.product.name}
+                          image={
+                            prd.upload?.filePath || // Use optional chaining para evitar erros
+                            'https://img.freepik.com/fotos-premium/praia-da-ilha-de-cantor-em-palm-beach-florida-us_79295-5856.jpg?w=996'
+                          }
+                        />
+                      </TouchableOpacity>
+                    ))}
+                </ScrollView>
+              </View>
+            ))}
         </ScrollView>
       </View>
     </>

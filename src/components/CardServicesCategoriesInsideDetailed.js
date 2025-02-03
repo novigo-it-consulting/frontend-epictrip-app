@@ -1,6 +1,6 @@
 import { View, Image, Text, StyleSheet } from "react-native";
 
-const CardServicesCategoriesInside = ({ title, image, description }) => {
+const CardServicesCategoriesInsideDetailed = ({ title, image, description }) => {
   return (
     <View style={styles.serviceCardContainer}>
       <View style={styles.imageWrapper}>
@@ -14,26 +14,25 @@ const CardServicesCategoriesInside = ({ title, image, description }) => {
 
 const styles = StyleSheet.create({
   serviceCardContainer: {
-    width: 208, // Aumentei a largura do card
+    width: '100%', // Aumentei a largura do card
     marginRight: 32,
     alignItems: 'center',
   },
   imageWrapper: {
-    width: '100%',
-    height: 256, // Aumentei ainda mais a altura da imagem
+    width: '90%',
+    height: 240, // Aumentei ainda mais a altura da imagem
     borderRadius: 15, // Ajustei o borderRadius para um visual mais suave
     overflow: 'hidden',
   },
   serviceImage: {
     width: '100%',
-    height: '100%',
+    height: '80%',
   },
   serviceTitle: {
     alignSelf: 'flex-start',
     fontWeight: 'bold',
     fontSize: 16, // Aumentei o tamanho da fonte do título
     color: '#172B4D',
-    marginTop: 10, // Ajustei o espaçamento
     marginLeft: 5,
   },
   serviceDescription: {
@@ -45,4 +44,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CardServicesCategoriesInside;
+export default CardServicesCategoriesInsideDetailed;

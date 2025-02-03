@@ -13,12 +13,13 @@ import Amiko from "../services/amiko/amiko.js";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GoBackArrow from "../components/GoBackArrow.js";
-import { requestGetBookingByUser, requestGetHousesByBooking, requestGetUser } from "../services/api";
+import { requestGetBookingByUser, requestGetHousesByBooking, requestGetUser, getAddressById, createFirstRequest } from "../services/api";
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 const ChatScreen = () => {
   const route = useRoute();
   const { productData } = route.params || {};
+  const { clickedProduct } = route.params || {};
 
   const [clientMessage, setClientMessage] = useState();
   const [messages, setMessages] = useState([]);
@@ -28,14 +29,75 @@ const ChatScreen = () => {
 
   const buildContext = async () => {
     try {
+      console.log(clickedProduct)
+      if (clickedProduct == 'a531dd1d-6b90-4fd1-a2e5-0e9e795288e3') {
+
+        // Cria uma nova requisição (request) com o ID do produto clicado ou um ID padrão
+        const newRequestClaim = await createFirstRequest(
+          await AsyncStorage.getItem("userId"),
+          clickedProduct.product?.id || "faf91ecc-36eb-42cc-9770-eb5c8d7aca05"
+        );
+
+        // Strings de template para os detalhes do viajante e número da requisição
+        let requestNumberClaim = "The opened request id is {request_id}";
+        let travelerDetailsClaim = "Traveler Details: Booking Name: {BookingName}, Booking Status: {statusBooking}, Check - In Date: {checkinDate}, Check - Out Date: {checkoutDate}, Person name: {fullName}, Email: {email}, Phone: {phoneNumber}, Share Number: {shareNumber}.";
+
+        // Obtém os dados do usuário e das reservas (bookings)
+        const userClaim = await requestGetUser(await AsyncStorage.getItem("userId"));
+        const bookingClaims = await requestGetBookingByUser(await AsyncStorage.getItem("userId"));
+
+        console.log(userClaim, "SEPARANDOOOO", bookingClaims);
+
+        // Verifica se bookingClaims tem pelo menos uma reserva
+        if (bookingClaims && bookingClaims.length > 0) {
+          // Substitui os placeholders na string travelerDetailsClaim com os dados da primeira reserva
+          travelerDetailsClaim = travelerDetailsClaim
+            .replace("{BookingName}", bookingClaims[0].bookingName || "N/A")
+            .replace("{statusBooking}", bookingClaims[0].status || "N/A")
+            .replace("{checkinDate}", bookingClaims[0].checkIn || "N/A")
+            .replace("{checkoutDate}", bookingClaims[0].checkOut || "N/A")
+            .replace("{fullName}", userClaim.fullName || "N/A")
+            .replace("{email}", userClaim.email || "N/A")
+            .replace("{phoneNumber}", userClaim.phone || "N/A")
+            .replace("{shareNumber}", bookingClaims[0].shareNumber || "N/A");
+        } else {
+          // Caso não haja reservas, define valores padrão
+          travelerDetailsClaim = travelerDetailsClaim
+            .replace("{BookingName}", "N/A")
+            .replace("{statusBooking}", "N/A")
+            .replace("{checkinDate}", "N/A")
+            .replace("{checkoutDate}", "N/A")
+            .replace("{fullName}", userClaim.fullName || "N/A")
+            .replace("{email}", userClaim.email || "N/A")
+            .replace("{phoneNumber}", userClaim.phone || "N/A")
+            .replace("{shareNumber}", "N/A");
+        }
+
+        // Substitui o placeholder na string requestNumberClaim com o ID da nova requisição
+        requestNumberClaim = requestNumberClaim.replace("{request_id}", newRequestClaim.request_id);
+
+        // Constrói a string de contexto final
+        contextString = `This is a claim, here are the necessary data to handle it: ${travelerDetailsClaim}. ${requestNumberClaim}`;
+
+        console.log("CONTEXT STRING AQUIIIIIIIIII: ", contextString);
+        return contextString;
+      }
+
       let contextString = ""
       let houseDetails = "House Details: House Name: {houseName}, Is condo house: {houseType}, Location: {number} {address}, {neighbourhood}, {City}, {State}, {ZipCode}, {Country}, Maximum Capacity: {maxCapacity}, Pets Allowed: {petsAllowed}, Smoking Allowed: {smokingAllowed}, Parties Allowed: {partiesAllowed}"
       let amenities = "Amenities: Has Pool: {hasPool}, Has Babercue Grill: {hasBabercueGrill}, Has Central Air Conditioner: {hasCentralAirConditioner}, Has Splitter Air Conditioner: {hasSplitterAirConditioner}, Has Dryer: {hasDryer}, Has Washing Machine: {hasWashingMachine}, Has Wi-fi: {hasWiFi}"
       let maxCapacity = "Maximum Guests: {maximumCapacity}, Total Rooms: {totalRooms}, Total Bath Rooms: {totalBathRooms}"
-      let travelerDetails = "Traveler Details: Booking Name: {BookingName}, Booking Status: {statusBooking}, Check - In Date: {checkinDate}, Check - Out Date: {checkoutDate}, Traveler Name: {fullName}, Email: {email}, Phone: {phoneNumber}, Share Number: {shareNumber}."
-      let offer = "The following is a offer: The product name {productName}. {description}. the severity is {severity}\n\n"
+      let travelerDetails = "Traveler Details: Booking Name: {BookingName}, Booking Status: {statusBooking}, Check - In Date: {checkinDate}, Check - Out Date: {checkoutDate}, Person name: {fullName}, Email: {email}, Phone: {phoneNumber}, Share Number: {shareNumber}."
+      let offer = "The following is a offer: The product name {productName}. {description}. the severity is {severity}. The Address is {number} {address}, {neighbourhood}, {city}, {state}, {country}, {zipCode}.\n\n"
+      let requestNumber = "The opened request id is {request_id}"
 
       const bookings = await requestGetBookingByUser(await AsyncStorage.getItem("userId"))
+
+      console.log("BBBBBBBBBBBBBBBBB: ", clickedProduct)
+
+      const newRequest = await createFirstRequest(await AsyncStorage.getItem("userId"), clickedProduct.product?.id || "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3")
+
+      requestNumber = requestNumber.replace("{request_id}", newRequest.request_id)
       for (const bk of bookings) {
         if (bk.status === 'Active') {
           const house = await requestGetHousesByBooking(bk.houseId)
@@ -80,20 +142,37 @@ const ChatScreen = () => {
 
           for (const prd of productData) {
             // Verifica se prd possui a estrutura esperada
-            const name = prd.productData?.product?.name ?? "Nome não disponível";
-            const description = prd.productData?.product?.description ?? "Descrição não disponível";
-            const severity = prd.productData?.product?.severity ?? "Severidade não disponível";
+            console.log("AQUIIIIII: ", prd)
+            const address = await getAddressById(prd.product?.location)
+            const name = prd.product?.name ?? "Nome não disponível";
+            const description = prd.product?.description ?? "Descrição não disponível";
+            const severity = prd.product?.severity ?? "Severidade não disponível";
+            const number = address.number;
+            const addressName = address.address;
+            const neighbourhood = address.neighbourhood;
+            const city = address.city;
+            const country = address.country;
+            const state = address.state;
+            const zip = address.zipCode;
 
             // Realiza as substituições na string offer
             let offerPrd = offer.replace("{productName}", name)
               .replace("{description}", description)
-              .replace("{severity}", severity);
+              .replace("{number}", number)
+              .replace("{address}", addressName)
+              .replace("{neighbourhood}", neighbourhood)
+              .replace("{city}", city)
+              .replace("{state}", state)
+              .replace("{country}", country)
+              .replace("{severity}", severity)
+              .replace("{zipCode}", zip)
+              .replace("undefined", "");
 
             // Acumula o resultado em offers
             offers += offerPrd;
           }
 
-          contextString = `${houseDetails}. ${amenities}. ${maxCapacity}. ${travelerDetails}. ${offers}`
+          contextString = `${houseDetails}. ${amenities}. ${maxCapacity}. ${travelerDetails}. ${offers}. ${requestNumber}`
 
           console.log(contextString)
 
@@ -101,7 +180,7 @@ const ChatScreen = () => {
         }
       }
     } catch (error) {
-      alert(error)
+      console.log(error)
     }
   }
 
@@ -111,6 +190,7 @@ const ChatScreen = () => {
 
   useEffect(() => {
     const initializeAmiko = async () => {
+      console.log(clickedProduct)
       const context = await buildContext();
       setClientMessage(await AsyncStorage.getItem("preMessage"));
       const amiko = new Amiko(`${gerarInteiroAleatorio()}`, context);

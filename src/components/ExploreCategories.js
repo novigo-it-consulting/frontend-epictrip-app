@@ -75,26 +75,19 @@ const ExploreCategories = () => {
     fetchData();
   }, []);
 
-  const handlePress = async (id) => {
+  const handlePress = async (id, data) => {
     switch (id) {
-      case 1:
-        navigation.navigate('BookingScreen');
-        break;
       case "9c0ca801-0fab-4f60-a1a2-37d2c4935fb7":
         navigation.navigate('ServiceScreen', { group: id });
-        break;
-      case 5:
-        navigation.navigate('ExperienceScreen');
         break;
       case "b5621786-3c52-44fc-9dac-f4ebbca3915d":
         navigation.navigate('ConciergeList', { group: id });
         break;
-      case 8:
-        await AsyncStorage.setItem("preMessage", "");
-        navigation.navigate('ChatAmico');
+      case "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3":
+        navigation.navigate('ChatAmico', { clickedProduct: "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3" })
         break;
       default:
-        console.log("Unhandled ID:", id);
+        navigation.navigate('OffersList', { group: id, groupData: data })
     }
   };
 
@@ -132,7 +125,7 @@ const ExploreCategories = () => {
             dataLength={data.length}
             title={item.title}
             id={item.id}
-            onPress={() => handlePress(item.id)}
+            onPress={() => handlePress(item.id, item)}
           />
         )}
       />

@@ -363,3 +363,91 @@ export const getUploadByProduct = async (productId) => {
     throw error
   }
 }
+
+export const getUploadByCategory = async (categoryId) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    const urlUploads = `https://homol-api.fertech.dev.br/uploads?categoryId=${categoryId}`;
+    const response = await axios.get(urlUploads, { headers });
+    return response.data.data
+  } catch (error) {
+    alert(error)
+    throw error
+  }
+}
+
+export const getCategoryByGroup = async (groupId) => {
+  try {
+    const token = await AsyncStorage.getItem('token')
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    const urlCategories = `https://homol-api.fertech.dev.br/categories/filter?groupId=${groupId}`
+    const response = await axios.get(urlCategories, { headers })
+    return response.data.data
+  } catch (error) {
+    alert(error)
+    throw error
+  }
+}
+
+export const getProductByCategory = async (id) => {
+  try {
+    const token = await AsyncStorage.getItem('token')
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    const url = `https://homol-api.fertech.dev.br/products/category/${id}`
+    const response = await axios.get(url, { headers })
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    alert(error)
+    throw error
+  }
+}
+
+export const getAddressById = async (id) => {
+  try {
+    const token = await AsyncStorage.getItem('token')
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    const url = `https://homol-api.fertech.dev.br/address/${id}`
+    const response = await axios.get(url, { headers })
+    console.log(response.data)
+    return response.data.data
+  } catch (error) {
+    alert(error)
+    throw error
+  }
+}
+
+export const createFirstRequest = async (userId, productId) => {
+  try {
+    const token = await AsyncStorage.getItem('token')
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    const body = {
+      account_id: userId,
+      description: null,
+      status: "OPEN_N1",
+      product_id: productId,
+      payment_id: null,
+      ai_resume: null,
+      customer_resume: null,
+      severity: null
+    }
+    const url = `https://homol-api.fertech.dev.br/requests`
+    const response = await axios.post(url, body, { headers })
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    alert(error)
+    throw error
+  }
+}

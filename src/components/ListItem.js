@@ -1,9 +1,9 @@
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Text, Image } from "react-native";
 import React from "react";
 import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated";
 import { Card } from "react-native-paper";
 
-const ListItem = ({ scrollX, index, dataLength, title, id, onPress, withIcon, icon }) => {
+const ListItem = ({ scrollX, index, dataLength, title, id, onPress, withIcon, icon, uri }) => {
   const inputRange = [
     (index - 2) * 36,
     (index - 1) * 36,
@@ -11,27 +11,29 @@ const ListItem = ({ scrollX, index, dataLength, title, id, onPress, withIcon, ic
     (index + 1) * 36,
   ];
 
-  const isLastItem = dataLength === index + 1;
-  const isSecondLastItem = dataLength === index + 2;
-
-  const outputRange = isLastItem
-    ? [36, 36, 36, 36]
-    : isSecondLastItem
-      ? [36, 36, 36, 36]
-      : [36, 36, 36, 36];
-
   const animatedStyle = useAnimatedStyle(() => ({
-    width: interpolate(scrollX.value, inputRange, outputRange, "clamp"),
+    width: interpolate(scrollX.value, inputRange, [36, 36, 36, 36], "clamp"),
     alignSelf: "center",
   }));
 
   return (
     <TouchableOpacity onPress={() => onPress(id)}>
-      <Card style={withIcon ? styles.card : stylesWithOutIcon.card}>
+      <Card style={withIcon ? styles.card : styles.cardWithoutIcon}>
         <View style={styles.shadowContainer}>
+          {/* Renderiza o ícone se existir */}
           {withIcon && icon && (
             <View style={styles.iconContainer}>{icon()}</View>
           )}
+
+          {/* Renderiza a imagem da URI */}
+          {uri && (
+            <Image
+              source={{ uri }}
+              style={styles.image}
+              resizeMode="contain"
+            />
+          )}
+
           <View style={styles.titleContainer}>
             <Text style={styles.title}>{title}</Text>
           </View>
@@ -44,6 +46,16 @@ const ListItem = ({ scrollX, index, dataLength, title, id, onPress, withIcon, ic
 const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
+    borderRadius: 16,
+    height: 112,
+    width: 96,
+    marginHorizontal: 4,
+    marginBottom: -70,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cardWithoutIcon: {
+    backgroundColor: "#f0f0f0",
     borderRadius: 16,
     height: 112,
     width: 96,
@@ -65,12 +77,17 @@ const styles = StyleSheet.create({
   titleContainer: {
     alignItems: "center",
     width: 96,
-    height: 20
+    height: 20,
   },
   title: {
     fontSize: 14,
     color: "#172B4D",
     fontWeight: "bold",
+  },
+  image: {
+    width: 64,
+    height: 64,
+    marginBottom: 8,
   },
 });
 

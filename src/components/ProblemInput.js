@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const ProblemInput = ({ productData }) => {
+const ProblemInput = ({ productData, clickedProduct }) => {
 
   const { t } = useTranslation();
   const [problem, setProblem] = useState('');
@@ -17,11 +17,12 @@ const ProblemInput = ({ productData }) => {
 
   const navigateChat = async () => {
     await AsyncStorage.setItem("preMessage", problem);
-    navigation.navigate("ChatAmico", { productData: productData })
+    navigation.navigate("ChatAmico", { productData: productData, clickedProduct: clickedProduct })
   }
 
   useEffect(() => {
     setData(productData);
+    console.log(clickedProduct)
   }, [productData]);
 
   return (

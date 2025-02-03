@@ -13,6 +13,7 @@ const ConciergeDetails = () => {
   const route = useRoute();
   const { serviceId } = route.params || {};
   const { productData } = route.params || {};
+  const { clickedProduct } = route.params || {};
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true); // Gerencie o estado de carregamento
@@ -28,7 +29,6 @@ const ConciergeDetails = () => {
       if (response.status === 200) {
         setData(response.data);
         setLoading(false); // Atualize o estado de carregamento
-        console.log(productData[0].productData.product)
       }
     } catch (error) {
       alert(`Erro ao carregar dados: ${error.message}`);
@@ -57,7 +57,7 @@ const ConciergeDetails = () => {
         ) : null}
       </View>
       <ScrollView style={styles.container}>
-        <ProblemInput productData={productData} />
+        <ProblemInput productData={productData} clickedProduct={clickedProduct} />
         <BookingInfo bookingInfo={bookingInfo} />
       </ScrollView>
       <CustomBar />

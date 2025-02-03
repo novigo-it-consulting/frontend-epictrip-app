@@ -12,6 +12,7 @@ const ConciergeDetails = ({ navigation }) => {
   const route = useRoute();
   const { data } = route.params || {};
   const { clickedImage } = route.params || {};
+  const { clickedProduct } = route.params || {};
 
   const goToChat = (screen) => {
     navigation.navigate(screen);
@@ -27,7 +28,7 @@ const ConciergeDetails = ({ navigation }) => {
         />
       </View>
       <ScrollView style={styles.container}>
-        <ProblemInput productData={data} />
+        <ProblemInput productData={data} clickedProduct={clickedProduct} />
         <BookingInfo bookingInfo={bookingInfo} />
       </ScrollView>
       <CustomBar />

@@ -26,6 +26,8 @@ import ServicesScreen from "../screens/ServiceScreen";
 import ConciergeDetails from "../screens/ConciergeDetails";
 import ConciergeList from "../screens/ConciergeList";
 import HomeScreen from "../screens/HomeScreen";
+import OffersList from "../screens/OffersList";
+import OffersByCategory from "../screens/OffersByCategory";
 
 const Stack = createStackNavigator();
 
@@ -52,6 +54,7 @@ const Navigation = () => {
           options={noGestureScreenOptions}
         />
         <Stack.Screen name="SignUp" component={SignUpScreen} options={noGestureScreenOptions} />
+        <Stack.Screen name="OffersList" component={OffersList} options={noGestureScreenOptions} />
         <Stack.Screen name="EnterCode" component={EnterCode} options={noGestureScreenOptions} />
         <Stack.Screen name="FogotPassword" component={FogotPassword} options={noGestureScreenOptions} />
         <Stack.Screen name="SetNewPassword" component={SetNewPassword} options={noGestureScreenOptions} />
@@ -59,6 +62,7 @@ const Navigation = () => {
         <Stack.Screen name="ChatAmico" component={ChatAmico} />
         <Stack.Screen name="ServiceDetails" component={ServiceDetails} />
         <Stack.Screen name="ServiceScreen" component={ServicesScreen} />
+        <Stack.Screen name="OffersByCategory" component={OffersByCategory} />
         <Stack.Screen
           name="Terms"
           component={WebView}
