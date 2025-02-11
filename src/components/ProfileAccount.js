@@ -7,7 +7,6 @@ import SearchBarHome from "./SearchViewHome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SkeletonLoading from "expo-skeleton-loading";
 import { useTranslation } from "react-i18next";
-import { Badge } from "react-native-paper";
 
 export default function ProfileAccount() {
   const [profilePhoto, setProfilePhoto] = useState(null);
@@ -60,36 +59,29 @@ export default function ProfileAccount() {
 
   if (loading || imageLoading) {
     return (
-      <SkeletonLoading background={"#adadad"} highlight={"#ffffff"}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between", padding: 20 }}>
-          <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: "#adadad" }} />
-          <View style={{ flex: 1, marginLeft: 12 }}>
-            <View style={{ backgroundColor: "#adadad", height: 16, marginBottom: 6, borderRadius: 8 }} />
-            <View style={{ backgroundColor: "#adadad", height: 16, borderRadius: 8 }} />
-          </View>
-          <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: "#adadad" }} />
-        </View>
-      </SkeletonLoading>
+      <View>Loading...</View>
     );
   }
 
   return (
     <View style={stylesProfile.container}>
       <View style={stylesProfile.boxProfile}>
-        <View style={{ flex: 1, justifyContent: "center", flexDirection: "row", marginBottom: 30 }}>
+        <View style={stylesProfile.profileRow}>
           <Image
             source={profilePhoto ? { uri: profilePhoto } : require("../../assets/profile/1.png")}
-            style={{ width: 48, height: 48, borderRadius: 24 }}
+            style={stylesProfile.profileImage}
             onLoadEnd={handleImageLoadEnd}
           />
           <View style={stylesProfile.titleName}>
-            <Text style={{ fontSize: 12, textAlign: "left", color: "#364764" }}>{t("profileAccount.welcome")}</Text>
-            <Text style={{ fontSize: 16, textAlign: "left", color: "#172B4D", fontWeight: "bold" }}>{profileName}</Text>
+            <Text style={stylesProfile.welcomeText}>{t("profileAccount.welcome")}</Text>
+            <Text style={stylesProfile.profileNameText}>{profileName}</Text>
           </View>
           <TouchableOpacity style={stylesProfile.boxNotification} onPress={() => navigation.navigate('ChatAmico')}>
             <View style={stylesProfile.boxColor}>
               <Entypo name="bell" size={24} color="#172B4D" />
-              <Badge style={{ position: "absolute", top: 5, right: 5 }} size={15}>3</Badge>
+              <View style={stylesProfile.customBadge}>
+                <Text style={stylesProfile.badgeText}>3</Text>
+              </View>
             </View>
           </TouchableOpacity>
         </View>
@@ -101,37 +93,66 @@ export default function ProfileAccount() {
 
 const stylesProfile = StyleSheet.create({
   container: {
-    flex: 0.5,
-    flexDirection: "column",
+    flex: 1, // Ajustado para flex: 1
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "center",
     width: "85%",
-    marginRight: "auto",
-    marginLeft: "auto",
   },
   boxProfile: {
     width: "100%",
-    display: "flex",
-    flexDirection: "column",
+  },
+  profileRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 30,
+  },
+  profileImage: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+  },
+  titleName: {
+    marginLeft: 12,
+    flex: 1,
+  },
+  welcomeText: {
+    fontSize: 12,
+    color: "#364764",
+  },
+  profileNameText: {
+    fontSize: 16,
+    color: "#172B4D",
+    fontWeight: "bold",
   },
   boxNotification: {
     height: 48,
-    marginLeft: "auto",
-    display: "flex",
+    justifyContent: "center",
     alignItems: "center",
-    flexDirection: "column",
   },
   boxColor: {
     backgroundColor: "#F1F5F6",
     width: 50,
     height: 50,
     borderRadius: 24,
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: "row",
+    position: "relative",
   },
-  titleName: {
-    marginLeft: 12,
+  customBadge: {
+    position: "absolute",
+    top: 5,
+    right: 5,
+    backgroundColor: "red",
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  badgeText: {
+    color: "white",
+    fontSize: 12,
+    fontWeight: "bold",
   },
 });

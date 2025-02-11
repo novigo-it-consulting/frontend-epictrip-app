@@ -80,7 +80,7 @@ const ExploreCategories = () => {
       case "9c0ca801-0fab-4f60-a1a2-37d2c4935fb7":
         navigation.navigate('ServiceScreen', { group: id });
         break;
-      case "b5621786-3c52-44fc-9dac-f4ebbca3915d":
+      case "6f399706-21d2-42c3-bcde-691feeeadab0":
         navigation.navigate('ConciergeList', { group: id });
         break;
       case "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3":

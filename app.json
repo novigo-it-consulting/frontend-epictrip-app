@@ -5,7 +5,7 @@
     "version": "1.8.1",
     "orientation": "portrait",
     "icon": "./assets/img/icon.png",
-    "userInterfaceStyle": "#FFF",
+    "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/img/splash.png",
       "resizeMode": "contain",
@@ -23,11 +23,9 @@
       }
     },
     "android": {
-      "usesCleartextTraffic": false,
       "adaptiveIcon": {
         "foregroundImage": "./assets/img/adaptive-icon.png",
-        "backgroundColor": "#C2185B",
-        "translucent": false
+        "backgroundColor": "#C2185B"
       },
       "package": "app.myepictrip",
       "versionCode": 564,
@@ -67,12 +65,6 @@
           "photosPermission": "Allow Epic Trip to use your photo library."
         }
       ]
-    ],
-    "server": {
-      "androidScheme": "https",
-      "allowNavigation": [
-        "qa-backend.myepictrip.app"
-      ]
-    }
+    ]
   }
 }

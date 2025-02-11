@@ -12,14 +12,14 @@ const HomeScreen = () => {
   return (
     <PaperProvider theme={theme}>
       <SafeAreaView style={styles.safeArea}>
-        {/* <AlertNotificationRoot> */}
-        <ScrollView contentContainerStyle={styles.scrollView}>
-          {/* <ProfileAccount /> */}
-          <ExploreCategories />
-          {/* <PopularEvents /> */}
-        </ScrollView>
-        {/* <FooterNavBar /> */}
-        {/* </AlertNotificationRoot> */}
+        <AlertNotificationRoot>
+          <ScrollView contentContainerStyle={styles.scrollView}>
+            <ProfileAccount />
+            <ExploreCategories />
+            <PopularEvents />
+          </ScrollView>
+          <FooterNavBar />
+        </AlertNotificationRoot>
       </SafeAreaView>
     </PaperProvider>
   );

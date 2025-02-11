@@ -17,7 +17,6 @@ import {
   Toast,
   ALERT_TYPE,
 } from "react-native-alert-notification";
-import { getDatabase, ref, set } from "firebase/database";
 import colors from "../colors";
 
 const ScheduleScreen = () => {
