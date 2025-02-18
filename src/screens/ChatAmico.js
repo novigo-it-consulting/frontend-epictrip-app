@@ -87,7 +87,7 @@ const ChatScreen = () => {
       let houseDetails = "House Details: House Name: {houseName}, Is condo house: {houseType}, Location: {number} {address}, {neighbourhood}, {City}, {State}, {ZipCode}, {Country}, Maximum Capacity: {maxCapacity}, Pets Allowed: {petsAllowed}, Smoking Allowed: {smokingAllowed}, Parties Allowed: {partiesAllowed}"
       let amenities = "Amenities: Has Pool: {hasPool}, Has Babercue Grill: {hasBabercueGrill}, Has Central Air Conditioner: {hasCentralAirConditioner}, Has Splitter Air Conditioner: {hasSplitterAirConditioner}, Has Dryer: {hasDryer}, Has Washing Machine: {hasWashingMachine}, Has Wi-fi: {hasWiFi}"
       let maxCapacity = "Maximum Guests: {maximumCapacity}, Total Rooms: {totalRooms}, Total Bath Rooms: {totalBathRooms}"
-      let travelerDetails = "Traveler Details: Booking Name: {BookingName}, Booking Status: {statusBooking}, Check - In Date: {checkinDate}, Check - Out Date: {checkoutDate}, Person name: {fullName}, Email: {email}, Phone: {phoneNumber}, Share Number: {shareNumber}."
+      let travelerDetails = "Traveler Details: Booking Name: {BookingName}, Booking Status: {statusBooking}, Check - In Date: {checkinDate}, Check - Out Date: {checkoutDate}, Person Name:{fullName}, Email: {email}, Phone: {phoneNumber}, Share Number: {shareNumber}."
       let offer = "The following is a offer: The product name {productName}. {description}. the severity is {severity}. The Address is {number} {address}, {neighbourhood}, {city}, {state}, {country}, {zipCode}.\n\n"
       let requestNumber = "The opened request id is {request_id}"
 

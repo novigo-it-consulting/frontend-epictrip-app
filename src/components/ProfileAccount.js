@@ -59,7 +59,11 @@ export default function ProfileAccount() {
 
   if (loading || imageLoading) {
     return (
-      <View>Loading...</View>
+      <View>
+        <Text>
+          Loading...
+        </Text>
+      </View>
     );
   }
 
