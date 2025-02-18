@@ -80,7 +80,7 @@ export const requestGetUser = async (userId) => {
     const response = await axios.get(`${BASE_URL}/users/${userId}`, {
       headers,
     });
-    return response;
+    return response.data.data;
   } catch (error) {
     throw error;
   }
@@ -263,7 +263,7 @@ export const requestGetBookingByUser = async (userId) => {
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
     };
     const response = await axios.get(`${BASE_URL}/bookings/user/${userId}`, { headers })
-    return response
+    return response.data.data
   } catch (error) {
     throw error;
   }
