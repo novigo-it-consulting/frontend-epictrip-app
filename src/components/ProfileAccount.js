@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, Image, TouchableOpacity, TextInput } from "react-native";
 import { requestGetUser } from "../services/api";
 import { useNavigation } from "@react-navigation/native";
 import Entypo from '@expo/vector-icons/Entypo';
-import SearchBarHome from "./SearchViewHome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import SkeletonLoading from "expo-skeleton-loading";
 import { useTranslation } from "react-i18next";
 
 export default function ProfileAccount() {
@@ -59,10 +57,9 @@ export default function ProfileAccount() {
 
   if (loading || imageLoading) {
     return (
-      <View>
-        <Text>
-          Loading...
-        </Text>
+
+      <View style={stylesProfile.container}>
+        <Text>Loading...</Text>
       </View>
     );
   }
@@ -89,7 +86,17 @@ export default function ProfileAccount() {
             </View>
           </TouchableOpacity>
         </View>
-        <SearchBarHome wid={"100%"} />
+        {/* Barra de pesquisa centralizada e com placeholder */}
+        <View style={stylesProfile.searchContainer}>
+          <View style={stylesProfile.searchBar}>
+            <Entypo name="magnifying-glass" size={20} color="#172B4D" style={stylesProfile.searchIcon} />
+            <TextInput
+              style={stylesProfile.searchInput}
+              placeholder="Try Disney, food or tickets"
+              placeholderTextColor="#7D8A99"
+            />
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -97,19 +104,22 @@ export default function ProfileAccount() {
 
 const stylesProfile = StyleSheet.create({
   container: {
-    flex: 1, // Ajustado para flex: 1
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    width: "85%",
+    width: "100%",
+    paddingHorizontal: 20,
   },
   boxProfile: {
     width: "100%",
+    alignItems: "center",
   },
   profileRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 30,
+    width: "100%",
   },
   profileImage: {
     width: 48,
@@ -158,5 +168,27 @@ const stylesProfile = StyleSheet.create({
     color: "white",
     fontSize: 12,
     fontWeight: "bold",
+  },
+  searchContainer: {
+    width: "100%",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  searchBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F1F5F6",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    width: "90%", // Aumenta a largura da barra
+    height: 50,
+  },
+  searchIcon: {
+    marginRight: 10,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: "#172B4D",
   },
 });

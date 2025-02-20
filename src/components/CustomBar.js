@@ -2,11 +2,12 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 
 const CustomTabBar = () => {
   const navigation = useNavigation();
+  const route = useRoute();
   const { t } = useTranslation();
 
   const tabs = [
@@ -19,16 +20,21 @@ const CustomTabBar = () => {
 
   return (
     <View style={styles.tabBar}>
-      {tabs.map((tab, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.tab}
-          onPress={() => navigation.navigate(tab.route)}
-        >
-          <Feather name={tab.icon} color="#696969" size={20} />
-          <Text style={styles.tabLabel}>{t(`homeTabs.${tab.name.toLowerCase()}Button`)}</Text>
-        </TouchableOpacity>
-      ))}
+      {tabs.map((tab, index) => {
+        const isActive = route.name === tab.route;
+        return (
+          <TouchableOpacity
+            key={index}
+            style={styles.tab}
+            onPress={() => navigation.navigate(tab.route)}
+          >
+            <Feather name={tab.icon} color={isActive ? "#007AFF" : "#696969"} size={24} />
+            <Text style={[styles.tabLabel, isActive && styles.activeLabel]}>
+              {t(`homeTabs.${tab.name.toLowerCase()}Button`)}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 };
@@ -38,7 +44,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     height: 88,
-    position: "absolute", 
+    position: "absolute",
     bottom: 10,
     width: "100%",
     backgroundColor: "#fff",
@@ -59,6 +65,10 @@ const styles = StyleSheet.create({
   tabLabel: {
     fontSize: 12,
     color: "#696969",
+  },
+  activeLabel: {
+    color: "#007AFF",
+    fontWeight: "bold",
   },
 });
 
