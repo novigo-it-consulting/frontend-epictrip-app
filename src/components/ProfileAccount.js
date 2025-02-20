@@ -57,6 +57,7 @@ export default function ProfileAccount() {
 
   if (loading || imageLoading) {
     return (
+
       <View style={stylesProfile.container}>
         <Text>Loading...</Text>
       </View>
