@@ -39,7 +39,7 @@ const ChatScreen = () => {
 
         // Strings de template para os detalhes do viajante e número da requisição
         let requestNumberClaim = "The opened request id is {request_id}";
-        let travelerDetailsClaim = "Traveler Details: Booking Name: {BookingName}, Booking Status: {statusBooking}, Check - In Date: {checkinDate}, Check - Out Date: {checkoutDate}, Person name: {fullName}, Email: {email}, Phone: {phoneNumber}, Share Number: {shareNumber}.";
+        let travelerDetailsClaim = "Traveler Details: Booking Name: {BookingName}, Booking Status: {statusBooking}, Check - In Date: {checkinDate}, Check - Out Date: {checkoutDate}, Person Name:{fullName}, Person Id:{userId}, Email: {email}, Phone: {phoneNumber}, Share Number: {shareNumber}.";
 
         // Obtém os dados do usuário e das reservas (bookings)
         const userClaim = await requestGetUser(await AsyncStorage.getItem("userId"));
@@ -55,6 +55,7 @@ const ChatScreen = () => {
             .replace("{checkinDate}", bookingClaims[0].checkIn || "N/A")
             .replace("{checkoutDate}", bookingClaims[0].checkOut || "N/A")
             .replace("{fullName}", userClaim.fullName || "N/A")
+            .replace("{userId}", userClaim.userId || "N/A")
             .replace("{email}", userClaim.email || "N/A")
             .replace("{phoneNumber}", userClaim.phone || "N/A")
             .replace("{shareNumber}", bookingClaims[0].shareNumber || "N/A");
@@ -66,6 +67,7 @@ const ChatScreen = () => {
             .replace("{checkinDate}", "N/A")
             .replace("{checkoutDate}", "N/A")
             .replace("{fullName}", userClaim.fullName || "N/A")
+            .replace("{userId}", userClaim.userId || "N/A")
             .replace("{email}", userClaim.email || "N/A")
             .replace("{phoneNumber}", userClaim.phone || "N/A")
             .replace("{shareNumber}", "N/A");
