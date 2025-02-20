@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 16,
     paddingHorizontal: 24,
-    backgroundColor: "#F8F8F8",
+    backgroundColor: "#FFFFFF", // Define o fundo branco para o componente
   },
   titlePage: {
     color: "#172B4D",
@@ -146,7 +146,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 16,
     textAlign: "left",
-  }
+  },
 });
+
 
 export default ExploreCategories;
