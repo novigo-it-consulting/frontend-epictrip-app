@@ -26,12 +26,12 @@ export default function ProfileHandleBooking() {
     try {
       const response = await requestGetBookingByUser(userId);
       if (response.status === 200) {
-        const inProgressBooking = await response.data.data.find(booking => booking.status === "In progress");
+        const inProgressBooking = await response.data.data.find(booking => booking.status === "Active");
         if (inProgressBooking) {
           setBookingNumber(inProgressBooking.shareNumber);
           return
         }
-        setBookingNumber (t("profileHandleBooking.reservas"))
+        setBookingNumber(t("profileHandleBooking.reservas"))
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,

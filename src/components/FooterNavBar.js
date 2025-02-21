@@ -11,7 +11,7 @@ const FooterNavBar = ({ onPress }) => {
         { name: 'Groups', icon: 'users', route: "EmConstrucaoScreen" },
         { name: 'Requests', icon: 'bell', route: "EmConstrucaoScreen" },
         { name: 'Schedule', icon: 'calendar', route: "EmConstrucaoScreen" },
-        { name: 'Profile', icon: 'user', route: "EmConstrucaoScreen" },
+        { name: 'Profile', icon: 'user', route: "ProfileScreen" },
     ];
 
     const handleOnPress = (route) => {
