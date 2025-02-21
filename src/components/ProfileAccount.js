@@ -179,7 +179,7 @@ const stylesProfile = StyleSheet.create({
     backgroundColor: "#F1F5F6",
     borderRadius: 8,
     paddingHorizontal: 10,
-    width: "90%", // Aumenta a largura da barra
+    width: "90%",
     height: 50,
   },
   searchIcon: {
