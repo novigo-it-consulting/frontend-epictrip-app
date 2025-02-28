@@ -1,6 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
-import ListItem from "./ListItem";
+import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { useSharedValue } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
@@ -37,19 +36,13 @@ const ExploreCategoriesProducts = ({ data }) => {
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item.categoryData.cat.categoryId.toString()}
-        contentContainerStyle={styles.flatListContent} // Espaçamento interno
+        contentContainerStyle={styles.flatListContent}
         renderItem={({ item, index }) => (
-          <ListItem
-            uri={item.uri} // Agora a URI será passada corretamente
-            withIcon={!!item.icon}
-            icon={item.icon}
-            scrollX={scrollX}
-            index={index}
-            dataLength={data.length}
-            title={item.categoryData.cat.categoryName}
-            id={item.categoryData.cat.categoryId}
-            onPress={() => handlePress(item.categoryData.cat.categoryId, item.categoryData.cat.categoryName)}
-          />
+          <View style={styles.card}>
+            {item.uri && <Image source={{ uri: item.uri }} style={styles.image} />}
+            {item.icon && <Image source={item.icon} style={styles.icon} />}
+            <Text style={styles.text}>{item.categoryData.cat.categoryName}</Text>
+          </View>
         )}
       />
     </View>
@@ -58,20 +51,45 @@ const ExploreCategoriesProducts = ({ data }) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 200, // Defina uma altura adequada para o container
+    height: 200,
     paddingVertical: 16,
     backgroundColor: colors.backGroundLight,
   },
   flatListContent: {
-    paddingHorizontal: 16, // Espaçamento horizontal para evitar cortes
+    paddingHorizontal: 16,
   },
-  titlePage: {
-    color: "#172B4D",
-    fontSize: 18,
+  card: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    padding: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    width: 100,
+    height: 100,
+    marginHorizontal: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  image: {
+    width: 60,
+    height: 60,
+    marginBottom: 8,
+    borderRadius: 8,
+  },
+  icon: {
+    width: 40,
+    height: 40,
+    marginBottom: 8,
+  },
+  text: {
+    fontSize: 14,
     fontWeight: "bold",
-    marginBottom: 16,
-    textAlign: "left",
-  }
+    color: "#000",
+    textAlign: "center",
+  },
 });
 
 export default ExploreCategoriesProducts;

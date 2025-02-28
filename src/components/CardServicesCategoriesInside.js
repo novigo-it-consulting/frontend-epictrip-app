@@ -14,13 +14,13 @@ const CardServicesCategoriesInside = ({ title, image, description }) => {
 
 const styles = StyleSheet.create({
   serviceCardContainer: {
-    width: 208, // Aumentei a largura do card
+    width: 450, // Aumentei a largura do card
     marginRight: 32,
     alignItems: 'center',
   },
   imageWrapper: {
     width: '100%',
-    height: 256, // Aumentei ainda mais a altura da imagem
+    height: 302, // Aumentei ainda mais a altura da imagem
     borderRadius: 15, // Ajustei o borderRadius para um visual mais suave
     overflow: 'hidden',
   },

@@ -6,6 +6,7 @@ import Entypo from '@expo/vector-icons/Entypo';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
 
+
 export default function ProfileAccount() {
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [profileName, setProfileName] = useState("Polina Fernandes");
@@ -95,6 +96,7 @@ export default function ProfileAccount() {
               placeholder="Try Disney, food or tickets"
               placeholderTextColor="#7D8A99"
             />
+
           </View>
         </View>
       </View>
