@@ -18,7 +18,7 @@ const HomeScreen = () => {
             <ExploreCategories />
             <PopularEvents />
           </ScrollView>
-          <FooterNavBar />
+          <FooterNavBar style={styles.styleFilter} />
         </AlertNotificationRoot>
       </SafeAreaView>
     </PaperProvider>
@@ -41,6 +41,13 @@ const styles = StyleSheet.create({
   scrollView: {
     flexGrow: 1,
     backgroundColor: colors.backGroundLight,
+  },
+  styleFilter: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    width: "100%",
   },
 });
 

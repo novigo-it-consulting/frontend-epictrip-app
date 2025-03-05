@@ -1,5 +1,5 @@
 // screens/ProfileScreen.js
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import colors from "../colors";
@@ -14,6 +14,7 @@ import ProfileHandleLogout from "../components/ProfileHandleLogout.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { requestChangePasswordToken, requestGetMethodsByUser } from "../services/api.js";
 import { Dialog, Portal, Text, Button } from 'react-native-paper';
+import FooterNavBar from "../components/FooterNavBar.js";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -45,7 +46,7 @@ const ProfileScreen = () => {
       alert("Error clearing AsyncStorage:", error);
     }
   };
-  
+
 
   const handlePressPaymentScreen = async () => {
     try {
@@ -58,16 +59,16 @@ const ProfileScreen = () => {
       }
     } catch (error) {
       throw error;
-    } 
+    }
   };
-  
+
   const handlePressPayment = () => {
     navigation.navigate("Payment");
   };
   const handlePressChangePassword = async () => {
     const userId = await AsyncStorage.getItem("userId")
     const response = await requestChangePasswordToken(userId)
-    if (response.status === 200){
+    if (response.status === 200) {
       await AsyncStorage.setItem("changePasswordToken", response.data.token)
       navigation.navigate("SetNewPassword");
     }
@@ -89,7 +90,7 @@ const ProfileScreen = () => {
 
   return (
     <View style={stylesProfile.containerAlpha}>
-        <View
+      <View
         style={{
           flex: 0.8,
           justifyContent: "center",
@@ -175,7 +176,7 @@ const ProfileScreen = () => {
         >
           <ProfileHandleSettingsLanguage />
         </TouchableOpacity>
-        
+
         <TouchableOpacity
           style={stylesProfile.container}
           onPress={() => setVisible(true)}
@@ -183,31 +184,32 @@ const ProfileScreen = () => {
           <ProfileHandleLogout />
         </TouchableOpacity>
         <Portal>
-        <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialog}>
-          <Dialog.Icon icon="alert" />
-          <Dialog.Title style={styles.title}>
-            {t('logoutDialog.title')}
-          </Dialog.Title>
-          <Dialog.Content>
-            <Text style={{textAlign: "center"}} variant="bodyMedium">
-              {t('logoutDialog.content')}
-            </Text>
-          </Dialog.Content>
-          <Dialog.Actions style={{marginLeft: "auto", marginRight: "auto"}}>
-            <Button
-              textColor="#fff"
-              background={"#0065ff"}
-              style={styles.actionButtonNo}
-              onPress={() => setVisible(false)}
-            >
-              {t('logoutDialog.noButton')}
-            </Button>
-            <Button onPress={() => handlePressLogout()}>
-              {t('logoutDialog.yesButton')}
-            </Button>
-          </Dialog.Actions>
-        </Dialog>
+          <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialog}>
+            <Dialog.Icon icon="alert" />
+            <Dialog.Title style={styles.title}>
+              {t('logoutDialog.title')}
+            </Dialog.Title>
+            <Dialog.Content>
+              <Text style={{ textAlign: "center" }} variant="bodyMedium">
+                {t('logoutDialog.content')}
+              </Text>
+            </Dialog.Content>
+            <Dialog.Actions style={{ marginLeft: "auto", marginRight: "auto" }}>
+              <Button
+                textColor="#fff"
+                background={"#0065ff"}
+                style={styles.actionButtonNo}
+                onPress={() => setVisible(false)}
+              >
+                {t('logoutDialog.noButton')}
+              </Button>
+              <Button onPress={() => handlePressLogout()}>
+                {t('logoutDialog.yesButton')}
+              </Button>
+            </Dialog.Actions>
+          </Dialog>
         </Portal>
+        <FooterNavBar />
       </View>
     </View>
   );
@@ -239,11 +241,11 @@ const styles = StyleSheet.create({
   },
   dialog: {
     backgroundColor: colors.backGroundLight
-  }, 
+  },
   actionButtonNo: {
     textAlign: "center",
     backgroundColor: colors.primary,
-    paddingRight: 12, 
+    paddingRight: 12,
     paddingLeft: 12
   }
 })
