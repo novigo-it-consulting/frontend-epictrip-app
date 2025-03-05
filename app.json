@@ -2,7 +2,7 @@
   "expo": {
     "name": "Epic Trip",
     "slug": "epic-trip",
-    "version": "1.8.2",
+    "version": "1.8.3",
     "orientation": "portrait",
     "icon": "./assets/img/icon.png",
     "userInterfaceStyle": "light",
@@ -17,9 +17,12 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "app.myepictrip",
-      "buildNumber": "564",
+      "buildNumber": "565",
       "entitlements": {
         "aps-environment": "production"
+      },
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -28,10 +31,13 @@
         "backgroundColor": "#C2185B"
       },
       "package": "app.myepictrip",
-      "versionCode": 564,
+      "versionCode": 565,
       "permissions": [
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION"
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "web": {

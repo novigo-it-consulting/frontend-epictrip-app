@@ -29,6 +29,8 @@ import HomeScreen from "../screens/HomeScreen";
 import OffersList from "../screens/OffersList";
 import OffersByCategory from "../screens/OffersByCategory";
 import ProfileScreen from "../screens/ProfileScreen";
+import RequestScreen from "../screens/RequestsScreen";
+import RequestDetailsScreen from "../screens/RequestDetailsScreen";
 
 const Stack = createStackNavigator();
 
@@ -55,7 +57,9 @@ const Navigation = () => {
           options={noGestureScreenOptions}
         />
         <Stack.Screen name="SignUp" component={SignUpScreen} options={noGestureScreenOptions} />
+        <Stack.Screen name="RequestDetailsScreen" component={RequestDetailsScreen} options={noGestureScreenOptions} />
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={noGestureScreenOptions} />
+        <Stack.Screen name="RequestScreen" component={RequestScreen} options={noGestureScreenOptions} />
         <Stack.Screen name="OffersList" component={OffersList} options={noGestureScreenOptions} />
         <Stack.Screen name="EnterCode" component={EnterCode} options={noGestureScreenOptions} />
         <Stack.Screen name="FogotPassword" component={FogotPassword} options={noGestureScreenOptions} />

@@ -9,7 +9,7 @@ const FooterNavBar = ({ onPress }) => {
     const navItems = [
         { name: 'Home', icon: 'home', route: "Home" },
         { name: 'Groups', icon: 'users', route: "EmConstrucaoScreen" },
-        { name: 'Requests', icon: 'bell', route: "EmConstrucaoScreen" },
+        { name: 'Requests', icon: 'bell', route: "RequestScreen" },
         { name: 'Schedule', icon: 'calendar', route: "EmConstrucaoScreen" },
         { name: 'Profile', icon: 'user', route: "ProfileScreen" },
     ];
