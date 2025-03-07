@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -19,15 +19,17 @@ import colors from "../colors";
 import { Ionicons } from "@expo/vector-icons";
 import CustomTabBar from "../components/CustomBar";
 import { useNavigation } from "@react-navigation/native";
+import { getRequestsByUser } from "../services/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const RequestScreen = () => {
   const navigation = useNavigation();
   const [activeFilter, setActiveFilter] = useState("All");
+  const [loadedRequests, setRequests] = useState([]);
 
   const handleRequestClick = (request) => {
-    alert("opora")
     navigation.navigate("RequestDetailsScreen", { request });
-  }
+  };
 
   const STATUS_MAPPING = {
     OPEN_N1: "In progress",
@@ -41,30 +43,55 @@ const RequestScreen = () => {
   };
 
   const STATUS_COLORS = {
-    "OPEN_N1": "#0057FF",
-    "OPEN_N2": "#0057FF",
-    "OPEN_N3": "#0057FF",
-    "SOLVED_N1": "#6C757D",
-    "SOLVED_N2": "#6C757D",
-    "PAYMENT_A": "#FFA500",
-    "PAYMENT_D": "#28A745",
-    "CLOSED": "#DC3545",
+    OPEN_N1: "#0057FF",
+    OPEN_N2: "#0057FF",
+    OPEN_N3: "#0057FF",
+    SOLVED_N1: "#6C757D",
+    SOLVED_N2: "#6C757D",
+    PAYMENT_A: "#FFA500",
+    PAYMENT_D: "#28A745",
+    CLOSED: "#DC3545",
   };
 
   const STATUS_ICONS = {
-    "OPEN_N1": "time-outline",
-    "OPEN_N2": "time-outline",
-    "OPEN_N3": "time-outline",
-    "SOLVED_N1": "checkmark-circle-outline",
-    "SOLVED_N2": "checkmark-circle-outline",
-    "PAYMENT_A": "card-outline",
-    "PAYMENT_D": "cash-outline",
-    "CLOSED": "close-circle-outline",
+    OPEN_N1: "time-outline",
+    OPEN_N2: "time-outline",
+    OPEN_N3: "time-outline",
+    SOLVED_N1: "checkmark-circle-outline",
+    SOLVED_N2: "checkmark-circle-outline",
+    PAYMENT_A: "card-outline",
+    PAYMENT_D: "cash-outline",
+    CLOSED: "close-circle-outline",
   };
 
-  const filteredRequests = activeFilter === "All"
-    ? requests
-    : requests.filter(request => request.status === activeFilter);
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { month: "short", day: "numeric", weekday: "short" };
+    return date.toLocaleDateString("en-US", options).replace(",", "");
+  };
+
+  useEffect(() => {
+    const fetchRequests = async () => {
+      try {
+        const userId = await AsyncStorage.getItem("userId");
+        if (userId) {
+          const requests = await getRequestsByUser(userId);
+          setRequests(requests);
+        }
+      } catch (error) {
+        console.error("Error fetching requests:", error);
+      }
+    };
+
+    fetchRequests();
+  }, []);
+
+  const filteredRequests =
+    activeFilter === "All"
+      ? loadedRequests
+      : loadedRequests.filter(
+        (request) => STATUS_MAPPING[request.status] === activeFilter
+      );
 
   return (
     <PaperProvider theme={theme}>
@@ -80,7 +107,12 @@ const RequestScreen = () => {
               </View>
 
               <View style={stylesRequests.searchContainer}>
-                <Ionicons name="search" size={20} color="gray" style={stylesRequests.searchIcon} />
+                <Ionicons
+                  name="search"
+                  size={20}
+                  color="gray"
+                  style={stylesRequests.searchIcon}
+                />
                 <TextInput
                   style={stylesRequests.searchInput}
                   placeholder="Try Disney, Food or Tickets"
@@ -88,7 +120,11 @@ const RequestScreen = () => {
                 />
               </View>
 
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={stylesRequests.filterScroll}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={stylesRequests.filterScroll}
+              >
                 <View style={stylesRequests.filterContainer}>
                   {[
                     "All",
@@ -103,7 +139,9 @@ const RequestScreen = () => {
                       style={stylesRequests.filterButton(filter === activeFilter)}
                       onPress={() => setActiveFilter(filter)}
                     >
-                      <Text style={stylesRequests.filterText(filter === activeFilter)}>{filter}</Text>
+                      <Text style={stylesRequests.filterText(filter === activeFilter)}>
+                        {filter}
+                      </Text>
                     </TouchableOpacity>
                   ))}
                 </View>
@@ -113,12 +151,26 @@ const RequestScreen = () => {
 
               <ScrollView contentContainerStyle={stylesRequests.requestList}>
                 {filteredRequests.map((request, index) => (
-                  <TouchableOpacity key={index} onPress={() => handleRequestClick(request)} style={[stylesRequests.requestCard, { borderLeftColor: request.color }]}>
-                    <Ionicons name={request.icon} size={24} color={request.color} style={stylesRequests.requestIcon} />
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => handleRequestClick(request)}
+                    style={[
+                      stylesRequests.requestCard,
+                      { borderLeftColor: STATUS_COLORS[request.status] },
+                    ]}
+                  >
+                    <Ionicons
+                      name={STATUS_ICONS[request.status]}
+                      size={24}
+                      color={STATUS_COLORS[request.status]}
+                      style={stylesRequests.requestIcon}
+                    />
                     <View style={stylesRequests.requestInfo}>
-                      <Text style={stylesRequests.requestTitle}>{request.title}</Text>
-                      <Text style={stylesRequests.requestStatus(request.color)}>{STATUS_MAPPING[request.status]}</Text>
-                      <Text style={stylesRequests.requestDate}>{request.date}</Text>
+                      <Text style={stylesRequests.requestTitle}>{request.ai_resume}</Text>
+                      <Text style={stylesRequests.requestStatus(STATUS_COLORS[request.status])}>
+                        {STATUS_MAPPING[request.status]}
+                      </Text>
+                      <Text style={stylesRequests.requestDate}>{formatDate(request.created_at)}</Text>
                     </View>
                     <Ionicons name="chevron-forward" size={20} color="gray" />
                   </TouchableOpacity>
@@ -132,15 +184,6 @@ const RequestScreen = () => {
     </PaperProvider>
   );
 };
-
-const requests = [
-  { title: "Pool maintenance", status: "SOLVED_N1", date: "Jun 24, Thu", color: "gray", icon: "hammer" },
-  { title: "BBQ Grill", status: "PAYMENT_A", date: "Jun 24, Thu", color: "blue", icon: "home" },
-  { title: "Condo access", status: "OPEN_N1", date: "Jun 24, Thu", color: "blue", icon: "home" },
-  { title: "Booking number", status: "SOLVED_N2", date: "Jun 24, Thu", color: "gray", icon: "document-text" },
-  { title: "Extend booking", status: "CLOSED", date: "Jun 24, Thu", color: "red", icon: "alert-circle" },
-];
-
 
 const stylesRequests = StyleSheet.create({
   safeArea: {

@@ -15,6 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { requestChangePasswordToken, requestGetMethodsByUser } from "../services/api.js";
 import { Dialog, Portal, Text, Button } from 'react-native-paper';
 import FooterNavBar from "../components/FooterNavBar.js";
+import CustomTabBar from "../components/CustomBar";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -164,18 +165,6 @@ const ProfileScreen = () => {
         >
           <ProfileHandleSettingsPayment />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={stylesProfile.container}
-          onPress={handlePressPayment}
-        >
-          <ProfileHandleSettingsRewards />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={stylesProfile.container}
-          onPress={handlePressEmBuild}
-        >
-          <ProfileHandleSettingsLanguage />
-        </TouchableOpacity>
 
         <TouchableOpacity
           style={stylesProfile.container}
@@ -209,7 +198,7 @@ const ProfileScreen = () => {
             </Dialog.Actions>
           </Dialog>
         </Portal>
-        <FooterNavBar />
+        <CustomTabBar />
       </View>
     </View>
   );

@@ -426,6 +426,20 @@ export const getAddressById = async (id) => {
   }
 }
 
+export const getRequestsByUser = async (user) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const headers = {
+      Authorization: `Bearer ${token}`
+    };
+    const url = `https://homol-api.fertech.dev.br/requests/filter?account_id=${user}`
+    const response = await axios.get(url, { headers })
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}
+
 export const createFirstRequest = async (userId, productId) => {
   try {
     const token = await AsyncStorage.getItem('token')

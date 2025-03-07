@@ -7,6 +7,7 @@ import PopularEvents from "../components/PopularEvents";
 import ProfileAccount from "../components/ProfileAccount";
 import FooterNavBar from "../components/FooterNavBar";
 import colors from "../colors";
+import CustomTabBar from "../components/CustomBar";
 
 const HomeScreen = () => {
   return (
@@ -18,7 +19,7 @@ const HomeScreen = () => {
             <ExploreCategories />
             <PopularEvents />
           </ScrollView>
-          <FooterNavBar style={styles.styleFilter} />
+          <CustomTabBar />
         </AlertNotificationRoot>
       </SafeAreaView>
     </PaperProvider>
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    width: "100%",
+    width: "90%",
   },
 });
 

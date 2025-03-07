@@ -77,10 +77,10 @@ const ExploreCategories = () => {
 
   const handlePress = async (id, data) => {
     switch (id) {
-      case "9c0ca801-0fab-4f60-a1a2-37d2c4935fb7":
+      case "bbfaecfc-013e-4ce3-9ac1-80d7b4c0010b":
         navigation.navigate('ServiceScreen', { group: id });
         break;
-      case "6f399706-21d2-42c3-bcde-691feeeadab0":
+      case "a99bc9a0-f142-4158-8b38-bf37426f18e4":
         navigation.navigate('ConciergeList', { group: id });
         break;
       case "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3":

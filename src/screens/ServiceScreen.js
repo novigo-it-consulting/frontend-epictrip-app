@@ -117,7 +117,7 @@ const ServicesScreen = () => {
         <SearchBarHome />
         <ScrollView>
           {categories
-            .filter((cat) => cat.groupId == '9c0ca801-0fab-4f60-a1a2-37d2c4935fb7')
+            .filter((cat) => cat.groupId == 'bbfaecfc-013e-4ce3-9ac1-80d7b4c0010b')
             .map((cat) => (
               <View key={cat.categoryId} style={styles.section}>
                 <Text style={styles.sectionTitle}>{cat.categoryName}</Text>

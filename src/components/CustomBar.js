@@ -12,10 +12,9 @@ const CustomTabBar = () => {
 
   const tabs = [
     { name: "Home", icon: "home", route: "Home" },
-    { name: "Groups", icon: "users", route: "GroupUsersScreen" },
-    { name: "Requests", icon: "bell", route: "RequestsScreen" },
+    { name: "Requests", icon: "bell", route: "RequestScreen" },
     { name: "Schedule", icon: "calendar", route: "ScheduleScreen" },
-    { name: "Profile", icon: "user", route: "ProfileScreen" },
+    { name: "Profile", icon: "user", route: "ProfileScreen" }
   ];
 
   return (
@@ -43,16 +42,16 @@ const styles = StyleSheet.create({
   tabBar: {
     flexDirection: "row",
     justifyContent: "space-around",
-    height: 88,
+    height: 64,
     position: "absolute",
-    bottom: 10,
+    bottom: 0,
     width: "100%",
     backgroundColor: "#fff",
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     shadowOffset: {
-      height: -4,
-      width: 1,
+      height: -8,
+      width: 4,
     },
     shadowColor: "#172B4D14",
     shadowRadius: 4,

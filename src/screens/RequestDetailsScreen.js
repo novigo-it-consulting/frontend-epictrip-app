@@ -10,6 +10,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import GoBackArrow from "../components/GoBackArrow";
 import colors from "../colors";
+import { useNavigation } from "@react-navigation/native";
 
 const STATUS_MAPPING = {
     OPEN_N1: "In progress",
@@ -38,12 +39,20 @@ const STATUS_ICONS = {
     "Unrealized": "close-circle-outline",
 };
 
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { month: "short", day: "numeric", weekday: "short" };
+    return date.toLocaleDateString("en-US", options).replace(",", "");
+};
+
 const RequestDetailsScreen = ({ route }) => {
     const request = route?.params?.request || {};
     const statusLabel = STATUS_MAPPING[request.status] || "Unknown";
     const statusColor = STATUS_COLORS[statusLabel] || "gray";
     const statusIcon = STATUS_ICONS[statusLabel] || "help-circle-outline";
     const showPaymentSection = request?.status === "PAYMENT_A";
+
+    const navigation = useNavigation();
 
     return (
         <SafeAreaView style={styles.container}>
@@ -59,16 +68,12 @@ const RequestDetailsScreen = ({ route }) => {
                         <Ionicons name={statusIcon} size={20} color={statusColor} style={styles.statusIcon} />
                         <Text style={[styles.status, { color: statusColor }]}>{statusLabel}</Text>
                     </View>
-                    <Text style={styles.date}>{request.date || "Date not available"}</Text>
+                    <Text style={styles.date}>{formatDate(request.created_at) || "Date not available"}</Text>
                 </View>
 
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Request</Text>
-                    <Text style={styles.subTitle}>My message</Text>
-                    <Text style={styles.message}>We want barbecue for 6 people with utensils, proper grill and meat included.</Text>
-                    <Text style={styles.subTitle}>Operator message</Text>
-                    <Text style={styles.message}>Confirming the order, the grill and utensils will be prepared and sent to the house. Delivery forecast for June 25.</Text>
-                    <Text style={styles.chatLink}>See in chat</Text>
+                    <Text style={styles.message}>{request.ai_resume}</Text>
                 </View>
 
                 {showPaymentSection && (
@@ -78,7 +83,7 @@ const RequestDetailsScreen = ({ route }) => {
                             <Text style={styles.totalText}>Total</Text>
                             <Text style={styles.totalAmount}>$ 65</Text>
                         </View>
-                        <TouchableOpacity style={styles.paymentButton}>
+                        <TouchableOpacity style={styles.paymentButton} onPress={() => navigation.navigate("SelectPaymentScreen")}>
                             <Text style={styles.paymentButtonText}>Select payment method</Text>
                         </TouchableOpacity>
                     </View>

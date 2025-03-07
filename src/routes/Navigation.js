@@ -31,6 +31,7 @@ import OffersByCategory from "../screens/OffersByCategory";
 import ProfileScreen from "../screens/ProfileScreen";
 import RequestScreen from "../screens/RequestsScreen";
 import RequestDetailsScreen from "../screens/RequestDetailsScreen";
+import SelectPaymentScreen from "../screens/choosePaymentMethodScreen";
 
 const Stack = createStackNavigator();
 
@@ -56,6 +57,7 @@ const Navigation = () => {
           component={LoginScreen}
           options={noGestureScreenOptions}
         />
+        <Stack.Screen name="SelectPaymentScreen" component={SelectPaymentScreen} options={noGestureScreenOptions} />
         <Stack.Screen name="SignUp" component={SignUpScreen} options={noGestureScreenOptions} />
         <Stack.Screen name="RequestDetailsScreen" component={RequestDetailsScreen} options={noGestureScreenOptions} />
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={noGestureScreenOptions} />

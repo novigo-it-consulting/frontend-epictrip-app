@@ -90,8 +90,8 @@ const styles = StyleSheet.create({
   },
   image: {
     height: 120,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    borderRadius: 24,
+    backgroundColor: "#fff"
   },
   title: {
     fontSize: 18,
