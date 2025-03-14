@@ -54,9 +54,9 @@ const ProfileScreen = () => {
       const userId = await AsyncStorage.getItem("userId")
       const response = await requestGetMethodsByUser(userId);
       if (response.status === 200) {
-        navigation.navigate("ChangePaymentScreen");
+        navigation.navigate("WalletScreen");
       } else {
-        navigation.navigate("PaymentScreen");
+        navigation.navigate("WalletScreen");
       }
     } catch (error) {
       throw error;
@@ -64,7 +64,7 @@ const ProfileScreen = () => {
   };
 
   const handlePressPayment = () => {
-    navigation.navigate("Payment");
+    navigation.navigate("WalletScreen");
   };
   const handlePressChangePassword = async () => {
     const userId = await AsyncStorage.getItem("userId")

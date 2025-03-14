@@ -1,15 +1,26 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Platform, NativeModules } from "react-native";
 import React, { useEffect } from "react";
 import LottieView from "lottie-react-native";
 import { useNavigation } from "@react-navigation/native";
 import { expo } from "../../app.json";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SplashScreen = () => {
   const { navigate } = useNavigation();
 
+  const checkNextPage = async () => {
+    const language = await AsyncStorage.getItem("language");
+    if (!language) {
+      navigate("LanguageSelectionScreen");
+    } else {
+      navigate("Login");
+    }
+  }
+
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate("Login");
+      checkNextPage();
     }, 1500);
     return () => clearTimeout(timer);
   }, []);

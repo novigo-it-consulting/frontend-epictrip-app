@@ -23,6 +23,8 @@ export default function ProfileHandleAccount(alert) {
   const getUserToProfile = async () => {
     setLoading(true);
     const userId = await AsyncStorage.getItem("userId");
+    console.log("User ID from AsyncStorage:", userId); // Verifique o userId
+
     if (!userId) {
       console.error("User ID not found in AsyncStorage");
       setLoading(false);
@@ -31,15 +33,28 @@ export default function ProfileHandleAccount(alert) {
 
     try {
       const response = await requestGetUser(userId);
-      if (response.status === 200) {
+      console.log("API Response:", response.data.data); // Verifique a resposta da API
+      console.log("API Response Status: ", response.status);
+
+      if (response.status == 200) {
         const { fullName, profilePic } = response.data.data;
         setProfileName(fullName);
-        setProfilePhoto(profilePic);
+        setProfilePhoto(profilePic || "https://via.placeholder.com/150"); // Imagem padrão
       } else {
+        console.error(response.status)
         console.error("Failed to fetch user profile:", response.status);
       }
     } catch (error) {
       console.error("An error occurred while fetching user profile:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+        console.error("Response status:", error.response.status);
+        console.error("Response headers:", error.response.headers);
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+      } else {
+        console.error("Error message:", error.message);
+      }
     }
     setLoading(false);
   };

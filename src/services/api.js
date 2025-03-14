@@ -80,7 +80,8 @@ export const requestGetUser = async (userId) => {
     const response = await axios.get(`${BASE_URL}/users/${userId}`, {
       headers,
     });
-    return response.data.data;
+    console.log(response)
+    return response;
   } catch (error) {
     throw error;
   }
