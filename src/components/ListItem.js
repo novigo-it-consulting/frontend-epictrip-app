@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 16,
     height: 112,
-    width: 96,
+    width: 104,
     marginHorizontal: 4,
     marginBottom: -70,
     justifyContent: "center",
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     height: 20,
   },
   title: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#172B4D",
     fontWeight: "bold",
   },

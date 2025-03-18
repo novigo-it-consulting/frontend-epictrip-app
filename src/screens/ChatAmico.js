@@ -15,6 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import GoBackArrow from "../components/GoBackArrow.js";
 import { requestGetBookingByUser, requestGetHousesByBooking, requestGetUser, getAddressById, createFirstRequest } from "../services/api";
 import { useNavigation, useRoute } from '@react-navigation/native';
+import clientMessageDto from "../services/amiko/clientMessageDto.js";
 
 const ChatScreen = () => {
   const route = useRoute();
@@ -190,7 +191,7 @@ const ChatScreen = () => {
     const initializeAmiko = async () => {
       const context = await buildContext();
       setClientMessage(await AsyncStorage.getItem("preMessage"));
-      const amiko = new Amiko(`${gerarInteiroAleatorio()}`, context);
+      const amiko = new Amiko(`1000000000000000000000`, context);
 
       amiko.onChatStateReceived = (newChatState) => {
         setChatState(newChatState);
@@ -238,9 +239,10 @@ const ChatScreen = () => {
   }, [messages]);
 
   const sendMessageToAmiko = (message) => {
+    const messageToSend = new clientMessageDto(message);
     if (message.trim()) {
       setMessages((prevMessages) => [...prevMessages, { from: 'user', content: message }]);
-      amikoInstance?.sendMessage(message, (response) => {
+      amikoInstance?.sendMessage(messageToSend, (response) => {
       });
       setClientMessage("");
     }

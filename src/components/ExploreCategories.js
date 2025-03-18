@@ -86,6 +86,9 @@ const ExploreCategories = () => {
       case "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3":
         navigation.navigate('ChatAmico', { clickedProduct: "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3" })
         break;
+      case "d8d5deb6-dcd4-4235-98a5-a659e6e46c43":
+        navigation.navigate('BookingScreen', { group: id });
+        break;
       default:
         navigation.navigate('OffersList', { group: id, groupData: data })
     }

@@ -74,6 +74,7 @@ class Amiko {
 
     sendMessage(content, callback) {
         const clientMessage = { content };
+        console.log(clientMessage)
         this.socket.emit('EVENT_CLIENT_SEND_MESSAGE', clientMessage, (response) => {
             if (callback) {
                 callback(response);

@@ -260,15 +260,29 @@ export const requestPayment = async (userId, paymentMethodId, amount) => {
 
 export const requestGetBookingByUser = async (userId) => {
   try {
+    const token = await AsyncStorage.getItem("token"); // Obtém o token do AsyncStorage
     const headers = {
-      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     };
-    const response = await axios.get(`${BASE_URL}/bookings/user/${userId}`, { headers })
-    return response.data.data
+
+    const response = await fetch(`${BASE_URL}/bookings/user/${userId}`, {
+      method: "GET",
+      headers: headers,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro na requisição: ${response.status}`);
+    }
+
+    const data = await response.json(); // Converte a resposta para JSON
+    return data.data; // Retorna os dados das reservas
   } catch (error) {
+    console.log("ERROR: ", error);
     throw error;
   }
-}
+};
+
 export const requestGetHousesByBooking = async (houseId) => {
   try {
     const headers = {

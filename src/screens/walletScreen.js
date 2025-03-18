@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
     View,
     Text,
@@ -12,6 +12,9 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import GoBackArrow from "../components/GoBackArrow";
+import { requestGetMethodsByUser } from "../services/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const { width: screenWidth } = Dimensions.get("window"); // Largura da tela
 
@@ -47,6 +50,14 @@ const WalletScreen = () => {
     const [editingCard, setEditingCard] = useState(null);
     const [cards, setCards] = useState(savedCards);
     const scrollX = useRef(new Animated.Value(0)).current;
+
+    const getUserPaymentMethods = async () => {
+        const userCards = requestGetMethodsByUser(await AsyncStorage.getItem("userId"));
+    }
+
+    useEffect(() => {
+        getUserPaymentMethods();
+    }, []);
 
     const handleEditCard = (card) => {
         setEditingCard(card.id);

@@ -50,6 +50,8 @@ const ServicesScreen = () => {
       const response = await axios.get(urlProducts, { headers });
       const products = response.data;
 
+      console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", products)
+
       const prds = [];
       for (const product of products) {
         const urlUploads = `https://homol-api.fertech.dev.br/uploads?productId=${product.id}`;
@@ -69,6 +71,7 @@ const ServicesScreen = () => {
         }
       }
       setProductData(objsToSendAmiko)
+      console.log("CCCCCCCCCCCCCCCC", prds)
       return prds;
     } catch (error) {
       console.error('Erro ao buscar produtos:', error);
@@ -82,13 +85,13 @@ const ServicesScreen = () => {
         setIsLoading(true); // Começa o carregamento
         const categoriesList = await fetchCategories();
         const productsList = await fetchProducts();
-        setProducts(productsList);
-        setCategories(categoriesList);
+        await setProducts(productsList);
+        await setCategories(categoriesList);
         console.log(products)
       } catch (error) {
         console.error('Erro ao buscar dados iniciais:', error);
       } finally {
-        console.log(products)
+        console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBB", products)
         setIsLoading(false); // Finaliza o carregamento
       }
     };
