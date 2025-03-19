@@ -83,7 +83,7 @@ const ExploreCategories = () => {
       case "a99bc9a0-f142-4158-8b38-bf37426f18e4":
         navigation.navigate('ConciergeList', { group: id });
         break;
-      case "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3":
+      case "f00977b4-354f-41d5-aaf5-fb3d935022d9":
         navigation.navigate('ChatAmico', { clickedProduct: "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3" })
         break;
       case "d8d5deb6-dcd4-4235-98a5-a659e6e46c43":

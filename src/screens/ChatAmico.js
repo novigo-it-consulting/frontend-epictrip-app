@@ -35,7 +35,7 @@ const ChatScreen = () => {
         // Cria uma nova requisição (request) com o ID do produto clicado ou um ID padrão
         const newRequestClaim = await createFirstRequest(
           await AsyncStorage.getItem("userId"),
-          clickedProduct.product?.id || "faf91ecc-36eb-42cc-9770-eb5c8d7aca05"
+          clickedProduct.product?.id || "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3"
         );
 
         // Strings de template para os detalhes do viajante e número da requisição
@@ -55,10 +55,10 @@ const ChatScreen = () => {
             .replace("{statusBooking}", bookingClaims[0].status || "N/A")
             .replace("{checkinDate}", bookingClaims[0].checkIn || "N/A")
             .replace("{checkoutDate}", bookingClaims[0].checkOut || "N/A")
-            .replace("{fullName}", userClaim.fullName || "N/A")
-            .replace("{userId}", userClaim.userId || "N/A")
-            .replace("{email}", userClaim.email || "N/A")
-            .replace("{phoneNumber}", userClaim.phone || "N/A")
+            .replace("{fullName}", userClaim.data.data.fullName || "N/A")
+            .replace("{userId}", userClaim.data.data.userId || "N/A")
+            .replace("{email}", userClaim.data.data.email || "N/A")
+            .replace("{phoneNumber}", userClaim.data.data.phone || "N/A")
             .replace("{shareNumber}", bookingClaims[0].shareNumber || "N/A");
         } else {
           // Caso não haja reservas, define valores padrão
@@ -67,10 +67,10 @@ const ChatScreen = () => {
             .replace("{statusBooking}", "N/A")
             .replace("{checkinDate}", "N/A")
             .replace("{checkoutDate}", "N/A")
-            .replace("{fullName}", userClaim.fullName || "N/A")
-            .replace("{userId}", userClaim.userId || "N/A")
-            .replace("{email}", userClaim.email || "N/A")
-            .replace("{phoneNumber}", userClaim.phone || "N/A")
+            .replace("{fullName}", userClaim.data.data.fullName || "N/A")
+            .replace("{userId}", userClaim.data.data.userId || "N/A")
+            .replace("{email}", userClaim.data.data.email || "N/A")
+            .replace("{phoneNumber}", userClaim.data.data.phone || "N/A")
             .replace("{shareNumber}", "N/A");
         }
 
@@ -132,10 +132,10 @@ const ChatScreen = () => {
           travelerDetails = travelerDetails.replace("{statusBooking}", bk.status)
           travelerDetails = travelerDetails.replace("{checkinDate}", bk.checkIn)
           travelerDetails = travelerDetails.replace("{checkoutDate}", bk.checkOut)
-          travelerDetails = travelerDetails.replace("{fullName}", user.fullName)
-          travelerDetails = travelerDetails.replace("{userId}", user.userId)
-          travelerDetails = travelerDetails.replace("{email}", user.email)
-          travelerDetails = travelerDetails.replace("{phoneNumber}", user.phone)
+          travelerDetails = travelerDetails.replace("{fullName}", user.data.data.fullName)
+          travelerDetails = travelerDetails.replace("{userId}", user.data.data.userId)
+          travelerDetails = travelerDetails.replace("{email}", user.data.data.email)
+          travelerDetails = travelerDetails.replace("{phoneNumber}", user.data.data.phone)
           travelerDetails = travelerDetails.replace("{shareNumber}", bk.shareNumber)
 
           let offers = ""; // Nova variável para acumular as ofertas

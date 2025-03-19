@@ -9,67 +9,72 @@ import {
     Animated,
     TextInput,
     Dimensions,
+    ActivityIndicator, // Adicionado para o indicador de carregamento
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import GoBackArrow from "../components/GoBackArrow";
 import { requestGetMethodsByUser } from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
 const { width: screenWidth } = Dimensions.get("window"); // Largura da tela
 
-const savedCards = [
-    {
-        id: 1,
-        last4: "0123",
-        name: "Polina J S Amaro",
-        expDate: "12/23",
-        cvv: "123",
-        number: "4111111111111111",
-    },
-    {
-        id: 2,
-        last4: "4567",
-        name: "John Doe",
-        expDate: "08/24",
-        cvv: "456",
-        number: "4222222222222222",
-    },
-    {
-        id: 3,
-        last4: "7890",
-        name: "Jane Smith",
-        expDate: "05/25",
-        cvv: "789",
-        number: "4333333333333333",
-    },
-];
-
 const WalletScreen = () => {
-    const [selectedCard, setSelectedCard] = useState(savedCards[0]?.id || null);
+    const [selectedCard, setSelectedCard] = useState(null);
     const [editingCard, setEditingCard] = useState(null);
-    const [cards, setCards] = useState(savedCards);
+    const [cards, setCards] = useState([]); // Inicializado como array vazio
+    const [loading, setLoading] = useState(true); // Estado para controlar o carregamento
     const scrollX = useRef(new Animated.Value(0)).current;
 
+    // Função para buscar os métodos de pagamento do usuário
     const getUserPaymentMethods = async () => {
-        const userCards = requestGetMethodsByUser(await AsyncStorage.getItem("userId"));
-    }
+        try {
+            const userId = await AsyncStorage.getItem("userId");
+            const userCards = await requestGetMethodsByUser(userId);
 
+            // Garante que userCards seja um array
+            if (Array.isArray(userCards)) {
+                setCards(userCards); // Atualiza o estado com os cartões
+                if (userCards.length > 0) {
+                    setSelectedCard(userCards[0].methodId); // Seleciona o primeiro cartão
+                }
+            } else {
+                console.warn("A API não retornou um array de cartões.");
+                setCards([]); // Define cards como array vazio
+            }
+        } catch (error) {
+            console.error("Erro ao buscar métodos de pagamento:", error);
+            setCards([]); // Define cards como array vazio em caso de erro
+        } finally {
+            setLoading(false); // Finaliza o carregamento
+        }
+    };
+
+    // Efeito para buscar os métodos de pagamento ao montar a tela
     useEffect(() => {
         getUserPaymentMethods();
     }, []);
 
     const handleEditCard = (card) => {
-        setEditingCard(card.id);
+        setEditingCard(card.methodId);
     };
 
     const handleSaveCard = (updatedCard) => {
         const updatedCards = cards.map((card) =>
-            card.id === updatedCard.id ? updatedCard : card
+            card.methodId === updatedCard.methodId ? updatedCard : card
         );
         setCards(updatedCards);
         setEditingCard(null);
     };
+
+    // Se estiver carregando, exibe um indicador de carregamento
+    if (loading) {
+        return (
+            <SafeAreaView style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#0057FF" />
+                <Text style={styles.loadingText}>Carregando...</Text>
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -89,35 +94,36 @@ const WalletScreen = () => {
                             [{ nativeEvent: { contentOffset: { x: scrollX } } }],
                             { useNativeDriver: false }
                         )}
-                        contentContainerStyle={styles.cardScrollContent} // Centraliza os cartões
+                        contentContainerStyle={styles.cardScrollContent}
                     >
-                        {cards.map((card) => (
+                        {/* Verifica se cards é um array antes de usar map */}
+                        {Array.isArray(cards) && cards.map((card) => (
                             <View
-                                key={card.id}
+                                key={card.methodId}
                                 style={[
                                     styles.cardContainer,
-                                    { width: screenWidth - 32 }, // Largura do cartão ajustada à tela
+                                    { width: screenWidth - 32 },
                                 ]}
                             >
-                                <View style={[styles.card, selectedCard === card.id && styles.selectedCard]}>
-                                    {editingCard === card.id ? (
+                                <View style={[styles.card, selectedCard === card.methodId && styles.selectedCard]}>
+                                    {editingCard === card.methodId ? (
                                         <EditCardForm
                                             card={card}
                                             onSave={handleSaveCard}
                                             onCancel={() => setEditingCard(null)}
                                         />
                                     ) : (
-                                        <TouchableOpacity onPress={() => setSelectedCard(card.id)}>
+                                        <TouchableOpacity onPress={() => setSelectedCard(card.methodId)}>
                                             <View style={styles.cardHeader}>
                                                 <Ionicons name="card-outline" size={24} color="#6C757D" />
                                                 <TouchableOpacity onPress={() => handleEditCard(card)}>
                                                     <Ionicons name="create-outline" size={20} color="#6C757D" />
                                                 </TouchableOpacity>
                                             </View>
-                                            <Text style={styles.cardNumber}>•••• •••• •••• {card.last4} {selectedCard === card.id && <Text style={styles.selectedText}>(selected)</Text>}</Text>
+                                            <Text style={styles.cardNumber}>•••• •••• •••• {card.cardNumber.slice(-4)} {selectedCard === card.methodId && <Text style={styles.selectedText}>(selected)</Text>}</Text>
                                             <View style={styles.cardFooter}>
-                                                <Text style={styles.cardName}>{card.name}</Text>
-                                                <Text style={styles.cardExp}>{card.expDate}</Text>
+                                                <Text style={styles.cardName}>{card.cardName}</Text>
+                                                <Text style={styles.cardExp}>{card.cardExpiration}</Text>
                                             </View>
                                         </TouchableOpacity>
                                     )}
@@ -126,7 +132,7 @@ const WalletScreen = () => {
                         ))}
                     </ScrollView>
                     <View style={styles.pagination}>
-                        {cards.map((card, index) => {
+                        {Array.isArray(cards) && cards.map((card, index) => {
                             const inputRange = [
                                 (index - 1) * (screenWidth - 32),
                                 index * (screenWidth - 32),
@@ -137,7 +143,7 @@ const WalletScreen = () => {
                                 outputRange: [0.3, 1, 0.3],
                                 extrapolate: "clamp",
                             });
-                            return <Animated.View key={card.id} style={[styles.dot, { opacity: dotOpacity }]} />;
+                            return <Animated.View key={card.methodId} style={[styles.dot, { opacity: dotOpacity }]} />;
                         })}
                     </View>
                 </View>
@@ -151,19 +157,18 @@ const WalletScreen = () => {
 };
 
 const EditCardForm = ({ card, onSave, onCancel }) => {
-    const [name, setName] = useState(card.name);
-    const [number, setNumber] = useState(card.number);
-    const [expDate, setExpDate] = useState(card.expDate);
+    const [name, setName] = useState(card.cardName);
+    const [number, setNumber] = useState(card.cardNumber);
+    const [expDate, setExpDate] = useState(card.cardExpiration);
     const [cvv, setCvv] = useState(card.cvv);
 
     const handleSave = () => {
         const updatedCard = {
             ...card,
-            name,
-            number,
-            expDate,
-            cvv,
-            last4: number.slice(-4),
+            cardName: name,
+            cardNumber: number,
+            cardExpiration: expDate,
+            cvv: cvv,
         };
         onSave(updatedCard);
     };
@@ -232,7 +237,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     cardScrollContent: {
-        alignItems: "center", // Centraliza os cartões horizontalmente
+        alignItems: "center",
     },
     cardContainer: {
         justifyContent: "center",
@@ -240,7 +245,7 @@ const styles = StyleSheet.create({
     },
     card: {
         backgroundColor: "#EAF2FF",
-        width: "100%", // Ocupa a largura do container
+        width: "100%",
         padding: 16,
         borderRadius: 12,
     },
@@ -328,6 +333,16 @@ const styles = StyleSheet.create({
         color: "#000000",
         fontSize: 16,
         fontWeight: "bold",
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    loadingText: {
+        marginTop: 10,
+        fontSize: 16,
+        color: "#0057FF",
     },
 });
 

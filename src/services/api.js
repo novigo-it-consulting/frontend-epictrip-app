@@ -213,18 +213,17 @@ export const requestGetMethodsByUser = async (userId) => {
     const headers = {
       Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
     };
-    const response = axios.get(
+    const response = await axios.get(
       `${BASE_URL}/paymentmethods/getmethodsbyuser/${userId}`,
       { headers }
     );
     if (response.status == 200) {
-      return response;
+      return response.data.data;
     } else if (response.status == 404) {
       return "noCardsFound";
     } else {
       return response
     }
-
   } catch (error) {
     throw error;
   }
