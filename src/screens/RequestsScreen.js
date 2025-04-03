@@ -224,6 +224,7 @@ const stylesRequests = StyleSheet.create({
   filterContainer: {
     flexDirection: "row",
     marginTop: 16,
+    marginBottom: 30,
   },
   filterButton: (isActive) => ({
     backgroundColor: isActive ? "#0057FF" : "white",

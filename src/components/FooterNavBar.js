@@ -12,7 +12,7 @@ const FooterNavBar = () => {
     const navItems = [
         { name: 'Home', icon: 'home', route: "Home" },
         { name: 'Groups', icon: 'users', route: "EmConstrucaoScreen" },
-        { name: 'Requests', icon: 'bell', route: "RequestScreen" },
+        { name: 'Requests', icon: 'bell', route: "EmConstrucaoScreen" },
         { name: 'Schedule', icon: 'calendar', route: "EmConstrucaoScreen" },
         { name: 'Profile', icon: 'user', route: "ProfileScreen" },
     ];
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         width: "100%",
-        height: Platform.OS === 'ios' ? 90 : 80, // Ajusta altura para iOS e Android
+        height: Platform.OS === 'ios' ? 90 : 80,
     },
     button: {
         alignItems: 'center',

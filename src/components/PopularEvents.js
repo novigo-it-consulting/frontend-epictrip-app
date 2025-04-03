@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     width: "85%",
     marginRight: "auto",
     marginLeft: "auto",
+    marginBottom: 30,
   },
   titlePage: {
     color: "#172B4D",
@@ -87,6 +88,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 24,
     width: "85%",
+
   },
   image: {
     height: 120,
