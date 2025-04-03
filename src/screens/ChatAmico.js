@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
 } from 'react-native';
 import { TextInput, Button, Avatar } from 'react-native-paper';
 import Amiko from "../services/amiko/amiko.js";
@@ -15,14 +16,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import GoBackArrow from "../components/GoBackArrow.js";
 import { requestGetBookingByUser, requestGetHousesByBooking, requestGetUser, getAddressById, createFirstRequest } from "../services/api";
 import { useNavigation, useRoute } from '@react-navigation/native';
-import clientMessageDto from "../services/amiko/clientMessageDto.js";
 
 const ChatScreen = () => {
   const route = useRoute();
   const { productData } = route.params || {};
   const { clickedProduct } = route.params || {};
 
-  const [clientMessage, setClientMessage] = useState();
+  // Inicializando clientMessage como string vazia para evitar problemas com TextInput
+  const [clientMessage, setClientMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [amikoInstance, setAmikoInstance] = useState(null);
   const [chatState, setChatState] = useState('');
@@ -31,25 +32,18 @@ const ChatScreen = () => {
   const buildContext = async () => {
     try {
       if (clickedProduct == 'a531dd1d-6b90-4fd1-a2e5-0e9e795288e3') {
-
-        // Cria uma nova requisição (request) com o ID do produto clicado ou um ID padrão
         const newRequestClaim = await createFirstRequest(
           await AsyncStorage.getItem("userId"),
           clickedProduct.product?.id || "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3"
         );
 
-        // Strings de template para os detalhes do viajante e número da requisição
         let requestNumberClaim = "The opened request id is {request_id}";
         let travelerDetailsClaim = "Traveler Details: Booking Name: {BookingName}, Booking Status: {statusBooking}, Check - In Date: {checkinDate}, Check - Out Date: {checkoutDate}, Person Name:{fullName}, Person Id:{userId}, Email: {email}, Phone: {phoneNumber}, Share Number: {shareNumber}.";
 
-        // Obtém os dados do usuário e das reservas (bookings)
         const userClaim = await requestGetUser(await AsyncStorage.getItem("userId"));
         const bookingClaims = await requestGetBookingByUser(await AsyncStorage.getItem("userId"));
 
-
-        // Verifica se bookingClaims tem pelo menos uma reserva
         if (bookingClaims && bookingClaims.length > 0) {
-          // Substitui os placeholders na string travelerDetailsClaim com os dados da primeira reserva
           travelerDetailsClaim = travelerDetailsClaim
             .replace("{BookingName}", bookingClaims[0].bookingName || "N/A")
             .replace("{statusBooking}", bookingClaims[0].status || "N/A")
@@ -61,7 +55,6 @@ const ChatScreen = () => {
             .replace("{phoneNumber}", userClaim.data.data.phone || "N/A")
             .replace("{shareNumber}", bookingClaims[0].shareNumber || "N/A");
         } else {
-          // Caso não haja reservas, define valores padrão
           travelerDetailsClaim = travelerDetailsClaim
             .replace("{BookingName}", "N/A")
             .replace("{statusBooking}", "N/A")
@@ -74,75 +67,73 @@ const ChatScreen = () => {
             .replace("{shareNumber}", "N/A");
         }
 
-        // Substitui o placeholder na string requestNumberClaim com o ID da nova requisição
-        requestNumberClaim = requestNumberClaim.replace("{request_id}", newRequestClaim.request_id);
-
-        // Constrói a string de contexto final
-        contextString = `This is a claim, here are the necessary data to handle it: ${travelerDetailsClaim}. ${requestNumberClaim}`;
+        requestNumberClaim = requestNumberClaim.replace("{request_id}", newRequestClaim.uniqueNumber);
+        let contextString = `This is a claim, here are the necessary data to handle it: ${travelerDetailsClaim}. ${requestNumberClaim}`;
 
         console.log("CONTEXT STRING AQUIIIIIIIIII: ", contextString);
         return contextString;
       }
 
-      let contextString = ""
-      let houseDetails = "House Details: House Name: {houseName}, Is condo house: {houseType}, Location: {number} {address}, {neighbourhood}, {City}, {State}, {ZipCode}, {Country}, Maximum Capacity: {maxCapacity}, Pets Allowed: {petsAllowed}, Smoking Allowed: {smokingAllowed}, Parties Allowed: {partiesAllowed}"
-      let amenities = "Amenities: Has Pool: {hasPool}, Has Babercue Grill: {hasBabercueGrill}, Has Central Air Conditioner: {hasCentralAirConditioner}, Has Splitter Air Conditioner: {hasSplitterAirConditioner}, Has Dryer: {hasDryer}, Has Washing Machine: {hasWashingMachine}, Has Wi-fi: {hasWiFi}"
-      let maxCapacity = "Maximum Guests: {maximumCapacity}, Total Rooms: {totalRooms}, Total Bath Rooms: {totalBathRooms}"
-      let travelerDetails = "Traveler Details: Booking Name: {BookingName}, Booking Status: {statusBooking}, Check - In Date: {checkinDate}, Check - Out Date: {checkoutDate}, Person Name:{fullName}, Person Id:{userId}, Email: {email}, Phone: {phoneNumber}, Share Number: {shareNumber}."
-      let offer = "The following is a offer: The product name {productName}. {description}. the severity is {severity}. The Address is {number} {address}, {neighbourhood}, {city}, {state}, {country}, {zipCode}.\n\n"
-      let requestNumber = "The opened request id is {request_id}"
+      let contextString = "";
+      let houseDetails = "House Details: House Name: {houseName}, Is condo house: {houseType}, Location: {number} {address}, {neighbourhood}, {City}, {State}, {ZipCode}, {Country}, Maximum Capacity: {maxCapacity}, Pets Allowed: {petsAllowed}, Smoking Allowed: {smokingAllowed}, Parties Allowed: {partiesAllowed}";
+      let amenities = "Amenities: Has Pool: {hasPool}, Has Babercue Grill: {hasBabercueGrill}, Has Central Air Conditioner: {hasCentralAirConditioner}, Has Splitter Air Conditioner: {hasSplitterAirConditioner}, Has Dryer: {hasDryer}, Has Washing Machine: {hasWashingMachine}, Has Wi-fi: {hasWiFi}";
+      let maxCapacity = "Maximum Guests: {maximumCapacity}, Total Rooms: {totalRooms}, Total Bath Rooms: {totalBathRooms}";
+      let travelerDetails = "Traveler Details: Booking Name: {BookingName}, Booking Status: {statusBooking}, Check - In Date: {checkinDate}, Check - Out Date: {checkoutDate}, Person Name:{fullName}, Person Id:{userId}, Email: {email}, Phone: {phoneNumber}, Share Number: {shareNumber}.";
+      let offer = "The following is an offer: The product name {productName}. {description}. the severity is {severity}. The Address is {number} {address}, {neighbourhood}, {city}, {state}, {country}, {zipCode}.\n\n";
+      let requestNumber = "The opened request id is {request_id}";
 
-      const bookings = await requestGetBookingByUser(await AsyncStorage.getItem("userId"))
+      const bookings = await requestGetBookingByUser(await AsyncStorage.getItem("userId"));
 
-      const newRequest = await createFirstRequest(await AsyncStorage.getItem("userId"), clickedProduct.product?.id || "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3")
+      const newRequest = await createFirstRequest(
+        await AsyncStorage.getItem("userId"),
+        clickedProduct.product?.id || "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3"
+      );
 
-      requestNumber = requestNumber.replace("{request_id}", newRequest.request_id)
+      requestNumber = requestNumber.replace("{request_id}", newRequest.uniqueNumber);
       for (const bk of bookings) {
         if (bk.status === 'Active') {
-          const house = await requestGetHousesByBooking(bk.houseId)
-          const user = await requestGetUser(await AsyncStorage.getItem("userId"))
+          const house = await requestGetHousesByBooking(bk.houseId);
+          const user = await requestGetUser(await AsyncStorage.getItem("userId"));
 
-          houseDetails = houseDetails.replace("{houseName}", house.houseName)
-          houseDetails = houseDetails.replace("{houseType}", house.isCondoHouse)
-          houseDetails = houseDetails.replace("{number}", house.number)
-          houseDetails = houseDetails.replace("{address}", house.address)
-          houseDetails = houseDetails.replace("{neighbourhood}", house.neighbourhood)
-          houseDetails = houseDetails.replace("{City}", house.city)
-          houseDetails = houseDetails.replace("{State}", house.state)
-          houseDetails = houseDetails.replace("{ZipCode}", house.zipCode)
-          houseDetails = houseDetails.replace("{Country}", house.country)
-          houseDetails = houseDetails.replace("{maxCapacity}", house.maximumCapacity)
-          houseDetails = houseDetails.replace("{petsAllowed}", house.petsAllowed)
-          houseDetails = houseDetails.replace("{smokingAllowed}", house.smokingAllowed)
-          houseDetails = houseDetails.replace("{partiesAllowed}", house.partiesAllowed)
+          houseDetails = houseDetails.replace("{houseName}", house.houseName);
+          houseDetails = houseDetails.replace("{houseType}", house.isCondoHouse);
+          houseDetails = houseDetails.replace("{number}", house.number);
+          houseDetails = houseDetails.replace("{address}", house.address);
+          houseDetails = houseDetails.replace("{neighbourhood}", house.neighbourhood);
+          houseDetails = houseDetails.replace("{City}", house.city);
+          houseDetails = houseDetails.replace("{State}", house.state);
+          houseDetails = houseDetails.replace("{ZipCode}", house.zipCode);
+          houseDetails = houseDetails.replace("{Country}", house.country);
+          houseDetails = houseDetails.replace("{maxCapacity}", house.maximumCapacity);
+          houseDetails = houseDetails.replace("{petsAllowed}", house.petsAllowed);
+          houseDetails = houseDetails.replace("{smokingAllowed}", house.smokingAllowed);
+          houseDetails = houseDetails.replace("{partiesAllowed}", house.partiesAllowed);
 
-          amenities = amenities.replace("{hasPool}", house.hasPool)
-          amenities = amenities.replace("{hasBabercueGrill}", house.hasBabercueGrill)
-          amenities = amenities.replace("{hasCentralAirConditioner}", house.hasCentralAirConditioner)
-          amenities = amenities.replace("{hasSplitterAirConditioner}", house.hasSplitterAirConditioner)
-          amenities = amenities.replace("{hasDryer}", house.hasDryer)
-          amenities = amenities.replace("{hasWashingMachine}", house.hasWashingMachine)
-          amenities = amenities.replace("{hasWiFi}", house.hasWifi)
+          amenities = amenities.replace("{hasPool}", house.hasPool);
+          amenities = amenities.replace("{hasBabercueGrill}", house.hasBabercueGrill);
+          amenities = amenities.replace("{hasCentralAirConditioner}", house.hasCentralAirConditioner);
+          amenities = amenities.replace("{hasSplitterAirConditioner}", house.hasSplitterAirConditioner);
+          amenities = amenities.replace("{hasDryer}", house.hasDryer);
+          amenities = amenities.replace("{hasWashingMachine}", house.hasWashingMachine);
+          amenities = amenities.replace("{hasWiFi}", house.hasWifi);
 
-          maxCapacity = maxCapacity.replace("{maximumCapacity}", house.maximumCapacity)
-          maxCapacity = maxCapacity.replace("{totalRooms}", house.totalRooms)
-          maxCapacity = maxCapacity.replace("{totalBathRooms}", house.totalBathRooms)
+          maxCapacity = maxCapacity.replace("{maximumCapacity}", house.maximumCapacity);
+          maxCapacity = maxCapacity.replace("{totalRooms}", house.totalRooms);
+          maxCapacity = maxCapacity.replace("{totalBathRooms}", house.totalBathRooms);
 
-          travelerDetails = travelerDetails.replace("{BookingName}", bk.bookingName)
-          travelerDetails = travelerDetails.replace("{statusBooking}", bk.status)
-          travelerDetails = travelerDetails.replace("{checkinDate}", bk.checkIn)
-          travelerDetails = travelerDetails.replace("{checkoutDate}", bk.checkOut)
-          travelerDetails = travelerDetails.replace("{fullName}", user.data.data.fullName)
-          travelerDetails = travelerDetails.replace("{userId}", user.data.data.userId)
-          travelerDetails = travelerDetails.replace("{email}", user.data.data.email)
-          travelerDetails = travelerDetails.replace("{phoneNumber}", user.data.data.phone)
-          travelerDetails = travelerDetails.replace("{shareNumber}", bk.shareNumber)
+          travelerDetails = travelerDetails.replace("{BookingName}", bk.bookingName);
+          travelerDetails = travelerDetails.replace("{statusBooking}", bk.status);
+          travelerDetails = travelerDetails.replace("{checkinDate}", bk.checkIn);
+          travelerDetails = travelerDetails.replace("{checkoutDate}", bk.checkOut);
+          travelerDetails = travelerDetails.replace("{fullName}", user.data.data.fullName);
+          travelerDetails = travelerDetails.replace("{userId}", user.data.data.userId);
+          travelerDetails = travelerDetails.replace("{email}", user.data.data.email);
+          travelerDetails = travelerDetails.replace("{phoneNumber}", user.data.data.phone);
+          travelerDetails = travelerDetails.replace("{shareNumber}", bk.shareNumber);
 
-          let offers = ""; // Nova variável para acumular as ofertas
-
+          let offers = "";
           for (const prd of productData) {
-            // Verifica se prd possui a estrutura esperada
-            const address = await getAddressById(prd.product?.location)
+            const address = await getAddressById(prd.product?.location);
             const name = prd.product?.name ?? "Nome não disponível";
             const description = prd.product?.description ?? "Descrição não disponível";
             const severity = prd.product?.severity ?? "Severidade não disponível";
@@ -154,7 +145,6 @@ const ChatScreen = () => {
             const state = address.state;
             const zip = address.zipCode;
 
-            // Realiza as substituições na string offer
             let offerPrd = offer.replace("{productName}", name)
               .replace("{description}", description)
               .replace("{number}", number)
@@ -167,58 +157,53 @@ const ChatScreen = () => {
               .replace("{zipCode}", zip)
               .replace("undefined", "");
 
-            // Acumula o resultado em offers
             offers += offerPrd;
           }
 
-          contextString = `${houseDetails}. ${amenities}. ${maxCapacity}. ${travelerDetails}. ${offers}. ${requestNumber}`
-
-          console.log("Context String aquiiiiiiiiiii: ", contextString)
-
-          return contextString
+          contextString = `${houseDetails}. ${amenities}. ${maxCapacity}. ${travelerDetails}. ${offers}. ${requestNumber}`;
+          console.log("Context String aquiiiiiiiiiii: ", contextString);
+          return contextString;
         }
       }
     } catch (error) {
-      console.log("errrrrooooo: ", error)
+      console.log("errrrrooooo: ", error);
     }
-  }
+  };
 
   const gerarInteiroAleatorio = () => {
     return Math.floor(Math.random() * 1000) + 1;
-  }
+  };
 
   useEffect(() => {
     const initializeAmiko = async () => {
       const context = await buildContext();
       setClientMessage(await AsyncStorage.getItem("preMessage"));
-      const amiko = new Amiko(`1000000000000000000000`, context);
+      const amiko = new Amiko(`10000232`, context);
 
       amiko.onChatStateReceived = (newChatState) => {
         setChatState(newChatState);
       };
 
-      amiko.onMessageReceived = (ServerMessageDto) => {
+      amiko.onMessageReceived = async (ServerMessageDto) => {
+        console.log("MENSAGEM RECEBIDA: ", ServerMessageDto)
         setChatState("");
-        if (ServerMessageDto.direction !== 'outgoing') {
-          const incomingMessage = {
-            id: ServerMessageDto.id,
-            type: 'reply',
-            content: ServerMessageDto.content,
-            createdAt: new Date(ServerMessageDto.createdAt),
-          };
+        const incomingMessage = {
+          id: ServerMessageDto.id,
+          type: ServerMessageDto.direction === 'incoming' ? 'reply' : 'user',
+          content: ServerMessageDto.content
+        };
 
-          setMessages((prevMessages) => {
-            const messageExists = prevMessages.some(msg => msg.id === incomingMessage.id);
-            if (!messageExists) {
-              return [...prevMessages, incomingMessage];
-            }
-            return prevMessages;
-          });
+        // Atualiza o estado das mensagens corretamente (retorno implícito sem as chaves)
+        if (incomingMessage.type === "reply") {
+          setMessages(prevMessages => [...prevMessages, incomingMessage]);
         }
       };
 
       amiko.onInitMessageList = (initialMessages) => {
-        const formattedMessages = initialMessages.map((msg) => ({ from: msg.from, content: msg.content }));
+        const formattedMessages = initialMessages.map((msg) => ({
+          from: msg.from,
+          content: msg.content
+        }));
         setMessages(formattedMessages);
       };
 
@@ -238,14 +223,21 @@ const ChatScreen = () => {
     scrollViewRef.current.scrollToEnd({ animated: true });
   }, [messages]);
 
-  const sendMessageToAmiko = (message) => {
-    const messageToSend = new clientMessageDto(message);
-    if (message.trim()) {
-      setMessages((prevMessages) => [...prevMessages, { from: 'user', content: message }]);
-      amikoInstance?.sendMessage(messageToSend, (response) => {
-      });
-      setClientMessage("");
-    }
+  const sendMessageToAmiko = async (message) => {
+    const content = {
+      content: message,
+      toLang: "EN-US",
+      fromLang: "PT-BR"
+    };
+
+    const messageToSend = {
+      id: null,
+      type: 'user',
+      content: message
+    };
+    setMessages((prevMessages) => [...prevMessages, messageToSend]);
+    await amikoInstance?.sendMessage(content, (response) => { });
+    setClientMessage("");
   };
 
   return (
@@ -263,10 +255,10 @@ const ChatScreen = () => {
               size={50}
               source={{ uri: 'https://epictrip-dev.s3.us-east-1.amazonaws.com/profilepics/Imagem+do+WhatsApp+de+2024-11-05+%C3%A0(s)+11.31.07_f195be8e.jpg' }}
             />
-            <View>
+            <TouchableOpacity onPress={() => console.log(messages)}>
               <Text style={styles.userName}>Amiko</Text>
               <Text style={styles.userStatus}>Online</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -278,9 +270,9 @@ const ChatScreen = () => {
           {messages.map((msg, index) => (
             <View
               key={index}
-              style={msg.from === 'user' ? styles.chatBubbleUser : styles.chatBubbleReply}
+              style={msg.type === 'user' ? styles.chatBubbleUser : styles.chatBubbleReply}
             >
-              <Text style={msg.from === 'user' ? styles.userMessage : styles.replyMessage}>
+              <Text style={msg.type === 'user' ? styles.userMessage : styles.replyMessage}>
                 {msg.content}
               </Text>
             </View>
@@ -315,7 +307,6 @@ const ChatScreen = () => {
   );
 };
 
-// Estilos
 const styles = StyleSheet.create({
   container: {
     flex: 1,
