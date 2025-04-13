@@ -22,7 +22,6 @@ const ChatScreen = () => {
   const { productData } = route.params || {};
   const { clickedProduct } = route.params || {};
 
-  // Inicializando clientMessage como string vazia para evitar problemas com TextInput
   const [clientMessage, setClientMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [amikoInstance, setAmikoInstance] = useState(null);
@@ -31,7 +30,7 @@ const ChatScreen = () => {
 
   const buildContext = async () => {
     try {
-      if (clickedProduct == 'a531dd1d-6b90-4fd1-a2e5-0e9e795288e3') {
+      if (clickedProduct === 'a531dd1d-6b90-4fd1-a2e5-0e9e795288e3') {
         const newRequestClaim = await createFirstRequest(
           await AsyncStorage.getItem("userId"),
           clickedProduct.product?.id || "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3"
@@ -68,141 +67,90 @@ const ChatScreen = () => {
         }
 
         requestNumberClaim = requestNumberClaim.replace("{request_id}", newRequestClaim.uniqueNumber);
-        let contextString = `This is a claim, here are the necessary data to handle it: ${travelerDetailsClaim}. ${requestNumberClaim}`;
-
-        console.log("CONTEXT STRING AQUIIIIIIIIII: ", contextString);
-        return contextString;
+        return `This is a claim, here are the necessary data to handle it: ${travelerDetailsClaim}. ${requestNumberClaim}`;
       }
 
       let contextString = "";
-      let houseDetails = "House Details: House Name: {houseName}, Is condo house: {houseType}, Location: {number} {address}, {neighbourhood}, {City}, {State}, {ZipCode}, {Country}, Maximum Capacity: {maxCapacity}, Pets Allowed: {petsAllowed}, Smoking Allowed: {smokingAllowed}, Parties Allowed: {partiesAllowed}";
-      let amenities = "Amenities: Has Pool: {hasPool}, Has Babercue Grill: {hasBabercueGrill}, Has Central Air Conditioner: {hasCentralAirConditioner}, Has Splitter Air Conditioner: {hasSplitterAirConditioner}, Has Dryer: {hasDryer}, Has Washing Machine: {hasWashingMachine}, Has Wi-fi: {hasWiFi}";
-      let maxCapacity = "Maximum Guests: {maximumCapacity}, Total Rooms: {totalRooms}, Total Bath Rooms: {totalBathRooms}";
-      let travelerDetails = "Traveler Details: Booking Name: {BookingName}, Booking Status: {statusBooking}, Check - In Date: {checkinDate}, Check - Out Date: {checkoutDate}, Person Name:{fullName}, Person Id:{userId}, Email: {email}, Phone: {phoneNumber}, Share Number: {shareNumber}.";
-      let offer = "The following is an offer: The product name {productName}. {description}. the severity is {severity}. The Address is {number} {address}, {neighbourhood}, {city}, {state}, {country}, {zipCode}.\n\n";
-      let requestNumber = "The opened request id is {request_id}";
-
       const bookings = await requestGetBookingByUser(await AsyncStorage.getItem("userId"));
-
       const newRequest = await createFirstRequest(
         await AsyncStorage.getItem("userId"),
         clickedProduct.product?.id || "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3"
       );
 
-      requestNumber = requestNumber.replace("{request_id}", newRequest.uniqueNumber);
+      let requestNumber = `The opened request id is ${newRequest.uniqueNumber}`;
+
       for (const bk of bookings) {
         if (bk.status === 'Active') {
           const house = await requestGetHousesByBooking(bk.houseId);
           const user = await requestGetUser(await AsyncStorage.getItem("userId"));
 
-          houseDetails = houseDetails.replace("{houseName}", house.houseName);
-          houseDetails = houseDetails.replace("{houseType}", house.isCondoHouse);
-          houseDetails = houseDetails.replace("{number}", house.number);
-          houseDetails = houseDetails.replace("{address}", house.address);
-          houseDetails = houseDetails.replace("{neighbourhood}", house.neighbourhood);
-          houseDetails = houseDetails.replace("{City}", house.city);
-          houseDetails = houseDetails.replace("{State}", house.state);
-          houseDetails = houseDetails.replace("{ZipCode}", house.zipCode);
-          houseDetails = houseDetails.replace("{Country}", house.country);
-          houseDetails = houseDetails.replace("{maxCapacity}", house.maximumCapacity);
-          houseDetails = houseDetails.replace("{petsAllowed}", house.petsAllowed);
-          houseDetails = houseDetails.replace("{smokingAllowed}", house.smokingAllowed);
-          houseDetails = houseDetails.replace("{partiesAllowed}", house.partiesAllowed);
+          let houseDetails = `House Details: House Name: ${house.houseName}, Is condo house: ${house.isCondoHouse}, Location: ${house.number} ${house.address}, ${house.neighbourhood}, ${house.city}, ${house.state}, ${house.zipCode}, ${house.country}, Maximum Capacity: ${house.maximumCapacity}, Pets Allowed: ${house.petsAllowed}, Smoking Allowed: ${house.smokingAllowed}, Parties Allowed: ${house.partiesAllowed}`;
 
-          amenities = amenities.replace("{hasPool}", house.hasPool);
-          amenities = amenities.replace("{hasBabercueGrill}", house.hasBabercueGrill);
-          amenities = amenities.replace("{hasCentralAirConditioner}", house.hasCentralAirConditioner);
-          amenities = amenities.replace("{hasSplitterAirConditioner}", house.hasSplitterAirConditioner);
-          amenities = amenities.replace("{hasDryer}", house.hasDryer);
-          amenities = amenities.replace("{hasWashingMachine}", house.hasWashingMachine);
-          amenities = amenities.replace("{hasWiFi}", house.hasWifi);
+          let amenities = `Amenities: Has Pool: ${house.hasPool}, Has Babercue Grill: ${house.hasBabercueGrill}, Has Central Air Conditioner: ${house.hasCentralAirConditioner}, Has Splitter Air Conditioner: ${house.hasSplitterAirConditioner}, Has Dryer: ${house.hasDryer}, Has Washing Machine: ${house.hasWashingMachine}, Has Wi-fi: ${house.hasWifi}`;
 
-          maxCapacity = maxCapacity.replace("{maximumCapacity}", house.maximumCapacity);
-          maxCapacity = maxCapacity.replace("{totalRooms}", house.totalRooms);
-          maxCapacity = maxCapacity.replace("{totalBathRooms}", house.totalBathRooms);
+          let maxCapacity = `Maximum Guests: ${house.maximumCapacity}, Total Rooms: ${house.totalRooms}, Total Bath Rooms: ${house.totalBathRooms}`;
 
-          travelerDetails = travelerDetails.replace("{BookingName}", bk.bookingName);
-          travelerDetails = travelerDetails.replace("{statusBooking}", bk.status);
-          travelerDetails = travelerDetails.replace("{checkinDate}", bk.checkIn);
-          travelerDetails = travelerDetails.replace("{checkoutDate}", bk.checkOut);
-          travelerDetails = travelerDetails.replace("{fullName}", user.data.data.fullName);
-          travelerDetails = travelerDetails.replace("{userId}", user.data.data.userId);
-          travelerDetails = travelerDetails.replace("{email}", user.data.data.email);
-          travelerDetails = travelerDetails.replace("{phoneNumber}", user.data.data.phone);
-          travelerDetails = travelerDetails.replace("{shareNumber}", bk.shareNumber);
+          let travelerDetails = `Traveler Details: Booking Name: ${bk.bookingName}, Booking Status: ${bk.status}, Check - In Date: ${bk.checkIn}, Check - Out Date: ${bk.checkOut}, Person Name:${user.data.data.fullName}, Person Id:${user.data.data.userId}, Email: ${user.data.data.email}, Phone: ${user.data.data.phone}, Share Number: ${bk.shareNumber}.`;
 
           let offers = "";
           for (const prd of productData) {
             const address = await getAddressById(prd.product?.location);
-            const name = prd.product?.name ?? "Nome não disponível";
-            const description = prd.product?.description ?? "Descrição não disponível";
-            const severity = prd.product?.severity ?? "Severidade não disponível";
-            const number = address.number;
-            const addressName = address.address;
-            const neighbourhood = address.neighbourhood;
-            const city = address.city;
-            const country = address.country;
-            const state = address.state;
-            const zip = address.zipCode;
-
-            let offerPrd = offer.replace("{productName}", name)
-              .replace("{description}", description)
-              .replace("{number}", number)
-              .replace("{address}", addressName)
-              .replace("{neighbourhood}", neighbourhood)
-              .replace("{city}", city)
-              .replace("{state}", state)
-              .replace("{country}", country)
-              .replace("{severity}", severity)
-              .replace("{zipCode}", zip)
-              .replace("undefined", "");
-
-            offers += offerPrd;
+            offers += `The following is an offer: The product name ${prd.product?.name || "Nome não disponível"}. ${prd.product?.description || "Descrição não disponível"}. the severity is ${prd.product?.severity || "Severidade não disponível"}. The Address is ${address.number} ${address.address}, ${address.neighbourhood}, ${address.city}, ${address.state}, ${address.country}, ${address.zipCode}.\n\n`;
           }
 
-          contextString = `${houseDetails}. ${amenities}. ${maxCapacity}. ${travelerDetails}. ${offers}. ${requestNumber}`;
-          console.log("Context String aquiiiiiiiiiii: ", contextString);
-          return contextString;
+          return `${houseDetails}. ${amenities}. ${maxCapacity}. ${travelerDetails}. ${offers}. ${requestNumber}`;
         }
       }
     } catch (error) {
-      console.log("errrrrooooo: ", error);
+      console.log("Error building context: ", error);
+      return "";
     }
-  };
-
-  const gerarInteiroAleatorio = () => {
-    return Math.floor(Math.random() * 1000) + 1;
   };
 
   useEffect(() => {
     const initializeAmiko = async () => {
       const context = await buildContext();
-      setClientMessage(await AsyncStorage.getItem("preMessage"));
-      const amiko = new Amiko(`10000232`, context);
+      const preMessage = await AsyncStorage.getItem("preMessage");
+      setClientMessage(preMessage ? String(preMessage) : '');
+
+      const amiko = new Amiko(10000232, context);
 
       amiko.onChatStateReceived = (newChatState) => {
         setChatState(newChatState);
       };
 
       amiko.onMessageReceived = async (ServerMessageDto) => {
-        console.log("MENSAGEM RECEBIDA: ", ServerMessageDto)
         setChatState("");
-        const incomingMessage = {
-          id: ServerMessageDto.id,
-          type: ServerMessageDto.direction === 'incoming' ? 'reply' : 'user',
-          content: ServerMessageDto.content
-        };
 
-        // Atualiza o estado das mensagens corretamente (retorno implícito sem as chaves)
-        if (incomingMessage.type === "reply") {
-          setMessages(prevMessages => [...prevMessages, incomingMessage]);
-        }
+        setMessages(prevMessages => {
+          if (prevMessages.some(msg => msg.id === ServerMessageDto.id)) {
+            return prevMessages;
+          }
+
+          return [
+            ...prevMessages,
+            {
+              id: ServerMessageDto.id,
+              type: ServerMessageDto.metadata?.agent ? 'agent' :
+                ServerMessageDto.direction === 'incoming' ? 'reply' : 'user',
+              content: ServerMessageDto.content,
+              direction: ServerMessageDto.direction,
+              metadata: ServerMessageDto.metadata,
+              createdAt: ServerMessageDto.createdAt
+            }
+          ];
+        });
       };
 
       amiko.onInitMessageList = (initialMessages) => {
         const formattedMessages = initialMessages.map((msg) => ({
-          from: msg.from,
-          content: msg.content
+          id: msg.id,
+          type: msg.metadata?.agent ? 'agent' :
+            msg.direction === 'incoming' ? 'reply' : 'user',
+          content: msg.metadata?.originalMessage || msg.content,
+          direction: msg.direction,
+          metadata: msg.metadata,
+          createdAt: msg.createdAt
         }));
         setMessages(formattedMessages);
       };
@@ -220,24 +168,49 @@ const ChatScreen = () => {
   }, []);
 
   useEffect(() => {
-    scrollViewRef.current.scrollToEnd({ animated: true });
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: true });
+    }
   }, [messages]);
 
   const sendMessageToAmiko = async (message) => {
+    const messageText = message ? String(message).trim() : '';
+    if (!messageText) return;
+
+    const tempId = Date.now().toString();
+
+    setMessages(prev => [
+      ...prev,
+      {
+        id: tempId,
+        type: 'user',
+        content: messageText,
+        direction: 'outgoing',
+        metadata: {},
+        createdAt: new Date().toISOString(),
+        status: 'sending'
+      }
+    ]);
+
     const content = {
-      content: message,
+      content: messageText,
       toLang: "EN-US",
       fromLang: "PT-BR"
     };
 
-    const messageToSend = {
-      id: null,
-      type: 'user',
-      content: message
-    };
-    setMessages((prevMessages) => [...prevMessages, messageToSend]);
-    await amikoInstance?.sendMessage(content, (response) => { });
-    setClientMessage("");
+    try {
+      await amikoInstance?.sendMessage(content, (response) => {
+        setMessages(prev => prev.map(msg =>
+          msg.id === tempId ? { ...msg, status: 'sent' } : msg
+        ));
+      });
+      setClientMessage("");
+    } catch (error) {
+      console.error("Erro ao enviar mensagem:", error);
+      setMessages(prev => prev.map(msg =>
+        msg.id === tempId ? { ...msg, status: 'failed' } : msg
+      ));
+    }
   };
 
   return (
@@ -255,48 +228,67 @@ const ChatScreen = () => {
               size={50}
               source={{ uri: 'https://epictrip-dev.s3.us-east-1.amazonaws.com/profilepics/Imagem+do+WhatsApp+de+2024-11-05+%C3%A0(s)+11.31.07_f195be8e.jpg' }}
             />
-            <TouchableOpacity onPress={() => console.log(messages)}>
-              <Text style={styles.userName}>Amiko</Text>
-              <Text style={styles.userStatus}>Online</Text>
-            </TouchableOpacity>
+            <Text style={styles.userName}>Amiko</Text>
+            <Text style={styles.userStatus}>Online</Text>
           </View>
         </View>
 
         <ScrollView
           ref={scrollViewRef}
           style={styles.chatContainer}
-          onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}
+          onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
         >
-          {messages.map((msg, index) => (
-            <View
-              key={index}
-              style={msg.type === 'user' ? styles.chatBubbleUser : styles.chatBubbleReply}
-            >
-              <Text style={msg.type === 'user' ? styles.userMessage : styles.replyMessage}>
-                {msg.content}
-              </Text>
-            </View>
-          ))}
-          {chatState.state === 'composing' ? (
+          {messages.map((msg, index) => {
+            let bubbleStyle, textStyle;
+
+            if (msg.metadata?.agent) {
+              bubbleStyle = styles.chatBubbleAgent;
+              textStyle = styles.agentMessage;
+            } else if (msg.direction === 'outgoing') {
+              bubbleStyle = styles.chatBubbleUser;
+              textStyle = styles.userMessage;
+            } else {
+              bubbleStyle = styles.chatBubbleReply;
+              textStyle = styles.replyMessage;
+            }
+
+            return (
+              <View key={`${msg.id}-${index}`} style={bubbleStyle}>
+                {msg.metadata?.agent && (
+                  <Text style={styles.agentName}>{msg.metadata.agent.name}</Text>
+                )}
+                <Text style={textStyle}>{msg.content}</Text>
+                {msg.status === 'sending' && (
+                  <Text style={styles.messageStatus}>Enviando...</Text>
+                )}
+                {msg.status === 'failed' && (
+                  <Text style={[styles.messageStatus, { color: 'red' }]}>Falha ao enviar</Text>
+                )}
+              </View>
+            );
+          })}
+          {chatState.state === 'composing' && (
             <Text style={styles.typingIndicator}>Amiko está digitando...</Text>
-          ) : null}
+          )}
         </ScrollView>
 
         <View style={styles.footer}>
           <View style={styles.textAndSendButtonView}>
             <TextInput
               style={styles.textInput}
-              placeholder="Type a message"
+              placeholder="Digite uma mensagem"
               mode="outlined"
               outlineColor="transparent"
               outlineStyle={{ borderRadius: 24 }}
               value={clientMessage}
-              onChangeText={setClientMessage}
+              onChangeText={text => setClientMessage(text || '')}
+              onSubmitEditing={() => sendMessageToAmiko(clientMessage)}
             />
             <Button
               mode="contained"
               onPress={() => sendMessageToAmiko(clientMessage)}
               style={styles.sendButton}
+              disabled={!clientMessage || !clientMessage.trim()}
             >
               <Icon name="send" size={24} color="#364764" />
             </Button>
@@ -343,9 +335,6 @@ const styles = StyleSheet.create({
     color: 'green',
     marginLeft: 10,
   },
-  headerIcons: {
-    flexDirection: 'row',
-  },
   chatContainer: {
     flex: 1,
     paddingHorizontal: 20,
@@ -372,10 +361,32 @@ const styles = StyleSheet.create({
   replyMessage: {
     color: '#000',
   },
+  chatBubbleAgent: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#E1F5FE',
+    padding: 15,
+    borderRadius: 20,
+    marginVertical: 5,
+    maxWidth: '75%',
+  },
+  agentMessage: {
+    color: '#000',
+  },
+  agentName: {
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#01579B',
+  },
   typingIndicator: {
     marginVertical: 5,
     fontStyle: 'italic',
     color: '#555',
+  },
+  messageStatus: {
+    fontSize: 10,
+    color: '#666',
+    marginTop: 5,
+    fontStyle: 'italic',
   },
   footer: {
     flexDirection: 'row',
@@ -414,9 +425,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F1F5F6',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  iconStyle: {
-    paddingLeft: 10,
   },
 });
 

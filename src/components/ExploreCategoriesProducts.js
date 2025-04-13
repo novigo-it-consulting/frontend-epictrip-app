@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, FlatList, Image } from "react-native";
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { useSharedValue } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
@@ -38,11 +38,11 @@ const ExploreCategoriesProducts = ({ data }) => {
         keyExtractor={(item) => item.categoryData.cat.categoryId.toString()}
         contentContainerStyle={styles.flatListContent}
         renderItem={({ item, index }) => (
-          <View style={styles.card}>
+          <TouchableOpacity style={styles.card} onPress={() => handlePress(item.categoryData.cat.categoryId, item.categoryData.cat.categoryName)}>
             {item.uri && <Image source={{ uri: item.uri }} style={styles.image} />}
             {item.icon && <Image source={item.icon} style={styles.icon} />}
             <Text style={styles.text}>{item.categoryData.cat.categoryName}</Text>
-          </View>
+          </TouchableOpacity>
         )}
       />
     </View>

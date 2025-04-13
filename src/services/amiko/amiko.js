@@ -29,6 +29,7 @@ class Amiko {
         });
 
         await this.socket.on('EVENT_SERVER_INIT_MESSAGE_LIST', (messages) => {
+            console.log("mensagenssss: ", messages)
             if (typeof this.onInitMessageList === 'function') {
                 this.onInitMessageList(messages);
             }

@@ -78,7 +78,7 @@ export default function ProfileAccount() {
             <Text style={stylesProfile.welcomeText}>{t("profileAccount.welcome")}</Text>
             <Text style={stylesProfile.profileNameText}>{profileName}</Text>
           </View>
-          <TouchableOpacity style={stylesProfile.boxNotification} onPress={() => navigation.navigate('ChatAmico')}>
+          <TouchableOpacity style={stylesProfile.boxNotification} onPress={() => navigation.navigate('RequestScreen')}>
             <View style={stylesProfile.boxColor}>
               <Entypo name="bell" size={24} color="#172B4D" />
               <View style={stylesProfile.customBadge}>

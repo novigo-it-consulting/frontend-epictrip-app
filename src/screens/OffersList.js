@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         color: '#172B4D',
-        marginLeft: 16,
+        marginLeft: 40
     },
     searchContainer: {
         alignItems: 'center',

@@ -32,8 +32,8 @@ const GoBackArrow = ({ colorArrow }) => {
 const styles = StyleSheet.create({
     containerBackButton: {
         position: "absolute",
-        top: 10,
-        left: 10,
+        top: 16,
+        left: 15,
         zIndex: 10,
     },
     touchableArrow: {

@@ -1,10 +1,15 @@
-import { View, Image, Text, StyleSheet } from "react-native";
+import React from 'react';
+import { View, Image, Text, StyleSheet } from 'react-native';
 
 const CardServicesCategoriesInside = ({ title, image, description }) => {
   return (
     <View style={styles.serviceCardContainer}>
       <View style={styles.imageWrapper}>
-        <Image style={styles.serviceImage} source={{ uri: image }} resizeMode="cover" />
+        <Image
+          source={{ uri: image }}
+          style={styles.serviceImage}
+          resizeMode="stretch"  // A imagem preencherá 100% do container
+        />
       </View>
       <Text style={styles.serviceTitle}>{title}</Text>
       <Text style={styles.serviceDescription}>{description}</Text>
@@ -14,14 +19,14 @@ const CardServicesCategoriesInside = ({ title, image, description }) => {
 
 const styles = StyleSheet.create({
   serviceCardContainer: {
-    width: 450, // Aumentei a largura do card
-    marginRight: 32,
+    width: 160,
     alignItems: 'center',
+    marginRight: 16,
   },
   imageWrapper: {
-    width: '100%',
-    height: 302, // Aumentei ainda mais a altura da imagem
-    borderRadius: 15, // Ajustei o borderRadius para um visual mais suave
+    width: 160,
+    height: 200,
+    borderRadius: 15,
     overflow: 'hidden',
   },
   serviceImage: {
@@ -29,19 +34,16 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   serviceTitle: {
-    alignSelf: 'flex-start',
+    marginTop: 10,
     fontWeight: 'bold',
-    fontSize: 16, // Aumentei o tamanho da fonte do título
+    fontSize: 16,
     color: '#172B4D',
-    marginTop: 10, // Ajustei o espaçamento
-    marginLeft: 5,
   },
   serviceDescription: {
-    alignSelf: 'flex-start',
-    color: '#6C798F',
-    fontSize: 14, // Aumentei o tamanho da fonte da descrição
     marginTop: 5,
-    marginLeft: 5,
+    fontSize: 14,
+    color: '#6C798F',
+    textAlign: 'center',
   },
 });
 
