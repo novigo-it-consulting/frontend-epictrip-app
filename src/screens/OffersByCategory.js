@@ -7,7 +7,7 @@ import {
     View,
     ActivityIndicator,
     TouchableOpacity,
-    ScrollView // Usei o ScrollView do react-native
+    ScrollView
 } from "react-native";
 import colors from "../colors";
 import SearchBarHome from '../components/SearchViewHome';
@@ -23,7 +23,7 @@ const OffersByCategory = () => {
     const { cat } = route.params || {};
     const { catName } = route.params || {};
 
-    const [isLoading, setIsLoading] = useState(true); // Alterado para true
+    const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState([]);
 
     const getProducts = async (id) => {
@@ -45,7 +45,6 @@ const OffersByCategory = () => {
             try {
                 setIsLoading(true);
                 const products = await getProducts(cat);
-                console.log("INFERNOOOOO: ", products);
                 setData(products);
             } catch (error) {
                 console.error('Erro ao buscar dados iniciais:', error);
@@ -76,22 +75,36 @@ const OffersByCategory = () => {
                     <GoBackArrow />
                     <Text style={styles.titleText}>{catName || "Categoria"}</Text>
                 </View>
+
                 <View style={styles.searchContainer}>
                     <SearchBarHome widthDesired={"90%"} />
                 </View>
-                <ScrollView style={styles.scrollView}>
-                    <View>
-                        {data.map((prd) => (
-                            <View key={prd.product.id} style={[styles.sectionContainer, { paddingTop: 8 }]}>
-                                <TouchableOpacity onPress={() => handlePressCard(prd.upload.filePath, prd)}>
+
+                <ScrollView
+                    contentContainerStyle={styles.scrollViewContent}
+                    style={styles.scrollView}
+                    showsVerticalScrollIndicator={false}
+                >
+                    <View style={styles.cardsContainer}>
+                        {data.length > 0 ? (
+                            data.map((prd) => (
+                                <TouchableOpacity
+                                    key={prd.product.id}
+                                    onPress={() => handlePressCard(prd.upload.filePath, prd)}
+                                    style={styles.cardTouchable}
+                                >
                                     <CardServicesCategoriesInsideDetailed
                                         title={prd.product.name}
-                                        image={prd.upload?.filePath || ""} // Verificação segura
+                                        image={prd.upload?.filePath || ""}
                                         description={prd.product.description}
                                     />
                                 </TouchableOpacity>
+                            ))
+                        ) : (
+                            <View style={styles.emptyContainer}>
+                                <Text style={styles.emptyText}>Nenhum item encontrado</Text>
                             </View>
-                        ))}
+                        )}
                     </View>
                 </ScrollView>
             </SafeAreaView>
@@ -111,25 +124,50 @@ const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
         backgroundColor: colors.backGroundLight,
+        alignItems: 'center',
     },
     headerContainer: {
+        width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 16,
-        backgroundColor: colors.backGroundLight,
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 10,
     },
     titleText: {
         fontSize: 24,
         fontWeight: 'bold',
         color: '#172B4D',
-        marginLeft: 16,
+        marginLeft: 36,
     },
     searchContainer: {
+        width: '100%',
         alignItems: 'center',
-        padding: 16,
+        paddingVertical: 10,
     },
     scrollView: {
+        width: '100%',
+    },
+    scrollViewContent: {
+        paddingBottom: 20,
+        alignItems: 'center',
+    },
+    cardsContainer: {
+        width: '90%',
+    },
+    cardTouchable: {
+        width: '100%',
+        marginVertical: 8,
+    },
+    emptyContainer: {
         flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    emptyText: {
+        color: "#172B4D",
+        fontSize: 16,
     },
     loadingContainer: {
         flex: 1,

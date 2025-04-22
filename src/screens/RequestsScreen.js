@@ -179,7 +179,7 @@ const RequestScreen = () => {
             </KeyboardAvoidingView>
           </TouchableWithoutFeedback>
         </AlertNotificationRoot>
-        <CustomTabBar />
+        <CustomTabBar where={"Requests"} />
       </SafeAreaView>
     </PaperProvider>
   );
@@ -195,7 +195,7 @@ const stylesRequests = StyleSheet.create({
     paddingHorizontal: 16,
   },
   filterScroll: {
-    marginTop: 16,
+    marginTop: 24,
   },
   headerView: {
     flexDirection: "row",
@@ -222,6 +222,7 @@ const stylesRequests = StyleSheet.create({
     height: 40,
   },
   filterContainer: {
+    paddingBottom: 24,
     flexDirection: "row",
     marginTop: 16,
   },
@@ -246,7 +247,7 @@ const stylesRequests = StyleSheet.create({
     marginTop: 20,
   },
   requestList: {
-    marginTop: 10,
+    marginTop: 16,
   },
   requestCard: {
     flexDirection: "row",

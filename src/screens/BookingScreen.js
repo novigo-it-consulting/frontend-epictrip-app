@@ -1,41 +1,94 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import { IconButton } from "react-native-paper";
 import SearchBarHome from "../components/SearchViewHome";
 import FeaturedHouseCard from "../components/FeaturedHouseCard";
 import HouseCarousel from "../components/HouseCarousel";
 import FooterNavBar from "../components/FooterNavBar";
-import { requestGetBookingByUser } from "../services/api";
+import { requestGetBookingByUser, requestGetHousesByBooking } from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const BookingScreen = ({ navigation }) => {
   const [bookings, setBookings] = useState([]);
+  const [inactiveBookings, setInactiveBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Função para buscar as reservas do usuário
   const getBookings = async () => {
     try {
-      const userId = await AsyncStorage.getItem("userId"); // Obtém o ID do usuário
+      setLoading(true);
+      const userId = await AsyncStorage.getItem("userId");
       if (userId) {
-        const userBookings = await requestGetBookingByUser(userId); // Chama a API
-        console.log("Reservas do usuário:", userBookings);
-        setBookings(userBookings); // Atualiza o estado com as reservas
+        const activeBookingsList = [];
+        const inactiveBookingsList = [];
+        const userBookings = await requestGetBookingByUser(userId);
+        for (const booking of userBookings) {
+          const houseBooking = await requestGetHousesByBooking(booking.houseId);
+          const listObj = {
+            bookingId: booking.bookingId,
+            bookingStatus: booking.status,
+            bookingName: booking.bookingName,
+            checkIn: booking.checkIn,
+            checkOut: booking.checkOut,
+            shareNumber: booking.shareNumber,
+            houseName: houseBooking.houseName,
+            housePhoto: houseBooking.housePhoto,
+            houseAddress: houseBooking.address,
+            houseNumber: houseBooking.number,
+            houseNeighbourhood: houseBooking.neighbourhood,
+            houseCity: houseBooking.city,
+            houseState: houseBooking.state,
+            houseCountry: houseBooking.country,
+            houseZip: houseBooking.zipCode,
+            houseDoorCode: houseBooking.houseDoorCode,
+            condoGateCode: houseBooking.condoGateCode,
+          };
+          if (listObj.bookingStatus === "Active" || listObj.bookingStatus === "Incoming") {
+            activeBookingsList.push(listObj);
+          } else {
+            inactiveBookingsList.push(listObj);
+          }
+        }
+        return {
+          active: activeBookingsList,
+          inactive: inactiveBookingsList
+        };
+        // setBookings(activeBookingsList);
+        // setInactiveBookings(inactiveBookingsList);
       } else {
         console.error("ID do usuário não encontrado.");
       }
     } catch (error) {
       console.error("Erro ao buscar reservas:", error);
+    } finally {
+      await console.log("bookings: ", bookings)
+      setLoading(false);
     }
   };
 
-  // UseEffect para carregar as reservas quando a tela for montada
   useEffect(() => {
-    getBookings();
+    const fetchBookings = async () => {
+      const bks = await getBookings();
+      if (bks) {
+        setBookings(bks.active);
+        setInactiveBookings(bks.inactive);
+      }
+    };
+
+    fetchBookings();
   }, []);
+
+  if (loading) {
+    return (
+      <View style={[styles.container, { justifyContent: "center", alignItems: "center" }]}>
+        <Text style={{ marginBottom: 20, fontSize: 16 }}>Carregando suas reservas...</Text>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Botão de voltar */}
         <IconButton
           icon="arrow-left"
           size={24}
@@ -43,34 +96,26 @@ const BookingScreen = ({ navigation }) => {
           onPress={() => navigation.goBack()}
         />
 
-        {/* Título da tela */}
         <Text style={styles.title}>Bookings</Text>
 
-        {/* Barra de pesquisa */}
         <View style={styles.searchBarContainer}>
           <SearchBarHome />
         </View>
 
-        {/* Card de destaque com ação para buscar reservas */}
-        <FeaturedHouseCard onPress={() => getBookings()} />
+        <FeaturedHouseCard bookings={bookings} onPress={() => getBookings()} />
 
-        {/* Subtítulo para as últimas reservas */}
         <Text style={styles.subtitle}>Latest bookings</Text>
 
-        {/* Carrossel de casas */}
-        <HouseCarousel data={bookings} />
+        <HouseCarousel bookings={inactiveBookings} />
 
-        {/* Espaço extra no final para evitar cortes */}
         <View style={styles.bottomSpace} />
       </ScrollView>
 
-      {/* Barra de navegação inferior */}
       <FooterNavBar />
     </View>
   );
 };
 
-// Estilos da tela
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -92,19 +137,19 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 10,
   },
-  searchBarContainer: {
-    marginHorizontal: 20,
-    marginBottom: 20,
-  },
   subtitle: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: "600",
     color: "#172B4D",
     marginHorizontal: 20,
     marginVertical: 10,
   },
+  searchBarContainer: {
+    marginHorizontal: 20,
+    marginBottom: 10,
+  },
   bottomSpace: {
-    height: 100,
+    height: 80,
   },
 });
 

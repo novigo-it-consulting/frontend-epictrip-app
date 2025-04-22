@@ -1,46 +1,60 @@
-import { View, Image, Text, StyleSheet } from "react-native";
+import { View, Image, Text, StyleSheet, Platform } from "react-native";
 
 const CardServicesCategoriesInsideDetailed = ({ title, image, description }) => {
   return (
     <View style={styles.serviceCardContainer}>
       <View style={styles.imageWrapper}>
         <Image style={styles.serviceImage} source={{ uri: image }} resizeMode="cover" />
+        <Text style={styles.serviceTitle}>{title}</Text>
+        <Text style={styles.serviceDescription}>{description}</Text>
       </View>
-      <Text style={styles.serviceTitle}>{title}</Text>
-      <Text style={styles.serviceDescription}>{description}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   serviceCardContainer: {
-    width: '100%', // Aumentei a largura do card
+    width: '100%',
     marginRight: 32,
     alignItems: 'center',
   },
   imageWrapper: {
     width: '90%',
-    height: 240, // Aumentei ainda mais a altura da imagem
-    borderRadius: 15, // Ajustei o borderRadius para um visual mais suave
+    borderRadius: 15,
     overflow: 'hidden',
+    backgroundColor: "#FEFEFE",
+    paddingBottom: 10, // Espaço para o texto
+    ...Platform.select({
+      ios: {
+        shadowColor: '#172B4D29',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 8,
+        shadowColor: '#172B4D29',
+      },
+    }),
   },
   serviceImage: {
     width: '100%',
-    height: '80%',
+    height: 180, // Mantém altura para a imagem
   },
   serviceTitle: {
     alignSelf: 'flex-start',
     fontWeight: 'bold',
-    fontSize: 16, // Aumentei o tamanho da fonte do título
+    fontSize: 16,
     color: '#172B4D',
-    marginLeft: 5,
+    marginTop: 8,
+    marginHorizontal: 5,
   },
   serviceDescription: {
     alignSelf: 'flex-start',
     color: '#6C798F',
-    fontSize: 14, // Aumentei o tamanho da fonte da descrição
+    fontSize: 14,
     marginTop: 5,
-    marginLeft: 5,
+    marginHorizontal: 5,
   },
 });
 

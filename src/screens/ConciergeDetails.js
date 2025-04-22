@@ -31,7 +31,7 @@ const ConciergeDetails = ({ navigation }) => {
         <ProblemInput productData={data} clickedProduct={clickedProduct} />
         <BookingInfo bookingInfo={bookingInfo} />
       </ScrollView>
-      <CustomBar />
+      <CustomBar where={"Product"} />
     </>
   );
 };

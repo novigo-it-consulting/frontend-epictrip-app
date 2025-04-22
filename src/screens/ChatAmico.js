@@ -113,7 +113,7 @@ const ChatScreen = () => {
       const preMessage = await AsyncStorage.getItem("preMessage");
       setClientMessage(preMessage ? String(preMessage) : '');
 
-      const amiko = new Amiko(10000232, context);
+      const amiko = new Amiko("10000232", context);
 
       amiko.onChatStateReceived = (newChatState) => {
         setChatState(newChatState);
@@ -121,10 +121,23 @@ const ChatScreen = () => {
 
       amiko.onMessageReceived = async (ServerMessageDto) => {
         setChatState("");
+        console.log("Mensagem recebida: ", ServerMessageDto);
+        // if (ServerMessageDto.direction === 'outgoing') {
+        //   console.log("ENTREI NO IF")
+        //   return prevMessages;
+        // }
 
         setMessages(prevMessages => {
           if (prevMessages.some(msg => msg.id === ServerMessageDto.id)) {
             return prevMessages;
+          }
+
+          let messageContent = ''
+
+          if (ServerMessageDto.direction && ServerMessageDto.direction == 'outgoing') {
+            messageContent = ServerMessageDto.metadata.originalMessage;
+          } else {
+            messageContent = ServerMessageDto.content;
           }
 
           return [
@@ -133,7 +146,7 @@ const ChatScreen = () => {
               id: ServerMessageDto.id,
               type: ServerMessageDto.metadata?.agent ? 'agent' :
                 ServerMessageDto.direction === 'incoming' ? 'reply' : 'user',
-              content: ServerMessageDto.content,
+              content: messageContent,
               direction: ServerMessageDto.direction,
               metadata: ServerMessageDto.metadata,
               createdAt: ServerMessageDto.createdAt
@@ -147,7 +160,7 @@ const ChatScreen = () => {
           id: msg.id,
           type: msg.metadata?.agent ? 'agent' :
             msg.direction === 'incoming' ? 'reply' : 'user',
-          content: msg.metadata?.originalMessage || msg.content,
+          content: msg.direction === 'outgoing' ? msg.metadata.originalMessage : msg.content,
           direction: msg.direction,
           metadata: msg.metadata,
           createdAt: msg.createdAt
@@ -179,18 +192,18 @@ const ChatScreen = () => {
 
     const tempId = Date.now().toString();
 
-    setMessages(prev => [
-      ...prev,
-      {
-        id: tempId,
-        type: 'user',
-        content: messageText,
-        direction: 'outgoing',
-        metadata: {},
-        createdAt: new Date().toISOString(),
-        status: 'sending'
-      }
-    ]);
+    // setMessages(prev => [
+    //   ...prev,
+    //   {
+    //     id: tempId,
+    //     type: 'user',
+    //     content: messageText,
+    //     direction: 'outgoing',
+    //     metadata: {},
+    //     createdAt: new Date().toISOString(),
+    //     status: 'sending'
+    //   }
+    // ]);
 
     const content = {
       content: messageText,
@@ -323,7 +336,7 @@ const styles = StyleSheet.create({
   userInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 25,
+    marginLeft: 42,
   },
   userName: {
     fontSize: 16,
@@ -402,8 +415,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
   },
   textAndSendButtonView: {
-    height: '100%',
-    width: 342,
+    height: Platform.OS === 'ios' ? '100%' : '30%',
+    width: Platform.OS === 'ios' ? 342 : 460,
     display: 'flex',
     flexDirection: 'row',
     backgroundColor: '#F1F5F6',

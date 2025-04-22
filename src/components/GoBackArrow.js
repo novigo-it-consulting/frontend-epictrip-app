@@ -6,7 +6,6 @@ const GoBackArrow = ({ colorArrow }) => {
     const navigation = useNavigation();
 
     const goBack = () => {
-        console.log("PORRA");
         if (navigation.canGoBack()) {
             navigation.goBack();
         } else {
@@ -33,7 +32,7 @@ const styles = StyleSheet.create({
     containerBackButton: {
         position: "absolute",
         top: 16,
-        left: 15,
+        left: 16,
         zIndex: 10,
     },
     touchableArrow: {

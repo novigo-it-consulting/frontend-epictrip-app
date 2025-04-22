@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, StatusBar } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 
@@ -25,13 +25,16 @@ const LanguageSelectionScreen = () => {
 
     return (
         <View style={styles.container}>
+            <StatusBar barStyle="dark-content" backgroundColor="#fff" />
             <Text style={styles.title}>Selecione seu idioma</Text>
             <FlatList
                 data={languages}
                 keyExtractor={(item) => item.code}
+                contentContainerStyle={styles.listContainer}
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={styles.languageButton}
+                        activeOpacity={0.8}
                         onPress={() => onSelectLanguage(item.code)}
                     >
                         <Text style={styles.languageText}>{item.label}</Text>
@@ -45,25 +48,41 @@ const LanguageSelectionScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: '#f5f5f5',
+        paddingTop: 100,
+        backgroundColor: '#ffffff',
     },
     title: {
-        fontSize: 24,
-        marginBottom: 20,
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: '#333333',
+        marginBottom: 30,
     },
-    languageButton: {
-        padding: 15,
-        backgroundColor: '#007bff',
-        borderRadius: 5,
-        marginVertical: 5,
-        width: '80%',
+    listContainer: {
+        paddingBottom: 20,
+        width: '100%',
         alignItems: 'center',
     },
+    languageButton: {
+        paddingVertical: 16,
+        paddingHorizontal: 24,
+        backgroundColor: '#4A90E2',
+        borderRadius: 16,
+        marginVertical: 8,
+        width: '80%',
+        alignItems: 'center',
+        elevation: 3,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 6,
+    },
     languageText: {
-        color: '#fff',
-        fontSize: 18,
+        color: '#ffffff',
+        fontSize: 20,
+        fontWeight: '600',
+        letterSpacing: 0.5,
     },
 });
 

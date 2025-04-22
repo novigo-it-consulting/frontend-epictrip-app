@@ -13,7 +13,6 @@ import SearchBarHome from '../components/SearchViewHome';
 import GoBackArrow from '../components/GoBackArrow';
 import CardServicesCategoriesInside from '../components/CardServicesCategoriesInside';
 import { ScrollView } from 'react-native-gesture-handler';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { getProductsByGroup, getUploadByProduct } from '../services/api';
 
@@ -35,9 +34,8 @@ const ConciergeList = () => {
                     const upload = await getUploadByProduct(product.id);
                     const obj = {
                         product: product,
-                        upload: upload[0] // Evita erro caso `filePath` não exista
+                        upload: upload[0]
                     };
-                    console.log(obj)
                     prds.push(obj);
                 } catch (error) {
                     console.warn(`Erro ao obter imagem para o produto ${product.id}:`, error);
@@ -54,7 +52,7 @@ const ConciergeList = () => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-                const products = await getProducts(); // Agora `getProducts()` retorna os produtos corretamente
+                const products = await getProducts();
                 setData(products);
             } catch (error) {
                 console.error('Erro ao buscar dados iniciais:', error);
@@ -81,23 +79,32 @@ const ConciergeList = () => {
     return (
         <PaperProvider theme={theme}>
             <SafeAreaView style={styles.safeArea}>
-                <View style={styles.textContainerTitle}>
+                <View style={styles.headerContainer}>
                     <GoBackArrow />
                     <Text style={styles.titleText}>Concierge</Text>
                 </View>
-                <View style={styles.centeredViews}>
+
+                <View style={styles.searchContainer}>
                     <SearchBarHome widthDesired={"90%"} />
                 </View>
-                <View style={styles.centeredViews}>
-                    <View style={styles.textContainer}>
-                        <Text style={styles.categoryText}>Categories</Text>
-                    </View>
+
+                <View style={styles.categoriesHeader}>
+                    <Text style={styles.categoryText}>Categories</Text>
                 </View>
-                <View style={styles.containerCategoryCards}>
-                    <ScrollView horizontal style={styles.scrollView}>
+
+                <View style={styles.cardsContainer}>
+                    <ScrollView
+                        horizontal
+                        contentContainerStyle={styles.scrollViewContent}
+                        showsHorizontalScrollIndicator={false}
+                    >
                         {data.length > 0 ? (
                             data.map((prd) => (
-                                <TouchableOpacity key={prd.product.id} onPress={() => handlePressCard(prd.upload.filePath, prd)}>
+                                <TouchableOpacity
+                                    key={prd.product.id}
+                                    onPress={() => handlePressCard(prd.upload.filePath, prd)}
+                                    style={styles.cardTouchable}
+                                >
                                     <CardServicesCategoriesInside
                                         title={prd.product.name}
                                         image={prd.upload.filePath}
@@ -106,7 +113,9 @@ const ConciergeList = () => {
                                 </TouchableOpacity>
                             ))
                         ) : (
-                            <Text style={{ padding: 20, color: "#172B4D" }}>Nenhum item encontrado</Text>
+                            <View style={styles.emptyContainer}>
+                                <Text style={styles.emptyText}>Nenhum item encontrado</Text>
+                            </View>
                         )}
                     </ScrollView>
                 </View>
@@ -127,45 +136,58 @@ const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
         backgroundColor: colors.backGroundLight,
-    },
-    scrollView: {
-        flexGrow: 1,
-        alignSelf: 'stretch',
-        backgroundColor: colors.backGroundLight
-    },
-    centeredViews: {
         alignItems: 'center',
-        width: '100%',
     },
-    textContainer: {
-        alignItems: 'flex-start',
+    headerContainer: {
         width: '100%',
-        padding: '7%',
-        paddingTop: '10%',
-    },
-    textContainerTitle: {
         flexDirection: 'row',
-        alignItems: 'flex-start',
-        width: '67%',
-        padding: '7%',
-        color: '#172B4D',
-        justifyContent: 'space-between',
-    },
-    categoryText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#172B4D'
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 10,
     },
     titleText: {
         fontSize: 32,
         fontWeight: 'bold',
-        color: '#172B4D'
+        color: '#172B4D',
+        marginLeft: 36,
     },
-    containerCategoryCards: {
-        alignItems: 'flex-start',
-        padding: '7%',
-        paddingTop: '1%',
-        flexDirection: 'row',
+    searchContainer: {
+        width: '100%',
+        alignItems: 'center',
+        paddingVertical: 10,
+    },
+    categoriesHeader: {
+        width: '100%',
+        paddingHorizontal: 20,
+        paddingVertical: 8, // reduzido aqui
+    },
+    categoryText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#172B4D',
+    },
+    cardsContainer: {
+        width: '100%',
+        flex: 1,
+        marginTop: 0, // evita espaço extra
+    },
+    scrollViewContent: {
+        paddingHorizontal: 8, // cards mais próximos das bordas
+        alignItems: 'center',
+    },
+    cardTouchable: {
+        marginHorizontal: 4, // cards mais colados entre si
+    },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    emptyText: {
+        color: "#172B4D",
+        fontSize: 16,
     },
     loadingContainer: {
         flex: 1,

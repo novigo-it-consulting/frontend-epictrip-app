@@ -110,8 +110,7 @@ const ProfileScreen = () => {
             flex: 4,
             justifyContent: "center",
             alignItems: "flex-start",
-            width: "85%",
-            marginBottom: 12,
+            width: "85%"
           }}
         >
           <Text style={{ fontSize: 18, marginBottom: 14, fontWeight: "bold" }}>
@@ -123,33 +122,13 @@ const ProfileScreen = () => {
         </TouchableOpacity>
         <View
           style={{
-            flex: 2,
-            justifyContent: "center",
-            alignItems: "flex-start",
-            width: "85%",
-            marginBottom: 0,
-          }}
-        >
-          <Text style={{ fontSize: 14, opacity: 0.6, marginBottom: 0 }}>
-            {t("profileScreen.subTitleBooking")}
-          </Text>
-        </View>
-        <TouchableOpacity
-          style={stylesProfile.container}
-          onPress={handlePressGoBooking}
-        >
-          <ProfileHandleBooking />
-        </TouchableOpacity>
-        <View
-          style={{
             flex: 4,
             justifyContent: "center",
             alignItems: "flex-start",
-            width: "85%",
-            marginBottom: 20,
+            width: "85%"
           }}
         >
-          <Text style={{ fontSize: 18, marginBottom: 12, fontWeight: "bold" }}>
+          <Text style={{ fontSize: 18, marginBottom: 40, fontWeight: "bold" }}>
             {t("profileScreen.subuTitleSettings")}
           </Text>
         </View>
@@ -198,8 +177,8 @@ const ProfileScreen = () => {
             </Dialog.Actions>
           </Dialog>
         </Portal>
-        <CustomTabBar />
       </View>
+      <CustomTabBar where={"Profile"} />
     </View>
   );
 };
@@ -221,6 +200,7 @@ const stylesProfile = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
+    marginBottom: 36
   },
 });
 

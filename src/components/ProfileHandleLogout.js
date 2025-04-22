@@ -46,7 +46,7 @@ const stylesProfile = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    width: "85%",
+    width: "85%"
   },
   boxProfile: {
     width: "100%",

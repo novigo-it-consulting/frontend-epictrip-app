@@ -1,9 +1,16 @@
 // HouseCarousel.js
 import React from "react";
-import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { IconButton } from "react-native-paper";
+import { useNavigation } from '@react-navigation/native';
 
-const HouseCarousel = () => {
+const HouseCarousel = ({ bookings }) => {
+    const navigation = useNavigation();
+
+    const handlePress = (booking) => {
+        navigation.navigate("BookingDetails", { data: booking })
+    }
+
     const houses = [
         {
             id: 1,
@@ -30,22 +37,22 @@ const HouseCarousel = () => {
             style={styles.scrollContainer}
             contentContainerStyle={styles.contentContainer}
         >
-            {houses.map((house) => (
-                <View key={house.id} style={styles.card}>
-                    <Image source={{ uri: house.imageUrl }} style={styles.image} />
+            {bookings.map((bk) => (
+                <TouchableOpacity key={bk.bookingId} style={styles.card} onPress={() => handlePress(bk)}>
+                    <Image source={{ uri: bk.housePhoto }} style={styles.image} />
                     <View style={styles.textContainer}>
                         <View style={styles.header}>
-                            <Text style={styles.name}>{house.name}</Text>
+                            <Text style={styles.name}>{bk.houseName}</Text>
                             <IconButton icon="heart-outline" size={20} color="#6B7280" />
                         </View>
-                        <Text style={styles.location}>{house.location}</Text>
-                        <View style={styles.ratingContainer}>
+                        <Text style={styles.location}>{bk.houseNumber} {bk.houseAddress}, {bk.houseCity}</Text>
+                        {/* <View style={styles.ratingContainer}>
                             <Text style={styles.rating}>{house.rating}</Text>
                             <IconButton icon="star" color="#FFD700" size={18} />
                             <Text style={styles.reviews}>({house.reviews})</Text>
-                        </View>
+                        </View> */}
                     </View>
-                </View>
+                </TouchableOpacity>
             ))}
         </ScrollView>
     );

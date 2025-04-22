@@ -5,7 +5,7 @@ import Feather from "react-native-vector-icons/Feather";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 
-const CustomTabBar = () => {
+const CustomTabBar = ({ where }) => {
   const navigation = useNavigation();
   const route = useRoute();
   const { t } = useTranslation();
@@ -16,6 +16,39 @@ const CustomTabBar = () => {
     { name: "Schedule", icon: "calendar", route: "ScheduleScreen" },
     { name: "Profile", icon: "user", route: "ProfileScreen" }
   ];
+
+  const styles = StyleSheet.create({
+    tabBar: {
+      flexDirection: "row",
+      justifyContent: "space-around",
+      height: where == "Profile" || where == "Product" || where == "Requests" ? 112 : 68,
+      position: "absolute",
+      bottom: 0,
+      width: "100%",
+      backgroundColor: "#fff",
+      borderTopLeftRadius: 24,
+      borderTopRightRadius: 24,
+      shadowOffset: {
+        height: -8,
+        width: 4,
+      },
+      shadowColor: "#172B4D14",
+      shadowRadius: 4,
+      shadowOpacity: 1,
+    },
+    tab: {
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    tabLabel: {
+      fontSize: 12,
+      color: "#696969",
+    },
+    activeLabel: {
+      color: "#007AFF",
+      fontWeight: "bold",
+    },
+  });
 
   return (
     <View style={styles.tabBar}>
@@ -37,38 +70,5 @@ const CustomTabBar = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  tabBar: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    height: 64,
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    backgroundColor: "#fff",
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    shadowOffset: {
-      height: -8,
-      width: 4,
-    },
-    shadowColor: "#172B4D14",
-    shadowRadius: 4,
-    shadowOpacity: 1,
-  },
-  tab: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  tabLabel: {
-    fontSize: 12,
-    color: "#696969",
-  },
-  activeLabel: {
-    color: "#007AFF",
-    fontWeight: "bold",
-  },
-});
 
 export default CustomTabBar;
