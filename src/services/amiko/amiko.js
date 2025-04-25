@@ -5,7 +5,7 @@ class Amiko {
         this.chatId = '478ae18a-596c-4ee8-b6a7-6422cf2571ca';
         this.token = '99jWB13psRBWs5CwcbssGG';
 
-        this.socket = io(`ws://web-socket.fertech.dev.br`, {
+        this.socket = io(`wss://web-socket.fertech.dev.br`, {
             auth: {
                 instance: {
                     chatId: this.chatId,
