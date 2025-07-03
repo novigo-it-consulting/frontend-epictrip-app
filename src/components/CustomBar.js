@@ -1,14 +1,15 @@
-// CustomTabBar.js
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const CustomTabBar = ({ where }) => {
   const navigation = useNavigation();
   const route = useRoute();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
 
   const tabs = [
     { name: "Home", icon: "home", route: "Home" },
@@ -17,14 +18,24 @@ const CustomTabBar = ({ where }) => {
     { name: "Profile", icon: "user", route: "ProfileScreen" }
   ];
 
+  const getTabBarHeight = () => {
+    const baseHeight = 68;
+    const extraHeight = where == "Profile" || where == "Product" || where == "Requests" ? 44 : 0;
+    return baseHeight + extraHeight + insets.bottom;
+  };
+
   const styles = StyleSheet.create({
     tabBar: {
       flexDirection: "row",
       justifyContent: "space-around",
-      height: where == "Profile" || where == "Product" || where == "Requests" ? 112 : 68,
+      alignItems: "center",
+      height: getTabBarHeight(),
+      paddingBottom: insets.bottom,
+      paddingTop: 12,
       position: "absolute",
       bottom: 0,
-      width: "100%",
+      left: 0,
+      right: 0,
       backgroundColor: "#fff",
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,
@@ -35,14 +46,19 @@ const CustomTabBar = ({ where }) => {
       shadowColor: "#172B4D14",
       shadowRadius: 4,
       shadowOpacity: 1,
+      elevation: 8,
     },
     tab: {
       alignItems: "center",
       justifyContent: "center",
+      flex: 1,
+      paddingVertical: 8,
     },
     tabLabel: {
       fontSize: 12,
       color: "#696969",
+      marginTop: 4,
+      textAlign: "center",
     },
     activeLabel: {
       color: "#007AFF",

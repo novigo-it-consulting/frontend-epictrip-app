@@ -3,6 +3,13 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform } from 'r
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ArrowLeft, Calendar } from 'lucide-react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { requestCreateEvent } from "../services/api";
+import {
+    ALERT_TYPE,
+    AlertNotificationRoot,
+    Toast,
+} from "react-native-alert-notification";
 
 const CreateNewEvent = () => {
     const [eventName, setEventName] = useState('');
@@ -15,16 +22,6 @@ const CreateNewEvent = () => {
     const [showEndTimePicker, setShowEndTimePicker] = useState(false);
 
     const navigation = useNavigation();
-
-    const handleCreateEvent = () => {
-        console.log('Creating event:', {
-            eventName,
-            description,
-            startDate,
-            endDate
-        });
-        navigation.navigate('EventDetails')
-    };
 
     const handleGoBack = () => {
         navigation.goBack();
@@ -72,8 +69,30 @@ const CreateNewEvent = () => {
         }
     };
 
+    const handleCreateEvent = async () => {
+        const event = {
+            eventName: eventName,
+            owner: await AsyncStorage.getItem("userId"),
+            description: description,
+            startsAt: startDate,
+            endsAt: endDate
+        }
+        const response = await requestCreateEvent(event);
+        if (response.status === 201) {
+            navigation.navigate("EventDetails")
+        } else {
+            alert("Error Creating Event. Try again later!")
+            // Toast.show({
+            //     type: ALERT_TYPE.DANGER,
+            //     title: "Ops",
+            //     textBody: "Error creating event. Try again later!",
+            // });
+        }
+    }
+
     return (
         <View style={styles.container}>
+            <Toast />
             <View style={styles.content}>
                 {/* Header */}
                 <View style={styles.header}>

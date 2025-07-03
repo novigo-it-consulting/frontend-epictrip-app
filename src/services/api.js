@@ -3,6 +3,45 @@ import axios from "axios";
 
 const BASE_URL = "https://homol-api.fertech.dev.br";
 
+export const requestGetEventById = async (event) => {
+  try {
+    const headers = {
+      "content-Type": "application/json",
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`
+    };
+    const response = await axios.get(`${BASE_URL}/events/${event}`, { headers });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const requestGetEvents = async () => {
+  try {
+    const headers = {
+      "content-Type": "application/json",
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`
+    };
+    const response = await axios.get(`${BASE_URL}/events`, { headers });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const requestCreateEvent = async (event) => {
+  try {
+    const headers = {
+      "content-Type": "application/json",
+      Authorization: `Bearer ${await AsyncStorage.getItem("token")}`
+    };
+    const response = await axios.post(`${BASE_URL}/events`, event, { headers });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const requestSignUpGuest = async (dados) => {
   try {
     const headers = {

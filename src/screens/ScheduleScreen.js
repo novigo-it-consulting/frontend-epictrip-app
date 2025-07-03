@@ -10,23 +10,25 @@ import {
 } from 'react-native';
 import { Plus, Play } from 'lucide-react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { requestGetEvents } from '../services/api';
+import CustomTabBar from "../components/CustomBar";
 
 const ScheduleScreen = () => {
   const navigation = useNavigation();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [dates, setDates] = useState([]);
+  const [events, setEvents] = useState([]);
 
   useEffect(() => {
     const generateWeekDates = () => {
       const today = new Date();
-      const currentDay = today.getDay(); // 0 = Domingo
       const weekDates = [];
       const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
       for (let i = 0; i < 7; i++) {
-        // Gerar 7 dias para a semana completa
+        // Loop para hoje + 6 dias seguintes
         const date = new Date(today);
-        date.setDate(today.getDate() - currentDay + i);
+        date.setDate(today.getDate() + i); // Adiciona 'i' dias à data de hoje
 
         weekDates.push({
           day: dayNames[date.getDay()],
@@ -34,43 +36,13 @@ const ScheduleScreen = () => {
           fullDate: new Date(date),
         });
       }
+
       setDates(weekDates);
+      getEvents();
     };
 
     generateWeekDates();
   }, []);
-
-  const events = [
-    {
-      id: 1,
-      title: 'Breakfast',
-      time: '10:00am - 1:00pm',
-      color: '#475569', // Cor do slate-600
-      hasPlayButton: true,
-      avatars: [],
-    },
-    {
-      id: 2,
-      title: 'Running with friends',
-      time: '1:00pm - 3:00pm',
-      color: '#3B82F6', // Cor do blue-500
-      hasPlayButton: false,
-      avatars: [
-        'https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face',
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face',
-      ],
-    },
-    {
-      id: 3,
-      title: 'Lunch with bro',
-      time: '2:00pm - 4:00pm',
-      color: '#8B5CF6', // Cor do purple-500
-      hasPlayButton: false,
-      avatars: [
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face',
-      ],
-    },
-  ];
 
   const isSameDate = (date1, date2) => {
     return (
@@ -80,13 +52,66 @@ const ScheduleScreen = () => {
     );
   };
 
-  const handleGoCreateNewEvent = () => {
-    navigation.navigate('CreateNewEvent')
-  }
+  const isDateInRange = (targetDate, startDate, endDate) => {
+    const target = new Date(targetDate);
+    const start = new Date(startDate);
+    const end = new Date(endDate);
 
-  const handleGoEventDetails = (eventId) => {
-    navigation.navigate("EventDetails", { eventId })
-  }
+    // Zerar as horas para comparar apenas as datas
+    target.setHours(0, 0, 0, 0);
+    start.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
+
+    return target >= start && target <= end;
+  };
+
+  const formatTime = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
+
+  const formatEventTime = (startsAt, endsAt) => {
+    const startTime = formatTime(startsAt);
+    const endTime = formatTime(endsAt);
+    return `${startTime} - ${endTime}`;
+  };
+
+  const getEventsForSelectedDate = () => {
+    return events.filter(event => {
+      return isDateInRange(selectedDate, event.startsAt, event.endsAt);
+    });
+  };
+
+  const handleGoCreateNewEvent = () => {
+    navigation.navigate('CreateNewEvent');
+  };
+
+  const handleGoEventDetails = (event) => {
+    navigation.navigate('EventDetails', { event });
+  };
+
+  const getEvents = async () => {
+    try {
+      const response = await requestGetEvents();
+      console.log(response);
+      if (response && Array.isArray(response.data)) {
+        setEvents(response.data);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar eventos:', error);
+    }
+  };
+
+  const getEventColor = (index) => {
+    const colors = ['#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444'];
+    return colors[index % colors.length];
+  };
+
+  const selectedDateEvents = getEventsForSelectedDate();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -134,45 +159,43 @@ const ScheduleScreen = () => {
 
         {/* Seção de Eventos */}
         <View style={styles.todayContainer}>
-          <Text style={styles.sectionTitle}>Today</Text>
+          <Text style={styles.sectionTitle}>
+            {isSameDate(selectedDate, new Date()) ? 'Today' : 'Events'}
+          </Text>
           <View style={styles.eventsList}>
-            {events.map(event => (
-              <TouchableOpacity onPress={() => handleGoEventDetails(event.id)} key={event.id}>
-                <View
-                  style={[styles.eventCard, { borderLeftColor: '#3B82F6' }]}>
-                  <View style={styles.eventDetails}>
-                    <Text style={styles.eventTitle}>{event.title}</Text>
-                    <Text style={styles.eventTime}>{event.time}</Text>
-                  </View>
-                  <View style={styles.eventRightContent}>
-                    {/* {event.avatars.length > 0 && (
-                    <View style={styles.avatarStack}>
-                      {event.avatars.map((avatar, index) => (
-                        <Image
-                          key={index}
-                          source={{ uri: avatar }}
-                          style={styles.avatar}
-                        />
-                      ))}
+            {selectedDateEvents.length > 0 ? (
+              selectedDateEvents.map((event, index) => (
+                <TouchableOpacity onPress={() => handleGoEventDetails(event)} key={event.id}>
+                  <View
+                    style={[styles.eventCard, { borderLeftColor: getEventColor(index) }]}>
+                    <View style={styles.eventDetails}>
+                      <Text style={styles.eventTitle}>
+                        {event.eventName || 'Evento sem título'}
+                      </Text>
+                      <Text style={styles.eventTime}>
+                        {formatEventTime(event.startsAt, event.endsAt)}
+                      </Text>
+                      {event.description && (
+                        <Text style={styles.eventDescription} numberOfLines={1}>
+                          {event.description}
+                        </Text>
+                      )}
                     </View>
-                  )} */}
-                    {/* {event.hasPlayButton && (
-                    <TouchableOpacity style={styles.playButton}>
-                      <Play
-                        size={16}
-                        color="#374151"
-                        fill="currentColor"
-                        style={{ marginLeft: 1 }}
-                      />
-                    </TouchableOpacity>
-                  )} */}
+                    <View style={styles.eventRightContent}>
+                      {/* Você pode adicionar avatars ou botão play aqui se necessário */}
+                    </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            ))}
+                </TouchableOpacity>
+              ))
+            ) : (
+              <View style={styles.noEventsContainer}>
+                <Text style={styles.noEventsText}>Nenhum evento para esta data</Text>
+              </View>
+            )}
           </View>
         </View>
       </ScrollView>
+      <CustomTabBar />
     </SafeAreaView>
   );
 };
@@ -278,10 +301,24 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6B7280',
   },
+  eventDescription: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    marginTop: 2,
+  },
   eventRightContent: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
+  },
+  noEventsContainer: {
+    padding: 24,
+    alignItems: 'center',
+  },
+  noEventsText: {
+    fontSize: 16,
+    color: '#6B7280',
+    fontStyle: 'italic',
   },
   avatarStack: {
     flexDirection: 'row',
