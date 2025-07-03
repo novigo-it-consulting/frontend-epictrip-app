@@ -119,11 +119,11 @@ const OffersList = () => {
                 </View>
                 <ScrollView style={styles.scrollView}>
                     <View style={styles.sectionContainer}>
-                        <Text style={styles.sectionTitle}>Categorias</Text>
+                        <Text style={styles.sectionTitle}>Categories</Text>
                         <ExploreCategoriesProducts data={categories} />
                     </View>
                     <View style={[styles.sectionContainer, { paddingTop: 8 }]}>
-                        <Text style={styles.sectionTitle}>Recomendados</Text>
+                        <Text style={styles.sectionTitle}>Suggestions</Text>
                         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                             {data.map((prd) => (
                                 <TouchableOpacity key={prd.product.id} onPress={() => handlePressCard(prd.upload.filePath, prd)}>

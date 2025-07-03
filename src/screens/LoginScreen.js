@@ -117,7 +117,7 @@ const LoginScreen = ({ navigation }) => {
 
   const handleForgotPassword = async () => {
     await AsyncStorage.setItem("typedUsername", typedUsername);
-    navigation.navigate("q");
+    navigation.navigate("FogotPassword");
   };
 
   const handleGoToSignUp = () => {

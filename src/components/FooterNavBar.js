@@ -13,7 +13,7 @@ const FooterNavBar = () => {
         { name: 'Home', icon: 'home', route: "Home" },
         { name: 'Groups', icon: 'users', route: "EmConstrucaoScreen" },
         { name: 'Requests', icon: 'bell', route: "RequestScreen" },
-        { name: 'Schedule', icon: 'calendar', route: "EmConstrucaoScreen" },
+        { name: 'Schedule', icon: 'calendar', route: "ScheduleScreen" },
         { name: 'Profile', icon: 'user', route: "ProfileScreen" },
     ];
 

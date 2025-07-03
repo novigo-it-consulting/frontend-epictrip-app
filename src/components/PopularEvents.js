@@ -53,7 +53,7 @@ const PopularEvents = () => {
         <AnimatedDotsCarousel
           length={data.length}
           currentIndex={index}
-          maxIndicators={4}
+          maxIndicators={4} r
           interpolateOpacityAndColor={true}
           activeIndicatorConfig={{ color: colors.primary, margin: 3, opacity: 1, size: 6 }}
           inactiveIndicatorConfig={{ color: "grey", margin: 3, opacity: 0.2, size: 6 }}

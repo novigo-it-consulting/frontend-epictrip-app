@@ -147,9 +147,15 @@ const RequestScreen = () => {
                 </View>
               </ScrollView>
 
-              <Text style={stylesRequests.allRequestsText}>All requests</Text>
+              <View style={stylesRequests.requestsHeader}>
+                <Text style={stylesRequests.allRequestsText}>All requests</Text>
+              </View>
 
-              <ScrollView contentContainerStyle={stylesRequests.requestList}>
+              <ScrollView
+                style={stylesRequests.requestsScrollView}
+                contentContainerStyle={stylesRequests.requestList}
+                showsVerticalScrollIndicator={false}
+              >
                 {filteredRequests.map((request, index) => (
                   <TouchableOpacity
                     key={index}
@@ -166,7 +172,9 @@ const RequestScreen = () => {
                       style={stylesRequests.requestIcon}
                     />
                     <View style={stylesRequests.requestInfo}>
-                      <Text style={stylesRequests.requestTitle}>{request.ai_resume}</Text>
+                      <Text style={stylesRequests.requestTitle} numberOfLines={2}>
+                        {request.ai_resume}
+                      </Text>
                       <Text style={stylesRequests.requestStatus(STATUS_COLORS[request.status])}>
                         {STATUS_MAPPING[request.status]}
                       </Text>
@@ -196,6 +204,7 @@ const stylesRequests = StyleSheet.create({
   },
   filterScroll: {
     marginTop: 24,
+    flexGrow: 0,
   },
   headerView: {
     flexDirection: "row",
@@ -222,7 +231,7 @@ const stylesRequests = StyleSheet.create({
     height: 40,
   },
   filterContainer: {
-    paddingBottom: 24,
+    paddingBottom: 16,
     flexDirection: "row",
     marginTop: 16,
   },
@@ -236,45 +245,63 @@ const stylesRequests = StyleSheet.create({
     shadowRadius: 3,
     height: 32,
     shadowOffset: { height: 1 },
+    elevation: 2,
   }),
   filterText: (isActive) => ({
     color: isActive ? "white" : "black",
     fontWeight: "bold",
+    fontSize: 14,
   }),
+  requestsHeader: {
+    marginTop: 8,
+    marginBottom: 12,
+  },
   allRequestsText: {
     fontSize: 18,
     fontWeight: "bold",
-    marginTop: 20,
+  },
+  requestsScrollView: {
+    flex: 1,
   },
   requestList: {
-    marginTop: 16,
+    paddingBottom: 100,
   },
   requestCard: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "white",
     padding: 16,
-    borderRadius: 8,
-    marginVertical: 6,
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    shadowOffset: { height: 1 },
+    borderRadius: 12,
+    marginVertical: 4,
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
     borderLeftWidth: 4,
+    elevation: 3,
+    minHeight: 80,
   },
   requestIcon: {
     marginRight: 12,
   },
   requestInfo: {
     flex: 1,
+    paddingRight: 8,
   },
   requestTitle: {
-    fontWeight: "bold",
+    fontWeight: "600",
+    fontSize: 16,
+    lineHeight: 20,
+    marginBottom: 4,
   },
   requestStatus: (color) => ({
     color: color,
+    fontSize: 14,
+    fontWeight: "500",
+    marginBottom: 2,
   }),
   requestDate: {
-    color: "gray",
+    color: "#6B7280",
+    fontSize: 12,
   },
 });
 

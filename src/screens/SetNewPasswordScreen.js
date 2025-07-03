@@ -84,7 +84,7 @@ const SetNewPasswordScreen = ({ navigation }) => {
       const response = await requestChangePassword(data);
 
       if (response === 200) {
-        navigation.navigate("Home");
+        navigation.navigate("Login");
         return;
       } else {
         throw new Error("Erro ao efetuar login. Por favor, tente novamente.");

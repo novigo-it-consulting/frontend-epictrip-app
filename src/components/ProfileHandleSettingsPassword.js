@@ -36,9 +36,9 @@ export default function ProfileHandleSettingsPassword() {
               </Text>
             </View>
             <View style={stylesProfile.boxNotification}>
-              <View style={stylesProfile.boxColor}>
+              {/* <View style={stylesProfile.boxColor}>
                 <Feather name="arrow-right" color={"#172B4D"} size={15} />
-              </View>
+              </View> */}
             </View>
           </View>
         </View>

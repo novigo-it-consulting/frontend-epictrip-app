@@ -1,6 +1,5 @@
-// screens/ProfileScreen.js
 import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import colors from "../colors";
 import { useTranslation } from "react-i18next";
@@ -19,22 +18,22 @@ import CustomTabBar from "../components/CustomBar";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
-
   const [visible, setVisible] = useState(false);
-
   const hideDialog = () => setVisible(false);
-
   const { t } = useTranslation();
 
   const handlePress = () => {
     navigation.navigate("ChangePersonalInfo");
   };
+
   const handlePressEmBuild = () => {
     navigation.navigate("EmConstrucaoScreen");
   };
+
   const handlePressGoBooking = () => {
     navigation.navigate("BookingScreen");
   };
+
   const handlePressLogout = async () => {
     setVisible(true);
     try {
@@ -47,7 +46,6 @@ const ProfileScreen = () => {
       alert("Error clearing AsyncStorage:", error);
     }
   };
-
 
   const handlePressPaymentScreen = async () => {
     try {
@@ -66,6 +64,7 @@ const ProfileScreen = () => {
   const handlePressPayment = () => {
     navigation.navigate("WalletScreen");
   };
+
   const handlePressChangePassword = async () => {
     const userId = await AsyncStorage.getItem("userId")
     const response = await requestChangePasswordToken(userId)
@@ -90,67 +89,61 @@ const ProfileScreen = () => {
   };
 
   return (
-    <View style={stylesProfile.containerAlpha}>
-      <View
-        style={{
-          flex: 0.8,
-          justifyContent: "center",
-          alignItems: "flex-start",
-          width: "85%",
-          marginTop: 30,
-        }}
+    <SafeAreaView style={stylesProfile.safeArea}>
+      <ScrollView
+        style={stylesProfile.scrollView}
+        contentContainerStyle={stylesProfile.scrollContent}
+        showsVerticalScrollIndicator={false}
       >
-        <Text style={{ fontSize: 33, fontWeight: "bold" }}>
-          {t("profileScreen.profileTitle")}
-        </Text>
-      </View>
-      <View style={stylesProfile.container}>
-        <View
-          style={{
-            flex: 4,
-            justifyContent: "center",
-            alignItems: "flex-start",
-            width: "85%"
-          }}
-        >
-          <Text style={{ fontSize: 18, marginBottom: 14, fontWeight: "bold" }}>
-            {t("profileScreen.subTitleAccount")}
+        {/* Header */}
+        <View style={stylesProfile.header}>
+          <Text style={stylesProfile.headerTitle}>
+            {t("profileScreen.profileTitle")}
           </Text>
         </View>
-        <TouchableOpacity style={stylesProfile.container} onPress={handlePress}>
-          <ProfileHandleAccount />
-        </TouchableOpacity>
-        <View
-          style={{
-            flex: 4,
-            justifyContent: "center",
-            alignItems: "flex-start",
-            width: "85%"
-          }}
-        >
-          <Text style={{ fontSize: 18, marginBottom: 40, fontWeight: "bold" }}>
-            {t("profileScreen.subuTitleSettings")}
-          </Text>
-        </View>
-        <TouchableOpacity
-          style={stylesProfile.container}
-          onPress={handlePressChangePassword}
-        >
-          <ProfileHandleSettingsPassword />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={stylesProfile.container}
-          onPress={handlePressPaymentScreen}
-        >
-          <ProfileHandleSettingsPayment />
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={stylesProfile.container}
-          onPress={() => setVisible(true)}
-        >
-          <ProfileHandleLogout />
-        </TouchableOpacity>
+        {/* Content */}
+        <View style={stylesProfile.content}>
+          {/* Account Section */}
+          <View style={stylesProfile.section}>
+            <Text style={stylesProfile.sectionTitle}>
+              {t("profileScreen.subTitleAccount")}
+            </Text>
+            <TouchableOpacity style={stylesProfile.menuItem} onPress={handlePress}>
+              <ProfileHandleAccount />
+            </TouchableOpacity>
+          </View>
+
+          {/* Settings Section */}
+          <View style={stylesProfile.section}>
+            <Text style={stylesProfile.sectionTitle}>
+              {t("profileScreen.subuTitleSettings")}
+            </Text>
+
+            <TouchableOpacity
+              style={stylesProfile.menuItem}
+              onPress={handlePressChangePassword}
+            >
+              <ProfileHandleSettingsPassword />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={stylesProfile.menuItem}
+              onPress={handlePressPaymentScreen}
+            >
+              <ProfileHandleSettingsPayment />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={stylesProfile.menuItem}
+              onPress={() => setVisible(true)}
+            >
+              <ProfileHandleLogout />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Logout Dialog */}
         <Portal>
           <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialog}>
             <Dialog.Icon icon="alert" />
@@ -158,66 +151,112 @@ const ProfileScreen = () => {
               {t('logoutDialog.title')}
             </Dialog.Title>
             <Dialog.Content>
-              <Text style={{ textAlign: "center" }} variant="bodyMedium">
+              <Text style={styles.dialogText} variant="bodyMedium">
                 {t('logoutDialog.content')}
               </Text>
             </Dialog.Content>
-            <Dialog.Actions style={{ marginLeft: "auto", marginRight: "auto" }}>
+            <Dialog.Actions style={styles.dialogActions}>
               <Button
                 textColor="#fff"
-                background={"#0065ff"}
                 style={styles.actionButtonNo}
                 onPress={() => setVisible(false)}
               >
                 {t('logoutDialog.noButton')}
               </Button>
-              <Button onPress={() => handlePressLogout()}>
+              <Button
+                style={styles.actionButtonYes}
+                onPress={() => handlePressLogout()}
+              >
                 {t('logoutDialog.yesButton')}
               </Button>
             </Dialog.Actions>
           </Dialog>
         </Portal>
-      </View>
+      </ScrollView>
+
+      {/* Bottom Navigation */}
       <CustomTabBar where={"Profile"} />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const stylesProfile = StyleSheet.create({
-  containerAlpha: {
+  safeArea: {
     flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    marginRight: "auto",
-    marginLeft: "auto",
     backgroundColor: colors.backGroundLight,
   },
-  container: {
-    flex: 5,
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    marginBottom: 36
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 20,
+  },
+  header: {
+    paddingHorizontal: 24,
+    paddingTop: 20,
+    paddingBottom: 10,
+  },
+  headerTitle: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: colors.textPrimary || "#000",
+  },
+  content: {
+    paddingHorizontal: 24,
+    paddingTop: 10,
+  },
+  section: {
+    marginBottom: 32,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 16,
+    color: colors.textPrimary || "#000",
+  },
+  menuItem: {
+    marginBottom: 8,
+    borderRadius: 12,
+    overflow: 'hidden',
   },
 });
 
 const styles = StyleSheet.create({
   title: {
     textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   dialog: {
-    backgroundColor: colors.backGroundLight
+    backgroundColor: colors.backGroundLight,
+    borderRadius: 16,
+    margin: 20,
+  },
+  dialogText: {
+    textAlign: "center",
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  dialogActions: {
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    flexDirection: 'row',
+    gap: 12,
   },
   actionButtonNo: {
-    textAlign: "center",
     backgroundColor: colors.primary,
-    paddingRight: 12,
-    paddingLeft: 12
+    borderRadius: 8,
+    paddingHorizontal: 20,
+    minWidth: 100,
+  },
+  actionButtonYes: {
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    paddingHorizontal: 20,
+    minWidth: 100,
   }
-})
-
+});
 
 export default ProfileScreen;

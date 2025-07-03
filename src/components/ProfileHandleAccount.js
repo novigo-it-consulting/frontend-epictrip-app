@@ -103,9 +103,9 @@ export default function ProfileHandleAccount(alert) {
                 {t("profileHandleAccount.titleHandleAccount")}
               </Text>
             </View>
-            <View style={stylesProfile.boxNotification}>
+            {/* <View style={stylesProfile.boxNotification}>
               <Feather name="arrow-right" color={"#172B4D"} size={15} />
-            </View>
+            </View> */}
           </View>
         )}
       </View>

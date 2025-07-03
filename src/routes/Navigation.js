@@ -34,6 +34,9 @@ import RequestDetailsScreen from "../screens/RequestDetailsScreen";
 import SelectPaymentScreen from "../screens/choosePaymentMethodScreen";
 import LanguageSelectionScreen from "../screens/SelectLanguage";
 import WalletScreen from "../screens/walletScreen";
+import ScheduleScreen from "../screens/ScheduleScreen";
+import CreateNewEvent from "../screens/CreateNewEvent";
+import EventDetails from "../screens/EventDetails";
 
 const Stack = createStackNavigator();
 
@@ -60,6 +63,9 @@ const Navigation = () => {
           options={noGestureScreenOptions}
         />
         <Stack.Screen name="WalletScreen" component={WalletScreen} options={noGestureScreenOptions} />
+        <Stack.Screen name="EventDetails" component={EventDetails} options={noGestureScreenOptions} />
+        <Stack.Screen name="CreateNewEvent" component={CreateNewEvent} options={noGestureScreenOptions} />
+        <Stack.Screen name="ScheduleScreen" component={ScheduleScreen} options={noGestureScreenOptions} />
         <Stack.Screen name="LanguageSelectionScreen" component={LanguageSelectionScreen} options={noGestureScreenOptions} />
         <Stack.Screen name="SelectPaymentScreen" component={SelectPaymentScreen} options={noGestureScreenOptions} />
         <Stack.Screen name="SignUp" component={SignUpScreen} options={noGestureScreenOptions} />
