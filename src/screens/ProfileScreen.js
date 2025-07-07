@@ -1,41 +1,91 @@
-import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import colors from "../colors";
-import { useTranslation } from "react-i18next";
 import ProfileHandleAccount from "../components/ProfileHandleAccount";
-import ProfileHandleBooking from "../components/ProfileHandleBooking";
 import ProfileHandleSettingsPassword from "../components/ProfileHandleSettingsPassword";
 import ProfileHandleSettingsPayment from "../components/ProfileHandleSettingsPayment";
-import ProfileHandleSettingsRewards from "../components/ProfileHandleSettingsRewards";
-import ProfileHandleSettingsLanguage from "../components/ProfileHandleSettingsLanguage";
 import ProfileHandleLogout from "../components/ProfileHandleLogout.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { requestChangePasswordToken, requestGetMethodsByUser } from "../services/api.js";
 import { Dialog, Portal, Text, Button } from 'react-native-paper';
-import FooterNavBar from "../components/FooterNavBar.js";
 import CustomTabBar from "../components/CustomBar";
+// 1. Importar o serviço de tradução
+import { translate } from "../services/translations/translateServices";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
   const [visible, setVisible] = useState(false);
   const hideDialog = () => setVisible(false);
-  const { t } = useTranslation();
+
+  // 2. Criar um estado para armazenar os textos traduzidos
+  const [t, setT] = useState({
+    profile: "Profile",
+    account: "Account",
+    settings: "Settings",
+    logoutConfirmTitle: "Do you really want to leave?",
+    logoutConfirmBody: "When you leave, we will clear all your data and redirect you to the login.",
+    no: "No",
+    yes: "Yes",
+    logoutError: "Error clearing data:",
+  });
+
+  // 3. useEffect para buscar as traduções
+  useEffect(() => {
+    const fetchTranslations = async () => {
+      try {
+        const [
+          profile, account, settings, logoutConfirmTitle,
+          logoutConfirmBody, no, yes, logoutError
+        ] = await Promise.all([
+          translate("Profile", "en"),
+          translate("Account", "en"),
+          translate("Settings", "en"),
+          translate("Do you really want to leave?", "en"),
+          translate("When you leave, we will clear all your data and redirect you to the login.", "en"),
+          translate("No", "en"),
+          translate("Yes", "en"),
+          translate("Error clearing data:", "en"),
+        ]);
+        setT({
+          profile, account, settings, logoutConfirmTitle,
+          logoutConfirmBody, no, yes, logoutError
+        });
+      } catch (error) {
+        console.error("Falha ao buscar traduções:", error);
+      }
+    };
+    fetchTranslations();
+  }, []);
+
 
   const handlePress = () => {
     navigation.navigate("ChangePersonalInfo");
   };
 
-  const handlePressEmBuild = () => {
-    navigation.navigate("EmConstrucaoScreen");
+  const handlePressPaymentScreen = async () => {
+    try {
+      const userId = await AsyncStorage.getItem("userId");
+      const response = await requestGetMethodsByUser(userId);
+      // Navega para a tela da carteira independentemente da resposta,
+      // a própria tela da carteira tratará se há cartões ou não.
+      navigation.navigate("WalletScreen");
+    } catch (error) {
+      console.error("Erro ao verificar métodos de pagamento, navegando mesmo assim:", error);
+      navigation.navigate("WalletScreen");
+    }
   };
 
-  const handlePressGoBooking = () => {
-    navigation.navigate("BookingScreen");
+  const handlePressChangePassword = async () => {
+    const userId = await AsyncStorage.getItem("userId");
+    const response = await requestChangePasswordToken(userId);
+    if (response.status === 200) {
+      await AsyncStorage.setItem("changePasswordToken", response.data.token);
+      navigation.navigate("SetNewPassword");
+    }
   };
 
-  const handlePressLogout = async () => {
-    setVisible(true);
+  const handleConfirmLogout = async () => {
     try {
       await AsyncStorage.clear();
       navigation.reset({
@@ -43,49 +93,8 @@ const ProfileScreen = () => {
         routes: [{ name: "Login" }],
       });
     } catch (error) {
-      alert("Error clearing AsyncStorage:", error);
+      Alert.alert(t.logoutError, error.message);
     }
-  };
-
-  const handlePressPaymentScreen = async () => {
-    try {
-      const userId = await AsyncStorage.getItem("userId")
-      const response = await requestGetMethodsByUser(userId);
-      if (response.status === 200) {
-        navigation.navigate("WalletScreen");
-      } else {
-        navigation.navigate("WalletScreen");
-      }
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const handlePressPayment = () => {
-    navigation.navigate("WalletScreen");
-  };
-
-  const handlePressChangePassword = async () => {
-    const userId = await AsyncStorage.getItem("userId")
-    const response = await requestChangePasswordToken(userId)
-    if (response.status === 200) {
-      await AsyncStorage.setItem("changePasswordToken", response.data.token)
-      navigation.navigate("SetNewPassword");
-    }
-  };
-
-  const defaultToastConfig = {
-    autoClose: 3000,
-    titleStyle: { fontSize: 16, fontWeight: "bold" },
-  };
-
-  const lightColors = {
-    label: "#000",
-    card: "red",
-    overlay: "#f0f0f0",
-    success: "#28a745",
-    danger: "rgba(255, 0, 0, 1)",
-    warning: "#fff",
   };
 
   return (
@@ -97,8 +106,9 @@ const ProfileScreen = () => {
       >
         {/* Header */}
         <View style={stylesProfile.header}>
+          {/* 4. Usar os textos traduzidos */}
           <Text style={stylesProfile.headerTitle}>
-            {t("profileScreen.profileTitle")}
+            {t.profile}
           </Text>
         </View>
 
@@ -107,7 +117,7 @@ const ProfileScreen = () => {
           {/* Account Section */}
           <View style={stylesProfile.section}>
             <Text style={stylesProfile.sectionTitle}>
-              {t("profileScreen.subTitleAccount")}
+              {t.account}
             </Text>
             <TouchableOpacity style={stylesProfile.menuItem} onPress={handlePress}>
               <ProfileHandleAccount />
@@ -117,7 +127,7 @@ const ProfileScreen = () => {
           {/* Settings Section */}
           <View style={stylesProfile.section}>
             <Text style={stylesProfile.sectionTitle}>
-              {t("profileScreen.subuTitleSettings")}
+              {t.settings}
             </Text>
 
             <TouchableOpacity
@@ -148,11 +158,11 @@ const ProfileScreen = () => {
           <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialog}>
             <Dialog.Icon icon="alert" />
             <Dialog.Title style={styles.title}>
-              {t('logoutDialog.title')}
+              {t.logoutConfirmTitle}
             </Dialog.Title>
             <Dialog.Content>
               <Text style={styles.dialogText} variant="bodyMedium">
-                {t('logoutDialog.content')}
+                {t.logoutConfirmBody}
               </Text>
             </Dialog.Content>
             <Dialog.Actions style={styles.dialogActions}>
@@ -161,20 +171,19 @@ const ProfileScreen = () => {
                 style={styles.actionButtonNo}
                 onPress={() => setVisible(false)}
               >
-                {t('logoutDialog.noButton')}
+                {t.no}
               </Button>
               <Button
                 style={styles.actionButtonYes}
-                onPress={() => handlePressLogout()}
+                onPress={handleConfirmLogout}
               >
-                {t('logoutDialog.yesButton')}
+                {t.yes}
               </Button>
             </Dialog.Actions>
           </Dialog>
         </Portal>
       </ScrollView>
 
-      {/* Bottom Navigation */}
       <CustomTabBar where={"Profile"} />
     </SafeAreaView>
   );
@@ -189,7 +198,7 @@ const stylesProfile = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 20,
+    paddingBottom: 80, // Aumentar espaço para a tab bar
   },
   header: {
     paddingHorizontal: 24,

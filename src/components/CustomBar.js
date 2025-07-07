@@ -1,26 +1,57 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { translate } from "../services/translations/translateServices";
+
+// Mova o array de abas para fora do componente para evitar recriação a cada renderização.
+const TABS_CONFIG = [
+  { name: "Home", icon: "home", route: "Home" },
+  { name: "Requests", icon: "bell", route: "RequestScreen" },
+  { name: "Schedule", icon: "calendar", route: "ScheduleScreen" },
+  { name: "Profile", icon: "user", route: "ProfileScreen" }
+];
 
 const CustomTabBar = ({ where }) => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
 
-  const tabs = [
-    { name: "Home", icon: "home", route: "Home" },
-    { name: "Requests", icon: "bell", route: "RequestScreen" },
-    { name: "Schedule", icon: "calendar", route: "ScheduleScreen" },
-    { name: "Profile", icon: "user", route: "ProfileScreen" }
-  ];
+  // 1. Crie um estado para armazenar as abas com os nomes já traduzidos.
+  // Comece com os nomes originais como padrão.
+  const [tabs, setTabs] = useState(TABS_CONFIG);
 
+  // 2. Use useEffect para traduzir os nomes apenas uma vez.
+  useEffect(() => {
+    const translateTabs = async () => {
+      try {
+        // Traduz todos os nomes de uma vez para melhor performance
+        const translatedNames = await Promise.all(
+          TABS_CONFIG.map(tab => translate(tab.name, "en")) // Assumindo "en"
+        );
+
+        // Cria o novo array de abas com os nomes traduzidos
+        const translatedTabs = TABS_CONFIG.map((tab, index) => ({
+          ...tab,
+          name: translatedNames[index],
+        }));
+
+        setTabs(translatedTabs);
+      } catch (error) {
+        console.error("Falha ao traduzir as abas:", error);
+        // Em caso de erro, os nomes originais serão mantidos.
+      }
+    };
+
+    translateTabs();
+  }, []); // O array vazio [] garante que isso execute apenas na montagem.
+
+
+  // A lógica de estilos permanece a mesma.
   const getTabBarHeight = () => {
     const baseHeight = 68;
-    const extraHeight = where == "Profile" || where == "Product" || where == "Requests" ? 44 : 0;
+    const extraHeight = where === "Profile" || where === "Product" || where === "Requests" ? 44 : 0;
     return baseHeight + extraHeight + insets.bottom;
   };
 
@@ -68,6 +99,7 @@ const CustomTabBar = ({ where }) => {
 
   return (
     <View style={styles.tabBar}>
+      {/* 3. Mapeie o array do estado que contém as traduções */}
       {tabs.map((tab, index) => {
         const isActive = route.name === tab.route;
         return (
@@ -78,7 +110,7 @@ const CustomTabBar = ({ where }) => {
           >
             <Feather name={tab.icon} color={isActive ? "#007AFF" : "#696969"} size={24} />
             <Text style={[styles.tabLabel, isActive && styles.activeLabel]}>
-              {t(`homeTabs.${tab.name.toLowerCase()}Button`)}
+              {tab.name}
             </Text>
           </TouchableOpacity>
         );

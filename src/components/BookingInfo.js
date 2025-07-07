@@ -1,22 +1,27 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { List } from 'react-native-paper'; 
+import { List } from 'react-native-paper';
 import useMockData from '../data/mockServiceDetails';
 import { useTranslation } from 'react-i18next';
+import { translate } from "../services/translations/translateServices";
 
 const BookingInfo = () => {
+
+  const handleTranslation = async (q, source) => {
+    return await translate(q, source);
+  }
 
   const { bookingInfo } = useMockData();
 
   const { t } = useTranslation();
 
   if (!bookingInfo || !Array.isArray(bookingInfo)) {
-    return null; 
+    return null;
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{t('bookingInfo.titlePage')}</Text>
+      <Text style={styles.label}>{handleTranslation("Booking Information", "EN")}</Text>
       {bookingInfo.map((info, index) => (
         <List.Accordion
           key={index}
@@ -32,7 +37,7 @@ const BookingInfo = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 12, 
+    padding: 12,
     marginBottom: 16,
   },
   accordion: {
@@ -43,7 +48,7 @@ const styles = StyleSheet.create({
   },
   acordionContent: {
     marginBottom: 10,
-    padding: 12, 
+    padding: 12,
   },
   label: {
     fontSize: 16,

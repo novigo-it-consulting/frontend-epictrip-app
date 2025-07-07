@@ -15,6 +15,8 @@ import CardServicesCategoriesInside from '../components/CardServicesCategoriesIn
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { getProductsByGroup, getUploadByProduct } from '../services/api';
+// 1. Importar o serviço de tradução
+import { translate } from "../services/translations/translateServices";
 
 const ConciergeList = () => {
     const navigation = useNavigation();
@@ -24,6 +26,32 @@ const ConciergeList = () => {
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
+    // 2. Criar um estado para armazenar os textos traduzidos
+    const [t, setT] = useState({
+        loading: "Loading...",
+        concierge: "Concierge",
+        categories: "Categories",
+        noItems: "No items",
+    });
+
+    // 3. useEffect para buscar as traduções
+    useEffect(() => {
+        const fetchTranslations = async () => {
+            try {
+                const [loading, concierge, categories, noItems] = await Promise.all([
+                    translate("Loading...", "en"),
+                    translate("Concierge", "en"),
+                    translate("Categories", "en"),
+                    translate("No items", "en")
+                ]);
+                setT({ loading, concierge, categories, noItems });
+            } catch (error) {
+                console.error("Falha ao buscar traduções:", error);
+            }
+        };
+        fetchTranslations();
+    }, []);
+
     const getProducts = async () => {
         try {
             let prds = [];
@@ -32,6 +60,8 @@ const ConciergeList = () => {
             for (const product of products) {
                 try {
                     const upload = await getUploadByProduct(product.id);
+                    product.name = await translate(product.name, "en");
+                    product.description = await translate(product.description, "en");
                     const obj = {
                         product: product,
                         upload: upload[0]
@@ -71,7 +101,8 @@ const ConciergeList = () => {
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#172B4D" />
-                <Text style={styles.loadingText}>Carregando...</Text>
+                {/* 4. Usar o texto traduzido */}
+                <Text style={styles.loadingText}>{t.loading}</Text>
             </View>
         );
     }
@@ -81,7 +112,8 @@ const ConciergeList = () => {
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.headerContainer}>
                     <GoBackArrow />
-                    <Text style={styles.titleText}>Concierge</Text>
+                    {/* 4. Usar o texto traduzido */}
+                    <Text style={styles.titleText}>{t.concierge}</Text>
                 </View>
 
                 <View style={styles.searchContainer}>
@@ -89,7 +121,8 @@ const ConciergeList = () => {
                 </View>
 
                 <View style={styles.categoriesHeader}>
-                    <Text style={styles.categoryText}>Categories</Text>
+                    {/* 4. Usar o texto traduzido */}
+                    <Text style={styles.categoryText}>{t.categories}</Text>
                 </View>
 
                 <View style={styles.cardsContainer}>
@@ -114,7 +147,8 @@ const ConciergeList = () => {
                             ))
                         ) : (
                             <View style={styles.emptyContainer}>
-                                <Text style={styles.emptyText}>Nenhum item encontrado</Text>
+                                {/* 4. Usar o texto traduzido */}
+                                <Text style={styles.emptyText}>{t.noItems}</Text>
                             </View>
                         )}
                     </ScrollView>
@@ -160,7 +194,7 @@ const styles = StyleSheet.create({
     categoriesHeader: {
         width: '100%',
         paddingHorizontal: 20,
-        paddingVertical: 8, // reduzido aqui
+        paddingVertical: 8,
     },
     categoryText: {
         fontSize: 16,
@@ -170,14 +204,14 @@ const styles = StyleSheet.create({
     cardsContainer: {
         width: '100%',
         flex: 1,
-        marginTop: 0, // evita espaço extra
+        marginTop: 0,
     },
     scrollViewContent: {
-        paddingHorizontal: 8, // cards mais próximos das bordas
+        paddingHorizontal: 8,
         alignItems: 'center',
     },
     cardTouchable: {
-        marginHorizontal: 4, // cards mais colados entre si
+        marginHorizontal: 4,
     },
     emptyContainer: {
         flex: 1,

@@ -13,7 +13,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Provider as PaperProvider, DefaultTheme } from "react-native-paper";
-import GoBackArrow from "../components/GoBackArrow";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import colors from "../colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -21,53 +20,88 @@ import CustomTabBar from "../components/CustomBar";
 import { useNavigation } from "@react-navigation/native";
 import { getRequestsByUser } from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+// 1. Importar o serviço de tradução
+import { translate } from "../services/translations/translateServices";
+
+// Mapeia o status da API para uma chave consistente (não traduzível)
+const STATUS_KEYS = {
+  OPEN_N1: "inProgress",
+  OPEN_N2: "inProgress",
+  OPEN_N3: "inProgress",
+  SOLVED_N1: "done",
+  SOLVED_N2: "done",
+  PAYMENT_A: "waitingPayment",
+  PAYMENT_D: "paid",
+  CLOSED: "unrealized",
+};
+
+const STATUS_STYLES = {
+  inProgress: { color: "#0057FF", icon: "time-outline" },
+  done: { color: "#6C757D", icon: "checkmark-circle-outline" },
+  waitingPayment: { color: "#FFA500", icon: "card-outline" },
+  paid: { color: "#28A745", icon: "cash-outline" },
+  unrealized: { color: "#DC3545", icon: "close-circle-outline" },
+};
+
+// Chaves para os filtros, usadas na lógica e para buscar traduções
+const FILTER_KEYS = ["all", "inProgress", "done", "waitingPayment", "paid", "unrealized"];
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const options = { month: "short", day: "numeric", weekday: "short" };
+  return date.toLocaleDateString("en-US", options).replace(",", "");
+};
 
 const RequestScreen = () => {
   const navigation = useNavigation();
-  const [activeFilter, setActiveFilter] = useState("All");
+  const [activeFilter, setActiveFilter] = useState("all"); // Usa a chave, não o texto
   const [loadedRequests, setRequests] = useState([]);
+
+  // 2. Criar um estado para armazenar os textos traduzidos
+  const [t, setT] = useState({
+    requests: "Requests",
+    searchPlaceholder: "Try Disney, Food or Tickets",
+    allRequests: "All requests",
+    // Textos dos filtros e status
+    all: "All",
+    inProgress: "In progress",
+    done: "Done",
+    waitingPayment: "Waiting payment",
+    paid: "Paid",
+    unrealized: "Unrealized",
+  });
+
+  // 3. useEffect para buscar as traduções
+  useEffect(() => {
+    const fetchTranslations = async () => {
+      try {
+        const [
+          requests, searchPlaceholder, allRequests, all, inProgress,
+          done, waitingPayment, paid, unrealized
+        ] = await Promise.all([
+          translate("Requests", "en"),
+          translate("Try Disney, Food or Tickets", "en"),
+          translate("All requests", "en"),
+          translate("All", "en"),
+          translate("In progress", "en"),
+          translate("Done", "en"),
+          translate("Waiting payment", "en"),
+          translate("Paid", "en"),
+          translate("Unrealized", "en"),
+        ]);
+        setT({
+          requests, searchPlaceholder, allRequests, all, inProgress,
+          done, waitingPayment, paid, unrealized
+        });
+      } catch (error) {
+        console.error("Falha ao buscar traduções:", error);
+      }
+    };
+    fetchTranslations();
+  }, []);
 
   const handleRequestClick = (request) => {
     navigation.navigate("RequestDetailsScreen", { request });
-  };
-
-  const STATUS_MAPPING = {
-    OPEN_N1: "In progress",
-    OPEN_N2: "In progress",
-    OPEN_N3: "In progress",
-    SOLVED_N1: "Done",
-    SOLVED_N2: "Done",
-    PAYMENT_A: "Waiting payment",
-    PAYMENT_D: "Paid",
-    CLOSED: "Unrealized",
-  };
-
-  const STATUS_COLORS = {
-    OPEN_N1: "#0057FF",
-    OPEN_N2: "#0057FF",
-    OPEN_N3: "#0057FF",
-    SOLVED_N1: "#6C757D",
-    SOLVED_N2: "#6C757D",
-    PAYMENT_A: "#FFA500",
-    PAYMENT_D: "#28A745",
-    CLOSED: "#DC3545",
-  };
-
-  const STATUS_ICONS = {
-    OPEN_N1: "time-outline",
-    OPEN_N2: "time-outline",
-    OPEN_N3: "time-outline",
-    SOLVED_N1: "checkmark-circle-outline",
-    SOLVED_N2: "checkmark-circle-outline",
-    PAYMENT_A: "card-outline",
-    PAYMENT_D: "cash-outline",
-    CLOSED: "close-circle-outline",
-  };
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const options = { month: "short", day: "numeric", weekday: "short" };
-    return date.toLocaleDateString("en-US", options).replace(",", "");
   };
 
   useEffect(() => {
@@ -82,15 +116,14 @@ const RequestScreen = () => {
         console.error("Error fetching requests:", error);
       }
     };
-
     fetchRequests();
   }, []);
 
   const filteredRequests =
-    activeFilter === "All"
+    activeFilter === "all"
       ? loadedRequests
       : loadedRequests.filter(
-        (request) => STATUS_MAPPING[request.status] === activeFilter
+        (request) => STATUS_KEYS[request.status] === activeFilter
       );
 
   return (
@@ -102,8 +135,9 @@ const RequestScreen = () => {
               behavior={Platform.OS === "ios" ? "padding" : "height"}
               style={stylesRequests.container}
             >
+              {/* 4. Usar os textos traduzidos */}
               <View style={stylesRequests.headerView}>
-                <Text style={stylesRequests.screenNameText}>Requests</Text>
+                <Text style={stylesRequests.screenNameText}>{t.requests}</Text>
               </View>
 
               <View style={stylesRequests.searchContainer}>
@@ -115,7 +149,7 @@ const RequestScreen = () => {
                 />
                 <TextInput
                   style={stylesRequests.searchInput}
-                  placeholder="Try Disney, Food or Tickets"
+                  placeholder={t.searchPlaceholder}
                   placeholderTextColor="gray"
                 />
               </View>
@@ -126,21 +160,14 @@ const RequestScreen = () => {
                 style={stylesRequests.filterScroll}
               >
                 <View style={stylesRequests.filterContainer}>
-                  {[
-                    "All",
-                    "In progress",
-                    "Done",
-                    "Waiting payment",
-                    "Paid",
-                    "Unrealized",
-                  ].map((filter, index) => (
+                  {FILTER_KEYS.map((filterKey, index) => (
                     <TouchableOpacity
                       key={index}
-                      style={stylesRequests.filterButton(filter === activeFilter)}
-                      onPress={() => setActiveFilter(filter)}
+                      style={stylesRequests.filterButton(filterKey === activeFilter)}
+                      onPress={() => setActiveFilter(filterKey)}
                     >
-                      <Text style={stylesRequests.filterText(filter === activeFilter)}>
-                        {filter}
+                      <Text style={stylesRequests.filterText(filterKey === activeFilter)}>
+                        {t[filterKey]}
                       </Text>
                     </TouchableOpacity>
                   ))}
@@ -148,7 +175,7 @@ const RequestScreen = () => {
               </ScrollView>
 
               <View style={stylesRequests.requestsHeader}>
-                <Text style={stylesRequests.allRequestsText}>All requests</Text>
+                <Text style={stylesRequests.allRequestsText}>{t.allRequests}</Text>
               </View>
 
               <ScrollView
@@ -156,33 +183,37 @@ const RequestScreen = () => {
                 contentContainerStyle={stylesRequests.requestList}
                 showsVerticalScrollIndicator={false}
               >
-                {filteredRequests.map((request, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => handleRequestClick(request)}
-                    style={[
-                      stylesRequests.requestCard,
-                      { borderLeftColor: STATUS_COLORS[request.status] },
-                    ]}
-                  >
-                    <Ionicons
-                      name={STATUS_ICONS[request.status]}
-                      size={24}
-                      color={STATUS_COLORS[request.status]}
-                      style={stylesRequests.requestIcon}
-                    />
-                    <View style={stylesRequests.requestInfo}>
-                      <Text style={stylesRequests.requestTitle} numberOfLines={2}>
-                        {request.ai_resume}
-                      </Text>
-                      <Text style={stylesRequests.requestStatus(STATUS_COLORS[request.status])}>
-                        {STATUS_MAPPING[request.status]}
-                      </Text>
-                      <Text style={stylesRequests.requestDate}>{formatDate(request.created_at)}</Text>
-                    </View>
-                    <Ionicons name="chevron-forward" size={20} color="gray" />
-                  </TouchableOpacity>
-                ))}
+                {filteredRequests.map((request, index) => {
+                  const statusKey = STATUS_KEYS[request.status];
+                  const statusStyle = STATUS_STYLES[statusKey];
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => handleRequestClick(request)}
+                      style={[
+                        stylesRequests.requestCard,
+                        { borderLeftColor: statusStyle?.color || 'gray' },
+                      ]}
+                    >
+                      <Ionicons
+                        name={statusStyle?.icon || 'help-circle-outline'}
+                        size={24}
+                        color={statusStyle?.color || 'gray'}
+                        style={stylesRequests.requestIcon}
+                      />
+                      <View style={stylesRequests.requestInfo}>
+                        <Text style={stylesRequests.requestTitle} numberOfLines={2}>
+                          {request.ai_resume}
+                        </Text>
+                        <Text style={stylesRequests.requestStatus(statusStyle?.color || 'gray')}>
+                          {t[statusKey]}
+                        </Text>
+                        <Text style={stylesRequests.requestDate}>{formatDate(request.created_at)}</Text>
+                      </View>
+                      <Ionicons name="chevron-forward" size={20} color="gray" />
+                    </TouchableOpacity>
+                  );
+                })}
               </ScrollView>
             </KeyboardAvoidingView>
           </TouchableWithoutFeedback>
@@ -210,6 +241,7 @@ const stylesRequests = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: 20,
+    paddingLeft: 8, // Ajuste para alinhar com o conteúdo
   },
   screenNameText: {
     fontSize: 24,
@@ -255,6 +287,7 @@ const stylesRequests = StyleSheet.create({
   requestsHeader: {
     marginTop: 8,
     marginBottom: 12,
+    paddingLeft: 8, // Ajuste
   },
   allRequestsText: {
     fontSize: 18,

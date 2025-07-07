@@ -1,34 +1,50 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { Card, Title, Paragraph } from "react-native-paper";
 import Carousel from "react-native-reanimated-carousel";
 import AnimatedDotsCarousel from "react-native-animated-dots-carousel";
-import colors from "../colors";
+import colors from "../colors"; // Certifique-se que o caminho para 'colors' está correto
 import { useTranslation } from "react-i18next";
+import { translate } from "../services/translations/translateServices"; // Certifique-se que o caminho para 'translateServices' está correto
 
 const PopularEvents = () => {
   const width = Dimensions.get("window").width;
   const { t } = useTranslation();
 
+  // Estado para armazenar o título traduzido
+  const [translatedTitle, setTranslatedTitle] = useState("Popular Events");
+
   const data = [
     {
       title: "Minnesota Vikings vs. New...",
       description: "1525 Sugargrove, Orlando",
-      image: require("../../assets/Categories/card_1.png"),
+      image: require("../../assets/Categories/card_1.png"), // Certifique-se que o caminho para as imagens está correto
     },
     {
       title: t("popularEvents.titleDisney"),
       description: "1525 Sugargrove, Orlando",
-      image: require("../../assets/Categories/foto-1.png"),
+      image: require("../../assets/Categories/foto-1.png"), // Certifique-se que o caminho para as imagens está correto
     },
   ];
 
   const [index, setIndex] = useState(0);
 
+  // useEffect para chamar a tradução apenas uma vez quando o componente montar
+  useEffect(() => {
+    const fetchTranslation = async () => {
+      // Usando "en" como no seu código original, pode ser alterado se necessário
+      const result = await translate("Popular Events", "en");
+      setTranslatedTitle(result);
+    };
+
+    fetchTranslation();
+  }, []); // O array de dependências vazio [] garante que o efeito rode apenas uma vez
+
   return (
     <View style={styles.container}>
-      <Text style={styles.titlePage}>{t("popularEvents.events")}</Text>
+      {/* Usa o estado com o valor já traduzido */}
+      <Text style={styles.titlePage}>{translatedTitle}</Text>
       <Carousel
         loop
         width={width}
@@ -53,7 +69,7 @@ const PopularEvents = () => {
         <AnimatedDotsCarousel
           length={data.length}
           currentIndex={index}
-          maxIndicators={4} r
+          maxIndicators={4}
           interpolateOpacityAndColor={true}
           activeIndicatorConfig={{ color: colors.primary, margin: 3, opacity: 1, size: 6 }}
           inactiveIndicatorConfig={{ color: "grey", margin: 3, opacity: 0.2, size: 6 }}

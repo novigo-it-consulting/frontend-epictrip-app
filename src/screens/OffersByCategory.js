@@ -15,44 +15,78 @@ import GoBackArrow from '../components/GoBackArrow';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { getProductByCategory, getUploadByProduct } from '../services/api';
 import CardServicesCategoriesInsideDetailed from '../components/CardServicesCategoriesInsideDetailed';
+// 1. Importar o serviço de tradução
+import { translate } from "../services/translations/translateServices";
 
 const OffersByCategory = () => {
     const navigation = useNavigation();
     const route = useRoute();
 
-    const { cat } = route.params || {};
-    const { catName } = route.params || {};
+    const { cat, catName } = route.params || {};
 
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState([]);
+
+    // 2. Criar um estado para armazenar os textos traduzidos
+    const [t, setT] = useState({
+        loading: "Loading...",
+        categoryFallback: "Category",
+        noItems: "No item found",
+    });
+
+    // 3. useEffect para buscar as traduções
+    useEffect(() => {
+        const fetchTranslations = async () => {
+            try {
+                const [loading, categoryFallback, noItems] = await Promise.all([
+                    translate("Loading...", "en"),
+                    translate("Category", "en"),
+                    translate("No item found", "en")
+                ]);
+                setT({ loading, categoryFallback, noItems });
+            } catch (error) {
+                console.error("Falha ao buscar traduções:", error);
+            }
+        };
+        fetchTranslations();
+    }, []);
 
     const getProducts = async (id) => {
         const data = [];
         const products = await getProductByCategory(id);
         for (const prd of products) {
-            const uploadResponse = await getUploadByProduct(prd.id);
-            const obj = {
-                upload: uploadResponse[0],
-                product: prd
-            };
-            data.push(obj);
+            try {
+                const uploadResponse = await getUploadByProduct(prd.id);
+                const obj = {
+                    upload: uploadResponse[0],
+                    product: prd
+                };
+                data.push(obj);
+            } catch (e) {
+                // Continua mesmo se um produto falhar ao carregar a imagem
+                console.warn(`Could not get upload for product ${prd.id}`);
+            }
         }
         return data;
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setIsLoading(true);
-                const products = await getProducts(cat);
-                setData(products);
-            } catch (error) {
-                console.error('Erro ao buscar dados iniciais:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchData();
+        if (cat) {
+            const fetchData = async () => {
+                try {
+                    setIsLoading(true);
+                    const products = await getProducts(cat);
+                    setData(products);
+                } catch (error) {
+                    console.error('Erro ao buscar dados iniciais:', error);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+            fetchData();
+        } else {
+            setIsLoading(false);
+        }
     }, [cat]);
 
     const handlePressCard = async (uri, clickedPrd) => {
@@ -63,7 +97,8 @@ const OffersByCategory = () => {
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#172B4D" />
-                <Text style={styles.loadingText}>Carregando...</Text>
+                {/* 4. Usar o texto traduzido */}
+                <Text style={styles.loadingText}>{t.loading}</Text>
             </View>
         );
     }
@@ -73,7 +108,7 @@ const OffersByCategory = () => {
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.headerContainer}>
                     <GoBackArrow />
-                    <Text style={styles.titleText}>{catName || "Categoria"}</Text>
+                    <Text style={styles.titleText}>{catName || t.categoryFallback}</Text>
                 </View>
 
                 <View style={styles.searchContainer}>
@@ -90,7 +125,7 @@ const OffersByCategory = () => {
                             data.map((prd) => (
                                 <TouchableOpacity
                                     key={prd.product.id}
-                                    onPress={() => handlePressCard(prd.upload.filePath, prd)}
+                                    onPress={() => handlePressCard(prd.upload?.filePath, prd)}
                                     style={styles.cardTouchable}
                                 >
                                     <CardServicesCategoriesInsideDetailed
@@ -102,7 +137,7 @@ const OffersByCategory = () => {
                             ))
                         ) : (
                             <View style={styles.emptyContainer}>
-                                <Text style={styles.emptyText}>Nenhum item encontrado</Text>
+                                <Text style={styles.emptyText}>{t.noItems}</Text>
                             </View>
                         )}
                     </View>
@@ -164,6 +199,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
+        marginTop: 50,
     },
     emptyText: {
         color: "#172B4D",

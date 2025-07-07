@@ -4,9 +4,14 @@ import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { Card, Title, Paragraph } from "react-native-paper";
 import Carousel from "react-native-reanimated-carousel";
 import { useTranslation } from "react-i18next";
+import { translate } from "../services/translations/translateServices";
 
 const BookingCarousel = () => {
   const width = Dimensions.get("window").width;
+
+  const handleTranslation = async (q, source) => {
+    return await translate(q, source);
+  }
 
   const data = [
     {
@@ -26,7 +31,7 @@ const BookingCarousel = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titlePage}>{t("popularEvents.events")}</Text>
+      <Text style={styles.titlePage}>{handleTranslation("Popular Events", "en")}</Text>
       <Carousel
         loop
         width={width}
@@ -49,9 +54,9 @@ const BookingCarousel = () => {
             </Card>
           </View>
         )}
-        
+
       />
-      
+
     </View>
   );
 };

@@ -147,7 +147,7 @@ const Payment = () => {
             paddingHorizontal: 20,
           }}
         >
-        <Text
+          <Text
             style={{
               textAlign: "center",
               fontSize: 23,
@@ -155,7 +155,7 @@ const Payment = () => {
               color: colors.primary,
             }}
           >
-            {t("payment.titlePayment")}
+            Payment
           </Text>
 
           <Text
@@ -226,7 +226,7 @@ const Payment = () => {
             {loading ? (
               <ActivityIndicator color={colors.white} />
             ) : (
-              t("payment.buttonPayment")
+              "Make Payment"
             )}
           </Button>
         </KeyboardAvoidingView>
@@ -258,7 +258,7 @@ const stylesCard = StyleSheet.create({
     display: "flex",
     position: "relative",
     flexDirection: "row",
-},
+  },
   creditCard: {
     width: "95%",
     height: "70%", // Adjusted to allow space for the button

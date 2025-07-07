@@ -1,67 +1,80 @@
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
-import { requestGetEventById } from '../services/api';
+// 1. Importar o serviço de tradução
+import { translate } from "../services/translations/translateServices";
 
 const EventDetails = ({ route }) => {
     const navigation = useNavigation();
     const { event } = route.params;
 
-    const handleGoEvents = () => {
-        navigation.navigate("ScheduleScreen")
-    }
+    // 2. Criar um estado para armazenar os textos traduzidos
+    const [t, setT] = useState({
+        noTitle: "Event without title",
+        today: "Today",
+        overview: "Overview",
+        noDescription: "No description available",
+        hours: "Hours",
+    });
 
-    // Function to format date and time
+    // 3. useEffect para buscar as traduções
+    useEffect(() => {
+        const fetchTranslations = async () => {
+            try {
+                const [noTitle, today, overview, noDescription, hours] = await Promise.all([
+                    translate("Event without title", "en"),
+                    translate("Today", "en"),
+                    translate("Overview", "en"),
+                    translate("No description available", "en"),
+                    translate("Hours", "en")
+                ]);
+                setT({ noTitle, today, overview, noDescription, hours });
+            } catch (error) {
+                console.error("Falha ao buscar traduções:", error);
+            }
+        };
+        fetchTranslations();
+    }, []);
+
+    const handleGoEvents = () => {
+        navigation.navigate("ScheduleScreen");
+    };
+
     const formatDateTime = (dateTimeString) => {
         const date = new Date(dateTimeString);
-        const today = new Date();
-
-        // Check if it's today
-        const isToday = date.toDateString() === today.toDateString();
-
-        // Format time (e.g., "7:59 PM")
         const timeString = date.toLocaleTimeString('en-US', {
             hour: 'numeric',
             minute: '2-digit',
             hour12: true
         });
-
-        // Format date (e.g., "July 3, 2025")
         const dateString = date.toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
         });
-
-        return { timeString, dateString, isToday };
+        return { timeString, dateString };
     };
 
-    // Check if event is today
     const isEventToday = () => {
         const startDate = new Date(event.startsAt);
         const today = new Date();
         return startDate.toDateString() === today.toDateString();
     };
 
-    // Format the event duration
     const getEventDuration = () => {
         const startDate = new Date(event.startsAt);
         const endDate = new Date(event.endsAt);
-
         const startFormatted = formatDateTime(event.startsAt);
         const endFormatted = formatDateTime(event.endsAt);
 
-        // If same day, show "10:00 AM - 2:00 PM"
         if (startDate.toDateString() === endDate.toDateString()) {
             return `${startFormatted.timeString} - ${endFormatted.timeString}`;
         } else {
-            // If different days, show full date and time
             return `${startFormatted.dateString} ${startFormatted.timeString} - ${endFormatted.dateString} ${endFormatted.timeString}`;
         }
     };
 
-    // Get the event date for display
     const getEventDate = () => {
         const startDate = new Date(event.startsAt);
         return startDate.toLocaleDateString('en-US', {
@@ -87,16 +100,15 @@ const EventDetails = ({ route }) => {
                             </TouchableOpacity>
                         </View>
 
-                        {/* Event Title */}
+                        {/* 4. Usar os textos traduzidos */}
                         <Text style={styles.eventTitle}>
-                            {event.eventName || "Event without title"}
+                            {event.eventName || t.noTitle}
                         </Text>
 
-                        {/* Event Date and Time */}
                         <View style={styles.dateTimeContainer}>
                             {isEventToday() && (
                                 <View style={styles.todayBadge}>
-                                    <Text style={styles.todayText}>Today</Text>
+                                    <Text style={styles.todayText}>{t.today}</Text>
                                 </View>
                             )}
                             <Text style={styles.dateTimeText}>
@@ -107,19 +119,17 @@ const EventDetails = ({ route }) => {
 
                     {/* Content */}
                     <View style={styles.contentSection}>
-                        {/* Overview Section */}
                         <View style={styles.overviewSection}>
-                            <Text style={styles.sectionTitle}>Overview</Text>
+                            <Text style={styles.sectionTitle}>{t.overview}</Text>
                             <View style={styles.overviewTextContainer}>
                                 <Text style={styles.overviewText}>
-                                    {event.description || "No description available"}
+                                    {event.description || t.noDescription}
                                 </Text>
                             </View>
                         </View>
 
-                        {/* Hours Section */}
                         <View style={styles.hoursSection}>
-                            <Text style={styles.hoursTitle}>Hours</Text>
+                            <Text style={styles.hoursTitle}>{t.hours}</Text>
                             <Text style={styles.hoursText}>
                                 {getEventDuration()}
                             </Text>

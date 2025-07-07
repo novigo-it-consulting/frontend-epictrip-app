@@ -8,6 +8,8 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Platform,
+  StyleSheet,
+  SafeAreaView
 } from "react-native";
 import {
   TextInput,
@@ -29,44 +31,83 @@ import {
   AlertNotificationRoot,
   Toast,
 } from "react-native-alert-notification";
-import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+// 1. Importar o serviço de tradução
+import { translate } from "../services/translations/translateServices";
 
 const ForgetPasswordScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
-  const { t } = useTranslation();
   const [typedUsername, setTypedUsername] = useState("");
+
+  // 2. Criar um estado para armazenar os textos traduzidos
+  const [t, setT] = useState({
+    title: "Forgot Password",
+    subTitle: "Type in your Epic Trip account email address",
+    emailLabel: "E-mail",
+    continueButton: "Continue",
+    noUser: "No user found",
+    unexpectedError: "An unexpected error occurred, please try again.",
+    invalidEmail: "Invalid e-mail",
+    emailRequired: "E-mail is required",
+  });
+
+  // 3. useEffect para buscar as traduções
+  useEffect(() => {
+    const fetchTranslations = async () => {
+      try {
+        const [
+          title, subTitle, emailLabel, continueButton, noUser,
+          unexpectedError, invalidEmail, emailRequired
+        ] = await Promise.all([
+          translate("Forgot Password", "en"), // Título mais apropriado para a tela
+          translate("Type in your Epic Trip account email address", "en"),
+          translate("E-mail", "en"),
+          translate("Continue", "en"),
+          translate("No user found", "en"),
+          translate("An unexpected error occurred, please try again.", "en"),
+          translate("Invalid e-mail", "en"),
+          translate("E-mail is required", "en"),
+        ]);
+        setT({
+          title, subTitle, emailLabel, continueButton, noUser,
+          unexpectedError, invalidEmail, emailRequired
+        });
+      } catch (error) {
+        console.error("Falha ao buscar traduções:", error);
+      }
+    };
+    fetchTranslations();
+  }, []);
 
   const fetchTypedUsername = async () => {
     const typedUser = await AsyncStorage.getItem("username");
-    setTypedUsername(typedUser);
-  };
-
-  const defaultToastConfig = {
-    autoClose: 3000,
-    titleStyle: { fontSize: 16, fontWeight: "bold" },
-  };
-
-  const lightColors = {
-    label: "#000",
-    card: "#fcfcfc",
-    overlay: "#f0f0f0",
-    success: "#28a745",
-    danger: "rgba(255, 0, 0, 1)",
-    warning: "#ffc107",
+    if (typedUser) {
+      setTypedUsername(typedUser);
+    }
   };
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    setValue
+  } = useForm({
+    defaultValues: {
+      username: ''
+    }
+  });
+
+  useEffect(() => {
+    if (typedUsername) {
+      setValue('username', typedUsername)
+    }
+  }, [typedUsername, setValue])
 
   const schema = yup.object().shape({
     username: yup
       .string()
-      .email("E-mail inválido")
-      .required("E-mail é obrigatório"),
+      .email(t.invalidEmail)
+      .required(t.emailRequired),
   });
 
   const onSubmit = async (data) => {
@@ -77,25 +118,22 @@ const ForgetPasswordScreen = ({ navigation }) => {
 
       if (response === 201) {
         navigation.navigate("EnterCode");
-        return;
       } else {
-        throw new Error(
-          "Ocorreu um erro inesperado, por favor tente novamente."
-        );
+        throw new Error(t.unexpectedError);
       }
     } catch (error) {
-      if (error.response.status === 500) {
+      const message = error?.response?.data?.message || error.message || t.unexpectedError;
+      if (error?.response?.status === 500) {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: t("forgetPasswordScreen.noUser"),
+          textBody: t.noUser,
         });
-        console.log(error.response.status);
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: t("forgetPasswordScreen.unknowError"),
+          textBody: message,
         });
       }
     } finally {
@@ -107,9 +145,7 @@ const ForgetPasswordScreen = ({ navigation }) => {
     fetchTypedUsername();
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
-      () => {
-        Toast.hide();
-      }
+      () => Toast.hide()
     );
     return () => {
       keyboardDidHideListener.remove();
@@ -122,95 +158,90 @@ const ForgetPasswordScreen = ({ navigation }) => {
 
   return (
     <PaperProvider theme={theme}>
-      <AlertNotificationRoot
-        toastConfig={defaultToastConfig}
-        colors={[lightColors]}
-        theme={"light"}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : null}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "space-around",
-              flex: 1,
-              width: "75%",
-              marginRight: "auto",
-              marginLeft: "auto",
-            }}
-          >
-            <View style={styles.containerBackButton}>
-              <TouchableOpacity onPress={handleGoBack} style={{ width: "40%" }}>
-                <IconButton
-                  icon={"arrow-left-thin"}
-                  size={30}
-                  style={styles.backIcon}
-                />
-              </TouchableOpacity>
-              <View style={{ width: "85%" }}>
-                <Image source={logo} style={styles.imageLogo} />
+      <AlertNotificationRoot>
+        <SafeAreaView style={{ flex: 1 }}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              style={combinedStyles.keyboardAvoidingView}
+            >
+              <View style={styles.containerBackButton}>
+                <TouchableOpacity onPress={handleGoBack} style={{ width: "40%" }}>
+                  <IconButton
+                    icon={"arrow-left-thin"}
+                    size={30}
+                    style={styles.backIcon}
+                  />
+                </TouchableOpacity>
+                <View style={{ width: "85%" }}>
+                  <Image source={logo} style={styles.imageLogo} />
+                </View>
               </View>
-            </View>
-            <View style={styles.container}>
-              <Text style={styles.textTitle}>
-                {t("forgetPasswordScreen.title")}
-              </Text>
-              <Text style={styles.linkPrivacy}>
-                {t("forgetPasswordScreen.subTitle")}
-              </Text>
-              {typedUsername !== "" ? (
+              <View style={styles.container}>
+                {/* 4. Usar os textos traduzidos */}
+                <Text style={styles.textTitle}>{t.title}</Text>
+                <Text style={styles.linkPrivacy}>{t.subTitle}</Text>
+
                 <Controller
                   control={control}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <TextInput
-                      label={t("forgetPasswordScreen.emailLabel")}
+                      label={t.emailLabel}
                       mode="flat"
                       onBlur={onBlur}
                       left={<TextInput.Icon icon="account-outline" />}
-                      onChangeText={(value) => onChange(value)}
-                      onChange={(value) => onChange(value)}
+                      onChangeText={onChange}
+                      value={value}
                       keyboardType="email-address"
                       autoCapitalize="none"
-                      value={() => onChange(typedUsername)}
-                      defaultValue={typedUsername}
                       style={styles.textEmail}
-                      error={errors.username ? true : false}
+                      error={!!errors.username}
                     />
                   )}
                   name="username"
-                  rules={{ required: true }}
                 />
-              ) : null}
-              {errors.email && (
-                <Text style={{ color: colors.error }}>
-                  {errors.email.message}
-                </Text>
-              )}
-              <Button
-                mode="contained"
-                onPress={handleSubmit(onSubmit)}
-                style={styles.button}
-                disabled={loading}
-              >
-                {loading ? (
-                  <ActivityIndicator color={colors.white} />
-                ) : (
-                  t("forgetPasswordScreen.continueButton")
+
+                {errors.username && (
+                  <Text style={{ color: colors.error }}>
+                    {errors.username.message}
+                  </Text>
                 )}
-              </Button>
-            </View>
-            <View style={{ flexDirection: "row", justifyContent: "center" }}>
-              <Text style={screenNumberStyles.numberStyle}>06</Text>
-            </View>
-          </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
-        <Toast />
+                <Button
+                  mode="contained"
+                  onPress={handleSubmit(onSubmit)}
+                  style={styles.button}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <ActivityIndicator color={colors.white} />
+                  ) : (
+                    t.continueButton
+                  )}
+                </Button>
+              </View>
+              <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                <Text style={screenNumberStyles.numberStyle}>06</Text>
+              </View>
+            </KeyboardAvoidingView>
+          </TouchableWithoutFeedback>
+        </SafeAreaView>
       </AlertNotificationRoot>
     </PaperProvider>
   );
 };
+
+const combinedStyles = StyleSheet.create({
+  keyboardAvoidingView: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-around",
+    flex: 1,
+    width: "75%",
+    marginRight: "auto",
+    marginLeft: "auto",
+  }
+});
 
 const theme = {
   ...DefaultTheme,

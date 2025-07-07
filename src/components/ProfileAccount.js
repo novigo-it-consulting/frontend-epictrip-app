@@ -1,20 +1,43 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Image, TouchableOpacity, TextInput } from "react-native";
+import { StyleSheet, View, Text, Image, TouchableOpacity, TextInput, ActivityIndicator } from "react-native";
 import { requestGetUser } from "../services/api";
 import { useNavigation } from "@react-navigation/native";
 import Entypo from '@expo/vector-icons/Entypo';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useTranslation } from "react-i18next";
+// 1. Importar o serviço de tradução
+import { translate } from "../services/translations/translateServices";
 
 
 export default function ProfileAccount() {
   const [profilePhoto, setProfilePhoto] = useState(null);
-  const [profileName, setProfileName] = useState("Polina Fernandes");
+  const [profileName, setProfileName] = useState("");
   const [loading, setLoading] = useState(true);
-  const [imageLoading, setImageLoading] = useState(true);
 
-  const { t } = useTranslation();
+  // 2. Criar um estado para armazenar os textos traduzidos
+  const [t, setT] = useState({
+    loading: "Loading...",
+    hello: "Hello",
+    searchPlaceholder: "Try Disney, food or tickets"
+  });
+
   const navigation = useNavigation();
+
+  // 3. useEffect para buscar as traduções
+  useEffect(() => {
+    const fetchTranslations = async () => {
+      try {
+        const [loading, hello, searchPlaceholder] = await Promise.all([
+          translate("Loading...", "en"),
+          translate("Hello", "en"),
+          translate("Try Disney, food or tickets", "en")
+        ]);
+        setT({ loading, hello, searchPlaceholder });
+      } catch (error) {
+        console.error("Falha ao buscar traduções:", error);
+      }
+    };
+    fetchTranslations();
+  }, []);
 
   const getUserToProfile = async () => {
     const userId = await AsyncStorage.getItem("userId");
@@ -35,32 +58,24 @@ export default function ProfileAccount() {
       console.error("An error occurred while fetching user profile:", error);
     } finally {
       setLoading(false);
-      setImageLoading(false);
     }
   };
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", getUserToProfile);
+    const unsubscribe = navigation.addListener("focus", () => {
+      setLoading(true); // Mostra o loading ao focar na tela
+      getUserToProfile();
+    });
     return unsubscribe;
   }, [navigation]);
 
-  useEffect(() => {
-    if (!profilePhoto) {
-      setImageLoading(false);
-    }
-  }, [profilePhoto]);
 
-  const handleImageLoadEnd = () => {
-    setTimeout(() => {
-      setImageLoading(false);
-    }, 5000);
-  };
-
-  if (loading || imageLoading) {
+  if (loading) {
     return (
-
-      <View style={stylesProfile.container}>
-        <Text>Loading...</Text>
+      <View style={stylesProfile.loadingContainer}>
+        {/* 4. Usar os textos traduzidos */}
+        <ActivityIndicator size="small" color="#172B4D" />
+        <Text style={{ marginLeft: 10 }}>{t.loading}</Text>
       </View>
     );
   }
@@ -72,10 +87,9 @@ export default function ProfileAccount() {
           <Image
             source={profilePhoto ? { uri: profilePhoto } : require("../../assets/profile/1.png")}
             style={stylesProfile.profileImage}
-            onLoadEnd={handleImageLoadEnd}
           />
           <View style={stylesProfile.titleName}>
-            <Text style={stylesProfile.welcomeText}>{t("profileAccount.welcome")}</Text>
+            <Text style={stylesProfile.welcomeText}>{t.hello}</Text>
             <Text style={stylesProfile.profileNameText}>{profileName}</Text>
           </View>
           <TouchableOpacity style={stylesProfile.boxNotification} onPress={() => navigation.navigate('RequestScreen')}>
@@ -87,16 +101,15 @@ export default function ProfileAccount() {
             </View>
           </TouchableOpacity>
         </View>
-        {/* Barra de pesquisa centralizada e com placeholder */}
+
         <View style={stylesProfile.searchContainer}>
           <View style={stylesProfile.searchBar}>
             <Entypo name="magnifying-glass" size={20} color="#172B4D" style={stylesProfile.searchIcon} />
             <TextInput
               style={stylesProfile.searchInput}
-              placeholder="Try Disney, food or tickets"
+              placeholder={t.searchPlaceholder}
               placeholderTextColor="#7D8A99"
             />
-
           </View>
         </View>
       </View>
@@ -105,6 +118,14 @@ export default function ProfileAccount() {
 }
 
 const stylesProfile = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    paddingHorizontal: 20,
+  },
   container: {
     flex: 1,
     alignItems: "center",
@@ -182,7 +203,7 @@ const stylesProfile = StyleSheet.create({
     backgroundColor: "#F1F5F6",
     borderRadius: 8,
     paddingHorizontal: 10,
-    width: "90%",
+    width: "100%", // Ajustado para 100%
     height: 50,
   },
   searchIcon: {

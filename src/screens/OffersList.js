@@ -7,26 +7,52 @@ import {
     View,
     TouchableOpacity,
     ActivityIndicator,
-    ScrollView // Usei o ScrollView do react-native
+    ScrollView
 } from "react-native";
 import colors from "../colors";
 import SearchBarHome from '../components/SearchViewHome';
 import GoBackArrow from '../components/GoBackArrow';
 import CardServicesCategoriesInside from '../components/CardServicesCategoriesInside';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { getProductsByGroup, getUploadByProduct, getCategoryByGroup, getUploadByCategory } from '../services/api';
 import ExploreCategoriesProducts from '../components/ExploreCategoriesProducts';
+// 1. Importar o serviço de tradução
+import { translate } from "../services/translations/translateServices";
 
 const OffersList = () => {
     const navigation = useNavigation();
     const route = useRoute();
-    const { group } = route.params || {};
-    const { groupData } = route.params || {};
+    const { group, groupData } = route.params || {};
 
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [categories, setCategories] = useState([]);
+
+    // 2. Criar um estado para armazenar os textos traduzidos
+    const [t, setT] = useState({
+        loading: "Loading...",
+        categoryFallback: "Category",
+        categories: "Categories",
+        suggestions: "Suggestions",
+    });
+
+    // 3. useEffect para buscar as traduções
+    useEffect(() => {
+        const fetchTranslations = async () => {
+            try {
+                const [loading, categoryFallback, categories, suggestions] = await Promise.all([
+                    translate("Loading...", "en"),
+                    translate("Category", "en"),
+                    translate("Categories", "en"),
+                    translate("Suggestions", "en")
+                ]);
+                setT({ loading, categoryFallback, categories, suggestions });
+            } catch (error) {
+                console.error("Falha ao buscar traduções:", error);
+            }
+        };
+        fetchTranslations();
+    }, []);
 
     const getProducts = async () => {
         try {
@@ -36,9 +62,10 @@ const OffersList = () => {
             for (const product of products) {
                 try {
                     const upload = await getUploadByProduct(product.id);
+                    product.description = await translate(product.description, "en");
                     const obj = {
                         product: product,
-                        upload: upload[0] // Evita erro caso `filePath` não exista
+                        upload: upload[0]
                     };
                     prds.push(obj);
                 } catch (error) {
@@ -59,10 +86,9 @@ const OffersList = () => {
             for (const cat of categories) {
                 try {
                     const upload = await getUploadByCategory(cat.categoryId);
+                    cat.categoryName = await translate(cat.categoryName, "en")
                     const obj = {
-                        categoryData: {
-                            cat // Mantive a estrutura original
-                        },
+                        categoryData: { cat },
                         uri: upload[0]?.filePath
                     };
                     cats.push(obj);
@@ -79,12 +105,13 @@ const OffersList = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            if (!group) return; // Garante que o grupo exista antes de buscar dados
             try {
                 setIsLoading(true);
-                const categories = await getCategoriesData();
-                setCategories(categories);
-                const products = await getProducts();
-                setData(products);
+                const categoriesData = await getCategoriesData();
+                setCategories(categoriesData);
+                const productsData = await getProducts();
+                setData(productsData);
             } catch (error) {
                 console.error('Erro ao buscar dados iniciais:', error);
             } finally {
@@ -92,9 +119,9 @@ const OffersList = () => {
             }
         };
         fetchData();
-    }, []);
+    }, [group]);
 
-    const handlePressCard = async (uri, prd) => {
+    const handlePressCard = (uri, prd) => {
         navigation.navigate('ConciergeDetails', { data: data, clickedImage: uri, clickedProduct: prd });
     };
 
@@ -102,7 +129,8 @@ const OffersList = () => {
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#172B4D" />
-                <Text style={styles.loadingText}>Carregando...</Text>
+                {/* 4. Usar o texto traduzido */}
+                <Text style={styles.loadingText}>{t.loading}</Text>
             </View>
         );
     }
@@ -112,24 +140,24 @@ const OffersList = () => {
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.headerContainer}>
                     <GoBackArrow />
-                    <Text style={styles.titleText}>{groupData?.title || "Categoria"}</Text>
+                    <Text style={styles.titleText}>{groupData?.title || t.categoryFallback}</Text>
                 </View>
                 <View style={styles.searchContainer}>
                     <SearchBarHome widthDesired={"90%"} />
                 </View>
                 <ScrollView style={styles.scrollView}>
                     <View style={styles.sectionContainer}>
-                        <Text style={styles.sectionTitle}>Categories</Text>
+                        <Text style={styles.sectionTitle}>{t.categories}</Text>
                         <ExploreCategoriesProducts data={categories} />
                     </View>
                     <View style={[styles.sectionContainer, { paddingTop: 8 }]}>
-                        <Text style={styles.sectionTitle}>Suggestions</Text>
+                        <Text style={styles.sectionTitle}>{t.suggestions}</Text>
                         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                             {data.map((prd) => (
-                                <TouchableOpacity key={prd.product.id} onPress={() => handlePressCard(prd.upload.filePath, prd)}>
+                                <TouchableOpacity key={prd.product.id} onPress={() => handlePressCard(prd.upload?.filePath, prd)}>
                                     <CardServicesCategoriesInside
                                         title={prd.product.name}
-                                        image={prd.upload.filePath}
+                                        image={prd.upload?.filePath}
                                         description={prd.product.description}
                                     />
                                 </TouchableOpacity>

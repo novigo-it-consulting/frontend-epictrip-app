@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-native';
 import SearchBarHome from '../components/SearchViewHome';
-import { useTranslation } from 'react-i18next';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import CardService from '../components/CardServices';
 import GoBackArrow from '../components/GoBackArrow';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+// 1. Importar o serviço de tradução
+import { translate } from "../services/translations/translateServices";
 
 const ServicesScreen = () => {
   const navigation = useNavigation();
@@ -15,10 +16,30 @@ const ServicesScreen = () => {
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // Estado de carregamento
-  const [productData, setProductData] = useState()
+  const [isLoading, setIsLoading] = useState(true);
+  const [productData, setProductData] = useState();
 
-  const { t } = useTranslation();
+  // 2. Criar um estado para armazenar os textos traduzidos
+  const [t, setT] = useState({
+    loading: "Loading...",
+    services: "Services",
+  });
+
+  // 3. useEffect para buscar as traduções
+  useEffect(() => {
+    const fetchTranslations = async () => {
+      try {
+        const [loading, services] = await Promise.all([
+          translate("Loading...", "en"),
+          translate("Services", "en"),
+        ]);
+        setT({ loading, services });
+      } catch (error) {
+        console.error("Falha ao buscar traduções:", error);
+      }
+    };
+    fetchTranslations();
+  }, []);
 
   const handleServicePress = (serviceId, prd) => {
     navigation.navigate('ServiceDetails', { serviceId: serviceId, productData: productData, clickedProduct: prd });
@@ -50,28 +71,30 @@ const ServicesScreen = () => {
       const response = await axios.get(urlProducts, { headers });
       const products = response.data;
 
-      console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", products)
-
       const prds = [];
       for (const product of products) {
-        const urlUploads = `https://homol-api.fertech.dev.br/uploads?productId=${product.id}`;
-        const responseUpload = await axios.get(urlUploads, { headers });
+        try {
+          const urlUploads = `https://homol-api.fertech.dev.br/uploads?productId=${product.id}`;
+          const responseUpload = await axios.get(urlUploads, { headers });
 
-        if (responseUpload.status === 200) {
-          const upload = responseUpload.data;
-          const obj = {
-            product: product,
-            upload: upload.data[0] // Evita erro caso `filePath` não exista
-          };
-          objsToSendAmiko.push(obj)
-          prds.push({
-            product: product,
-            upload: upload.data[0]
-          });
+          if (responseUpload.status === 200) {
+            const upload = responseUpload.data;
+            const obj = {
+              product: product,
+              upload: upload.data[0]
+            };
+            objsToSendAmiko.push(obj)
+            product.name = await translate(product.name, "en");
+            prds.push({
+              product: product,
+              upload: upload.data[0]
+            });
+          }
+        } catch (e) {
+          console.warn(`Could not get upload for product ${product.id}`);
         }
       }
       setProductData(objsToSendAmiko)
-      console.log("CCCCCCCCCCCCCCCC", prds)
       return prds;
     } catch (error) {
       console.error('Erro ao buscar produtos:', error);
@@ -82,70 +105,70 @@ const ServicesScreen = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setIsLoading(true); // Começa o carregamento
+        setIsLoading(true);
         const categoriesList = await fetchCategories();
         const productsList = await fetchProducts();
-        await setProducts(productsList);
-        await setCategories(categoriesList);
-        console.log(products)
+        setProducts(productsList);
+        setCategories(categoriesList);
       } catch (error) {
         console.error('Erro ao buscar dados iniciais:', error);
       } finally {
-        console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBB", products)
-        setIsLoading(false); // Finaliza o carregamento
+        setIsLoading(false);
       }
     };
     fetchData();
-  }, []);
+  }, [group]); // Adicionado `group` como dependência para re-buscar se ele mudar
 
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#172B4D" />
-        <Text style={styles.loadingText}>Carregando...</Text>
+        {/* 4. Usar o texto traduzido */}
+        <Text style={styles.loadingText}>{t.loading}</Text>
       </View>
     );
   }
 
   return (
     <>
-      <SafeAreaView />
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <View style={styles.headerIcons}>
-            <GoBackArrow />
-            <Text style={styles.title}>Services</Text>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <View style={styles.headerIcons}>
+              <GoBackArrow />
+              <Text style={styles.title}>{t.services}</Text>
+            </View>
           </View>
+          <SearchBarHome />
+          <ScrollView>
+            {categories
+              .filter((cat) => cat.groupId === 'bbfaecfc-013e-4ce3-9ac1-80d7b4c0010b')
+              .map((cat) => (
+                <View key={cat.categoryId} style={styles.section}>
+                  <Text style={styles.sectionTitle}>{cat.categoryName}</Text>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    {products
+                      .filter((prd) => prd.product.category === cat.categoryId)
+                      .map((prd) => (
+                        <TouchableOpacity
+                          key={prd.product.id}
+                          onPress={() => handleServicePress(prd.product.id, prd)}
+                        >
+                          <CardService
+                            title={prd.product.name}
+                            image={
+                              prd.upload?.filePath ||
+                              'https://img.freepik.com/fotos-premium/praia-da-ilha-de-cantor-em-palm-beach-florida-us_79295-5856.jpg?w=996'
+                            }
+                          />
+                        </TouchableOpacity>
+                      ))}
+                  </ScrollView>
+                </View>
+              ))}
+          </ScrollView>
         </View>
-        <SearchBarHome />
-        <ScrollView>
-          {categories
-            .filter((cat) => cat.groupId == 'bbfaecfc-013e-4ce3-9ac1-80d7b4c0010b')
-            .map((cat) => (
-              <View key={cat.categoryId} style={styles.section}>
-                <Text style={styles.sectionTitle}>{cat.categoryName}</Text>
-                <ScrollView horizontal>
-                  {products
-                    .filter((prd) => prd.product.category === cat.categoryId) // Certifique-se que os campos são correspondentes
-                    .map((prd) => (
-                      <TouchableOpacity
-                        key={prd.product.id}
-                        onPress={() => handleServicePress(prd.product.id, prd)}
-                      >
-                        <CardService
-                          title={prd.product.name}
-                          image={
-                            prd.upload?.filePath || // Use optional chaining para evitar erros
-                            'https://img.freepik.com/fotos-premium/praia-da-ilha-de-cantor-em-palm-beach-florida-us_79295-5856.jpg?w=996'
-                          }
-                        />
-                      </TouchableOpacity>
-                    ))}
-                </ScrollView>
-              </View>
-            ))}
-        </ScrollView>
-      </View>
+      </SafeAreaView>
     </>
   );
 };
@@ -161,7 +184,6 @@ const styles = StyleSheet.create({
   },
   headerIcons: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
   },
   title: {
@@ -169,8 +191,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#172B4D',
     textAlign: 'center',
-    width: '100%',
-    marginLeft: -80,
+    flex: 1,
+    marginLeft: -40, // Compensa o espaço do botão de voltar
   },
   section: {
     marginBottom: 20,

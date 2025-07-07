@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   Platform,
   KeyboardAvoidingView,
+  StyleSheet,
 } from "react-native";
 import {
   TextInput,
@@ -30,15 +31,54 @@ import {
   AlertNotificationRoot,
   Toast,
 } from "react-native-alert-notification";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useTranslation } from "react-i18next";
+import { translate } from "../services/translations/translateServices";
 
 const SetNewPasswordScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
-  const { t } = useTranslation();
+  const [t, setT] = useState({
+    title: "Set your new password",
+    passwordLabel: "Password",
+    confirmPasswordLabel: "Confirm Password",
+    continueButton: "Continue",
+    passwordsDoNotMatch: "Passwords do not match",
+    requiredField: "Required field",
+    errorChangingPassword: "Error changing password. Please try again.",
+    passwordChangedSuccess: "Password changed successfully!",
+    successTitle: "Success"
+  });
+
+  useEffect(() => {
+    const fetchTranslations = async () => {
+      try {
+        const [
+          title, passwordLabel, confirmPasswordLabel, continueButton,
+          passwordsDoNotMatch, requiredField, errorChangingPassword,
+          passwordChangedSuccess, successTitle
+        ] = await Promise.all([
+          translate("Set your new password", "en"),
+          translate("Password", "en"),
+          translate("Confirm Password", "en"),
+          translate("Continue", "en"),
+          translate("Passwords do not match", "en"),
+          translate("Required field", "en"),
+          translate("Error changing password. Please try again.", "en"),
+          translate("Password changed successfully!", "en"),
+          translate("Success", "en"),
+        ]);
+        setT({
+          title, passwordLabel, confirmPasswordLabel, continueButton,
+          passwordsDoNotMatch, requiredField, errorChangingPassword,
+          passwordChangedSuccess, successTitle
+        });
+      } catch (error) {
+        console.error("Falha ao buscar traduções:", error);
+      }
+    };
+    fetchTranslations();
+  }, []);
 
   const {
     control,
@@ -47,8 +87,8 @@ const SetNewPasswordScreen = ({ navigation }) => {
   } = useForm();
 
   const schema = yup.object().shape({
-    newPassword: yup.string().required("Campo Obrigatório"),
-    confirmPassword: yup.string().required("Campo Obrigatório"),
+    newPassword: yup.string().required(t.requiredField),
+    confirmPassword: yup.string().required(t.requiredField),
   });
 
   const defaultToastConfig = {
@@ -67,47 +107,57 @@ const SetNewPasswordScreen = ({ navigation }) => {
 
   const onSubmit = async (data) => {
     setLoading(true);
+
     if (data.newPassword !== data.confirmPassword) {
-      const timer = setTimeout(() => {
-        setLoading(false);
-      }, 2000);
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
-        textBody: t("setNewPasswordScreen.passwordsDoNotMatch"),
+        textBody: t.passwordsDoNotMatch,
       });
-      return () => clearTimeout(timer);
+      setLoading(false);
+      return;
     }
+
     try {
       await schema.validate(data, { abortEarly: false });
-      const token = await AsyncStorage.getItem("token");
       const response = await requestChangePassword(data);
+      console.log("API Response 0:", JSON.stringify(response, null, 2));
 
-      if (response === 200) {
-        navigation.navigate("Login");
-        return;
+      if (response && JSON.stringify(response, null, 2) == "200") {
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: t.successTitle,
+          textBody: t.passwordChangedSuccess,
+        });
+
+        setTimeout(() => {
+          try {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Login' }],
+            });
+          } catch (navError) {
+            console.error("Erro de Navegação:", navError);
+            Toast.show({
+              type: ALERT_TYPE.DANGER,
+              title: "Erro de Navegação",
+              textBody: "Não foi possível ir para a tela de Login.",
+            });
+          }
+        }, 1500);
+
       } else {
-        throw new Error("Erro ao efetuar login. Por favor, tente novamente.");
+        console.log("API Response 1:", JSON.stringify(response, null, 2));
+        throw new Error(response?.data?.message || t.errorChangingPassword);
       }
     } catch (error) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        Toast.show({
-          type: ALERT_TYPE.DANGER,
-          title: "Ops",
-          textBody: error.response.data.message,
-        });
-      } else {
-        Toast.show({
-          type: ALERT_TYPE.DANGER,
-          title: "Ops",
-          textBody: error.response.data.message,
-        });
-      }
-    } finally {
+      console.log("API Response: 2", error.message);
+      const message = error?.response?.data?.message || error.message || t.errorChangingPassword;
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Ops",
+        textBody: message,
+      });
       setLoading(false);
     }
   };
@@ -115,9 +165,7 @@ const SetNewPasswordScreen = ({ navigation }) => {
   useEffect(() => {
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
-      () => {
-        Toast.hide();
-      }
+      () => Toast.hide()
     );
     return () => {
       keyboardDidHideListener.remove();
@@ -137,17 +185,8 @@ const SetNewPasswordScreen = ({ navigation }) => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? null : null}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "space-around",
-              flex: 1,
-              width: "75%",
-              marginRight: "auto",
-              marginLeft: "auto",
-            }}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={combinedStyles.keyboardAvoidingView}
           >
             <View style={styles.containerBackButton}>
               <TouchableOpacity onPress={handleGoBack} style={{ width: "40%" }}>
@@ -162,14 +201,12 @@ const SetNewPasswordScreen = ({ navigation }) => {
               </View>
             </View>
             <View style={styles.container}>
-              <Text style={styles.textTitle}>
-                {t("setNewPasswordScreen.title")}
-              </Text>
+              <Text style={styles.textTitle}>{t.title}</Text>
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    label={t("setNewPasswordScreen.passwordLabel")}
+                    label={t.passwordLabel}
                     mode="flat"
                     onBlur={onBlur}
                     left={<TextInput.Icon icon="account-key-outline" />}
@@ -180,11 +217,11 @@ const SetNewPasswordScreen = ({ navigation }) => {
                       />
                     }
                     secureTextEntry={!showPassword}
-                    onChangeText={(value) => onChange(value)}
-                    keyboardType="email-address"
+                    onChangeText={onChange}
+                    value={value}
                     autoCapitalize="none"
                     style={styles.textEmail}
-                    error={errors.newPassword ? true : false}
+                    error={!!errors.newPassword}
                   />
                 )}
                 name="newPassword"
@@ -195,7 +232,7 @@ const SetNewPasswordScreen = ({ navigation }) => {
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    label={t("setNewPasswordScreen.confirmPasswordLabel")}
+                    label={t.confirmPasswordLabel}
                     mode="flat"
                     left={<TextInput.Icon icon="account-key-outline" />}
                     onBlur={onBlur}
@@ -212,20 +249,20 @@ const SetNewPasswordScreen = ({ navigation }) => {
                       />
                     }
                     secureTextEntry={!showPasswordConfirm}
-                    onChangeText={(value) => onChange(value)}
-                    keyboardType="email-address"
+                    onChangeText={onChange}
+                    value={value}
                     autoCapitalize="none"
                     style={styles.textEmail}
-                    error={errors.confirmPassword ? true : false}
+                    error={!!errors.confirmPassword}
                   />
                 )}
                 name="confirmPassword"
                 rules={{ required: true }}
                 defaultValue=""
               />
-              {errors.email && (
+              {errors.confirmPassword && (
                 <Text style={{ color: colors.error }}>
-                  {errors.email.message}
+                  {errors.confirmPassword.message}
                 </Text>
               )}
               <Button
@@ -237,20 +274,31 @@ const SetNewPasswordScreen = ({ navigation }) => {
                 {loading ? (
                   <ActivityIndicator color={colors.white} />
                 ) : (
-                  t("setNewPasswordScreen.continueButton")
+                  t.continueButton
                 )}
               </Button>
             </View>
             <View style={{ flexDirection: "row", justifyContent: "center" }}>
               <Text style={screenNumberStyles.numberStyle}>08</Text>
             </View>
-            <Toast />
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
       </AlertNotificationRoot>
     </PaperProvider>
   );
 };
+
+const combinedStyles = StyleSheet.create({
+  keyboardAvoidingView: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    width: '75%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  }
+});
 
 const theme = {
   ...DefaultTheme,

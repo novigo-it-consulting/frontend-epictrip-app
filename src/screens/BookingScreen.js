@@ -7,11 +7,41 @@ import HouseCarousel from "../components/HouseCarousel";
 import FooterNavBar from "../components/FooterNavBar";
 import { requestGetBookingByUser, requestGetHousesByBooking } from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+// 1. Importar o serviço de tradução
+import { translate } from "../services/translations/translateServices";
 
 const BookingScreen = ({ navigation }) => {
   const [bookings, setBookings] = useState([]);
   const [inactiveBookings, setInactiveBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // 2. Criar estados para os textos que precisam de tradução
+  const [loadingText, setLoadingText] = useState("Loading your bookings...");
+  const [titleText, setTitleText] = useState("Bookings");
+  const [subtitleText, setSubtitleText] = useState("Latest bookings");
+
+  // 3. useEffect para buscar todas as traduções de uma vez
+  useEffect(() => {
+    const fetchTranslations = async () => {
+      try {
+        const [
+          translatedLoading,
+          translatedTitle,
+          translatedSubtitle,
+        ] = await Promise.all([
+          translate("Loading your bookings...", "en"),
+          translate("Bookings", "en"),
+          translate("Latest bookings", "en"),
+        ]);
+        setLoadingText(translatedLoading);
+        setTitleText(translatedTitle);
+        setSubtitleText(translatedSubtitle);
+      } catch (error) {
+        console.error("Falha ao buscar traduções:", error);
+      }
+    };
+    fetchTranslations();
+  }, []);
 
   const getBookings = async () => {
     try {
@@ -25,8 +55,8 @@ const BookingScreen = ({ navigation }) => {
           const houseBooking = await requestGetHousesByBooking(booking.houseId);
           const listObj = {
             bookingId: booking.bookingId,
-            bookingStatus: booking.status,
-            bookingName: booking.bookingName,
+            bookingStatus: await translate(booking.status, "en"),
+            bookingName: await translate(booking.bookingName, "en"),
             checkIn: booking.checkIn,
             checkOut: booking.checkOut,
             shareNumber: booking.shareNumber,
@@ -52,15 +82,12 @@ const BookingScreen = ({ navigation }) => {
           active: activeBookingsList,
           inactive: inactiveBookingsList
         };
-        // setBookings(activeBookingsList);
-        // setInactiveBookings(inactiveBookingsList);
       } else {
         console.error("ID do usuário não encontrado.");
       }
     } catch (error) {
       console.error("Erro ao buscar reservas:", error);
     } finally {
-      await console.log("bookings: ", bookings)
       setLoading(false);
     }
   };
@@ -73,14 +100,14 @@ const BookingScreen = ({ navigation }) => {
         setInactiveBookings(bks.inactive);
       }
     };
-
     fetchBookings();
   }, []);
 
   if (loading) {
     return (
-      <View style={[styles.container, { justifyContent: "center", alignItems: "center" }]}>
-        <Text style={{ marginBottom: 20, fontSize: 16 }}>Carregando suas reservas...</Text>
+      <View style={styles.loadingContainer}>
+        {/* 4. Usar o estado com o texto traduzido */}
+        <Text style={styles.loadingText}>{loadingText}</Text>
         <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
@@ -96,7 +123,8 @@ const BookingScreen = ({ navigation }) => {
           onPress={() => navigation.goBack()}
         />
 
-        <Text style={styles.title}>Bookings</Text>
+        {/* 4. Usar os estados com os textos traduzidos */}
+        <Text style={styles.title}>{titleText}</Text>
 
         <View style={styles.searchBarContainer}>
           <SearchBarHome />
@@ -104,7 +132,7 @@ const BookingScreen = ({ navigation }) => {
 
         <FeaturedHouseCard bookings={bookings} onPress={() => getBookings()} />
 
-        <Text style={styles.subtitle}>Latest bookings</Text>
+        <Text style={styles.subtitle}>{subtitleText}</Text>
 
         <HouseCarousel bookings={inactiveBookings} />
 
@@ -121,6 +149,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FEFEFE",
     paddingTop: 30,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  loadingText: {
+    marginBottom: 20,
+    fontSize: 16
   },
   scrollContent: {
     paddingBottom: 100,

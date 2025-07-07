@@ -9,47 +9,90 @@ import {
     Animated,
     TextInput,
     Dimensions,
-    ActivityIndicator, // Adicionado para o indicador de carregamento
+    ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import GoBackArrow from "../components/GoBackArrow";
 import { requestGetMethodsByUser } from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+// 1. Importar o serviço de tradução
+import { translate } from "../services/translations/translateServices";
 
-const { width: screenWidth } = Dimensions.get("window"); // Largura da tela
+const { width: screenWidth } = Dimensions.get("window");
 
 const WalletScreen = () => {
     const [selectedCard, setSelectedCard] = useState(null);
     const [editingCard, setEditingCard] = useState(null);
-    const [cards, setCards] = useState([]); // Inicializado como array vazio
-    const [loading, setLoading] = useState(true); // Estado para controlar o carregamento
+    const [cards, setCards] = useState([]);
+    const [loading, setLoading] = useState(true);
     const scrollX = useRef(new Animated.Value(0)).current;
 
-    // Função para buscar os métodos de pagamento do usuário
+    // 2. Criar um estado para armazenar os textos traduzidos
+    const [t, setT] = useState({
+        loading: "Loading...",
+        wallet: "Wallet",
+        selected: "(selected)",
+        addNewCard: "Add new card",
+        cardholderName: "Cardholder Name",
+        cardNumber: "Card Number",
+        expDate: "Expiration Date (MM/YY)",
+        cvv: "CVV",
+        save: "Save",
+        cancel: "Cancel",
+    });
+
+    // 3. useEffect para buscar as traduções
+    useEffect(() => {
+        const fetchTranslations = async () => {
+            try {
+                const [
+                    loading, wallet, selected, addNewCard, cardholderName,
+                    cardNumber, expDate, cvv, save, cancel
+                ] = await Promise.all([
+                    translate("Loading...", "en"),
+                    translate("Wallet", "en"),
+                    translate("(selected)", "en"),
+                    translate("Add new card", "en"),
+                    translate("Cardholder Name", "en"),
+                    translate("Card Number", "en"),
+                    translate("Expiration Date (MM/YY)", "en"),
+                    translate("CVV", "en"),
+                    translate("Save", "en"),
+                    translate("Cancel", "en"),
+                ]);
+                setT({
+                    loading, wallet, selected, addNewCard, cardholderName,
+                    cardNumber, expDate, cvv, save, cancel
+                });
+            } catch (error) {
+                console.error("Falha ao buscar traduções:", error);
+            }
+        };
+        fetchTranslations();
+    }, []);
+
+
     const getUserPaymentMethods = async () => {
         try {
             const userId = await AsyncStorage.getItem("userId");
             const userCards = await requestGetMethodsByUser(userId);
 
-            // Garante que userCards seja um array
             if (Array.isArray(userCards)) {
-                setCards(userCards); // Atualiza o estado com os cartões
+                setCards(userCards);
                 if (userCards.length > 0) {
-                    setSelectedCard(userCards[0].methodId); // Seleciona o primeiro cartão
+                    setSelectedCard(userCards[0].methodId);
                 }
             } else {
-                console.warn("A API não retornou um array de cartões.");
-                setCards([]); // Define cards como array vazio
+                setCards([]);
             }
         } catch (error) {
             console.error("Erro ao buscar métodos de pagamento:", error);
-            setCards([]); // Define cards como array vazio em caso de erro
+            setCards([]);
         } finally {
-            setLoading(false); // Finaliza o carregamento
+            setLoading(false);
         }
     };
 
-    // Efeito para buscar os métodos de pagamento ao montar a tela
     useEffect(() => {
         getUserPaymentMethods();
     }, []);
@@ -66,12 +109,11 @@ const WalletScreen = () => {
         setEditingCard(null);
     };
 
-    // Se estiver carregando, exibe um indicador de carregamento
     if (loading) {
         return (
             <SafeAreaView style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#0057FF" />
-                <Text style={styles.loadingText}>Carregando...</Text>
+                <Text style={styles.loadingText}>{t.loading}</Text>
             </SafeAreaView>
         );
     }
@@ -81,7 +123,8 @@ const WalletScreen = () => {
             <ScrollView contentContainerStyle={styles.content}>
                 <View style={styles.header}>
                     <GoBackArrow />
-                    <Text style={styles.title}>Wallet</Text>
+                    {/* 4. Usar os textos traduzidos */}
+                    <Text style={styles.title}>{t.wallet}</Text>
                     <View style={{ width: 24 }} />
                 </View>
 
@@ -96,14 +139,10 @@ const WalletScreen = () => {
                         )}
                         contentContainerStyle={styles.cardScrollContent}
                     >
-                        {/* Verifica se cards é um array antes de usar map */}
                         {Array.isArray(cards) && cards.map((card) => (
                             <View
                                 key={card.methodId}
-                                style={[
-                                    styles.cardContainer,
-                                    { width: screenWidth - 32 },
-                                ]}
+                                style={[styles.cardContainer, { width: screenWidth - 32 }]}
                             >
                                 <View style={[styles.card, selectedCard === card.methodId && styles.selectedCard]}>
                                     {editingCard === card.methodId ? (
@@ -111,6 +150,7 @@ const WalletScreen = () => {
                                             card={card}
                                             onSave={handleSaveCard}
                                             onCancel={() => setEditingCard(null)}
+                                            t={t} // Passa as traduções para o formulário
                                         />
                                     ) : (
                                         <TouchableOpacity onPress={() => setSelectedCard(card.methodId)}>
@@ -120,7 +160,7 @@ const WalletScreen = () => {
                                                     <Ionicons name="create-outline" size={20} color="#6C757D" />
                                                 </TouchableOpacity>
                                             </View>
-                                            <Text style={styles.cardNumber}>•••• •••• •••• {card.cardNumber.slice(-4)} {selectedCard === card.methodId && <Text style={styles.selectedText}>(selected)</Text>}</Text>
+                                            <Text style={styles.cardNumber}>•••• •••• •••• {card.cardNumber.slice(-4)} {selectedCard === card.methodId && <Text style={styles.selectedText}>{t.selected}</Text>}</Text>
                                             <View style={styles.cardFooter}>
                                                 <Text style={styles.cardName}>{card.cardName}</Text>
                                                 <Text style={styles.cardExp}>{card.cardExpiration}</Text>
@@ -149,27 +189,21 @@ const WalletScreen = () => {
                 </View>
 
                 <TouchableOpacity style={styles.addCardButton}>
-                    <Text style={styles.addCardText}>Add new card</Text>
+                    <Text style={styles.addCardText}>{t.addNewCard}</Text>
                 </TouchableOpacity>
             </ScrollView>
         </SafeAreaView>
     );
 };
 
-const EditCardForm = ({ card, onSave, onCancel }) => {
+const EditCardForm = ({ card, onSave, onCancel, t }) => {
     const [name, setName] = useState(card.cardName);
     const [number, setNumber] = useState(card.cardNumber);
     const [expDate, setExpDate] = useState(card.cardExpiration);
     const [cvv, setCvv] = useState(card.cvv);
 
     const handleSave = () => {
-        const updatedCard = {
-            ...card,
-            cardName: name,
-            cardNumber: number,
-            cardExpiration: expDate,
-            cvv: cvv,
-        };
+        const updatedCard = { ...card, cardName: name, cardNumber: number, cardExpiration: expDate, cvv: cvv };
         onSave(updatedCard);
     };
 
@@ -177,35 +211,35 @@ const EditCardForm = ({ card, onSave, onCancel }) => {
         <View>
             <TextInput
                 style={styles.input}
-                placeholder="Cardholder Name"
+                placeholder={t.cardholderName}
                 value={name}
                 onChangeText={setName}
             />
             <TextInput
                 style={styles.input}
-                placeholder="Card Number"
+                placeholder={t.cardNumber}
                 value={number}
                 onChangeText={setNumber}
                 keyboardType="numeric"
             />
             <TextInput
                 style={styles.input}
-                placeholder="Expiration Date (MM/YY)"
+                placeholder={t.expDate}
                 value={expDate}
                 onChangeText={setExpDate}
             />
             <TextInput
                 style={styles.input}
-                placeholder="CVV"
+                placeholder={t.cvv}
                 value={cvv}
                 onChangeText={setCvv}
                 keyboardType="numeric"
             />
             <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-                <Text style={styles.saveButtonText}>Save</Text>
+                <Text style={styles.saveButtonText}>{t.save}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
-                <Text style={styles.cancelButtonText}>Cancel</Text>
+                <Text style={styles.cancelButtonText}>{t.cancel}</Text>
             </TouchableOpacity>
         </View>
     );
@@ -248,6 +282,7 @@ const styles = StyleSheet.create({
         width: "100%",
         padding: 16,
         borderRadius: 12,
+        minHeight: 150, // Altura mínima para o cartão
     },
     selectedCard: {
         borderWidth: 2,
@@ -261,10 +296,12 @@ const styles = StyleSheet.create({
     cardNumber: {
         fontSize: 16,
         marginTop: 10,
+        letterSpacing: 2, // Melhora a legibilidade
     },
     selectedText: {
         fontSize: 14,
         color: "#0057FF",
+        fontWeight: "bold",
     },
     cardFooter: {
         flexDirection: "row",
@@ -309,6 +346,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 10,
         marginBottom: 10,
+        backgroundColor: 'white',
     },
     saveButton: {
         backgroundColor: "#0057FF",
@@ -323,14 +361,14 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     cancelButton: {
-        backgroundColor: "#D3D3D3",
+        backgroundColor: "#E5E7EB",
         paddingVertical: 14,
         borderRadius: 8,
         alignItems: "center",
         marginTop: 10,
     },
     cancelButtonText: {
-        color: "#000000",
+        color: "#1F2937",
         fontSize: 16,
         fontWeight: "bold",
     },

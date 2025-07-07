@@ -3,23 +3,63 @@ import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, Dimens
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Card, Title, Paragraph } from 'react-native-paper';
-import { getAllPlaces } from '../services/api'; // Supondo que você tenha essa função de API implementada
+import { getAllPlaces } from '../services/api';
+// 1. Importar o serviço de tradução
+import { translate } from "../services/translations/translateServices";
 
 const { width } = Dimensions.get('window');
 
 const ExperienceScreen = ({ navigation }) => {
-  const [activeItem, setActiveItem] = useState(null);
+  const [activeItem, setActiveItem] = useState(0); // Inicia com o primeiro item ativo
   const [loading, setLoading] = useState(true);
   const [places, setPlaces] = useState([]);
-  const [categories, setCategories] = useState(["Parks", "Shows", "Sports", "Tours", "Events"]); // Exemplo de categorias
 
-  // Função para buscar os dados da API
+  // 2. Criar um estado para armazenar os textos traduzidos
+  const [t, setT] = useState({
+    experiences: "Experiences",
+    searchPlaceholder: "Try Disney, Food or Tickets",
+    categories: "Categories",
+    noPlacesFound: "No places found.",
+    categoryItems: ["Parks", "Shows", "Sports", "Tours", "Events"],
+  });
+
+  // 3. useEffect para buscar as traduções
+  useEffect(() => {
+    const fetchTranslations = async () => {
+      try {
+        const [
+          experiences, searchPlaceholder, categories, noPlacesFound,
+          parks, shows, sports, tours, events
+        ] = await Promise.all([
+          translate("Experiences", "en"),
+          translate("Try Disney, Food or Tickets", "en"),
+          translate("Categories", "en"),
+          translate("No places found.", "en"),
+          translate("Parks", "en"),
+          translate("Shows", "en"),
+          translate("Sports", "en"),
+          translate("Tours", "en"),
+          translate("Events", "en"),
+        ]);
+        setT({
+          experiences,
+          searchPlaceholder,
+          categories,
+          noPlacesFound,
+          categoryItems: [parks, shows, sports, tours, events]
+        });
+      } catch (error) {
+        console.error("Falha ao buscar traduções:", error);
+      }
+    };
+    fetchTranslations();
+  }, []);
+
   const fetchPlacesData = async () => {
     try {
       const response = await getAllPlaces();
       if (response.status === 200) {
         setPlaces(response.data.data);
-        console.log(response.data.data); // Supondo que `response.data` seja a lista de lugares
       } else {
         console.error('Erro ao buscar dados: ', response.status);
       }
@@ -31,7 +71,7 @@ const ExperienceScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    fetchPlacesData(); // Buscar os dados quando o componente for montado
+    fetchPlacesData();
   }, []);
 
   const handleBackPress = () => {
@@ -63,27 +103,27 @@ const ExperienceScreen = ({ navigation }) => {
           <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
             <Icon name="arrow-back" size={24} color="#333" />
           </TouchableOpacity>
-          <Text style={styles.title}>Experiences</Text>
+          {/* 4. Usar os textos traduzidos */}
+          <Text style={styles.title}>{t.experiences}</Text>
         </View>
 
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchBar}
-            placeholder="Try Disney, Food or Tickets"
+            placeholder={t.searchPlaceholder}
           />
           <Icon name="search" size={20} color="#333" style={styles.searchIcon} />
         </View>
       </View>
 
-      <Text style={styles.categoriesText}>Categories</Text>
+      <Text style={styles.categoriesText}>{t.categories}</Text>
 
-      {/* Renderizando as Categorias como um menu horizontal */}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.itemsContainer}
       >
-        {categories.map((category, index) => (
+        {t.categoryItems.map((category, index) => (
           <TouchableOpacity
             key={index}
             style={[
@@ -92,7 +132,7 @@ const ExperienceScreen = ({ navigation }) => {
             ]}
             onPress={() => setActiveItem(index)}
           >
-            <Text style={styles.itemText}>{category}</Text>
+            <Text style={[styles.itemText, activeItem === index && styles.itemTextActive]}>{category}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -103,13 +143,13 @@ const ExperienceScreen = ({ navigation }) => {
         <ScrollView contentContainerStyle={styles.carouselContainer} showsVerticalScrollIndicator={false}>
           <View style={styles.verticalContainer}>
             {places.length > 0 ? (
-              places.map((place, index) => (
-                <View key={index} style={styles.cardWrapper}>
+              places.map((place) => (
+                <View key={place.id} style={styles.cardWrapper}>
                   {renderCardItem(place)}
                 </View>
               ))
             ) : (
-              <Text style={styles.noDataText}>No places found.</Text>
+              <Text style={styles.noDataText}>{t.noPlacesFound}</Text>
             )}
           </View>
         </ScrollView>
@@ -173,7 +213,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    marginBottom: 15, // Espaçamento abaixo das categorias
+    marginBottom: 15,
   },
   item: {
     width: 100,
@@ -194,6 +234,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#333',
   },
+  itemTextActive: {
+    color: '#fff',
+  },
   carouselContainer: {
     alignItems: 'center',
     paddingVertical: 10,
@@ -213,7 +256,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     width: '100%',
-    height: 200,
+    height: 250,
     paddingBottom: 10
   },
   cardImage: {
@@ -222,10 +265,12 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    paddingTop: 10
+    paddingTop: 10,
+    lineHeight: 22,
   },
   cardParagraph: {
     fontSize: 14,
+    lineHeight: 20,
   },
   noDataText: {
     fontSize: 18,

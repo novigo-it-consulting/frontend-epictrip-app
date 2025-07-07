@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ArrowLeft, Calendar } from 'lucide-react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { requestCreateEvent } from "../services/api";
 import {
@@ -10,6 +10,8 @@ import {
     AlertNotificationRoot,
     Toast,
 } from "react-native-alert-notification";
+// 1. Importar o serviço de tradução
+import { translate } from "../services/translations/translateServices";
 
 const CreateNewEvent = () => {
     const [eventName, setEventName] = useState('');
@@ -21,11 +23,48 @@ const CreateNewEvent = () => {
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
     const [showEndTimePicker, setShowEndTimePicker] = useState(false);
 
+    // 2. Criar um estado para armazenar os textos traduzidos
+    const [t, setT] = useState({
+        createYour: "Create your",
+        amazingEvent: "amazing event",
+        eventName: "Event name",
+        description: "Description",
+        createEvent: "Create event",
+        errorCreating: "Error Creating Event. Try again later!",
+    });
+
     const navigation = useNavigation();
+
+    // 3. useEffect para buscar as traduções
+    useEffect(() => {
+        const fetchTranslations = async () => {
+            try {
+                const [
+                    createYour, amazingEvent, eventName,
+                    description, createEvent, errorCreating
+                ] = await Promise.all([
+                    translate("Create your", "en"),
+                    translate("amazing event", "en"),
+                    translate("Event name", "en"),
+                    translate("Description", "en"),
+                    translate("Create event", "en"),
+                    translate("Error Creating Event. Try again later!", "en"),
+                ]);
+                setT({
+                    createYour, amazingEvent, eventName,
+                    description, createEvent, errorCreating
+                });
+            } catch (error) {
+                console.error("Falha ao buscar traduções:", error);
+            }
+        };
+        fetchTranslations();
+    }, []);
+
 
     const handleGoBack = () => {
         navigation.goBack();
-    }
+    };
 
     const formatDate = (date) => {
         return date.toLocaleDateString();
@@ -36,14 +75,14 @@ const CreateNewEvent = () => {
     };
 
     const onStartDateChange = (event, selectedDate) => {
-        setShowStartDatePicker(false);
+        setShowStartDatePicker(Platform.OS === 'ios');
         if (selectedDate) {
             setStartDate(selectedDate);
         }
     };
 
     const onStartTimeChange = (event, selectedTime) => {
-        setShowStartTimePicker(false);
+        setShowStartTimePicker(Platform.OS === 'ios');
         if (selectedTime) {
             const newDate = new Date(startDate);
             newDate.setHours(selectedTime.getHours());
@@ -53,14 +92,14 @@ const CreateNewEvent = () => {
     };
 
     const onEndDateChange = (event, selectedDate) => {
-        setShowEndDatePicker(false);
+        setShowEndDatePicker(Platform.OS === 'ios');
         if (selectedDate) {
             setEndDate(selectedDate);
         }
     };
 
     const onEndTimeChange = (event, selectedTime) => {
-        setShowEndTimePicker(false);
+        setShowEndTimePicker(Platform.OS === 'ios');
         if (selectedTime) {
             const newDate = new Date(endDate);
             newDate.setHours(selectedTime.getHours());
@@ -76,171 +115,168 @@ const CreateNewEvent = () => {
             description: description,
             startsAt: startDate,
             endsAt: endDate
+        };
+        try {
+            const response = await requestCreateEvent(event);
+            if (response.status === 201) {
+                navigation.navigate("EventDetails");
+            } else {
+                Toast.show({
+                    type: ALERT_TYPE.DANGER,
+                    title: "Ops",
+                    textBody: t.errorCreating,
+                });
+            }
+        } catch (error) {
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: "Ops",
+                textBody: t.errorCreating,
+            });
         }
-        const response = await requestCreateEvent(event);
-        if (response.status === 201) {
-            navigation.navigate("EventDetails")
-        } else {
-            alert("Error Creating Event. Try again later!")
-            // Toast.show({
-            //     type: ALERT_TYPE.DANGER,
-            //     title: "Ops",
-            //     textBody: "Error creating event. Try again later!",
-            // });
-        }
-    }
+    };
 
     return (
-        <View style={styles.container}>
-            <Toast />
-            <View style={styles.content}>
-                {/* Header */}
-                <View style={styles.header}>
-                    <View style={styles.headerTop}>
-                        <TouchableOpacity style={styles.backButton} onPress={() => handleGoBack()}>
-                            <ArrowLeft size={24} color="#374151" />
+        <AlertNotificationRoot>
+            <View style={styles.container}>
+                <View style={styles.content}>
+                    {/* Header */}
+                    <View style={styles.header}>
+                        <View style={styles.headerTop}>
+                            <TouchableOpacity style={styles.backButton} onPress={() => handleGoBack()}>
+                                <ArrowLeft size={24} color="#374151" />
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={styles.iconContainer}>
+                            <View style={styles.iconWrapper}>
+                                <View style={styles.iconInner}>
+                                    <Calendar size={24} color="white" />
+                                </View>
+                            </View>
+                        </View>
+
+                        {/* 4. Usar os textos traduzidos */}
+                        <View style={styles.titleContainer}>
+                            <Text style={styles.title}>{t.createYour}</Text>
+                            <Text style={styles.title}>{t.amazingEvent}</Text>
+                        </View>
+                    </View>
+
+                    {/* Form */}
+                    <View style={styles.form}>
+                        <View style={styles.inputContainer}>
+                            <View style={styles.inputWrapper}>
+                                <Text style={styles.inputIcon}>@</Text>
+                                <TextInput
+                                    placeholder={t.eventName}
+                                    value={eventName}
+                                    onChangeText={setEventName}
+                                    style={styles.input}
+                                    placeholderTextColor="#9CA3AF"
+                                />
+                            </View>
+                        </View>
+
+                        <View style={styles.inputContainer}>
+                            <View style={styles.inputWrapper}>
+                                <Text style={styles.inputIcon}>@</Text>
+                                <TextInput
+                                    placeholder={t.description}
+                                    value={description}
+                                    onChangeText={setDescription}
+                                    style={styles.input}
+                                    placeholderTextColor="#9CA3AF"
+                                />
+                            </View>
+                        </View>
+
+                        <View style={styles.inputContainer}>
+                            <View style={styles.timeRow}>
+                                <TouchableOpacity
+                                    style={[styles.inputWrapper, styles.timeInput]}
+                                    onPress={() => setShowStartDatePicker(true)}
+                                >
+                                    <Calendar size={20} color="#9CA3AF" style={styles.calendarIcon} />
+                                    <Text style={styles.dateTimeText}>{formatDate(startDate)}</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    style={[styles.inputWrapper, styles.timeInput]}
+                                    onPress={() => setShowStartTimePicker(true)}
+                                >
+                                    <Calendar size={20} color="#9CA3AF" style={styles.calendarIcon} />
+                                    <Text style={styles.dateTimeText}>{formatTime(startDate)}</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                        <View style={styles.inputContainer}>
+                            <View style={styles.timeRow}>
+                                <TouchableOpacity
+                                    style={[styles.inputWrapper, styles.timeInput]}
+                                    onPress={() => setShowEndDatePicker(true)}
+                                >
+                                    <Calendar size={20} color="#9CA3AF" style={styles.calendarIcon} />
+                                    <Text style={styles.dateTimeText}>{formatDate(endDate)}</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    style={[styles.inputWrapper, styles.timeInput]}
+                                    onPress={() => setShowEndTimePicker(true)}
+                                >
+                                    <Calendar size={20} color="#9CA3AF" style={styles.calendarIcon} />
+                                    <Text style={styles.dateTimeText}>{formatTime(endDate)}</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                        <TouchableOpacity
+                            onPress={handleCreateEvent}
+                            style={styles.createButton}
+                        >
+                            <Text style={styles.createButtonText}>{t.createEvent}</Text>
                         </TouchableOpacity>
                     </View>
 
-                    {/* Calendar Icon */}
-                    <View style={styles.iconContainer}>
-                        <View style={styles.iconWrapper}>
-                            <View style={styles.iconInner}>
-                                <Calendar size={24} color="white" />
-                            </View>
-                        </View>
-                    </View>
+                    {showStartDatePicker && (
+                        <DateTimePicker
+                            value={startDate}
+                            mode="date"
+                            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                            onChange={onStartDateChange}
+                        />
+                    )}
 
-                    {/* Title */}
-                    <View style={styles.titleContainer}>
-                        <Text style={styles.title}>Create your</Text>
-                        <Text style={styles.title}>amazing event</Text>
-                    </View>
+                    {showStartTimePicker && (
+                        <DateTimePicker
+                            value={startDate}
+                            mode="time"
+                            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                            onChange={onStartTimeChange}
+                        />
+                    )}
+
+                    {showEndDatePicker && (
+                        <DateTimePicker
+                            value={endDate}
+                            mode="date"
+                            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                            onChange={onEndDateChange}
+                        />
+                    )}
+
+                    {showEndTimePicker && (
+                        <DateTimePicker
+                            value={endDate}
+                            mode="time"
+                            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                            onChange={onEndTimeChange}
+                        />
+                    )}
                 </View>
-
-                {/* Form */}
-                <View style={styles.form}>
-                    {/* Event Name */}
-                    <View style={styles.inputContainer}>
-                        <View style={styles.inputWrapper}>
-                            <Text style={styles.inputIcon}>@</Text>
-                            <TextInput
-                                placeholder="Event name"
-                                value={eventName}
-                                onChangeText={setEventName}
-                                style={styles.input}
-                                placeholderTextColor="#9CA3AF"
-                            />
-                        </View>
-                    </View>
-
-                    {/* Description */}
-                    <View style={styles.inputContainer}>
-                        <View style={styles.inputWrapper}>
-                            <Text style={styles.inputIcon}>@</Text>
-                            <TextInput
-                                placeholder="Description"
-                                value={description}
-                                onChangeText={setDescription}
-                                style={styles.input}
-                                placeholderTextColor="#9CA3AF"
-                            />
-                        </View>
-                    </View>
-
-                    {/* Start Date and Time */}
-                    <View style={styles.inputContainer}>
-                        <View style={styles.timeRow}>
-                            {/* Start Date */}
-                            <TouchableOpacity
-                                style={[styles.inputWrapper, styles.timeInput]}
-                                onPress={() => setShowStartDatePicker(true)}
-                            >
-                                <Calendar size={20} color="#9CA3AF" style={styles.calendarIcon} />
-                                <Text style={styles.dateTimeText}>{formatDate(startDate)}</Text>
-                            </TouchableOpacity>
-
-                            {/* Start Time */}
-                            <TouchableOpacity
-                                style={[styles.inputWrapper, styles.timeInput]}
-                                onPress={() => setShowStartTimePicker(true)}
-                            >
-                                <Calendar size={20} color="#9CA3AF" style={styles.calendarIcon} />
-                                <Text style={styles.dateTimeText}>{formatTime(startDate)}</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-
-                    {/* End Date and Time */}
-                    <View style={styles.inputContainer}>
-                        <View style={styles.timeRow}>
-                            {/* End Date */}
-                            <TouchableOpacity
-                                style={[styles.inputWrapper, styles.timeInput]}
-                                onPress={() => setShowEndDatePicker(true)}
-                            >
-                                <Calendar size={20} color="#9CA3AF" style={styles.calendarIcon} />
-                                <Text style={styles.dateTimeText}>{formatDate(endDate)}</Text>
-                            </TouchableOpacity>
-
-                            {/* End Time */}
-                            <TouchableOpacity
-                                style={[styles.inputWrapper, styles.timeInput]}
-                                onPress={() => setShowEndTimePicker(true)}
-                            >
-                                <Calendar size={20} color="#9CA3AF" style={styles.calendarIcon} />
-                                <Text style={styles.dateTimeText}>{formatTime(endDate)}</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-
-                    {/* Create Event Button */}
-                    <TouchableOpacity
-                        onPress={handleCreateEvent}
-                        style={styles.createButton}
-                    >
-                        <Text style={styles.createButtonText}>Create event</Text>
-                    </TouchableOpacity>
-                </View>
-
-                {/* Date Time Pickers */}
-                {showStartDatePicker && (
-                    <DateTimePicker
-                        value={startDate}
-                        mode="date"
-                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                        onChange={onStartDateChange}
-                    />
-                )}
-
-                {showStartTimePicker && (
-                    <DateTimePicker
-                        value={startDate}
-                        mode="time"
-                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                        onChange={onStartTimeChange}
-                    />
-                )}
-
-                {showEndDatePicker && (
-                    <DateTimePicker
-                        value={endDate}
-                        mode="date"
-                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                        onChange={onEndDateChange}
-                    />
-                )}
-
-                {showEndTimePicker && (
-                    <DateTimePicker
-                        value={endDate}
-                        mode="time"
-                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                        onChange={onEndTimeChange}
-                    />
-                )}
             </View>
-        </View>
+        </AlertNotificationRoot>
     );
 };
 

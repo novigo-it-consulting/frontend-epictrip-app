@@ -3,16 +3,31 @@ import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import ListItem from "./ListItem";
 import { useNavigation } from '@react-navigation/native';
 import { useSharedValue } from "react-native-reanimated";
-import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { Entypo } from "@expo/vector-icons";
+// 1. Importar o serviço de tradução
+import { translate } from "../services/translations/translateServices";
 
 const ExploreCategories = () => {
   const [data, setData] = useState([]);
+  // 2. Criar estado para o título traduzido
+  const [translatedTitle, setTranslatedTitle] = useState("Explore Categories");
   const scrollX = useSharedValue(0);
-  const { t } = useTranslation();
   const navigation = useNavigation();
+
+  // useEffect para buscar a tradução do título
+  useEffect(() => {
+    const fetchTranslation = async () => {
+      try {
+        const result = await translate("Explore Categories", "en"); // Assumindo tradução do inglês
+        setTranslatedTitle(result);
+      } catch (error) {
+        console.error("Falha ao traduzir o título:", error);
+      }
+    };
+
+    fetchTranslation();
+  }, []); // Array vazio [] garante que rode apenas uma vez
 
   const assembleData = async (groups) => {
     const token = await AsyncStorage.getItem("token");
@@ -28,10 +43,10 @@ const ExploreCategories = () => {
         const responseIcon = await axios.get(iconUrl, { headers });
 
         if (responseIcon.status === 200) {
-          const iconData = responseIcon.data
+          const iconData = responseIcon.data;
           assembled.push({
             id: group.id,
-            title: group.name,
+            title: await translate(group.name, "en"),
             icon: () => (
               <Image
                 source={{ uri: iconData.data[0].filePath }}
@@ -101,15 +116,17 @@ const ExploreCategories = () => {
   if (!data || data.length === 0) {
     return (
       <View style={styles.container}>
-        <Text style={styles.titlePage}>{t("exploreCategories.categories")}</Text>
-        <Text>{t("loading")}</Text>
+        {/* 3. Usar o estado com o texto traduzido */}
+        <Text style={styles.titlePage}>{translatedTitle}</Text>
+        <Text>Loading...</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titlePage}>{t("exploreCategories.categories")}</Text>
+      {/* 3. Usar o estado com o texto traduzido */}
+      <Text style={styles.titlePage}>{translatedTitle}</Text>
       <FlatList
         data={data}
         horizontal
@@ -141,7 +158,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 16,
     paddingHorizontal: 24,
-    backgroundColor: "#FFFFFF", // Define o fundo branco para o componente
+    backgroundColor: "#FFFFFF",
   },
   titlePage: {
     color: "#172B4D",
@@ -151,6 +168,5 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
 });
-
 
 export default ExploreCategories;

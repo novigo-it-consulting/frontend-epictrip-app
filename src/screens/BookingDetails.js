@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
     StyleSheet,
     View,
@@ -12,18 +12,53 @@ import {
 import {
     AlertNotificationRoot,
 } from "react-native-alert-notification";
-import colors from "../colors";
 import { IconButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import { useTranslation } from "react-i18next";
 import Entypo from '@expo/vector-icons/Entypo';
-
-const { width } = Dimensions.get("window");
+// 1. Importar o serviço de tradução
+import { translate } from "../services/translations/translateServices";
 
 const BookingDetails = ({ route }) => {
     const { data } = route.params;
-    const { t } = useTranslation();
     const navigation = useNavigation();
+
+    // 2. Criar estados para todos os textos que precisam de tradução
+    const [aboutText, setAboutText] = useState("About Your Reservation");
+    const [reservationDateText, setReservationDateText] = useState("Reservation Date");
+    const [checkinText, setCheckinText] = useState("Check-in:");
+    const [checkoutText, setCheckoutText] = useState("Check-out:");
+    const [reservationNumberText, setReservationNumberText] = useState("Reservation Number");
+
+    // 3. useEffect para buscar todas as traduções de uma vez
+    useEffect(() => {
+        const fetchTranslations = async () => {
+            try {
+                const [
+                    translatedAbout,
+                    translatedReservationDate,
+                    translatedCheckin,
+                    translatedCheckout,
+                    translatedReservationNumber,
+                ] = await Promise.all([
+                    translate("About Your Reservation", "en"),
+                    translate("Reservation Date", "en"),
+                    translate("Check-in:", "en"),
+                    translate("Check-out:", "en"),
+                    translate("Reservation Number", "en"),
+                ]);
+
+                setAboutText(translatedAbout);
+                setReservationDateText(translatedReservationDate);
+                setCheckinText(translatedCheckin);
+                setCheckoutText(translatedCheckout);
+                setReservationNumberText(translatedReservationNumber);
+
+            } catch (error) {
+                console.error("Falha ao buscar traduções:", error);
+            }
+        };
+        fetchTranslations();
+    }, []); // Array vazio [] garante que rode apenas uma vez
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -42,7 +77,6 @@ const BookingDetails = ({ route }) => {
         <AlertNotificationRoot>
             <StatusBar barStyle={"light-content"} />
 
-            {/* Header com imagem e botão de voltar */}
             <View style={styles.headerContainer}>
                 <ImageBackground
                     source={{ uri: data.housePhoto }}
@@ -63,10 +97,8 @@ const BookingDetails = ({ route }) => {
                 </ImageBackground>
             </View>
 
-            {/* Conteúdo principal */}
             <View style={styles.contentContainer}>
                 <ScrollView contentContainerStyle={styles.scrollContent}>
-                    {/* Seção de endereço */}
                     <View style={styles.addressSection}>
                         <View style={styles.addressTextContainer}>
                             <Text style={styles.houseName}>{data.houseName}</Text>
@@ -77,19 +109,19 @@ const BookingDetails = ({ route }) => {
                         <Entypo name="location-pin" size={24} color="#6C798F" />
                     </View>
 
-                    {/* Seção de detalhes da reserva */}
                     <View style={styles.detailsSection}>
+                        {/* 4. Usar os estados com os textos traduzidos */}
                         <Text style={styles.sectionTitle}>
-                            {t("bookingScreen.aboutReservation")}
+                            {aboutText}
                         </Text>
 
                         <Text style={styles.sectionSubtitle}>
-                            {t("bookingScreen.reservationDate")}
+                            {reservationDateText}
                         </Text>
 
                         <View style={styles.dateContainer}>
                             <View style={styles.dateRow}>
-                                <Text style={styles.dateLabel}>Check-in:</Text>
+                                <Text style={styles.dateLabel}>{checkinText}</Text>
                                 <View style={styles.dateBox}>
                                     <Text style={styles.dateText}>
                                         {formatDate(data.checkIn)}
@@ -98,7 +130,7 @@ const BookingDetails = ({ route }) => {
                             </View>
 
                             <View style={styles.dateRow}>
-                                <Text style={styles.dateLabel}>Check-out:</Text>
+                                <Text style={styles.dateLabel}>{checkoutText}</Text>
                                 <View style={styles.dateBox}>
                                     <Text style={styles.dateText}>
                                         {formatDate(data.checkOut)}
@@ -109,7 +141,7 @@ const BookingDetails = ({ route }) => {
 
                         <View style={styles.reservationNumberSection}>
                             <Text style={styles.sectionSubtitle}>
-                                {t("bookingScreen.reservationNumber")}
+                                {reservationNumberText}
                             </Text>
                             <Text style={styles.reservationNumber}>
                                 {data.shareNumber}

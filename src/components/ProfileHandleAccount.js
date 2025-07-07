@@ -100,7 +100,7 @@ export default function ProfileHandleAccount(alert) {
                   marginTop: 6,
                 }}
               >
-                {t("profileHandleAccount.titleHandleAccount")}
+                Change your personal information
               </Text>
             </View>
             {/* <View style={stylesProfile.boxNotification}>

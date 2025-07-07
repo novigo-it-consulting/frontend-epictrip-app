@@ -26,9 +26,10 @@ import {
 } from "../services/api";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
-import { useTranslation } from "react-i18next";
 import DatePickerAge from "../components/DatePickerAge";
 import CustomTabBar from "../components/CustomBar";
+// Importar o serviço de tradução
+import { translate } from "../services/translations/translateServices";
 
 const ChangePersonalInfo = () => {
   const navigation = useNavigation();
@@ -41,46 +42,63 @@ const ChangePersonalInfo = () => {
     age: new Date(),
   });
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    if (!initialDataLoaded) {
-      Promise.all([getUserInfo(), fetchLocation()])
-        .then(() => {
-          setLoading(false);
-          setInitialDataLoaded(true);
-        })
-        .catch((error) => {
-          Toast.show({
-            type: ALERT_TYPE.DANGER,
-            title: "Ops",
-            textBody: t("changePersonalInfo.loadingData"),
-          });
-          setLoading(false);
-        });
-    }
-  }, [initialDataLoaded]);
-
   const [loading, setLoading] = useState(true);
 
-  const handleGoBack = () => {
-    navigation.navigate("ProfileScreen");
-  };
+  // Criar um estado para armazenar todos os textos traduzidos
+  const [t, setT] = useState({
+    personalInfo: "Personal Info",
+    uploadImage: "Upload Image",
+    firstName: "First Name",
+    lastName: "Last Name",
+    location: "Location",
+    male: "Male",
+    female: "Female",
+    other: "Other",
+    save: "Save",
+    permissionDenied: "Permission to access the photo library was denied.",
+  });
+
+  // useEffect para buscar todas as traduções
+  useEffect(() => {
+    const fetchTranslations = async () => {
+      try {
+        const [
+          personalInfo, uploadImage, firstName, lastName, location,
+          male, female, other, save, permissionDenied
+        ] = await Promise.all([
+          translate("Personal Info", "en"),
+          translate("Upload Image", "en"),
+          translate("First Name", "en"),
+          translate("Last Name", "en"),
+          translate("Location", "en"),
+          translate("Male", "en"),
+          translate("Female", "en"),
+          translate("Other", "en"),
+          translate("Save", "en"),
+          translate("Permission to access the photo library was denied.", "en"),
+        ]);
+        setT({
+          personalInfo, uploadImage, firstName, lastName, location,
+          male, female, other, save, permissionDenied
+        });
+      } catch (error) {
+        console.error("Falha ao buscar traduções:", error);
+      }
+    };
+    fetchTranslations();
+  }, []);
 
   const getUserInfo = async () => {
-    setLoading(true);
     const userId = await AsyncStorage.getItem("userId");
 
     if (!userId) {
-      t("changePersonalInfo.notFoundAsyncStorage");
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
-        textBody: t("changePersonalInfo.notFoundAsyncStorage"),
+        textBody: "User ID not found in AsyncStorage.",
       });
       return;
     }
-    setLoading(true);
     try {
       const response = await requestGetUser(userId);
       if (response.status === 200) {
@@ -97,9 +115,7 @@ const ChangePersonalInfo = () => {
           rental,
         } = response.data.data;
         const [firstName, lastName] = fullName.split(" ");
-
         const age = new Date(birthDate);
-
         setUserData({
           firstName,
           lastName,
@@ -111,29 +127,25 @@ const ChangePersonalInfo = () => {
           language,
           rental,
         });
-        fetchLocation();
-        return;
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: t("changePersonalInfo.failedUpdateUserInfo"),
+          textBody: "Failed to update user information",
         });
       }
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
-        textBody: t("changePersonalInfo.failedUpdate"),
+        textBody: "Failed to update user information",
       });
-      setLoading(false);
     }
   };
 
   const fetchLocation = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
-      t("changePersonalInfo.locationPermissionDenied");
       setLoading(false);
       return;
     }
@@ -149,15 +161,36 @@ const ChangePersonalInfo = () => {
       const { city, region, country } = response[0];
       setAutoLocation(`${city} - ${region}, ${country}`);
     }
-    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (!initialDataLoaded) {
+      Promise.all([getUserInfo(), fetchLocation()])
+        .then(() => {
+          setLoading(false);
+          setInitialDataLoaded(true);
+        })
+        .catch((error) => {
+          Toast.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Ops",
+            textBody: "Error loading initial data.",
+          });
+          setLoading(false);
+        });
+    }
+  }, [initialDataLoaded]);
+
+  const handleGoBack = () => {
+    navigation.navigate("ProfileScreen");
   };
 
   const handleSave = async () => {
     if (!userData.firstName || !userData.lastName || !userData.age) {
       Toast.show({
         type: ALERT_TYPE.WARNING,
-        title: t("changePersonalInfo.alertAttention"),
-        textBody: t("changePersonalInfo.errorEmptyField"),
+        title: "Attention",
+        textBody: "Please fill out all required fields.",
       });
       setLoading(false);
       return;
@@ -169,7 +202,7 @@ const ChangePersonalInfo = () => {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
-        textBody: t("changePersonalInfo.notFoundAsyncStorage"),
+        textBody: "User ID not found in AsyncStorage.",
       });
       setLoading(false);
       return;
@@ -194,8 +227,8 @@ const ChangePersonalInfo = () => {
         setUserData(updatedData);
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
-          title: t("changePersonalInfo.alertSuccess"),
-          textBody: t("changePersonalInfo.updateSuccess"),
+          title: "Success",
+          textBody: "Success",
         });
         setTimeout(() => {
           setLoading(false);
@@ -205,7 +238,7 @@ const ChangePersonalInfo = () => {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: t("changePersonalInfo.failedUpdateUserInfo"),
+          textBody: "Failed to update user information",
         });
         setLoading(false);
       }
@@ -213,7 +246,7 @@ const ChangePersonalInfo = () => {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
-        textBody: t("changePersonalInfo.failedUpdate"),
+        textBody: "Failed to update user information",
       });
       setLoading(false);
     }
@@ -222,7 +255,11 @@ const ChangePersonalInfo = () => {
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      t("changePersonalInfo.permissionLibraryDenied");
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Ops",
+        textBody: t.permissionDenied,
+      });
       return;
     }
 
@@ -241,22 +278,22 @@ const ChangePersonalInfo = () => {
         if (response.status === 200) {
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
-            title: t("changePersonalInfo.alertSuccess"),
-            textBody: t("changePersonalInfo.pictureUpdate"),
+            title: "Success",
+            textBody: "Your profile picture has been successfully updated.",
           });
           return setLoading(false);
         } else {
           Toast.show({
             type: ALERT_TYPE.DANGER,
-            title: t("changePersonalInfo.alertError"),
-            textBody: t("changePersonalInfo.failedUpdatePicture"),
+            title: "Error",
+            textBody: "Failed to update profile picture",
           });
         }
       } catch (error) {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: t("changePersonalInfo.failedUpdatePicture"),
+          textBody: "Failed to update profile picture",
         });
       }
     }
@@ -270,11 +307,10 @@ const ChangePersonalInfo = () => {
       }
     );
 
-    getUserInfo();
     return () => {
       keyboardDidHideListener.remove();
     };
-  }, [profilePhoto]);
+  }, []);
 
   const defaultToastConfig = {
     autoClose: 3000,
@@ -288,7 +324,6 @@ const ChangePersonalInfo = () => {
     danger: "rgba(255, 0, 0, 1)",
     warning: "#ffc107",
   };
-
 
   return (
     <>
@@ -311,9 +346,7 @@ const ChangePersonalInfo = () => {
                 </TouchableOpacity>
               </View>
               <View style={styles.header}>
-                <Text style={styles.headerText}>
-                  {t("changePersonalInfo.personalInfo")}
-                </Text>
+                <Text style={styles.headerText}>{t.personalInfo}</Text>
               </View>
               <View style={styles.profilePicContainer}>
                 <Image
@@ -330,11 +363,11 @@ const ChangePersonalInfo = () => {
                   style={styles.uploadButton}
                   onPress={pickImage}
                 >
-                  {t("changePersonalInfo.buttonUploadImage")}
+                  {t.uploadImage}
                 </Button>
               </View>
               <TextInput
-                label={t("changePersonalInfo.labelFirstName")}
+                label={t.firstName}
                 value={userData.firstName}
                 onChangeText={(text) =>
                   setUserData({ ...userData, firstName: text })
@@ -345,7 +378,7 @@ const ChangePersonalInfo = () => {
                 style={styles.input}
               />
               <TextInput
-                label={t("changePersonalInfo.labelLastName")}
+                label={t.lastName}
                 value={userData.lastName}
                 onChangeText={(text) =>
                   setUserData({ ...userData, lastName: text })
@@ -356,7 +389,7 @@ const ChangePersonalInfo = () => {
                 style={styles.input}
               />
               <TextInput
-                label={t("changePersonalInfo.labelLocation")}
+                label={t.location}
                 disabled
                 value={autoLocation}
                 keyboardType="default"
@@ -372,14 +405,14 @@ const ChangePersonalInfo = () => {
               >
                 <View style={styles.radioButtonContainer}>
                   <RadioButton.Item
-                    label={t("changePersonalInfo.genderM")}
+                    label={t.male}
                     value="Male"
                   />
                   <RadioButton.Item
-                    label={t("changePersonalInfo.genderF")}
+                    label={t.female}
                     value="Female"
                   />
-                  <RadioButton.Item label={t("changePersonalInfo.genderOther")} value="Other" />
+                  <RadioButton.Item label={t.other} value="Other" />
                 </View>
               </RadioButton.Group>
               <DatePickerAge userData={userData} updateUserData={setUserData} />
@@ -388,7 +421,7 @@ const ChangePersonalInfo = () => {
                 style={styles.saveButton}
                 onPress={handleSave}
               >
-                {t("changePersonalInfo.buttonSave")}
+                {t.save}
               </Button>
             </View>
           </TouchableWithoutFeedback>

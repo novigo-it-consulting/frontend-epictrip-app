@@ -1,34 +1,71 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, StatusBar } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+// 1. Importar o serviço de tradução
+import { translate } from "../services/translations/translateServices";
 
-const languages = [
-    { code: 'en', label: 'English' },
-    { code: 'pt', label: 'Português' },
-    { code: 'es', label: 'Español' },
-    // Adicione outros idiomas conforme necessário
+// Mantém apenas os códigos dos idiomas, que não mudam
+const languageCodes = [
+    { code: 'en', key: 'english' },
+    { code: 'pt', key: 'portuguese' },
+    { code: 'es', key: 'spanish' },
 ];
 
 const LanguageSelectionScreen = () => {
     const { navigate } = useNavigation();
 
+    // 2. Criar um estado para armazenar os textos traduzidos
+    const [t, setT] = useState({
+        selectLanguage: 'Select your language',
+        english: 'English',
+        portuguese: 'Português',
+        spanish: 'Español',
+    });
+
+    // 3. useEffect para buscar as traduções
+    useEffect(() => {
+        const fetchTranslations = async () => {
+            try {
+                const [
+                    selectLanguage, english, portuguese, spanish
+                ] = await Promise.all([
+                    translate("Select your language", "en"),
+                    translate("English", "en"),
+                    translate("Português", "en"),
+                    translate("Español", "en"),
+                ]);
+                setT({ selectLanguage, english, portuguese, spanish });
+            } catch (error) {
+                console.error("Falha ao buscar traduções:", error);
+            }
+        };
+        fetchTranslations();
+    }, []);
+
+
     const onSelectLanguage = async (language) => {
         try {
             await AsyncStorage.setItem("language", language);
             navigate("Login");
-            console.log(`Idioma selecionado: ${language}`);
         } catch (error) {
             console.error("Erro ao salvar o idioma:", error);
         }
     };
 
+    // Mapeia os códigos para os nomes traduzidos
+    const translatedLanguages = languageCodes.map(lang => ({
+        ...lang,
+        label: t[lang.key]
+    }));
+
     return (
         <View style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-            <Text style={styles.title}>Selecione seu idioma</Text>
+            {/* 4. Usar os textos traduzidos */}
+            <Text style={styles.title}>{t.selectLanguage}</Text>
             <FlatList
-                data={languages}
+                data={translatedLanguages}
                 keyExtractor={(item) => item.code}
                 contentContainerStyle={styles.listContainer}
                 renderItem={({ item }) => (

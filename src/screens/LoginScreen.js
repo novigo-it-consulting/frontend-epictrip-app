@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   View,
   Text,
@@ -8,6 +7,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
+  StyleSheet,
+  SafeAreaView,
 } from "react-native";
 import {
   TextInput,
@@ -29,16 +30,60 @@ import {
   Toast,
 } from "react-native-alert-notification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useTranslation } from "react-i18next";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
+// 1. Importar o serviço de tradução
+import { translate } from "../services/translations/translateServices";
 
 const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [typedUsername, setTypedUsername] = useState("");
 
-  const { t } = useTranslation();
+  // 2. Criar um estado para armazenar os textos traduzidos
+  const [t, setT] = useState({
+    login: "Login",
+    emailLabel: "E-mail",
+    passwordLabel: "Password",
+    forgotPassword: "Forgot your password?",
+    dontHaveAccount: "Don't have an account?",
+    signUp: "Sign Up",
+    invalidEmail: "Invalid e-mail address",
+    emailRequired: "E-mail is required",
+    passwordMinLength: "Password must have at least 6 characters",
+    passwordRequired: "Password is required",
+    genericError: "Error logging in. Please try again.",
+  });
+
+  // 3. useEffect para buscar as traduções
+  useEffect(() => {
+    const fetchTranslations = async () => {
+      try {
+        const [
+          login, emailLabel, passwordLabel, forgotPassword, dontHaveAccount, signUp,
+          invalidEmail, emailRequired, passwordMinLength, passwordRequired, genericError
+        ] = await Promise.all([
+          translate("Login", "en"),
+          translate("E-mail", "en"),
+          translate("Password", "en"),
+          translate("Forgot your password?", "en"),
+          translate("Don't have an account?", "en"),
+          translate("Sign Up", "en"),
+          translate("Invalid e-mail address", "en"),
+          translate("E-mail is required", "en"),
+          translate("Password must have at least 6 characters", "en"),
+          translate("Password is required", "en"),
+          translate("Error logging in. Please try again.", "en"),
+        ]);
+        setT({
+          login, emailLabel, passwordLabel, forgotPassword, dontHaveAccount, signUp,
+          invalidEmail, emailRequired, passwordMinLength, passwordRequired, genericError
+        });
+      } catch (error) {
+        console.error("Falha ao buscar traduções:", error);
+      }
+    };
+    fetchTranslations();
+  }, []);
 
   const {
     control,
@@ -47,48 +92,35 @@ const LoginScreen = ({ navigation }) => {
     formState: { errors },
   } = useForm();
 
+  // Usa os textos traduzidos no schema de validação
   const schema = yup.object().shape({
-    username: yup
-      .string()
-      .email(t("loginScreen.invalidEmailAdress"))
-      .required("E-mail é obrigatório"),
-    password: yup
-      .string()
-      .min(6, "Senha deve ter pelo menos 6 caracteres")
-      .required("Senha é obrigatória"),
+    username: yup.string().email(t.invalidEmail).required(t.emailRequired),
+    password: yup.string().min(6, t.passwordMinLength).required(t.passwordRequired),
   });
-
-  const handleTypedUsernameChange = (value) => {
-    setTypedUsername(value);
-  };
 
   const onSubmit = async (data) => {
     setLoading(true);
     try {
       await schema.validate(data, { abortEarly: false });
-
       const response = await requestLogin(data);
-
       if (response.status === 200) {
         const userId = response.data.userId;
         await AsyncStorage.setItem("token", response.data.token);
         await AsyncStorage.setItem("username", data.username);
-
+        await AsyncStorage.setItem("language", response.data.language);
         if (userId) {
           await AsyncStorage.setItem("userId", userId);
           navigation.navigate("Home");
-          return;
         }
       }
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
-        textBody: t("loginScreen.genericError"),
+        textBody: error?.response?.data?.message || t.genericError,
       });
       console.error(error);
     } finally {
-      ""
       setLoading(false);
     }
   };
@@ -106,9 +138,7 @@ const LoginScreen = ({ navigation }) => {
   useEffect(() => {
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
-      () => {
-        Toast.hide();
-      }
+      () => Toast.hide()
     );
     return () => {
       keyboardDidHideListener.remove();
@@ -124,144 +154,124 @@ const LoginScreen = ({ navigation }) => {
     navigation.navigate("SignUp");
   };
 
-  const defaultToastConfig = {
-    autoClose: 3000,
-    titleStyle: { fontSize: 16, fontWeight: "bold" },
-  };
-
-  const lightColors = {
-    label: "#000",
-    card: "#fcfcfc",
-    overlay: "#f0f0f0",
-    success: "#28a745",
-    danger: "rgba(255, 0, 0, 1)",
-    warning: "#ffc107",
-  };
-
   return (
     <PaperProvider theme={theme}>
-      <AlertNotificationRoot
-        toastConfig={defaultToastConfig}
-        colors={[lightColors]}
-        theme={"light"}
-      >
-        <SafeAreaView />
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? null : null}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "space-around",
-              flex: 1,
-              width: "75%",
-              marginRight: "auto",
-              marginLeft: "auto",
-            }}
-          >
-            <View style={styles.containerBackButton}>
-              <Image source={logo} style={styles.imageLogo} />
-            </View>
-            <View style={styles.container}>
-              <Text style={styles.textTitle}>{t("loginScreen.title")}</Text>
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    label={t("loginScreen.emailLabel")}
-                    onSubmitEditing={Keyboard.dismiss}
-                    mode="flat"
-                    left={<TextInput.Icon icon="account-outline" />}
-                    onBlur={onBlur}
-                    onChangeText={(value) => {
-                      onChange(value);
-                      handleTypedUsernameChange(value);
-                    }}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    style={styles.textEmail}
-                    value={value}
-                    error={errors.username ? true : false}
-                  />
+      <AlertNotificationRoot>
+        <SafeAreaView style={{ flex: 1 }}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              style={combinedStyles.keyboardAvoidingView}
+            >
+              <View style={styles.containerBackButton}>
+                <Image source={logo} style={styles.imageLogo} />
+              </View>
+              <View style={styles.container}>
+                {/* 4. Usar os textos traduzidos */}
+                <Text style={styles.textTitle}>{t.login}</Text>
+                <Controller
+                  control={control}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      label={t.emailLabel}
+                      onSubmitEditing={Keyboard.dismiss}
+                      mode="flat"
+                      left={<TextInput.Icon icon="account-outline" />}
+                      onBlur={onBlur}
+                      onChangeText={(text) => {
+                        onChange(text);
+                        setTypedUsername(text);
+                      }}
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      style={styles.textEmail}
+                      value={value}
+                      error={!!errors.username}
+                    />
+                  )}
+                  name="username"
+                  rules={{ required: true }}
+                />
+                {errors.username && (
+                  <Text style={{ color: colors.error }}>
+                    {errors.username.message}
+                  </Text>
                 )}
-                name="username"
-                rules={{ required: true }}
-                defaultValue=""
-              />
-              {errors.username && (
-                <Text style={{ color: colors.error }}>
-                  {errors.username.message}
-                </Text>
-              )}
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    label={t("loginScreen.passwordLabel")}
-                    mode="flat"
-                    onSubmitEditing={Keyboard.dismiss}
-                    left={<TextInput.Icon icon="lock-outline" />}
-                    right={
-                      <TextInput.Icon
-                        icon={showPassword ? "eye-off-outline" : "eye-outline"}
-                        onPress={() => setShowPassword(!showPassword)}
-                      />
-                    }
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    secureTextEntry={!showPassword}
-                    style={styles.textPassword}
-                    value={value}
-                    error={errors.password ? true : false}
-                  />
+                <Controller
+                  control={control}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      label={t.passwordLabel}
+                      mode="flat"
+                      onSubmitEditing={Keyboard.dismiss}
+                      left={<TextInput.Icon icon="lock-outline" />}
+                      right={
+                        <TextInput.Icon
+                          icon={showPassword ? "eye-off-outline" : "eye-outline"}
+                          onPress={() => setShowPassword(!showPassword)}
+                        />
+                      }
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      secureTextEntry={!showPassword}
+                      style={styles.textPassword}
+                      value={value}
+                      error={!!errors.password}
+                    />
+                  )}
+                  name="password"
+                  rules={{ required: true }}
+                />
+                {errors.password && (
+                  <Text style={{ color: colors.error }}>
+                    {errors.password.message}
+                  </Text>
                 )}
-                name="password"
-                rules={{ required: true }}
-                defaultValue=""
-              />
-              {errors.password && (
-                <Text style={{ color: colors.error }}>
-                  {errors.password.message}
-                </Text>
-              )}
 
-              <Button
-                mode="contained"
-                onPress={handleSubmit(onSubmit)}
-                style={styles.button}
-                disabled={loading}
-              >
-                {loading ? (
-                  <ActivityIndicator color={colors.white} />
-                ) : (
-                  t("loginScreen.loginButton")
-                )}
-              </Button>
+                <Button
+                  mode="contained"
+                  onPress={handleSubmit(onSubmit)}
+                  style={styles.button}
+                  disabled={loading}
+                >
+                  {loading ? <ActivityIndicator color={colors.white} /> : t.login}
+                </Button>
 
-              <Button
-                style={styles.linkForgotPassword}
-                onPress={handleForgotPassword}
-              >
-                {t("loginScreen.forgotPassword")}
-              </Button>
-            </View>
-            <View style={styles.containerFooter}>
-              <Text style={styles.textFinalTextScreen}>
-                {t("loginScreen.noAccount")}
-              </Text>
-              <Button onPress={handleGoToSignUp} style={styles.link}>
-                {t("loginScreen.signUp")}
-              </Button>
-              <Text style={screenNumberStyles.numberStyle}>02</Text>
-            </View>
-            <Toast />
-          </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
+                <Button
+                  style={styles.linkForgotPassword}
+                  onPress={handleForgotPassword}
+                >
+                  {t.forgotPassword}
+                </Button>
+              </View>
+              <View style={styles.containerFooter}>
+                <Text style={styles.textFinalTextScreen}>
+                  {t.dontHaveAccount}
+                </Text>
+                <Button onPress={handleGoToSignUp} style={styles.link}>
+                  {t.signUp}
+                </Button>
+                <Text style={screenNumberStyles.numberStyle}>02</Text>
+              </View>
+            </KeyboardAvoidingView>
+          </TouchableWithoutFeedback>
+        </SafeAreaView>
       </AlertNotificationRoot>
     </PaperProvider>
   );
 };
+
+const combinedStyles = StyleSheet.create({
+  keyboardAvoidingView: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    width: '75%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  }
+});
 
 const theme = {
   ...DefaultTheme,
