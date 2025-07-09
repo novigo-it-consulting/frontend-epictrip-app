@@ -69,6 +69,8 @@ const CreateNewEvent = () => {
         }
     };
 
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
     const handleCreateEvent = async () => {
         const event = {
             eventName: eventName,
@@ -78,8 +80,12 @@ const CreateNewEvent = () => {
             endsAt: endDate
         }
         const response = await requestCreateEvent(event);
+
         if (response.status === 201) {
-            navigation.navigate("EventDetails")
+            // await sleep(1000)
+            console.log(response.data)
+            const created = await response.data;
+            navigation.navigate("EventDetails", { event: created })
         } else {
             alert("Error Creating Event. Try again later!")
             // Toast.show({
