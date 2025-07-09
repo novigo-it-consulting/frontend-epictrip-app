@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ActivityIndicator,
+  Alert, // <-- IMPORTADO
 } from "react-native";
 import {
   AlertNotificationRoot,
@@ -26,10 +27,9 @@ import {
 } from "../services/api";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
+import { useTranslation } from "react-i18next";
 import DatePickerAge from "../components/DatePickerAge";
 import CustomTabBar from "../components/CustomBar";
-// Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
 
 const ChangePersonalInfo = () => {
   const navigation = useNavigation();
@@ -42,63 +42,46 @@ const ChangePersonalInfo = () => {
     age: new Date(),
   });
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
 
-  // Criar um estado para armazenar todos os textos traduzidos
-  const [t, setT] = useState({
-    personalInfo: "Personal Info",
-    uploadImage: "Upload Image",
-    firstName: "First Name",
-    lastName: "Last Name",
-    location: "Location",
-    male: "Male",
-    female: "Female",
-    other: "Other",
-    save: "Save",
-    permissionDenied: "Permission to access the photo library was denied.",
-  });
-
-  // useEffect para buscar todas as traduções
   useEffect(() => {
-    const fetchTranslations = async () => {
-      try {
-        const [
-          personalInfo, uploadImage, firstName, lastName, location,
-          male, female, other, save, permissionDenied
-        ] = await Promise.all([
-          translate("Personal Info", "en"),
-          translate("Upload Image", "en"),
-          translate("First Name", "en"),
-          translate("Last Name", "en"),
-          translate("Location", "en"),
-          translate("Male", "en"),
-          translate("Female", "en"),
-          translate("Other", "en"),
-          translate("Save", "en"),
-          translate("Permission to access the photo library was denied.", "en"),
-        ]);
-        setT({
-          personalInfo, uploadImage, firstName, lastName, location,
-          male, female, other, save, permissionDenied
+    if (!initialDataLoaded) {
+      Promise.all([getUserInfo(), fetchLocation()])
+        .then(() => {
+          setLoading(false);
+          setInitialDataLoaded(true);
+        })
+        .catch((error) => {
+          Toast.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Ops",
+            textBody: t("changePersonalInfo.loadingData"),
+          });
+          setLoading(false);
         });
-      } catch (error) {
-        console.error("Falha ao buscar traduções:", error);
-      }
-    };
-    fetchTranslations();
-  }, []);
+    }
+  }, [initialDataLoaded]);
+
+  const handleGoBack = () => {
+    navigation.navigate("ProfileScreen");
+  };
 
   const getUserInfo = async () => {
+    setLoading(true);
     const userId = await AsyncStorage.getItem("userId");
 
     if (!userId) {
+      t("changePersonalInfo.notFoundAsyncStorage");
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
-        textBody: "User ID not found in AsyncStorage.",
+        textBody: t("changePersonalInfo.notFoundAsyncStorage"),
       });
+      setLoading(false);
       return;
     }
+
     try {
       const response = await requestGetUser(userId);
       if (response.status === 200) {
@@ -115,7 +98,9 @@ const ChangePersonalInfo = () => {
           rental,
         } = response.data.data;
         const [firstName, lastName] = fullName.split(" ");
+
         const age = new Date(birthDate);
+
         setUserData({
           firstName,
           lastName,
@@ -127,25 +112,30 @@ const ChangePersonalInfo = () => {
           language,
           rental,
         });
+        fetchLocation(); // fetchLocation já tem setLoading(false)
+        return;
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: "Failed to update user information",
+          textBody: t("changePersonalInfo.failedUpdateUserInfo"),
         });
+        setLoading(false);
       }
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
-        textBody: "Failed to update user information",
+        textBody: t("changePersonalInfo.failedUpdate"),
       });
+      setLoading(false);
     }
   };
 
   const fetchLocation = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
+      t("changePersonalInfo.locationPermissionDenied");
       setLoading(false);
       return;
     }
@@ -161,38 +151,16 @@ const ChangePersonalInfo = () => {
       const { city, region, country } = response[0];
       setAutoLocation(`${city} - ${region}, ${country}`);
     }
-  };
-
-  useEffect(() => {
-    if (!initialDataLoaded) {
-      Promise.all([getUserInfo(), fetchLocation()])
-        .then(() => {
-          setLoading(false);
-          setInitialDataLoaded(true);
-        })
-        .catch((error) => {
-          Toast.show({
-            type: ALERT_TYPE.DANGER,
-            title: "Ops",
-            textBody: "Error loading initial data.",
-          });
-          setLoading(false);
-        });
-    }
-  }, [initialDataLoaded]);
-
-  const handleGoBack = () => {
-    navigation.navigate("ProfileScreen");
+    setLoading(false);
   };
 
   const handleSave = async () => {
     if (!userData.firstName || !userData.lastName || !userData.age) {
       Toast.show({
         type: ALERT_TYPE.WARNING,
-        title: "Attention",
-        textBody: "Please fill out all required fields.",
+        title: t("changePersonalInfo.alertAttention"),
+        textBody: t("changePersonalInfo.errorEmptyField"),
       });
-      setLoading(false);
       return;
     }
 
@@ -202,7 +170,7 @@ const ChangePersonalInfo = () => {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
-        textBody: "User ID not found in AsyncStorage.",
+        textBody: t("changePersonalInfo.notFoundAsyncStorage"),
       });
       setLoading(false);
       return;
@@ -227,95 +195,131 @@ const ChangePersonalInfo = () => {
         setUserData(updatedData);
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
-          title: "Success",
-          textBody: "Success",
+          title: t("changePersonalInfo.alertSuccess"),
+          textBody: t("changePersonalInfo.updateSuccess"),
         });
         setTimeout(() => {
-          setLoading(false);
           navigation.navigate("ProfileScreen");
-        }, 5000);
+        }, 3000); // Reduzido o tempo para 3s
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: "Failed to update user information",
+          textBody: t("changePersonalInfo.failedUpdateUserInfo"),
         });
-        setLoading(false);
       }
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Ops",
-        textBody: "Failed to update user information",
+        textBody: t("changePersonalInfo.failedUpdate"),
       });
+    } finally {
       setLoading(false);
     }
   };
 
-  const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Ops",
-        textBody: t.permissionDenied,
-      });
-      return;
-    }
-
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
+  // Função auxiliar para fazer o upload e evitar repetição de código
+  const uploadImage = async (result) => {
     if (!result.canceled) {
       setLoading(true);
       try {
-        const response = await changeProfilePic(result);
-        setProfilePhoto(response.data);
+        const response = await changeProfilePic(result.assets[0]);
         if (response.status === 200) {
+          // Assumindo que a API retorna o novo URL da imagem
+          setProfilePhoto(response.data.data.profilePic);
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
-            title: "Success",
-            textBody: "Your profile picture has been successfully updated.",
+            title: t("changePersonalInfo.alertSuccess"),
+            textBody: t("changePersonalInfo.pictureUpdate"),
           });
-          return setLoading(false);
         } else {
           Toast.show({
             type: ALERT_TYPE.DANGER,
-            title: "Error",
-            textBody: "Failed to update profile picture",
+            title: t("changePersonalInfo.alertError"),
+            textBody: t("changePersonalInfo.failedUpdatePicture"),
           });
         }
       } catch (error) {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Ops",
-          textBody: "Failed to update profile picture",
+          textBody: t("changePersonalInfo.failedUpdatePicture"),
         });
+      } finally {
+        setLoading(false);
       }
     }
   };
 
-  useEffect(() => {
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        Toast.hide();
-      }
-    );
+  // Função para pedir permissão e ABRIR A CÂMERA
+  const takePhoto = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert(
+        "Permissão necessária",
+        "Você precisa conceder permissão para usar a câmera."
+      );
+      return;
+    }
 
-    return () => {
-      keyboardDidHideListener.remove();
-    };
-  }, []);
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [1, 1], // Rosto geralmente é 1:1
+      quality: 0.5,
+    });
+
+    await uploadImage(result);
+  };
+
+  // Função para pedir permissão e ABRIR A GALERIA
+  const chooseFromGallery = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert(
+        "Permissão necessária",
+        "Você precisa conceder permissão para acessar a galeria."
+      );
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
+
+    await uploadImage(result);
+  };
+
+  // Função principal que pergunta ao usuário de onde pegar a imagem
+  const handleChoosePhoto = () => {
+    Alert.alert(
+      "Alterar Foto de Perfil",
+      "Escolha uma opção",
+      [
+        {
+          text: "Tirar Foto...",
+          onPress: takePhoto,
+        },
+        {
+          text: "Escolher da Galeria...",
+          onPress: chooseFromGallery,
+        },
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+      ]
+    );
+  };
 
   const defaultToastConfig = {
     autoClose: 3000,
     titleStyle: { fontSize: 16, fontWeight: "bold" },
   };
+
   const lightColors = {
     label: "#000",
     card: "#fcfcfc",
@@ -332,100 +336,103 @@ const ChangePersonalInfo = () => {
         colors={[lightColors]}
         theme={"light"}
       >
-        <SafeAreaView />
-        {loading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.primary} />
-          </View>
-        ) : (
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.containerAlpha}>
-              <View style={styles.containerBackButton}>
-                <TouchableOpacity onPress={handleGoBack}>
-                  <IconButton icon={"arrow-left-thin"} size={30} />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.header}>
-                <Text style={styles.headerText}>{t.personalInfo}</Text>
-              </View>
-              <View style={styles.profilePicContainer}>
-                <Image
-                  style={styles.profilePic}
-                  source={
-                    profilePhoto
-                      ? { uri: profilePhoto }
-                      : require("../../assets/profile/profileIcon.png")
+        <SafeAreaView style={{ flex: 1, backgroundColor: colors.backGroundLight }}>
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color={colors.primary} />
+            </View>
+          ) : (
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <View style={styles.containerAlpha}>
+                <View style={styles.containerBackButton}>
+                  <TouchableOpacity onPress={handleGoBack}>
+                    <IconButton icon={"arrow-left-thin"} size={30} />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.header}>
+                  <Text style={styles.headerText}>
+                    {t("changePersonalInfo.personalInfo")}
+                  </Text>
+                </View>
+                <View style={styles.profilePicContainer}>
+                  <Image
+                    style={styles.profilePic}
+                    source={
+                      profilePhoto
+                        ? { uri: profilePhoto }
+                        : require("../../assets/profile/profileIcon.png")
+                    }
+                  />
+                  <Button
+                    icon="upload"
+                    mode="outlined"
+                    style={styles.uploadButton}
+                    onPress={handleChoosePhoto}
+                  >
+                    {t("changePersonalInfo.buttonUploadImage")}
+                  </Button>
+                </View>
+                <TextInput
+                  label={t("changePersonalInfo.labelFirstName")}
+                  value={userData.firstName}
+                  onChangeText={(text) =>
+                    setUserData({ ...userData, firstName: text })
                   }
+                  keyboardType="default"
+                  autoCapitalize="words"
+                  mode="flat"
+                  style={styles.input}
                 />
-                <Button
-                  icon="upload"
-                  mode="outlined"
-                  style={styles.uploadButton}
-                  onPress={pickImage}
+                <TextInput
+                  label={t("changePersonalInfo.labelLastName")}
+                  value={userData.lastName}
+                  onChangeText={(text) =>
+                    setUserData({ ...userData, lastName: text })
+                  }
+                  keyboardType="default"
+                  autoCapitalize="words"
+                  mode="flat"
+                  style={styles.input}
+                />
+                <TextInput
+                  label={t("changePersonalInfo.labelLocation")}
+                  disabled
+                  value={autoLocation}
+                  keyboardType="default"
+                  autoCapitalize="words"
+                  mode="flat"
+                  style={styles.input}
+                />
+                <RadioButton.Group
+                  onValueChange={(value) =>
+                    setUserData({ ...userData, gender: value })
+                  }
+                  value={userData.gender}
                 >
-                  {t.uploadImage}
+                  <View style={styles.radioButtonContainer}>
+                    <RadioButton.Item
+                      label={t("changePersonalInfo.genderM")}
+                      value="Male"
+                    />
+                    <RadioButton.Item
+                      label={t("changePersonalInfo.genderF")}
+                      value="Female"
+                    />
+                    <RadioButton.Item label={t("changePersonalInfo.genderOther")} value="Other" />
+                  </View>
+                </RadioButton.Group>
+                <DatePickerAge userData={userData} updateUserData={setUserData} />
+                <Button
+                  mode="contained"
+                  style={styles.saveButton}
+                  onPress={handleSave}
+                >
+                  {t("changePersonalInfo.buttonSave")}
                 </Button>
               </View>
-              <TextInput
-                label={t.firstName}
-                value={userData.firstName}
-                onChangeText={(text) =>
-                  setUserData({ ...userData, firstName: text })
-                }
-                keyboardType="default"
-                autoCapitalize="words"
-                mode="flat"
-                style={styles.input}
-              />
-              <TextInput
-                label={t.lastName}
-                value={userData.lastName}
-                onChangeText={(text) =>
-                  setUserData({ ...userData, lastName: text })
-                }
-                keyboardType="default"
-                autoCapitalize="words"
-                mode="flat"
-                style={styles.input}
-              />
-              <TextInput
-                label={t.location}
-                disabled
-                value={autoLocation}
-                keyboardType="default"
-                autoCapitalize="words"
-                mode="flat"
-                style={styles.input}
-              />
-              <RadioButton.Group
-                onValueChange={(value) =>
-                  setUserData({ ...userData, gender: value })
-                }
-                value={userData.gender}
-              >
-                <View style={styles.radioButtonContainer}>
-                  <RadioButton.Item
-                    label={t.male}
-                    value="Male"
-                  />
-                  <RadioButton.Item
-                    label={t.female}
-                    value="Female"
-                  />
-                  <RadioButton.Item label={t.other} value="Other" />
-                </View>
-              </RadioButton.Group>
-              <DatePickerAge userData={userData} updateUserData={setUserData} />
-              <Button
-                mode="contained"
-                style={styles.saveButton}
-                onPress={handleSave}
-              >
-                {t.save}
-              </Button>
-            </View>
-          </TouchableWithoutFeedback>
-        )}
+            </TouchableWithoutFeedback>
+          )}
+        </SafeAreaView>
         <CustomTabBar />
       </AlertNotificationRoot>
     </>
@@ -439,7 +446,7 @@ const styles = StyleSheet.create({
     width: "85%",
     marginLeft: "auto",
     marginRight: "auto",
-    flex: 0.98,
+    flex: 1,
     backgroundColor: colors.backGroundLight,
   },
   containerBackButton: {
@@ -447,23 +454,23 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     marginLeft: -15,
     flexDirection: "column",
-    flex: 0.1,
   },
   header: {
-    flex: 0.1,
     justifyContent: "center",
     alignItems: "flex-start",
     width: "85%",
+    marginTop: 10,
+    marginBottom: 10,
   },
   headerText: {
     fontSize: 26,
     fontWeight: "500",
   },
   profilePicContainer: {
-    flex: 0.5,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
+    marginBottom: 10,
   },
   profilePic: {
     marginBottom: 12,
@@ -478,19 +485,20 @@ const styles = StyleSheet.create({
     width: "100%",
     borderColor: colors.primary,
     backgroundColor: "transparent",
+    marginBottom: 5,
   },
   radioButtonContainer: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-around",
     alignItems: "center",
     width: "100%",
     marginRight: "auto",
-    marginLeft: 12
+    marginLeft: 12,
+    marginTop: 10,
   },
   saveButton: {
     width: "100%",
-    marginBottom: 20,
-    padding: 12,
+    padding: 8,
     marginTop: 20,
   },
   loadingContainer: {
