@@ -2,7 +2,7 @@
   "expo": {
     "name": "Epic Trip",
     "slug": "epic-trip",
-    "version": "1.8.10",
+    "version": "1.8.11",
     "orientation": "portrait",
     "icon": "./assets/img/icon.png",
     "userInterfaceStyle": "light",
@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "app.myepictrip",
-      "buildNumber": "574",
+      "buildNumber": "575",
       "entitlements": {
         "aps-environment": "production"
       },
@@ -31,7 +31,7 @@
         "backgroundColor": "#C2185B"
       },
       "package": "app.myepictrip",
-      "versionCode": 574,
+      "versionCode": 575,
       "permissions": [
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.ACCESS_COARSE_LOCATION",

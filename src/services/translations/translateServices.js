@@ -13,7 +13,7 @@ export const translate = async (q, source) => {
             source: `${source}`,
             target: `${target}`
         }
-        const response = await axios.post("http://translate.fertech.dev.br/translate", data, { headers })
+        const response = await axios.post("https://translate.fertech.dev.br/translate", data, { headers })
 
         if (response.status === 200) {
             return response.data.translatedText;
