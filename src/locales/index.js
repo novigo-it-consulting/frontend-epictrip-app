@@ -6,6 +6,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ptBR from "./translations/pt_BR.json";
 import enUS from "./translations/en_US.json";
 import esES from "./translations/es_ES.json";
+import de from "./translations/de.json";
+import fr from "./translations/fr.json";
+import it from "./translations/it.json";
+import ru from "./translations/ru.json";
+import zhhans from "./translations/zh-hans.json";
 
 // Função para obter o idioma do dispositivo
 const getDeviceLanguage = () => {
@@ -37,6 +42,21 @@ i18n
       },
       "es-ES": {
         translation: esES,
+      },
+      "de": {
+        translation: de,
+      },
+      "fr": {
+        translation: fr,
+      },
+      "it": {
+        translation: it,
+      },
+      "ru": {
+        translation: ru,
+      },
+      "zhhans": {
+        translation: zhhans,
       },
     },
     interpolation: {
