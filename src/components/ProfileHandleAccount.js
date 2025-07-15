@@ -1,70 +1,49 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Image, ActivityIndicator } from "react-native";
-import Feather from "react-native-vector-icons/Feather";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { requestGetUser } from "../services/api";
-import {
-  ALERT_TYPE,
-  Toast,
-  AlertNotificationRoot,
-} from "react-native-alert-notification";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
+import { AlertNotificationRoot } from "react-native-alert-notification";
+
+import { requestGetUser } from "../services/api";
 import colors from "../colors";
 
-export default function ProfileHandleAccount(alert) {
+export default function ProfileHandleAccount() {
   const [profileName, setProfileName] = useState("");
   const [profilePhoto, setProfilePhoto] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Inicia como true para mostrar o loading
   const navigation = useNavigation();
-
   const { t } = useTranslation();
 
   const getUserToProfile = async () => {
     setLoading(true);
-    const userId = await AsyncStorage.getItem("userId");
-    console.log("User ID from AsyncStorage:", userId); // Verifique o userId
-
-    if (!userId) {
-      console.error("User ID not found in AsyncStorage");
-      setLoading(false);
-      return;
-    }
-
     try {
+      const userId = await AsyncStorage.getItem("userId");
+      if (!userId) {
+        console.error("User ID not found in AsyncStorage");
+        return;
+      }
       const response = await requestGetUser(userId);
-      console.log("API Response:", response.data.data); // Verifique a resposta da API
-      console.log("API Response Status: ", response.status);
-
-      if (response.status == 200) {
+      if (response.status === 200) {
         const { fullName, profilePic } = response.data.data;
         setProfileName(fullName);
-        setProfilePhoto(profilePic || "https://via.placeholder.com/150"); // Imagem padrão
+        setProfilePhoto(profilePic);
       } else {
-        console.error(response.status)
         console.error("Failed to fetch user profile:", response.status);
       }
     } catch (error) {
       console.error("An error occurred while fetching user profile:", error);
-      if (error.response) {
-        console.error("Response data:", error.response.data);
-        console.error("Response status:", error.response.status);
-        console.error("Response headers:", error.response.headers);
-      } else if (error.request) {
-        console.error("No response received:", error.request);
-      } else {
-        console.error("Error message:", error.message);
-      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
+  // useFocusEffect é mais adequado para re-buscar dados quando a tela ganha foco
+  useFocusEffect(
+    React.useCallback(() => {
       getUserToProfile();
-    });
-    return unsubscribe;
-  }, [navigation]);
+    }, [])
+  );
 
   return (
     <AlertNotificationRoot theme={"light"}>
@@ -82,30 +61,13 @@ export default function ProfileHandleAccount(alert) {
               style={{ width: 48, height: 48, borderRadius: 24 }}
             />
             <View style={stylesProfile.titleName}>
-              <Text
-                style={{
-                  fontSize: 14,
-                  textAlign: "left",
-                  color: "#172B4D",
-                  fontWeight: "bold",
-                }}
-              >
-                {profileName || "Falha ao carregar..."}
+              <Text style={stylesProfile.profileNameText}>
+                {profileName || t('profileHandleAccount.loadingError')}
               </Text>
-              <Text
-                style={{
-                  fontSize: 16,
-                  textAlign: "left",
-                  color: "#364764",
-                  marginTop: 6,
-                }}
-              >
-                Change your personal information
+              <Text style={stylesProfile.descriptionText}>
+                {t('profileHandleAccount.titleHandleAccount')}
               </Text>
             </View>
-            {/* <View style={stylesProfile.boxNotification}>
-              <Feather name="arrow-right" color={"#172B4D"} size={15} />
-            </View> */}
           </View>
         )}
       </View>
@@ -115,36 +77,32 @@ export default function ProfileHandleAccount(alert) {
 
 const stylesProfile = StyleSheet.create({
   container: {
-    flex: 0.1,
-    flexDirection: "column",
+    flex: 1, // Ajustado para ocupar o espaço necessário
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    width: "85%",
+    paddingVertical: 8, // Adicionado padding vertical
   },
   boxProfile: {
     width: "100%",
     display: "flex",
     flexDirection: "row",
-  },
-  boxNotification: {
-    height: 32,
-    width: "auto",
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "column",
-    marginLeft: "auto",
-  },
-  boxColor: {
-    backgroundColor: "#F6F8FA",
-    width: 25,
-    height: 25,
-    borderRadius: 24,
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
+    alignItems: "center", // Alinha itens verticalmente
   },
   titleName: {
     marginLeft: 12,
+    flex: 1, // Permite que o texto quebre a linha se necessário
+  },
+  profileNameText: {
+    fontSize: 14,
+    textAlign: "left",
+    color: "#172B4D",
+    fontWeight: "bold",
+  },
+  descriptionText: {
+    fontSize: 16,
+    textAlign: "left",
+    color: "#364764",
+    marginTop: 6,
   },
 });

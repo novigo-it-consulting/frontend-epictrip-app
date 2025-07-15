@@ -1,0 +1,520 @@
+{
+    "homeScreen": {
+        "title": "Главный экран",
+        "logoutButton": "Выйти"
+    },
+    "homeTabs": {
+        "homeButton": "Главная",
+        "groupsButton": "Группы",
+        "requestsButton": "Запросы",
+        "scheduleButton": "Расписание",
+        "profileButton": "Профиль"
+    },
+    "loginScreen": {
+        "title": "Войти",
+        "emailLabel": "Эл. почта",
+        "passwordLabel": "Пароль",
+        "loginButton": "Войти",
+        "forgotPassword": "Забыли пароль?",
+        "noAccount": "Нет аккаунта?",
+        "signUp": "Зарегистрироваться",
+        "errorTitle": "Ой!",
+        "genericError": "Ошибка входа. Пожалуйста, попробуйте еще раз.",
+        "invalidEmailAdress": "Неверный адрес электронной почты",
+        "emailRequired": "Требуется адрес электронной почты",
+        "passwordMinLength": "Пароль должен содержать не менее 6 символов",
+        "passwordRequired": "Требуется пароль"
+    },
+    "enterCode": {
+        "title": "Введите ваш код",
+        "subTitle": "6-значный код был отправлен на вашу электронную почту. Проверьте папку со спамом.",
+        "codeLabel": "Код",
+        "codePlaceholder": "Введите код",
+        "continueButton": "Продолжить",
+        "resendCode": "Отправить код еще раз",
+        "errorTitle": "Ой",
+        "errorMessage": "Ошибка при проверке кода. Пожалуйста, попробуйте еще раз."
+    },
+    "forgetPasswordScreen": {
+        "title": "Забыли пароль?",
+        "subTitle": "Введите адрес электронной почты вашей учетной записи Epic Trip",
+        "emailLabel": "Эл. почта",
+        "continueButton": "Продолжить",
+        "errorTitle": "Ой!",
+        "noUser": "Пользователь с таким адресом электронной почты не найден.",
+        "unexpectedError": "Произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз.",
+        "invalidEmail": "Неверный адрес электронной почты",
+        "emailRequired": "Требуется адрес электронной почты"
+    },
+    "signUpScreen": {
+        "title": "Зарегистрироваться",
+        "nameLabel": "Полное имя",
+        "emailLabel": "Эл. почта",
+        "shareNumberLabel": "Номер для обмена",
+        "phoneLabel": "Телефон",
+        "languageLabel": "Язык",
+        "signUpButton": "Зарегистрироваться",
+        "privacyPolicy": "Регистрируясь, вы соглашаетесь с нашей",
+        "privacyPolicyLink": " Политикой конфиденциальности ",
+        "andOur": "и нашими",
+        "termsAndConditionsLink": " Условиями и положениями",
+        "alreadyHaveAccount": "Уже есть аккаунт?",
+        "signIn": "Войти",
+        "errorCreatingAccount": "Ошибка при создании вашей учетной записи. Пожалуйста, попробуйте позже.",
+        "errorRequired": "Это поле обязательно для заполнения",
+        "successTitle": "Успех!",
+        "successMessage": "Аккаунт успешно создан!",
+        "errorTitle": "Ой!",
+        "languages": {
+            "arabic": "Арабский",
+            "azerbaijani": "Азербайджанский",
+            "bulgarian": "Болгарский",
+            "bengali": "Бенгальский",
+            "catalan": "Каталанский",
+            "czech": "Чешский",
+            "danish": "Датский",
+            "german": "Немецкий",
+            "greek": "Греческий",
+            "english": "Английский",
+            "esperanto": "Эсперанто",
+            "spanish": "Испанский",
+            "estonian": "Эстонский",
+            "basque": "Баскский",
+            "persian": "Персидский",
+            "finnish": "Финский",
+            "french": "Французский",
+            "irish": "Ирландский",
+            "galician": "Галисийский",
+            "hebrew": "Иврит",
+            "hindi": "Хинди",
+            "hungarian": "Венгерский",
+            "indonesian": "Индонезийский",
+            "italian": "Итальянский",
+            "japanese": "Японский",
+            "korean": "Корейский",
+            "kyrgyz": "Киргизский",
+            "lithuanian": "Литовский",
+            "latvian": "Латышский",
+            "malay": "Малайский",
+            "norwegian": "Норвежский",
+            "dutch": "Голландский",
+            "polish": "Польский",
+            "portuguese": "Португальский",
+            "portuguese_brazil": "Португальский (Бразилия)",
+            "romanian": "Румынский",
+            "russian": "Русский",
+            "slovak": "Словацкий",
+            "slovenian": "Словенский",
+            "albanian": "Албанский",
+            "swedish": "Шведский",
+            "filipino": "Филиппинский",
+            "chinese_simplified": "Китайский (упрощенный)",
+            "chinese_traditional": "Китайский (традиционный)"
+        }
+    },
+    "profileScreen": {
+        "profileTitle": "Профиль",
+        "subTitleAccount": "Аккаунт",
+        "subTitleBooking": "Бронирование",
+        "subuTitleSettings": "Настройки",
+        "logoutErrorTitle": "Ошибка выхода",
+        "errorProfileScreenGetUserInfo": "Произошла ошибка при загрузке вашей информации"
+    },
+    "profileHandleChangePassword": {
+        "titleChangePassword": "Изменить пароль"
+    },
+    "profileHandleLogout": {
+        "titleHandleLogout": "Выйти"
+    },
+    "profileHandleBack": {
+        "titleHandleBack": "Назад"
+    },
+    "profileHandleAccount": {
+        "titleHandleAccount": "Изменить вашу личную информацию",
+        "loadingError": "Загрузка имени...",
+        "errorUpdating": "Произошла ошибка при обновлении информации о пользователе, пожалуйста, попробуйте позже."
+    },
+    "profileHandleHandlePayment": {
+        "titlePayment": "Кошелек"
+    },
+    "profileHandleChangeRewards": {
+        "titleRewards": "Награды"
+    },
+    "profileHandleSettingsLanguage": {
+        "titleLanguage": "Язык"
+    },
+    "setNewPasswordScreen": {
+        "title": "Установите новый пароль",
+        "passwordLabel": "Новый пароль",
+        "confirmPasswordLabel": "Подтвердите новый пароль",
+        "continueButton": "Продолжить",
+        "passwordsDoNotMatch": "Пароли не совпадают",
+        "requiredField": "Обязательное поле",
+        "errorChangingPassword": "Ошибка при изменении пароля. Пожалуйста, попробуйте еще раз.",
+        "passwordChangedSuccess": "Пароль успешно изменен!",
+        "successTitle": "Успех!",
+        "errorTitle": "Ой!"
+    },
+    "profileHandleBooking": {
+        "errorUserID": "Не удалось загрузить ID пользователя",
+        "bookingInformation": "Информация о вашем бронировании",
+        "errorProfileScreenGetUserInfo": "Произошла ошибка при загрузке вашей информации",
+        "loadingBookingNumber": "Загрузка...",
+        "reservas": "Нет бронирований"
+    },
+    "changePersonalInfo": {
+        "failedUpdate": "Произошла ошибка при обновлении информации о пользователе. Пожалуйста, попробуйте позже.",
+        "updateSuccess": "Ваша личная информация была успешно обновлена.",
+        "failedUpdateUser": "Не удалось обновить пользователя.",
+        "loadingData": "Ошибка при загрузке начальных данных.",
+        "pictureUpdate": "Ваше изображение профиля было успешно обновлено.",
+        "failedUpdatePicture": "Не удалось обновить изображение профиля",
+        "notFoundAsyncStorage": "ID пользователя не найден в AsyncStorage.",
+        "failedUserInfo": "Не удалось получить информацию о пользователе.",
+        "failedUpdateUserInfo": "Не удалось обновить информацию о пользователе",
+        "permissionLibraryDenied": "Разрешение на доступ к медиатеке было отклонено",
+        "locationPermissionDenied": "Разрешение на доступ к местоположению было отклонено",
+        "genderM": "Мужской",
+        "genderF": "Женский",
+        "genderOther": "Другой",
+        "buttonSave": "Сохранить",
+        "labelFirstName": "Имя",
+        "labelLastName": "Фамилия",
+        "labelLocation": "Текущее местоположение",
+        "labelAge": "Возраст",
+        "buttonUploadImage": "Загрузить изображение",
+        "personalInfo": "Личная информация",
+        "errorEmptyField": "Пожалуйста, заполните все обязательные поля.",
+        "alertAttention": "Внимание",
+        "alertSuccess": "Успех",
+        "alertError": "Ошибка"
+    },
+    "popularEvents": {
+        "title": "Популярные события",
+        "vikingsGame": "Minnesota Vikings vs. New...",
+        "disneyPark": "Парк Дисней",
+        "sugargroveLocation": "1525 Sugargrove, Орландо"
+    },
+    "exploreCategories": {
+        "categories": "Исследовать категории"
+    },
+    "searchViewHome": {
+        "searchEvents": "Попробуйте Дисней, Еда или Билеты"
+    },
+    "profileAccount": {
+        "welcome": "Привет,"
+    },
+    "paymentScreen": {
+        "title": "Кошелек",
+        "yourCards": "Нет карт...",
+        "addCard": "Добавить карту",
+        "errorNotification": "Ошибка",
+        "errorCards": "Не удалось получить карты. Пожалуйста, попробуйте еще раз.",
+        "cardDeleted": "Карта успешно удалена.",
+        "deleteError": "Ошибка при удалении карты",
+        "errorDeletingCard": "Произошла ошибка"
+    },
+    "changePaymentScreen": {
+        "titleError": "Ошибка",
+        "errorFields": "Пожалуйста, заполните все поля правильно",
+        "titleAddCard": "Добавить карту",
+        "buttonAddCard": "Добавить карту",
+        "cardAddedSuccess": "Карта успешно добавлена!",
+        "cardAddedError": "Не удалось добавить карту. Пожалуйста, попробуйте еще раз."
+    },
+    "payment": {
+        "titlePayment": "Оплата",
+        "buttonPayment": "Произвести оплату",
+        "successTitle": "Успех",
+        "successMessage": "Оплата прошла успешно!",
+        "errorTitle": "Ошибка",
+        "errorMessage": "Платеж не удался. Пожалуйста, попробуйте еще раз.",
+        "noName": "Без имени",
+        "expiryPlaceholder": "ММ/ГГ",
+        "noCards": "Карты не найдены"
+    },
+    "sampleData": {
+        "categoryBooking": "Бронирования",
+        "categoryServices": "Услуги",
+        "categoryConcierge": "Консьерж",
+        "categoryTickets": "Билеты",
+        "categoryPlaces": "Места",
+        "categoryFood": "Еда",
+        "categoryShop": "Магазин"
+    },
+    "bookingScreen": {
+        "title": "Бронирования",
+        "latestBookings": "Последние бронирования",
+        "loading": "Загрузка ваших бронирований...",
+        "yourReservations": "Пока нет бронирований",
+        "bookButton": "Сделать бронирование",
+        "aboutReservation": "О вашем бронировании",
+        "reservationDate": "Дата бронирования",
+        "extendReservation": "Продлить бронирование",
+        "selectDates": "Выберите даты",
+        "startDate": "Дата начала",
+        "endDate": "Дата окончания",
+        "reservationNumber": "Номер бронирования",
+        "mainGroup": "Основная группа",
+        "noLinkedGroup": "Нет связанной группы"
+    },
+    "logoutDialog": {
+        "title": "Вы действительно хотите уйти?",
+        "content": "Когда вы уйдете, мы удалим все ваши данные и перенаправим вас на страницу входа.",
+        "noButton": "Нет",
+        "yesButton": "Да, уйти"
+    },
+    "experienceScreen": {
+        "errorTitle": "Ой!",
+        "errorFetching": "Ошибка при получении мест.",
+        "noExperience": "Опыт не найден",
+        "backButton": "Назад",
+        "title": "Опыт",
+        "searchPlaceholder": "Попробуйте Дисней, Еда или Билеты",
+        "categories": "Категории"
+    },
+    "problemInput": {
+        "title": "Электротехническое обслуживание",
+        "placeholder": "Опишите вашу проблему...",
+        "helperText": "Пожалуйста, прикрепите фото или файл для лучшего решения проблемы"
+    },
+    "bookingInfo": {
+        "titlePage": "Информация о бронировании",
+        "acordionOne": {
+            "title": "Данные доступа",
+            "content": "Здесь вы можете найти свои данные доступа..."
+        },
+        "acordionTwo": {
+            "title": "Обмен данными",
+            "content": "Как мы делимся вашими данными с третьими лицами..."
+        },
+        "acordionThree": {
+            "title": "Полезные телефоны",
+            "content": "Список важных телефонных номеров..."
+        }
+    },
+    "bookingDetails": {
+        "about": "О вашем бронировании",
+        "reservationDate": "Дата бронирования",
+        "checkin": "Заезд:",
+        "checkout": "Выезд:",
+        "reservationNumber": "Номер бронирования"
+    },
+    "chatScreen": {
+        "header": {
+            "userName": "Amiko",
+            "userStatus": "В сети"
+        },
+        "messages": {
+            "sending": "Отправка...",
+            "sendFailed": "Не удалось отправить",
+            "typing": "Amiko печатает..."
+        },
+        "input": {
+            "placeholder": "Введите сообщение"
+        },
+        "context": {
+            "claimContext": "Это претензия, вот необходимые данные для ее обработки: {{travelerDetailsClaim}}. {{requestNumberClaim}}",
+            "requestNumber": "ID открытого запроса: {{requestId}}",
+            "travelerDetails": "Данные путешественника: Название бронирования: {{bookingName}}, Статус бронирования: {{statusBooking}}, Дата заезда: {{checkinDate}}, Дата выезда: {{checkoutDate}}, Имя человека: {{fullName}}, ID человека: {{userId}}, Эл. почта: {{email}}, Телефон: {{phoneNumber}}, Номер для обмена: {{shareNumber}}.",
+            "houseDetails": "Детали дома: Название дома: {{houseName}}, Это дом в кондоминиуме: {{isCondoHouse}}, Местоположение: {{number}} {{address}}, {{neighbourhood}}, {{city}}, {{state}}, {{zipCode}}, {{country}}, Максимальная вместимость: {{maximumCapacity}}, Разрешены домашние животные: {{petsAllowed}}, Разрешено курение: {{smokingAllowed}}, Разрешены вечеринки: {{partiesAllowed}}",
+            "amenities": "Удобства: Есть бассейн: {{hasPool}}, Есть гриль для барбекю: {{hasBabercueGrill}}, Есть центральный кондиционер: {{hasCentralAirConditioner}}, Есть сплит-кондиционер: {{hasSplitterAirConditioner}}, Есть сушилка: {{hasDryer}}, Есть стиральная машина: {{hasWashingMachine}}, Есть Wi-Fi: {{hasWifi}}",
+            "maxCapacity": "Максимальное количество гостей: {{maximumCapacity}}, Общее количество комнат: {{totalRooms}}, Общее количество ванных комнат: {{totalBathRooms}}",
+            "offer": "Ниже приведено предложение: Название продукта: {{productName}}. {{productDescription}}. серьезность: {{productSeverity}}. Адрес: {{number}} {{address}}, {{neighbourhood}}, {{city}}, {{state}}, {{country}}, {{zipCode}}.\n\n",
+            "notAvailable": "Н/Д"
+        }
+    },
+    "selectPaymentScreen": {
+        "title": "Выберите способ оплаты",
+        "savedCards": "Сохраненные карты",
+        "totalProducts": "Всего продуктов",
+        "totalTax": "Всего налогов",
+        "totalAmount": "Общая сумма",
+        "payButton": "Оплатить",
+        "addCardButton": "Добавить новую карту",
+        "modal": {
+            "approvedTitle": "Платеж одобрен!",
+            "rejectedTitle": "Платеж отклонен!",
+            "approvedMessage": "Ваш платеж был успешно обработан.",
+            "rejectedMessage": "Ваш платеж не может быть обработан. Пожалуйста, попробуйте еще раз.",
+            "returnButton": "Вернуться к запросам"
+        }
+    },
+    "customBar": {
+        "product": "Продукт"
+    },
+    "conciergeList": {
+        "loading": "Загрузка...",
+        "concierge": "Консьерж",
+        "categories": "Категории",
+        "noItems": "Товары не найдены"
+    },
+    "createNewEvent": {
+        "title1": "Создайте свое",
+        "title2": "удивительное событие",
+        "eventNamePlaceholder": "Название события",
+        "descriptionPlaceholder": "Описание",
+        "createButton": "Создать событие",
+        "errorTitle": "Ой!",
+        "errorMessage": "Ошибка при создании события. Пожалуйста, попробуйте позже!",
+        "emptyFields": "Пожалуйста, заполните название и описание события.",
+        "successTitle": "Успех!",
+        "successMessage": "Событие успешно создано!"
+    },
+    "eventDetails": {
+        "noTitle": "Событие без названия",
+        "today": "Сегодня",
+        "overview": "Обзор",
+        "noDescription": "Описание недоступно",
+        "hours": "Часы"
+    },
+    "groupUsersScreen": {
+        "title": "Экран пользователей группы"
+    },
+    "offersByCategory": {
+        "loading": "Загрузка...",
+        "categoryFallback": "Категория",
+        "noItems": "В этой категории товары не найдены."
+    },
+    "offersList": {
+        "loading": "Загрузка...",
+        "categoryFallback": "Категория",
+        "categories": "Категории",
+        "suggestions": "Предложения"
+    },
+    "paymentSelectCard": {
+        "title": "Тестовый платеж",
+        "buttonText": "Произвести оплату",
+        "successTitle": "Успех",
+        "successMessage": "Оплата прошла успешно!",
+        "errorTitle": "Ошибка",
+        "errorMessage": "Платеж не удался. Пожалуйста, попробуйте еще раз."
+    },
+    "requestDetails": {
+        "title": "Детали запроса",
+        "dateNotAvailable": "Дата недоступна",
+        "requestTitle": "Запрос",
+        "paymentTitle": "Оплата",
+        "total": "Всего",
+        "selectPaymentMethod": "Выберите способ оплаты",
+        "noDescription": "Описание недоступно.",
+        "status": {
+            "inProgress": "В процессе",
+            "done": "Выполнено",
+            "waitingPayment": "Ожидание оплаты",
+            "paid": "Оплачено",
+            "unrealized": "Нереализовано",
+            "unknown": "Неизвестно"
+        }
+    },
+    "requestScreen": {
+        "requests": "Запросы",
+        "searchPlaceholder": "Попробуйте Дисней, Еда или Билеты",
+        "allRequests": "Все запросы",
+        "filters": {
+            "all": "Все",
+            "inProgress": "В процессе",
+            "done": "Выполнено",
+            "waitingPayment": "Ожидание оплаты",
+            "paid": "Оплачено",
+            "unrealized": "Нереализовано"
+        },
+        "status": {
+            "inProgress": "В процессе",
+            "done": "Выполнено",
+            "waitingPayment": "Ожидание оплаты",
+            "paid": "Оплачено",
+            "unrealized": "Нереализовано",
+            "unknown": "Неизвестно"
+        }
+    },
+    "scheduleScreen": {
+        "schedule": "Расписание",
+        "bookingDate": "Дата бронирования",
+        "today": "Сегодня",
+        "events": "События",
+        "noTitle": "Событие без названия",
+        "noEvents": "На эту дату нет забронированных событий",
+        "dayNames": {
+            "sun": "Вс",
+            "mon": "Пн",
+            "tue": "Вт",
+            "wed": "Ср",
+            "thu": "Чт",
+            "fri": "Пт",
+            "sat": "Сб"
+        }
+    },
+    "languageSelectionScreen": {
+        "title": "Выберите ваш язык",
+        "searchPlaceholder": "Поиск языка",
+        "languages": {
+            "arabic": "Арабский",
+            "azerbaijani": "Азербайджанский",
+            "bulgarian": "Болгарский",
+            "bengali": "Бенгальский",
+            "catalan": "Каталанский",
+            "czech": "Чешский",
+            "danish": "Датский",
+            "german": "Немецкий",
+            "greek": "Греческий",
+            "english": "Английский",
+            "esperanto": "Эсперанто",
+            "spanish": "Испанский",
+            "estonian": "Эстонский",
+            "basque": "Баскский",
+            "persian": "Персидский",
+            "finnish": "Финский",
+            "french": "Французский",
+            "irish": "Ирландский",
+            "galician": "Галисийский",
+            "hebrew": "Иврит",
+            "hindi": "Хинди",
+            "hungarian": "Венгерский",
+            "indonesian": "Индонезийский",
+            "italian": "Итальянский",
+            "japanese": "Японский",
+            "korean": "Корейский",
+            "kyrgyz": "Киргизский",
+            "lithuanian": "Литовский",
+            "latvian": "Латышский",
+            "malay": "Малайский",
+            "norwegian": "Норвежский",
+            "dutch": "Голландский",
+            "polish": "Польский",
+            "portuguese": "Португальский",
+            "portuguese_brazil": "Португальский (Бразилия)",
+            "romanian": "Румынский",
+            "russian": "Русский",
+            "slovak": "Словацкий",
+            "slovenian": "Словенский",
+            "albanian": "Албанский",
+            "swedish": "Шведский",
+            "filipino": "Филиппинский",
+            "chinese_simplified": "Китайский (упрощенный)",
+            "chinese_traditional": "Китайский (традиционный)"
+        }
+    },
+    "servicesScreen": {
+        "loading": "Загрузка...",
+        "title": "Услуги"
+    },
+    "walletScreen": {
+        "loading": "Загрузка...",
+        "wallet": "Кошелек",
+        "selected": "(выбрано)",
+        "addNewCard": "Добавить новую карту",
+        "cardholderName": "Имя владельца карты",
+        "cardNumber": "Номер карты",
+        "expDate": "Срок действия (ММ/ГГ)",
+        "cvv": "CVV",
+        "save": "Сохранить",
+        "cancel": "Отмена"
+    },
+    "contactCard": {
+        "role": "Риэлтор"
+    },
+    "profileHandleSettingsPrivacy": {
+        "title": "Конфиденциальность"
+    }
+}

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform, ScrollView, KeyboardAvoidingView } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ArrowLeft, Calendar } from 'lucide-react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from 'react-i18next';
+import { LinearGradient } from 'expo-linear-gradient'; // Importando o LinearGradient
 import { requestCreateEvent } from "../services/api";
 import {
     ALERT_TYPE,
@@ -12,6 +14,9 @@ import {
 } from "react-native-alert-notification";
 
 const CreateNewEvent = () => {
+    const { t } = useTranslation();
+    const navigation = useNavigation();
+
     const [eventName, setEventName] = useState('');
     const [description, setDescription] = useState('');
     const [startDate, setStartDate] = useState(new Date());
@@ -21,29 +26,27 @@ const CreateNewEvent = () => {
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
     const [showEndTimePicker, setShowEndTimePicker] = useState(false);
 
-    const navigation = useNavigation();
-
     const handleGoBack = () => {
         navigation.goBack();
     }
 
     const formatDate = (date) => {
-        return date.toLocaleDateString();
+        return date.toLocaleDateString('pt-BR');
     };
 
     const formatTime = (date) => {
-        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     };
 
     const onStartDateChange = (event, selectedDate) => {
-        setShowStartDatePicker(false);
+        setShowStartDatePicker(Platform.OS === 'ios');
         if (selectedDate) {
             setStartDate(selectedDate);
         }
     };
 
     const onStartTimeChange = (event, selectedTime) => {
-        setShowStartTimePicker(false);
+        setShowStartTimePicker(Platform.OS === 'ios');
         if (selectedTime) {
             const newDate = new Date(startDate);
             newDate.setHours(selectedTime.getHours());
@@ -53,14 +56,14 @@ const CreateNewEvent = () => {
     };
 
     const onEndDateChange = (event, selectedDate) => {
-        setShowEndDatePicker(false);
+        setShowEndDatePicker(Platform.OS === 'ios');
         if (selectedDate) {
             setEndDate(selectedDate);
         }
     };
 
     const onEndTimeChange = (event, selectedTime) => {
-        setShowEndTimePicker(false);
+        setShowEndTimePicker(Platform.OS === 'ios');
         if (selectedTime) {
             const newDate = new Date(endDate);
             newDate.setHours(selectedTime.getHours());
@@ -69,9 +72,16 @@ const CreateNewEvent = () => {
         }
     };
 
-    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
     const handleCreateEvent = async () => {
+        if (!eventName.trim() || !description.trim()) {
+            Toast.show({
+                type: ALERT_TYPE.WARNING,
+                title: t('createNewEvent.errorTitle'),
+                textBody: t('createNewEvent.emptyFields'),
+            });
+            return;
+        }
+
         const event = {
             eventName: eventName,
             owner: await AsyncStorage.getItem("userId"),
@@ -79,174 +89,115 @@ const CreateNewEvent = () => {
             startsAt: startDate,
             endsAt: endDate
         }
-        const response = await requestCreateEvent(event);
 
-        if (response.status === 201) {
-            // await sleep(1000)
-            console.log(response.data)
-            const created = await response.data;
-            navigation.navigate("EventDetails", { event: created })
-        } else {
-            alert("Error Creating Event. Try again later!")
-            // Toast.show({
-            //     type: ALERT_TYPE.DANGER,
-            //     title: "Ops",
-            //     textBody: "Error creating event. Try again later!",
-            // });
+        try {
+            const response = await requestCreateEvent(event);
+            if (response.status === 201) {
+                Toast.show({
+                    type: ALERT_TYPE.SUCCESS,
+                    title: t('createNewEvent.successTitle'),
+                    textBody: t('createNewEvent.successMessage'),
+                });
+                const createdEvent = response.data;
+                setTimeout(() => {
+                    navigation.navigate("EventDetails", { event: createdEvent });
+                }, 1500);
+            } else {
+                throw new Error("Failed to create event");
+            }
+        } catch (error) {
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t('createNewEvent.errorTitle'),
+                textBody: t('createNewEvent.errorMessage'),
+            });
         }
     }
 
     return (
-        <View style={styles.container}>
-            <Toast />
-            <View style={styles.content}>
-                {/* Header */}
-                <View style={styles.header}>
-                    <View style={styles.headerTop}>
-                        <TouchableOpacity style={styles.backButton} onPress={() => handleGoBack()}>
-                            <ArrowLeft size={24} color="#374151" />
+        <AlertNotificationRoot>
+            <KeyboardAvoidingView
+                style={styles.container}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+            >
+                <ScrollView contentContainerStyle={styles.scrollContent}>
+                    {/* Header */}
+                    <View style={styles.header}>
+                        <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+                            <ArrowLeft size={28} color="#1F2937" />
                         </TouchableOpacity>
-                    </View>
-
-                    {/* Calendar Icon */}
-                    <View style={styles.iconContainer}>
-                        <View style={styles.iconWrapper}>
-                            <View style={styles.iconInner}>
-                                <Calendar size={24} color="white" />
-                            </View>
-                        </View>
-                    </View>
-
-                    {/* Title */}
-                    <View style={styles.titleContainer}>
-                        <Text style={styles.title}>Create your</Text>
-                        <Text style={styles.title}>amazing event</Text>
-                    </View>
-                </View>
-
-                {/* Form */}
-                <View style={styles.form}>
-                    {/* Event Name */}
-                    <View style={styles.inputContainer}>
-                        <View style={styles.inputWrapper}>
-                            <Text style={styles.inputIcon}>@</Text>
-                            <TextInput
-                                placeholder="Event name"
-                                value={eventName}
-                                onChangeText={setEventName}
-                                style={styles.input}
-                                placeholderTextColor="#9CA3AF"
-                            />
-                        </View>
-                    </View>
-
-                    {/* Description */}
-                    <View style={styles.inputContainer}>
-                        <View style={styles.inputWrapper}>
-                            <Text style={styles.inputIcon}>@</Text>
-                            <TextInput
-                                placeholder="Description"
-                                value={description}
-                                onChangeText={setDescription}
-                                style={styles.input}
-                                placeholderTextColor="#9CA3AF"
-                            />
-                        </View>
-                    </View>
-
-                    {/* Start Date and Time */}
-                    <View style={styles.inputContainer}>
-                        <View style={styles.timeRow}>
-                            {/* Start Date */}
-                            <TouchableOpacity
-                                style={[styles.inputWrapper, styles.timeInput]}
-                                onPress={() => setShowStartDatePicker(true)}
+                        <View style={styles.iconContainer}>
+                            <LinearGradient
+                                colors={['#60A5FA', '#3B82F6']}
+                                style={styles.iconWrapper}
                             >
-                                <Calendar size={20} color="#9CA3AF" style={styles.calendarIcon} />
+                                <Calendar size={32} color="white" />
+                            </LinearGradient>
+                        </View>
+                        <View style={styles.titleContainer}>
+                            <Text style={styles.title}>{t('createNewEvent.title1')}</Text>
+                            <Text style={styles.subtitle}>{t('createNewEvent.title2')}</Text>
+                        </View>
+                    </View>
+
+                    {/* Form */}
+                    <View style={styles.form}>
+                        <TextInput
+                            placeholder={t('createNewEvent.eventNamePlaceholder')}
+                            value={eventName}
+                            onChangeText={setEventName}
+                            style={styles.input}
+                            placeholderTextColor="#9CA3AF"
+                        />
+                        <TextInput
+                            placeholder={t('createNewEvent.descriptionPlaceholder')}
+                            value={description}
+                            onChangeText={setDescription}
+                            style={[styles.input, styles.multilineInput]}
+                            placeholderTextColor="#9CA3AF"
+                            multiline
+                        />
+
+                        <Text style={styles.dateLabel}>{t('createNewEvent.startsAt') || 'Início'}</Text>
+                        <View style={styles.timeRow}>
+                            <TouchableOpacity style={styles.dateInput} onPress={() => setShowStartDatePicker(true)}>
+                                <Calendar size={20} color="#6B7280" />
                                 <Text style={styles.dateTimeText}>{formatDate(startDate)}</Text>
                             </TouchableOpacity>
-
-                            {/* Start Time */}
-                            <TouchableOpacity
-                                style={[styles.inputWrapper, styles.timeInput]}
-                                onPress={() => setShowStartTimePicker(true)}
-                            >
-                                <Calendar size={20} color="#9CA3AF" style={styles.calendarIcon} />
+                            <TouchableOpacity style={styles.dateInput} onPress={() => setShowStartTimePicker(true)}>
                                 <Text style={styles.dateTimeText}>{formatTime(startDate)}</Text>
                             </TouchableOpacity>
                         </View>
-                    </View>
 
-                    {/* End Date and Time */}
-                    <View style={styles.inputContainer}>
+                        <Text style={styles.dateLabel}>{t('createNewEvent.endsAt') || 'Término'}</Text>
                         <View style={styles.timeRow}>
-                            {/* End Date */}
-                            <TouchableOpacity
-                                style={[styles.inputWrapper, styles.timeInput]}
-                                onPress={() => setShowEndDatePicker(true)}
-                            >
-                                <Calendar size={20} color="#9CA3AF" style={styles.calendarIcon} />
+                            <TouchableOpacity style={styles.dateInput} onPress={() => setShowEndDatePicker(true)}>
+                                <Calendar size={20} color="#6B7280" />
                                 <Text style={styles.dateTimeText}>{formatDate(endDate)}</Text>
                             </TouchableOpacity>
-
-                            {/* End Time */}
-                            <TouchableOpacity
-                                style={[styles.inputWrapper, styles.timeInput]}
-                                onPress={() => setShowEndTimePicker(true)}
-                            >
-                                <Calendar size={20} color="#9CA3AF" style={styles.calendarIcon} />
+                            <TouchableOpacity style={styles.dateInput} onPress={() => setShowEndTimePicker(true)}>
                                 <Text style={styles.dateTimeText}>{formatTime(endDate)}</Text>
                             </TouchableOpacity>
                         </View>
+
+                        <TouchableOpacity onPress={handleCreateEvent}>
+                            <LinearGradient
+                                colors={['#3B82F6', '#2563EB']}
+                                style={styles.createButton}
+                            >
+                                <Text style={styles.createButtonText}>{t('createNewEvent.createButton')}</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
                     </View>
 
-                    {/* Create Event Button */}
-                    <TouchableOpacity
-                        onPress={handleCreateEvent}
-                        style={styles.createButton}
-                    >
-                        <Text style={styles.createButtonText}>Create event</Text>
-                    </TouchableOpacity>
-                </View>
-
-                {/* Date Time Pickers */}
-                {showStartDatePicker && (
-                    <DateTimePicker
-                        value={startDate}
-                        mode="date"
-                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                        onChange={onStartDateChange}
-                    />
-                )}
-
-                {showStartTimePicker && (
-                    <DateTimePicker
-                        value={startDate}
-                        mode="time"
-                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                        onChange={onStartTimeChange}
-                    />
-                )}
-
-                {showEndDatePicker && (
-                    <DateTimePicker
-                        value={endDate}
-                        mode="date"
-                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                        onChange={onEndDateChange}
-                    />
-                )}
-
-                {showEndTimePicker && (
-                    <DateTimePicker
-                        value={endDate}
-                        mode="time"
-                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                        onChange={onEndTimeChange}
-                    />
-                )}
-            </View>
-        </View>
+                    {/* Date Time Pickers */}
+                    {showStartDatePicker && <DateTimePicker value={startDate} mode="date" display="default" onChange={onStartDateChange} />}
+                    {showStartTimePicker && <DateTimePicker value={startDate} mode="time" display="default" onChange={onStartTimeChange} />}
+                    {showEndDatePicker && <DateTimePicker value={endDate} mode="date" display="default" onChange={onEndDateChange} />}
+                    {showEndTimePicker && <DateTimePicker value={endDate} mode="time" display="default" onChange={onEndTimeChange} />}
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </AlertNotificationRoot>
     );
 };
 
@@ -255,105 +206,126 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#F9FAFB',
     },
-    content: {
-        flex: 1,
-        maxWidth: 384,
-        alignSelf: 'center',
-        width: '100%',
+    scrollContent: {
+        paddingBottom: 40,
     },
     header: {
-        backgroundColor: 'white',
+        backgroundColor: '#FFFFFF',
         paddingHorizontal: 24,
-        paddingTop: 48,
-        paddingBottom: 32,
-    },
-    headerTop: {
-        flexDirection: 'row',
+        paddingTop: 60,
+        paddingBottom: 40,
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
         alignItems: 'center',
-        marginBottom: 48,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 12,
+        elevation: 5,
     },
     backButton: {
-        marginRight: 16,
+        position: 'absolute',
+        top: 60,
+        left: 24,
     },
     iconContainer: {
         alignItems: 'center',
-        marginBottom: 48,
+        marginBottom: 20,
     },
     iconWrapper: {
         width: 80,
         height: 80,
-        backgroundColor: '#DBEAFE',
-        borderRadius: 16,
+        borderRadius: 40,
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    iconInner: {
-        width: 48,
-        height: 48,
-        backgroundColor: '#3B82F6',
-        borderRadius: 8,
-        alignItems: 'center',
-        justifyContent: 'center',
+        elevation: 8,
+        shadowColor: '#3B82F6',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
     },
     titleContainer: {
         alignItems: 'center',
     },
     title: {
-        fontSize: 30,
+        fontSize: 32,
         fontWeight: 'bold',
         color: '#111827',
-        marginBottom: 8,
+    },
+    subtitle: {
+        fontSize: 20,
+        color: '#3B82F6',
+        fontWeight: '600',
     },
     form: {
         paddingHorizontal: 24,
-    },
-    inputContainer: {
-        marginBottom: 24,
-    },
-    inputWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#F3F4F6',
-        borderRadius: 16,
-        paddingHorizontal: 16,
-        paddingVertical: 16,
-    },
-    inputIcon: {
-        fontSize: 18,
-        color: '#9CA3AF',
-        marginRight: 8,
-    },
-    calendarIcon: {
-        marginRight: 8,
+        paddingTop: 40,
     },
     input: {
-        flex: 1,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 12,
+        paddingVertical: 16,
+        paddingHorizontal: 20,
         fontSize: 16,
-        color: '#374151',
+        color: '#1F2937',
+        marginBottom: 20,
+        borderWidth: 1,
+        borderColor: '#E5E7EB',
     },
-    dateTimeText: {
-        flex: 1,
+    multilineInput: {
+        height: 100,
+        textAlignVertical: 'top',
+    },
+    dateLabel: {
         fontSize: 16,
+        fontWeight: '600',
         color: '#374151',
+        marginBottom: 12,
+        marginLeft: 4,
     },
     timeRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        marginBottom: 20,
     },
-    timeInput: {
-        width: '48%',
+    dateInput: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#FFFFFF',
+        borderRadius: 12,
+        paddingVertical: 16,
+        paddingHorizontal: 20,
+        borderWidth: 1,
+        borderColor: '#E5E7EB',
+        marginHorizontal: 4,
+    },
+    dateTimeText: {
+        fontSize: 16,
+        color: '#1F2937',
+        marginLeft: 10,
     },
     createButton: {
-        backgroundColor: '#DBEAFE',
         borderRadius: 16,
-        paddingVertical: 16,
+        paddingVertical: 18,
         alignItems: 'center',
-        marginTop: 8,
+        marginTop: 20,
+        shadowColor: "#2563EB",
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 8,
     },
     createButtonText: {
-        color: '#2563EB',
+        color: '#FFFFFF',
         fontSize: 18,
-        fontWeight: '600',
+        fontWeight: 'bold',
     },
 });
 

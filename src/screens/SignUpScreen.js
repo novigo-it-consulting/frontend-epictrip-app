@@ -11,77 +11,80 @@ import {
   StyleSheet,
   ScrollView,
   SafeAreaView,
-  Modal, // Importar Modal
-  FlatList, // Importar FlatList
-  TextInput as NativeTextInput, // Renomear para evitar conflito
+  Modal,
+  FlatList,
+  TextInput as NativeTextInput,
+  ActivityIndicator,
 } from "react-native";
 import {
   TextInput,
   Button,
   Provider as PaperProvider,
   DefaultTheme,
-  ActivityIndicator,
 } from "react-native-paper";
-import { Ionicons } from '@expo/vector-icons';
-import logo from "../../assets/logo.png";
 import { useForm, Controller } from "react-hook-form";
-import styles from "../styles/globalScreen.js";
-import screenNumberStyles from "../styles/ScreenNumberStyles";
-import colors from "../colors";
-import { requestSignUpGuest } from "../services/api";
+import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
+import { Ionicons } from '@expo/vector-icons';
 import {
   ALERT_TYPE,
   AlertNotificationRoot,
   Toast,
 } from "react-native-alert-notification";
-import { translate } from "../services/translations/translateServices";
 
-// --- Dados e Funções de Idioma (Reutilizados da tela anterior) ---
+import logo from "../../assets/logo.png";
+import styles from "../styles/globalScreen.js";
+import screenNumberStyles from "../styles/ScreenNumberStyles";
+import colors from "../colors";
+import { requestSignUpGuest } from "../services/api";
+
 const ALL_LANGUAGES = [
-  { code: 'ar', name: 'Arabic', countryCode: 'SA' },
-  { code: 'az', name: 'Azerbaijani', countryCode: 'AZ' },
-  { code: 'bg', name: 'Bulgarian', countryCode: 'BG' },
-  { code: 'bn', name: 'Bengali', countryCode: 'BD' },
-  { code: 'ca', name: 'Catalan', countryCode: 'ES-CT' },
-  { code: 'cs', name: 'Czech', countryCode: 'CZ' },
-  { code: 'da', name: 'Danish', countryCode: 'DK' },
-  { code: 'de', name: 'German', countryCode: 'DE' },
-  { code: 'el', name: 'Greek', countryCode: 'GR' },
-  { code: 'en', name: 'English', countryCode: 'US' },
-  { code: 'eo', name: 'Esperanto', countryCode: 'EO' },
-  { code: 'es', name: 'Spanish', countryCode: 'ES' },
-  { code: 'et', name: 'Estonian', countryCode: 'EE' },
-  { code: 'eu', name: 'Basque', countryCode: 'ES-PV' },
-  { code: 'fa', name: 'Persian', countryCode: 'IR' },
-  { code: 'fi', name: 'Finnish', countryCode: 'FI' },
-  { code: 'fr', name: 'French', countryCode: 'FR' },
-  { code: 'ga', name: 'Irish', countryCode: 'IE' },
-  { code: 'gl', name: 'Galician', countryCode: 'ES-GA' },
-  { code: 'he', name: 'Hebrew', countryCode: 'IL' },
-  { code: 'hi', name: 'Hindi', countryCode: 'IN' },
-  { code: 'hu', name: 'Hungarian', countryCode: 'HU' },
-  { code: 'id', name: 'Indonesian', countryCode: 'ID' },
-  { code: 'it', name: 'Italian', countryCode: 'IT' },
-  { code: 'ja', name: 'Japanese', countryCode: 'JP' },
-  { code: 'ko', name: 'Korean', countryCode: 'KR' },
-  { code: 'ky', name: 'Kyrgyz', countryCode: 'KG' },
-  { code: 'lt', name: 'Lithuanian', countryCode: 'LT' },
-  { code: 'lv', name: 'Latvian', countryCode: 'LV' },
-  { code: 'ms', name: 'Malay', countryCode: 'MY' },
-  { code: 'nb', name: 'Norwegian', countryCode: 'NO' },
-  { code: 'nl', name: 'Dutch', countryCode: 'NL' },
-  { code: 'pl', name: 'Polish', countryCode: 'PL' },
-  { code: 'pt', name: 'Portuguese', countryCode: 'PT' },
-  { code: 'pt-BR', name: 'Portuguese (Brazil)', countryCode: 'BR' },
-  { code: 'ro', name: 'Romanian', countryCode: 'RO' },
-  { code: 'ru', name: 'Russian', countryCode: 'RU' },
-  { code: 'sk', name: 'Slovak', countryCode: 'SK' },
-  { code: 'sl', name: 'Slovenian', countryCode: 'SI' },
-  { code: 'sq', name: 'Albanian', countryCode: 'AL' },
-  { code: 'sv', name: 'Swedish', countryCode: 'SE' },
-  { code: 'tl', name: 'Filipino', countryCode: 'PH' },
-  { code: 'zh-Hans', name: 'Chinese (Simplified)', countryCode: 'CN' },
-  { code: 'zh-Hant', name: 'Chinese (Traditional)', countryCode: 'TW' }
+  { code: 'ar', nameKey: 'arabic', countryCode: 'SA' },
+  { code: 'az', nameKey: 'azerbaijani', countryCode: 'AZ' },
+  { code: 'bg', nameKey: 'bulgarian', countryCode: 'BG' },
+  { code: 'bn', nameKey: 'bengali', countryCode: 'BD' },
+  { code: 'ca', nameKey: 'catalan', countryCode: 'ES-CT' },
+  { code: 'cs', nameKey: 'czech', countryCode: 'CZ' },
+  { code: 'da', nameKey: 'danish', countryCode: 'DK' },
+  { code: 'de', nameKey: 'german', countryCode: 'DE' },
+  { code: 'el', nameKey: 'greek', countryCode: 'GR' },
+  { code: 'en', nameKey: 'english', countryCode: 'US' },
+  { code: 'eo', nameKey: 'esperanto', countryCode: 'EO' },
+  { code: 'es', nameKey: 'spanish', countryCode: 'ES' },
+  { code: 'et', nameKey: 'estonian', countryCode: 'EE' },
+  { code: 'eu', nameKey: 'basque', countryCode: 'ES-PV' },
+  { code: 'fa', nameKey: 'persian', countryCode: 'IR' },
+  { code: 'fi', nameKey: 'finnish', countryCode: 'FI' },
+  { code: 'fr', nameKey: 'french', countryCode: 'FR' },
+  { code: 'ga', nameKey: 'irish', countryCode: 'IE' },
+  { code: 'gl', nameKey: 'galician', countryCode: 'ES-GA' },
+  { code: 'he', nameKey: 'hebrew', countryCode: 'IL' },
+  { code: 'hi', nameKey: 'hindi', countryCode: 'IN' },
+  { code: 'hu', nameKey: 'hungarian', countryCode: 'HU' },
+  { code: 'id', nameKey: 'indonesian', countryCode: 'ID' },
+  { code: 'it', nameKey: 'italian', countryCode: 'IT' },
+  { code: 'ja', nameKey: 'japanese', countryCode: 'JP' },
+  { code: 'ko', nameKey: 'korean', countryCode: 'KR' },
+  { code: 'ky', nameKey: 'kyrgyz', countryCode: 'KG' },
+  { code: 'lt', nameKey: 'lithuanian', countryCode: 'LT' },
+  { code: 'lv', nameKey: 'latvian', countryCode: 'LV' },
+  { code: 'ms', nameKey: 'malay', countryCode: 'MY' },
+  { code: 'nb', nameKey: 'norwegian', countryCode: 'NO' },
+  { code: 'nl', nameKey: 'dutch', countryCode: 'NL' },
+  { code: 'pl', nameKey: 'polish', countryCode: 'PL' },
+  { code: 'pt', nameKey: 'portuguese', countryCode: 'PT' },
+  { code: 'pt-BR', nameKey: 'portuguese_brazil', countryCode: 'BR' },
+  { code: 'ro', nameKey: 'romanian', countryCode: 'RO' },
+  { code: 'ru', nameKey: 'russian', countryCode: 'RU' },
+  { code: 'sk', nameKey: 'slovak', countryCode: 'SK' },
+  { code: 'sl', nameKey: 'slovenian', countryCode: 'SI' },
+  { code: 'sq', nameKey: 'albanian', countryCode: 'AL' },
+  { code: 'sv', nameKey: 'swedish', countryCode: 'SE' },
+  { code: 'tl', nameKey: 'filipino', countryCode: 'PH' },
+  { code: 'zh-Hans', nameKey: 'chinese_simplified', countryCode: 'CN' },
+  { code: 'zh-Hant', nameKey: 'chinese_traditional', countryCode: 'TW' }
 ];
 
 const getFlagEmoji = (countryCode) => {
@@ -90,87 +93,76 @@ const getFlagEmoji = (countryCode) => {
   return String.fromCodePoint(...codePoints);
 };
 
-
 const SignUpScreen = ({ navigation }) => {
+  const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
-  // Estado para o modal de idiomas
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [allLanguages, setAllLanguages] = useState([]);
-  const [filteredLanguages, setFilteredLanguages] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const initialLang = ALL_LANGUAGES.find(l => l.code === i18n.language) || ALL_LANGUAGES.find(l => l.code === 'en');
   const [selectedLanguage, setSelectedLanguage] = useState({
-    code: 'en',
-    label: 'English',
-    countryCode: 'US'
+    ...initialLang,
+    label: t(`signUpScreen.languages.${initialLang.nameKey}`)
   });
 
-  const [t, setT] = useState({
-    signUp: "Sign Up",
-    fullName: "Full Name",
-    email: "E-mail",
-    shareNumber: "Share Number",
-    phone: "Phone",
-    language: "Language",
-    bySigningUp: "By signing up, you agree to our",
-    privacyPolicy: " Privacy Policy ",
-    andOur: "and our",
-    terms: " Terms and Conditions ",
-    alreadyHaveAccount: "Already have an account?",
-    signIn: "Sign In",
-    errorCreatingAccount: "Error creating your account. Please try again later.",
-    searchPlaceholder: "Search for a language"
+  const allLanguages = ALL_LANGUAGES.map(lang => ({
+    ...lang,
+    label: t(`signUpScreen.languages.${lang.nameKey}`)
+  })).sort((a, b) => a.label.localeCompare(b.label));
+
+  const [filteredLanguages, setFilteredLanguages] = useState(allLanguages);
+
+  const schema = yup.object().shape({
+    fullName: yup.string().required(t('signUpScreen.errorRequired')),
+    email: yup.string().email(t('loginScreen.invalidEmailAdress')).required(t('signUpScreen.errorRequired')),
+    shareNumber: yup.string().required(t('signUpScreen.errorRequired')),
+    phone: yup.string().required(t('signUpScreen.errorRequired')),
+    language: yup.string().required(),
   });
-
-  useEffect(() => {
-    const fetchAndTranslateData = async () => {
-      // Traduz textos estáticos da UI
-      const [signUp, fullName, email, ...rest] = await Promise.all([
-        translate("Sign Up", "en"),
-        translate("Full Name", "en"),
-        translate("E-mail", "en"),
-        // ... outras traduções estáticas
-      ]);
-      setT(prev => ({ ...prev, signUp, fullName, email, ...rest })); // Atualiza o estado t
-
-      // Traduz a lista de idiomas
-      const translatedLangs = await Promise.all(
-        ALL_LANGUAGES.map(async (lang) => {
-          const translatedName = await translate(lang.name, 'en');
-          return { ...lang, label: translatedName };
-        })
-      );
-      setAllLanguages(translatedLangs);
-      setFilteredLanguages(translatedLangs);
-    };
-
-    fetchAndTranslateData();
-  }, []);
 
   const {
     control,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      language: selectedLanguage.code
+    }
+  });
 
   const onSubmit = async (data) => {
-    // Lógica de submit
+    setLoading(true);
+    try {
+      const response = await requestSignUpGuest(data);
+      if (response.status === 201) {
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: t('signUpScreen.successTitle'),
+          textBody: t('signUpScreen.successMessage'),
+        });
+        setTimeout(() => navigation.navigate("Login"), 2000);
+      } else {
+        throw new Error(response?.data?.message || t('signUpScreen.errorCreate'));
+      }
+    } catch (error) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: t('signUpScreen.errorTitle'),
+        textBody: error.message || t('signUpScreen.errorCreate'),
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    setValue("language", selectedLanguage.code);
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => Toast.hide()
-    );
-    return () => {
-      keyboardDidHideListener.remove();
-    };
-  }, [selectedLanguage]);
+    const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => Toast.hide());
+    return () => keyboardDidHideListener.remove();
+  }, []);
 
-  const handleGoToSignIn = () => {
-    navigation.navigate("Login");
-  };
+  const handleGoToSignIn = () => navigation.navigate("Login");
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -187,10 +179,10 @@ const SignUpScreen = ({ navigation }) => {
   const handleSelectLanguage = (lang) => {
     setSelectedLanguage(lang);
     setValue('language', lang.code);
+    i18n.changeLanguage(lang.code);
     setIsModalVisible(false);
-    setSearchQuery(''); // Limpa a busca
+    setSearchQuery('');
   };
-
 
   return (
     <PaperProvider theme={theme}>
@@ -206,38 +198,42 @@ const SignUpScreen = ({ navigation }) => {
               </View>
               <ScrollView style={{ width: '100%' }} contentContainerStyle={{ alignItems: 'center' }}>
                 <View style={styles.container}>
-                  <Text style={styles.textTitle}>{t.signUp}</Text>
+                  <Text style={styles.textTitle}>{t('signUpScreen.title')}</Text>
 
-                  {/* Inputs do Formulário */}
-                  <Controller name="fullName" control={control} rules={{ required: true }} render={({ field: { onChange, onBlur, value } }) => (<TextInput label={t.fullName} mode="flat" left={<TextInput.Icon icon="account-outline" />} onBlur={onBlur} onChangeText={onChange} value={value} autoCapitalize="words" style={styles.textEmail} error={!!errors.fullName} />)} />
-                  <Controller name="email" control={control} rules={{ required: true }} render={({ field: { onChange, onBlur, value } }) => (<TextInput label={t.email} mode="flat" left={<TextInput.Icon icon="at" />} onBlur={onBlur} onChangeText={onChange} value={value} keyboardType="email-address" autoCapitalize="none" style={styles.textEmail} error={!!errors.email} />)} />
-                  <Controller name="shareNumber" control={control} rules={{ required: true }} render={({ field: { onChange, onBlur, value } }) => (<TextInput label={t.shareNumber} mode="flat" left={<TextInput.Icon icon="account-group-outline" />} onBlur={onBlur} onChangeText={onChange} value={value} autoCapitalize="none" style={styles.textEmail} error={!!errors.shareNumber} />)} />
-                  <Controller name="phone" control={control} rules={{ required: true }} render={({ field: { onChange, onBlur, value } }) => (<TextInput label={t.phone} mode="flat" left={<TextInput.Icon icon="phone-outline" />} onBlur={onBlur} onChangeText={onChange} value={value} style={styles.textPassword} error={!!errors.phone} keyboardType="phone-pad" />)} />
+                  <Controller name="fullName" control={control} render={({ field: { onChange, onBlur, value } }) => (<TextInput label={t('signUpScreen.nameLabel')} mode="flat" left={<TextInput.Icon icon="account-outline" />} onBlur={onBlur} onChangeText={onChange} value={value} autoCapitalize="words" style={styles.textEmail} error={!!errors.fullName} />)} />
+                  {errors.fullName && <Text style={styles.errorText}>{errors.fullName.message}</Text>}
 
-                  {/* Campo de Seleção de Idioma */}
-                  <Text style={styles.textLabel}>{t.language}</Text>
+                  <Controller name="email" control={control} render={({ field: { onChange, onBlur, value } }) => (<TextInput label={t('signUpScreen.emailLabel')} mode="flat" left={<TextInput.Icon icon="at" />} onBlur={onBlur} onChangeText={onChange} value={value} keyboardType="email-address" autoCapitalize="none" style={styles.textEmail} error={!!errors.email} />)} />
+                  {errors.email && <Text style={styles.errorText}>{errors.email.message}</Text>}
+
+                  <Controller name="shareNumber" control={control} render={({ field: { onChange, onBlur, value } }) => (<TextInput label={t('signUpScreen.shareNumberLabel')} mode="flat" left={<TextInput.Icon icon="account-group-outline" />} onBlur={onBlur} onChangeText={onChange} value={value} autoCapitalize="none" style={styles.textEmail} error={!!errors.shareNumber} />)} />
+                  {errors.shareNumber && <Text style={styles.errorText}>{errors.shareNumber.message}</Text>}
+
+                  <Controller name="phone" control={control} render={({ field: { onChange, onBlur, value } }) => (<TextInput label={t('signUpScreen.phoneLabel')} mode="flat" left={<TextInput.Icon icon="phone-outline" />} onBlur={onBlur} onChangeText={onChange} value={value} style={styles.textPassword} error={!!errors.phone} keyboardType="phone-pad" />)} />
+                  {errors.phone && <Text style={styles.errorText}>{errors.phone.message}</Text>}
+
+                  <Text style={styles.textLabel}>{t('signUpScreen.languageLabel')}</Text>
                   <TouchableOpacity style={combinedStyles.languageInput} onPress={() => setIsModalVisible(true)}>
                     <Text style={combinedStyles.languageInputFlag}>{getFlagEmoji(selectedLanguage.countryCode)}</Text>
                     <Text style={combinedStyles.languageInputText}>{selectedLanguage.label}</Text>
                     <Ionicons name="chevron-down" size={20} color="#6B7280" />
                   </TouchableOpacity>
 
-                  {/* Botão de Submit e Termos */}
                   <Button mode="contained" onPress={handleSubmit(onSubmit)} style={styles.button} disabled={loading}>
-                    {loading ? <ActivityIndicator color={colors.white} /> : t.signUp}
+                    {loading ? <ActivityIndicator color={colors.white} /> : t('signUpScreen.signUpButton')}
                   </Button>
                   <Text style={styles.linkPrivacy}>
-                    {t.bySigningUp}
-                    <Text style={styles.link} onPress={() => navigation.navigate("Terms")}>{t.privacyPolicy}</Text>
-                    {t.andOur}
-                    <Text style={styles.link} onPress={() => navigation.navigate("Terms")}>{t.terms}</Text>
+                    {t('signUpScreen.privacyPolicy')}
+                    <Text style={styles.link} onPress={() => navigation.navigate("Terms")}>{t('signUpScreen.privacyPolicyLink')}</Text>
+                    {t('signUpScreen.andOur')}
+                    <Text style={styles.link} onPress={() => navigation.navigate("Terms")}>{t('signUpScreen.termsAndConditionsLink')}</Text>
                   </Text>
                 </View>
               </ScrollView>
 
               <View style={styles.containerText}>
-                <Text>{t.alreadyHaveAccount}</Text>
-                <Button onPress={handleGoToSignIn} style={styles.link}>{t.signIn}</Button>
+                <Text>{t('signUpScreen.alreadyHaveAccount')}</Text>
+                <Button onPress={handleGoToSignIn} style={styles.link}>{t('signUpScreen.signIn')}</Button>
                 <Text style={screenNumberStyles.numberStyle}>03</Text>
               </View>
             </KeyboardAvoidingView>
@@ -245,7 +241,6 @@ const SignUpScreen = ({ navigation }) => {
         </SafeAreaView>
       </AlertNotificationRoot>
 
-      {/* Modal de Seleção de Idioma */}
       <Modal
         animationType="slide"
         transparent={false}
@@ -254,7 +249,7 @@ const SignUpScreen = ({ navigation }) => {
       >
         <SafeAreaView style={combinedStyles.modalContainer}>
           <View style={combinedStyles.modalHeader}>
-            <Text style={combinedStyles.modalTitle}>{t.language}</Text>
+            <Text style={combinedStyles.modalTitle}>{t('signUpScreen.languageLabel')}</Text>
             <TouchableOpacity onPress={() => setIsModalVisible(false)}>
               <Ionicons name="close" size={28} color="#111827" />
             </TouchableOpacity>
@@ -264,7 +259,7 @@ const SignUpScreen = ({ navigation }) => {
             <Ionicons name="search" size={20} color="#9CA3AF" style={combinedStyles.searchIcon} />
             <NativeTextInput
               style={combinedStyles.searchInput}
-              placeholder={t.searchPlaceholder}
+              placeholder={t('languageSelectionScreen.searchPlaceholder')}
               value={searchQuery}
               onChangeText={handleSearch}
               placeholderTextColor="#9CA3AF"
@@ -286,36 +281,21 @@ const SignUpScreen = ({ navigation }) => {
           />
         </SafeAreaView>
       </Modal>
-
     </PaperProvider>
   );
 };
 
-// --- Estilos ---
 const combinedStyles = StyleSheet.create({
   keyboardAvoidingView: { flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around', width: '85%', marginLeft: 'auto', marginRight: 'auto' },
-  languageInput: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    height: 58,
-    backgroundColor: 'rgba(230, 230, 230, 0.5)',
-    borderRadius: 4,
-    borderBottomWidth: 1,
-    borderBottomColor: '#6B7280',
-    paddingHorizontal: 14,
-    marginTop: 10,
-    marginBottom: 20,
-  },
+  languageInput: { flexDirection: 'row', alignItems: 'center', width: '100%', height: 58, backgroundColor: 'rgba(230, 230, 230, 0.5)', borderRadius: 4, borderBottomWidth: 1, borderBottomColor: '#6B7280', paddingHorizontal: 14, marginTop: 10, marginBottom: 20 },
   languageInputText: { flex: 1, fontSize: 16, color: '#1F2937' },
   languageInputFlag: { fontSize: 24, marginRight: 12 },
-  // Estilos do Modal
   modalContainer: { flex: 1, backgroundColor: '#F8F9FC' },
   modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 20, borderBottomWidth: 1, borderBottomColor: '#E5E7EB' },
   modalTitle: { fontSize: 20, fontWeight: 'bold', color: '#111827' },
   searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFFFFF', borderRadius: 12, margin: 20, paddingHorizontal: 15, elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 2 },
   searchIcon: { marginRight: 10 },
-  searchInput: { flex: 1, height: 50, fontSize: 16, color: '#111827' },
+  searchInput: { flex: 1, height: 50, fontSize: 16, color: '#111827', backgroundColor: 'transparent' },
   languageRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 16, paddingHorizontal: 20, borderBottomWidth: 1, borderBottomColor: '#E5E7EB' },
   flagEmoji: { fontSize: 24, marginRight: 15 },
   languageLabel: { fontSize: 18, color: '#1F2937' },

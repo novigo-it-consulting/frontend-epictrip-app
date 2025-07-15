@@ -9,108 +9,85 @@ import {
     ActivityIndicator,
     ScrollView
 } from "react-native";
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
+
 import colors from "../colors";
 import SearchBarHome from '../components/SearchViewHome';
 import GoBackArrow from '../components/GoBackArrow';
 import CardServicesCategoriesInside from '../components/CardServicesCategoriesInside';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { getProductsByGroup, getUploadByProduct, getCategoryByGroup, getUploadByCategory } from '../services/api';
 import ExploreCategoriesProducts from '../components/ExploreCategoriesProducts';
-// 1. Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
+import { getProductsByGroup, getUploadByProduct, getCategoryByGroup, getUploadByCategory } from '../services/api';
 
 const OffersList = () => {
     const navigation = useNavigation();
     const route = useRoute();
+    const { t } = useTranslation();
     const { group, groupData } = route.params || {};
 
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [categories, setCategories] = useState([]);
 
-    // 2. Criar um estado para armazenar os textos traduzidos
-    const [t, setT] = useState({
-        loading: "Loading...",
-        categoryFallback: "Category",
-        categories: "Categories",
-        suggestions: "Suggestions",
-    });
-
-    // 3. useEffect para buscar as traduções
     useEffect(() => {
-        const fetchTranslations = async () => {
+        const getProducts = async () => {
             try {
-                const [loading, categoryFallback, categories, suggestions] = await Promise.all([
-                    translate("Loading...", "en"),
-                    translate("Category", "en"),
-                    translate("Categories", "en"),
-                    translate("Suggestions", "en")
-                ]);
-                setT({ loading, categoryFallback, categories, suggestions });
+                let prds = [];
+                const products = await getProductsByGroup(group);
+
+                for (const product of products) {
+                    try {
+                        const upload = await getUploadByProduct(product.id);
+                        const obj = {
+                            product: product,
+                            upload: upload[0]
+                        };
+                        prds.push(obj);
+                    } catch (error) {
+                        console.warn(`Erro ao obter imagem para o produto ${product.id}:`, error);
+                        prds.push({ product: product, upload: null });
+                    }
+                }
+                return prds;
             } catch (error) {
-                console.error("Falha ao buscar traduções:", error);
+                console.error('Erro ao buscar produtos:', error);
+                return [];
             }
         };
-        fetchTranslations();
-    }, []);
 
-    const getProducts = async () => {
-        try {
-            let prds = [];
-            const products = await getProductsByGroup(group);
-
-            for (const product of products) {
-                try {
-                    const upload = await getUploadByProduct(product.id);
-                    product.description = await translate(product.description, "en");
-                    const obj = {
-                        product: product,
-                        upload: upload[0]
-                    };
-                    prds.push(obj);
-                } catch (error) {
-                    console.warn(`Erro ao obter imagem para o produto ${product.id}:`, error);
+        const getCategoriesData = async () => {
+            try {
+                let cats = [];
+                const categoriesData = await getCategoryByGroup(group);
+                for (const cat of categoriesData) {
+                    try {
+                        const upload = await getUploadByCategory(cat.categoryId);
+                        const obj = {
+                            categoryData: { cat },
+                            uri: upload[0]?.filePath
+                        };
+                        cats.push(obj);
+                    } catch (error) {
+                        console.warn("Erro ao obter conteúdo:", error);
+                        cats.push({ categoryData: { cat }, uri: null });
+                    }
                 }
+                return cats;
+            } catch (error) {
+                console.error('Erro ao buscar categorias:', error);
+                return [];
             }
-            return prds;
-        } catch (error) {
-            console.error('Erro ao buscar produtos:', error);
-            return [];
-        }
-    };
+        };
 
-    const getCategoriesData = async () => {
-        try {
-            let cats = [];
-            const categories = await getCategoryByGroup(group);
-            for (const cat of categories) {
-                try {
-                    const upload = await getUploadByCategory(cat.categoryId);
-                    cat.categoryName = await translate(cat.categoryName, "en")
-                    const obj = {
-                        categoryData: { cat },
-                        uri: upload[0]?.filePath
-                    };
-                    cats.push(obj);
-                } catch (error) {
-                    console.warn("Erro ao obter conteúdo:", error);
-                }
-            }
-            return cats;
-        } catch (error) {
-            console.error('Erro ao buscar categorias:', error);
-            return [];
-        }
-    };
-
-    useEffect(() => {
         const fetchData = async () => {
-            if (!group) return; // Garante que o grupo exista antes de buscar dados
+            if (!group) return;
             try {
                 setIsLoading(true);
-                const categoriesData = await getCategoriesData();
+                const [categoriesData, productsData] = await Promise.all([
+                    getCategoriesData(),
+                    getProducts()
+                ]);
                 setCategories(categoriesData);
-                const productsData = await getProducts();
                 setData(productsData);
             } catch (error) {
                 console.error('Erro ao buscar dados iniciais:', error);
@@ -129,8 +106,7 @@ const OffersList = () => {
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#172B4D" />
-                {/* 4. Usar o texto traduzido */}
-                <Text style={styles.loadingText}>{t.loading}</Text>
+                <Text style={styles.loadingText}>{t('offersList.loading')}</Text>
             </View>
         );
     }
@@ -140,25 +116,25 @@ const OffersList = () => {
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.headerContainer}>
                     <GoBackArrow />
-                    <Text style={styles.titleText}>{groupData?.title || t.categoryFallback}</Text>
+                    <Text style={styles.titleText}>{t(groupData?.title) || t('offersList.categoryFallback')}</Text>
                 </View>
                 <View style={styles.searchContainer}>
                     <SearchBarHome widthDesired={"90%"} />
                 </View>
                 <ScrollView style={styles.scrollView}>
                     <View style={styles.sectionContainer}>
-                        <Text style={styles.sectionTitle}>{t.categories}</Text>
+                        <Text style={styles.sectionTitle}>{t('offersList.categories')}</Text>
                         <ExploreCategoriesProducts data={categories} />
                     </View>
                     <View style={[styles.sectionContainer, { paddingTop: 8 }]}>
-                        <Text style={styles.sectionTitle}>{t.suggestions}</Text>
+                        <Text style={styles.sectionTitle}>{t('offersList.suggestions')}</Text>
                         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                             {data.map((prd) => (
                                 <TouchableOpacity key={prd.product.id} onPress={() => handlePressCard(prd.upload?.filePath, prd)}>
                                     <CardServicesCategoriesInside
-                                        title={prd.product.name}
+                                        title={t(prd.product.name)}
                                         image={prd.upload?.filePath}
-                                        description={prd.product.description}
+                                        description={t(prd.product.description)}
                                     />
                                 </TouchableOpacity>
                             ))}

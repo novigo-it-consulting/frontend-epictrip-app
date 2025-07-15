@@ -3,18 +3,21 @@ import { View, TouchableOpacity, StyleSheet, Text, Platform } from 'react-native
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
 const FooterNavBar = () => {
     const navigation = useNavigation();
     const route = useRoute();
-    const insets = useSafeAreaInsets(); // Pegando safe area do dispositivo
+    const insets = useSafeAreaInsets();
+    const { t } = useTranslation();
 
+    // Os itens agora usam chaves de tradução
     const navItems = [
-        { name: 'Home', icon: 'home', route: "Home" },
-        { name: 'Groups', icon: 'users', route: "EmConstrucaoScreen" },
-        { name: 'Requests', icon: 'bell', route: "RequestScreen" },
-        { name: 'Schedule', icon: 'calendar', route: "ScheduleScreen" },
-        { name: 'Profile', icon: 'user', route: "ProfileScreen" },
+        { nameKey: 'homeTabs.homeButton', icon: 'home', route: "Home" },
+        { nameKey: 'homeTabs.groupsButton', icon: 'users', route: "EmConstrucaoScreen" },
+        { nameKey: 'homeTabs.requestsButton', icon: 'bell', route: "RequestScreen" },
+        { nameKey: 'homeTabs.scheduleButton', icon: 'calendar', route: "ScheduleScreen" },
+        { nameKey: 'homeTabs.profileButton', icon: 'user', route: "ProfileScreen" },
     ];
 
     const handleOnPress = (routeName) => {
@@ -42,7 +45,7 @@ const FooterNavBar = () => {
                             route.name === item.route && { color: "#172B4D", fontWeight: "bold" }
                         ]}
                     >
-                        {item.name}
+                        {t(item.nameKey)}
                     </Text>
                 </TouchableOpacity>
             ))}
@@ -62,7 +65,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         width: "100%",
-        height: Platform.OS === 'ios' ? 90 : 80, // Ajusta altura para iOS e Android
+        height: Platform.OS === 'ios' ? 90 : 80,
     },
     button: {
         alignItems: 'center',

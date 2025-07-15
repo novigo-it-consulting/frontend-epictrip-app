@@ -1,27 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from 'react';
 import { StyleSheet, View, Text, Image } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-// 1. Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
+import { useTranslation } from 'react-i18next';
 
 export default function ProfileHandleSettingsLanguage() {
-  // 2. Criar estado para o texto traduzido
-  const [languageText, setLanguageText] = useState("Language");
-
-  // useEffect para buscar a tradução
-  useEffect(() => {
-    const fetchTranslation = async () => {
-      try {
-        const result = await translate("Language", "en");
-        setLanguageText(result);
-      } catch (error) {
-        console.error("Falha ao traduzir 'Language':", error);
-      }
-    };
-
-    fetchTranslation();
-  }, []); // Array vazio [] garante que rode apenas uma vez
+  const { t } = useTranslation();
 
   return (
     <AlertNotificationRoot theme={"light"}>
@@ -33,9 +17,8 @@ export default function ProfileHandleSettingsLanguage() {
               style={stylesProfile.icon}
             />
             <View style={stylesProfile.titleName}>
-              {/* 3. Usar o estado com o texto traduzido */}
               <Text style={stylesProfile.languageText}>
-                {languageText}
+                {t('profileHandleSettingsLanguage.titleLanguage')}
               </Text>
             </View>
             <View style={stylesProfile.boxNotification}>
@@ -52,11 +35,10 @@ export default function ProfileHandleSettingsLanguage() {
 
 const stylesProfile = StyleSheet.create({
   container: {
-    flex: 0.1,
-    flexDirection: "column",
+    flex: 1,
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    width: "85%",
+    paddingVertical: 8,
   },
   boxProfile: {
     width: "100%",
@@ -76,10 +58,10 @@ const stylesProfile = StyleSheet.create({
   },
   boxNotification: {
     height: 32,
-    width: "auto",
+    width: 32, // Tamanho fixo para o ícone da seta
     display: "flex",
     alignItems: "center",
-    flexDirection: "column",
+    justifyContent: 'center',
     marginLeft: "auto",
   },
   boxColor: {
@@ -87,17 +69,17 @@ const stylesProfile = StyleSheet.create({
     width: 25,
     height: 25,
     borderRadius: 24,
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: "row",
   },
   titleName: {
     marginLeft: 12,
+    flex: 1, // Permite que o texto ocupe o espaço disponível
   },
   languageText: {
-    fontSize: 14,
+    fontSize: 16,
     textAlign: "left",
     color: "#172B4D",
+    fontWeight: '600',
   },
 });

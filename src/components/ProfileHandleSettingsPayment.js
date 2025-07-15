@@ -1,26 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from 'react';
 import { StyleSheet, View, Text, Image } from "react-native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-// 1. Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
+import { useTranslation } from 'react-i18next';
+import Feather from "react-native-vector-icons/Feather";
 
 export default function ProfileHandleSettingsPayment() {
-  // 2. Criar estado para o texto traduzido
-  const [walletText, setWalletText] = useState("Wallet");
-
-  // useEffect para buscar a tradução
-  useEffect(() => {
-    const fetchTranslation = async () => {
-      try {
-        const result = await translate("Wallet", "en");
-        setWalletText(result);
-      } catch (error) {
-        console.error("Falha ao traduzir 'Wallet':", error);
-      }
-    };
-
-    fetchTranslation();
-  }, []); // Array vazio [] garante que rode apenas uma vez
+  const { t } = useTranslation();
 
   return (
     <AlertNotificationRoot theme={"light"}>
@@ -32,15 +17,14 @@ export default function ProfileHandleSettingsPayment() {
               style={stylesProfile.icon}
             />
             <View style={stylesProfile.titleName}>
-              {/* 3. Usar o estado com o texto traduzido */}
               <Text style={stylesProfile.text}>
-                {walletText}
+                {t('profileHandleHandlePayment.titlePayment')}
               </Text>
             </View>
             <View style={stylesProfile.boxNotification}>
-              {/* <View style={stylesProfile.boxColor}>
+              <View style={stylesProfile.boxColor}>
                 <Feather name="arrow-right" color={"#172B4D"} size={15} />
-              </View> */}
+              </View>
             </View>
           </View>
         </View>
@@ -51,11 +35,10 @@ export default function ProfileHandleSettingsPayment() {
 
 const stylesProfile = StyleSheet.create({
   container: {
-    flex: 0.1,
-    flexDirection: "column",
+    flex: 1,
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    width: "85%",
+    paddingVertical: 8,
   },
   boxProfile: {
     width: "100%",
@@ -64,7 +47,7 @@ const stylesProfile = StyleSheet.create({
   },
   rowContainer: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
     flexDirection: "row",
   },
@@ -74,19 +57,29 @@ const stylesProfile = StyleSheet.create({
     borderRadius: 24,
   },
   text: {
-    fontSize: 14,
+    fontSize: 16,
     textAlign: "left",
     color: "#172B4D",
+    fontWeight: '600',
   },
   boxNotification: {
     height: 32,
-    width: "auto",
+    width: 32,
     display: "flex",
     alignItems: "center",
-    flexDirection: "column",
+    justifyContent: 'center',
     marginLeft: "auto",
+  },
+  boxColor: {
+    backgroundColor: "#F6F8FA",
+    width: 25,
+    height: 25,
+    borderRadius: 24,
+    justifyContent: "center",
+    alignItems: "center",
   },
   titleName: {
     marginLeft: 12,
+    flex: 1,
   },
 });

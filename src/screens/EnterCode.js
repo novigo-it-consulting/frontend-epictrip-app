@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,23 +8,21 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Platform,
-  StyleSheet
+  StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import {
   TextInput,
   Button,
   Provider as PaperProvider,
   DefaultTheme,
-  ActivityIndicator,
   IconButton,
 } from "react-native-paper";
-import logo from "../../assets/logo.png";
 import { useForm, Controller } from "react-hook-form";
-import styles from "../styles/globalScreen.js";
-import screenNumberStyles from "../styles/ScreenNumberStyles";
-import colors from "../colors";
+import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
-import { requestValidateToken } from "../services/api";
+import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import {
   ALERT_TYPE,
   AlertNotificationRoot,
@@ -32,80 +30,52 @@ import {
 } from "react-native-alert-notification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
-// 1. Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
 
-const EnterCodeScreen = ({ navigation }) => {
+import logo from "../../assets/logo.png";
+import styles from "../styles/globalScreen.js";
+import screenNumberStyles from "../styles/ScreenNumberStyles";
+import colors from "../colors";
+import { requestValidateToken } from "../services/api";
+
+const EnterCodeScreen = () => {
   const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
+  const { t } = useTranslation();
 
-  // 2. Criar um estado para armazenar os textos traduzidos
-  const [t, setT] = useState({
-    title: "Enter your code",
-    subTitle: "A 6-digit code has been sent to your email. Check your spam folder.",
-    codeLabel: "Code",
-    continueButton: "Continue",
-    codeRequired: "Code is required",
-    maxDigits: "Maximum of 6 digits",
-    genericError: "An error occurred. Please try again later.",
+  // O schema de validação agora é definido dentro do componente
+  // para que possa acessar a função `t` do hook.
+  const schema = yup.object().shape({
+    token: yup
+      .string()
+      .required(t('enterCode.codeRequired'))
+      .length(6, t('enterCode.maxDigits')),
   });
-
-  // 3. useEffect para buscar as traduções
-  useEffect(() => {
-    const fetchTranslations = async () => {
-      try {
-        const [
-          title, subTitle, codeLabel, continueButton,
-          codeRequired, maxDigits, genericError
-        ] = await Promise.all([
-          translate("Enter your code", "en"),
-          translate("A 6-digit code has been sent to your email. Check your spam folder.", "en"),
-          translate("Code", "en"),
-          translate("Continue", "en"),
-          translate("Code is required", "en"),
-          translate("Maximum of 6 digits", "en"),
-          translate("An error occurred. Please try again later.", "en"),
-        ]);
-        setT({
-          title, subTitle, codeLabel, continueButton,
-          codeRequired, maxDigits, genericError
-        });
-      } catch (error) {
-        console.error("Falha ao buscar traduções:", error);
-      }
-    };
-    fetchTranslations();
-  }, []);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm();
-
-  const schema = yup.object().shape({
-    token: yup
-      .string() // Validar como string é melhor para comprimento
-      .required(t.codeRequired)
-      .length(6, t.maxDigits),
+  } = useForm({
+    resolver: yupResolver(schema), // Integração do Yup com o React Hook Form
   });
 
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      await schema.validate(data, { abortEarly: false });
       const response = await requestValidateToken(data);
 
       if (response.status === 200) {
         await AsyncStorage.setItem("changePasswordToken", response.data.token);
         navigation.navigate("SetNewPassword");
       } else {
-        throw new Error(t.genericError);
+        // Lança um erro se o status não for 200 para ser pego pelo catch
+        throw new Error(t('enterCode.genericError'));
       }
     } catch (error) {
-      const message = error?.response?.data?.message || error.message || t.genericError;
+      const message = error?.response?.data?.message || error.message || t('enterCode.genericError');
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        title: "Ops",
+        title: t('enterCode.errorTitle'),
         textBody: message,
       });
     } finally {
@@ -149,14 +119,13 @@ const EnterCodeScreen = ({ navigation }) => {
                 </View>
               </View>
               <View style={styles.container}>
-                {/* 4. Usar os textos traduzidos */}
-                <Text style={styles.textTitle}>{t.title}</Text>
-                <Text style={styles.linkPrivacy}>{t.subTitle}</Text>
+                <Text style={styles.textTitle}>{t('enterCode.title')}</Text>
+                <Text style={styles.linkPrivacy}>{t('enterCode.subTitle')}</Text>
                 <Controller
                   control={control}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <TextInput
-                      label={t.codeLabel}
+                      label={t('enterCode.codeLabel')}
                       mode="flat"
                       onBlur={onBlur}
                       left={<TextInput.Icon icon="shield-check-outline" />}
@@ -170,7 +139,6 @@ const EnterCodeScreen = ({ navigation }) => {
                     />
                   )}
                   name="token"
-                  rules={{ required: true }}
                   defaultValue=""
                 />
                 {errors.token && (
@@ -187,7 +155,7 @@ const EnterCodeScreen = ({ navigation }) => {
                   {loading ? (
                     <ActivityIndicator color={colors.white} />
                   ) : (
-                    t.continueButton
+                    t('enterCode.continueButton')
                   )}
                 </Button>
               </View>

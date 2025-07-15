@@ -1,41 +1,14 @@
+import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
-import { useNavigation } from '@react-navigation/native';
-import React, { useState, useEffect } from 'react';
-// 1. Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
-const EventDetails = ({ route }) => {
+const EventDetails = () => {
     const navigation = useNavigation();
+    const route = useRoute();
     const { event } = route.params;
-
-    // 2. Criar um estado para armazenar os textos traduzidos
-    const [t, setT] = useState({
-        noTitle: "Event without title",
-        today: "Today",
-        overview: "Overview",
-        noDescription: "No description available",
-        hours: "Hours",
-    });
-
-    // 3. useEffect para buscar as traduções
-    useEffect(() => {
-        const fetchTranslations = async () => {
-            try {
-                const [noTitle, today, overview, noDescription, hours] = await Promise.all([
-                    translate("Event without title", "en"),
-                    translate("Today", "en"),
-                    translate("Overview", "en"),
-                    translate("No description available", "en"),
-                    translate("Hours", "en")
-                ]);
-                setT({ noTitle, today, overview, noDescription, hours });
-            } catch (error) {
-                console.error("Falha ao buscar traduções:", error);
-            }
-        };
-        fetchTranslations();
-    }, []);
+    const { t } = useTranslation();
 
     const handleGoEvents = () => {
         navigation.navigate("ScheduleScreen");
@@ -92,7 +65,7 @@ const EventDetails = ({ route }) => {
                     {/* Header */}
                     <View style={styles.header}>
                         <View style={styles.headerTop}>
-                            <TouchableOpacity onPress={() => handleGoEvents()}>
+                            <TouchableOpacity onPress={handleGoEvents}>
                                 <ArrowLeft size={24} color="#4B5563" />
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.menuButton}>
@@ -100,15 +73,14 @@ const EventDetails = ({ route }) => {
                             </TouchableOpacity>
                         </View>
 
-                        {/* 4. Usar os textos traduzidos */}
                         <Text style={styles.eventTitle}>
-                            {event.eventName || t.noTitle}
+                            {event.eventName || t('eventDetails.noTitle')}
                         </Text>
 
                         <View style={styles.dateTimeContainer}>
                             {isEventToday() && (
                                 <View style={styles.todayBadge}>
-                                    <Text style={styles.todayText}>{t.today}</Text>
+                                    <Text style={styles.todayText}>{t('eventDetails.today')}</Text>
                                 </View>
                             )}
                             <Text style={styles.dateTimeText}>
@@ -120,16 +92,16 @@ const EventDetails = ({ route }) => {
                     {/* Content */}
                     <View style={styles.contentSection}>
                         <View style={styles.overviewSection}>
-                            <Text style={styles.sectionTitle}>{t.overview}</Text>
+                            <Text style={styles.sectionTitle}>{t('eventDetails.overview')}</Text>
                             <View style={styles.overviewTextContainer}>
                                 <Text style={styles.overviewText}>
-                                    {event.description || t.noDescription}
+                                    {event.description || t('eventDetails.noDescription')}
                                 </Text>
                             </View>
                         </View>
 
                         <View style={styles.hoursSection}>
-                            <Text style={styles.hoursTitle}>{t.hours}</Text>
+                            <Text style={styles.hoursTitle}>{t('eventDetails.hours')}</Text>
                             <Text style={styles.hoursText}>
                                 {getEventDuration()}
                             </Text>

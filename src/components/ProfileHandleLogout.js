@@ -1,26 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from 'react';
 import { StyleSheet, View, Text, Image } from "react-native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-// 1. Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
+import { useTranslation } from 'react-i18next';
 
 export default function ProfileHandleLogout() {
-  // 2. Criar estado para o texto traduzido
-  const [logoutText, setLogoutText] = useState("Logout");
-
-  // useEffect para buscar a tradução
-  useEffect(() => {
-    const fetchTranslation = async () => {
-      try {
-        const result = await translate("Logout", "en");
-        setLogoutText(result);
-      } catch (error) {
-        console.error("Falha ao traduzir 'Logout':", error);
-      }
-    };
-
-    fetchTranslation();
-  }, []); // Array vazio [] garante que rode apenas uma vez
+  const { t } = useTranslation();
 
   return (
     <AlertNotificationRoot theme={"light"}>
@@ -32,9 +16,8 @@ export default function ProfileHandleLogout() {
               style={stylesProfile.icon}
             />
             <View style={stylesProfile.titleName}>
-              {/* 3. Usar o estado com o texto traduzido */}
               <Text style={stylesProfile.logoutText}>
-                {logoutText}
+                {t('profileHandleLogout.titleHandleLogout')}
               </Text>
             </View>
           </View>
@@ -46,16 +29,17 @@ export default function ProfileHandleLogout() {
 
 const stylesProfile = StyleSheet.create({
   container: {
-    flex: 0.1,
-    flexDirection: "column",
+    flex: 1, // Ajustado para ocupar o espaço necessário
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    width: "85%",
+    paddingVertical: 8, // Adicionado padding vertical
   },
   boxProfile: {
     width: "100%",
     display: "flex",
     flexDirection: "row",
+    alignItems: 'center',
   },
   rowContainer: {
     flex: 1,
@@ -72,8 +56,9 @@ const stylesProfile = StyleSheet.create({
     marginLeft: 12,
   },
   logoutText: {
-    fontSize: 14,
+    fontSize: 16, // Aumentado para melhor legibilidade
     textAlign: "left",
     color: "#172B4D",
+    fontWeight: '600', // Adicionado peso para destaque
   },
 });

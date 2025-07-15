@@ -1,63 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
+import { Dialog, Portal, Text, Button } from 'react-native-paper';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import colors from "../colors";
 import ProfileHandleAccount from "../components/ProfileHandleAccount";
 import ProfileHandleSettingsPassword from "../components/ProfileHandleSettingsPassword";
 import ProfileHandleSettingsPayment from "../components/ProfileHandleSettingsPayment";
 import ProfileHandleLogout from "../components/ProfileHandleLogout.js";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { requestChangePasswordToken, requestGetMethodsByUser } from "../services/api.js";
-import { Dialog, Portal, Text, Button } from 'react-native-paper';
 import CustomTabBar from "../components/CustomBar";
-// 1. Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const hideDialog = () => setVisible(false);
-
-  // 2. Criar um estado para armazenar os textos traduzidos
-  const [t, setT] = useState({
-    profile: "Profile",
-    account: "Account",
-    settings: "Settings",
-    logoutConfirmTitle: "Do you really want to leave?",
-    logoutConfirmBody: "When you leave, we will clear all your data and redirect you to the login.",
-    no: "No",
-    yes: "Yes",
-    logoutError: "Error clearing data:",
-  });
-
-  // 3. useEffect para buscar as traduções
-  useEffect(() => {
-    const fetchTranslations = async () => {
-      try {
-        const [
-          profile, account, settings, logoutConfirmTitle,
-          logoutConfirmBody, no, yes, logoutError
-        ] = await Promise.all([
-          translate("Profile", "en"),
-          translate("Account", "en"),
-          translate("Settings", "en"),
-          translate("Do you really want to leave?", "en"),
-          translate("When you leave, we will clear all your data and redirect you to the login.", "en"),
-          translate("No", "en"),
-          translate("Yes", "en"),
-          translate("Error clearing data:", "en"),
-        ]);
-        setT({
-          profile, account, settings, logoutConfirmTitle,
-          logoutConfirmBody, no, yes, logoutError
-        });
-      } catch (error) {
-        console.error("Falha ao buscar traduções:", error);
-      }
-    };
-    fetchTranslations();
-  }, []);
-
 
   const handlePress = () => {
     navigation.navigate("ChangePersonalInfo");
@@ -66,9 +26,7 @@ const ProfileScreen = () => {
   const handlePressPaymentScreen = async () => {
     try {
       const userId = await AsyncStorage.getItem("userId");
-      const response = await requestGetMethodsByUser(userId);
-      // Navega para a tela da carteira independentemente da resposta,
-      // a própria tela da carteira tratará se há cartões ou não.
+      await requestGetMethodsByUser(userId);
       navigation.navigate("WalletScreen");
     } catch (error) {
       console.error("Erro ao verificar métodos de pagamento, navegando mesmo assim:", error);
@@ -77,11 +35,16 @@ const ProfileScreen = () => {
   };
 
   const handlePressChangePassword = async () => {
-    const userId = await AsyncStorage.getItem("userId");
-    const response = await requestChangePasswordToken(userId);
-    if (response.status === 200) {
-      await AsyncStorage.setItem("changePasswordToken", response.data.token);
-      navigation.navigate("SetNewPassword");
+    try {
+      const userId = await AsyncStorage.getItem("userId");
+      const response = await requestChangePasswordToken(userId);
+      if (response.status === 200) {
+        await AsyncStorage.setItem("changePasswordToken", response.data.token);
+        navigation.navigate("SetNewPassword");
+      }
+    } catch (error) {
+      console.error("Failed to get change password token:", error);
+      // Adicionar um Toast de erro para o usuário aqui, se desejar
     }
   };
 
@@ -93,7 +56,7 @@ const ProfileScreen = () => {
         routes: [{ name: "Login" }],
       });
     } catch (error) {
-      Alert.alert(t.logoutError, error.message);
+      Alert.alert(t('profileScreen.logoutErrorTitle'), error.message);
     }
   };
 
@@ -106,9 +69,8 @@ const ProfileScreen = () => {
       >
         {/* Header */}
         <View style={stylesProfile.header}>
-          {/* 4. Usar os textos traduzidos */}
           <Text style={stylesProfile.headerTitle}>
-            {t.profile}
+            {t('profileScreen.profileTitle')}
           </Text>
         </View>
 
@@ -117,7 +79,7 @@ const ProfileScreen = () => {
           {/* Account Section */}
           <View style={stylesProfile.section}>
             <Text style={stylesProfile.sectionTitle}>
-              {t.account}
+              {t('profileScreen.subTitleAccount')}
             </Text>
             <TouchableOpacity style={stylesProfile.menuItem} onPress={handlePress}>
               <ProfileHandleAccount />
@@ -127,7 +89,7 @@ const ProfileScreen = () => {
           {/* Settings Section */}
           <View style={stylesProfile.section}>
             <Text style={stylesProfile.sectionTitle}>
-              {t.settings}
+              {t('profileScreen.subuTitleSettings')}
             </Text>
 
             <TouchableOpacity
@@ -158,11 +120,11 @@ const ProfileScreen = () => {
           <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialog}>
             <Dialog.Icon icon="alert" />
             <Dialog.Title style={styles.title}>
-              {t.logoutConfirmTitle}
+              {t('logoutDialog.title')}
             </Dialog.Title>
             <Dialog.Content>
               <Text style={styles.dialogText} variant="bodyMedium">
-                {t.logoutConfirmBody}
+                {t('logoutDialog.content')}
               </Text>
             </Dialog.Content>
             <Dialog.Actions style={styles.dialogActions}>
@@ -171,20 +133,20 @@ const ProfileScreen = () => {
                 style={styles.actionButtonNo}
                 onPress={() => setVisible(false)}
               >
-                {t.no}
+                {t('logoutDialog.noButton')}
               </Button>
               <Button
                 style={styles.actionButtonYes}
                 onPress={handleConfirmLogout}
               >
-                {t.yes}
+                {t('logoutDialog.yesButton')}
               </Button>
             </Dialog.Actions>
           </Dialog>
         </Portal>
       </ScrollView>
 
-      <CustomTabBar where={"Profile"} />
+      <CustomTabBar where={t('homeTabs.profileButton')} />
     </SafeAreaView>
   );
 };
@@ -198,7 +160,7 @@ const stylesProfile = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 80, // Aumentar espaço para a tab bar
+    paddingBottom: 80,
   },
   header: {
     paddingHorizontal: 24,

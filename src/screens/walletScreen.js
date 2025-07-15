@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
     View,
     Text,
@@ -12,68 +12,75 @@ import {
     ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import GoBackArrow from "../components/GoBackArrow";
 import { requestGetMethodsByUser } from "../services/api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-// 1. Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
 
 const { width: screenWidth } = Dimensions.get("window");
 
+const EditCardForm = ({ card, onSave, onCancel, t }) => {
+    const [name, setName] = useState(card.cardName);
+    const [number, setNumber] = useState(card.cardNumber);
+    const [expDate, setExpDate] = useState(card.cardExpiration);
+    const [cvv, setCvv] = useState(card.cvv);
+
+    const handleSave = () => {
+        const updatedCard = { ...card, cardName: name, cardNumber: number, cardExpiration: expDate, cvv: cvv };
+        onSave(updatedCard);
+    };
+
+    return (
+        <View>
+            <TextInput
+                style={styles.input}
+                placeholder={t('walletScreen.cardholderName')}
+                value={name}
+                onChangeText={setName}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder={t('walletScreen.cardNumber')}
+                value={number}
+                onChangeText={setNumber}
+                keyboardType="numeric"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder={t('walletScreen.expDate')}
+                value={expDate}
+                onChangeText={setExpDate}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder={t('walletScreen.cvv')}
+                value={cvv}
+                onChangeText={setCvv}
+                keyboardType="numeric"
+            />
+            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+                <Text style={styles.saveButtonText}>{t('walletScreen.save')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
+                <Text style={styles.cancelButtonText}>{t('walletScreen.cancel')}</Text>
+            </TouchableOpacity>
+        </View>
+    );
+};
+
 const WalletScreen = () => {
+    const { t } = useTranslation();
     const [selectedCard, setSelectedCard] = useState(null);
     const [editingCard, setEditingCard] = useState(null);
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(true);
     const scrollX = useRef(new Animated.Value(0)).current;
 
-    // 2. Criar um estado para armazenar os textos traduzidos
-    const [t, setT] = useState({
-        loading: "Loading...",
-        wallet: "Wallet",
-        selected: "(selected)",
-        addNewCard: "Add new card",
-        cardholderName: "Cardholder Name",
-        cardNumber: "Card Number",
-        expDate: "Expiration Date (MM/YY)",
-        cvv: "CVV",
-        save: "Save",
-        cancel: "Cancel",
-    });
-
-    // 3. useEffect para buscar as traduções
-    useEffect(() => {
-        const fetchTranslations = async () => {
-            try {
-                const [
-                    loading, wallet, selected, addNewCard, cardholderName,
-                    cardNumber, expDate, cvv, save, cancel
-                ] = await Promise.all([
-                    translate("Loading...", "en"),
-                    translate("Wallet", "en"),
-                    translate("(selected)", "en"),
-                    translate("Add new card", "en"),
-                    translate("Cardholder Name", "en"),
-                    translate("Card Number", "en"),
-                    translate("Expiration Date (MM/YY)", "en"),
-                    translate("CVV", "en"),
-                    translate("Save", "en"),
-                    translate("Cancel", "en"),
-                ]);
-                setT({
-                    loading, wallet, selected, addNewCard, cardholderName,
-                    cardNumber, expDate, cvv, save, cancel
-                });
-            } catch (error) {
-                console.error("Falha ao buscar traduções:", error);
-            }
-        };
-        fetchTranslations();
-    }, []);
-
-
     const getUserPaymentMethods = async () => {
         try {
+            setLoading(true);
             const userId = await AsyncStorage.getItem("userId");
             const userCards = await requestGetMethodsByUser(userId);
 
@@ -93,9 +100,11 @@ const WalletScreen = () => {
         }
     };
 
-    useEffect(() => {
-        getUserPaymentMethods();
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            getUserPaymentMethods();
+        }, [])
+    );
 
     const handleEditCard = (card) => {
         setEditingCard(card.methodId);
@@ -113,7 +122,7 @@ const WalletScreen = () => {
         return (
             <SafeAreaView style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#0057FF" />
-                <Text style={styles.loadingText}>{t.loading}</Text>
+                <Text style={styles.loadingText}>{t('walletScreen.loading')}</Text>
             </SafeAreaView>
         );
     }
@@ -123,8 +132,7 @@ const WalletScreen = () => {
             <ScrollView contentContainerStyle={styles.content}>
                 <View style={styles.header}>
                     <GoBackArrow />
-                    {/* 4. Usar os textos traduzidos */}
-                    <Text style={styles.title}>{t.wallet}</Text>
+                    <Text style={styles.title}>{t('walletScreen.wallet')}</Text>
                     <View style={{ width: 24 }} />
                 </View>
 
@@ -150,7 +158,7 @@ const WalletScreen = () => {
                                             card={card}
                                             onSave={handleSaveCard}
                                             onCancel={() => setEditingCard(null)}
-                                            t={t} // Passa as traduções para o formulário
+                                            t={t}
                                         />
                                     ) : (
                                         <TouchableOpacity onPress={() => setSelectedCard(card.methodId)}>
@@ -160,7 +168,7 @@ const WalletScreen = () => {
                                                     <Ionicons name="create-outline" size={20} color="#6C757D" />
                                                 </TouchableOpacity>
                                             </View>
-                                            <Text style={styles.cardNumber}>•••• •••• •••• {card.cardNumber.slice(-4)} {selectedCard === card.methodId && <Text style={styles.selectedText}>{t.selected}</Text>}</Text>
+                                            <Text style={styles.cardNumber}>•••• •••• •••• {card.cardNumber.slice(-4)} {selectedCard === card.methodId && <Text style={styles.selectedText}>{t('walletScreen.selected')}</Text>}</Text>
                                             <View style={styles.cardFooter}>
                                                 <Text style={styles.cardName}>{card.cardName}</Text>
                                                 <Text style={styles.cardExp}>{card.cardExpiration}</Text>
@@ -172,7 +180,7 @@ const WalletScreen = () => {
                         ))}
                     </ScrollView>
                     <View style={styles.pagination}>
-                        {Array.isArray(cards) && cards.map((card, index) => {
+                        {Array.isArray(cards) && cards.map((_, index) => {
                             const inputRange = [
                                 (index - 1) * (screenWidth - 32),
                                 index * (screenWidth - 32),
@@ -183,65 +191,16 @@ const WalletScreen = () => {
                                 outputRange: [0.3, 1, 0.3],
                                 extrapolate: "clamp",
                             });
-                            return <Animated.View key={card.methodId} style={[styles.dot, { opacity: dotOpacity }]} />;
+                            return <Animated.View key={index} style={[styles.dot, { opacity: dotOpacity }]} />;
                         })}
                     </View>
                 </View>
 
                 <TouchableOpacity style={styles.addCardButton}>
-                    <Text style={styles.addCardText}>{t.addNewCard}</Text>
+                    <Text style={styles.addCardText}>{t('walletScreen.addNewCard')}</Text>
                 </TouchableOpacity>
             </ScrollView>
         </SafeAreaView>
-    );
-};
-
-const EditCardForm = ({ card, onSave, onCancel, t }) => {
-    const [name, setName] = useState(card.cardName);
-    const [number, setNumber] = useState(card.cardNumber);
-    const [expDate, setExpDate] = useState(card.cardExpiration);
-    const [cvv, setCvv] = useState(card.cvv);
-
-    const handleSave = () => {
-        const updatedCard = { ...card, cardName: name, cardNumber: number, cardExpiration: expDate, cvv: cvv };
-        onSave(updatedCard);
-    };
-
-    return (
-        <View>
-            <TextInput
-                style={styles.input}
-                placeholder={t.cardholderName}
-                value={name}
-                onChangeText={setName}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder={t.cardNumber}
-                value={number}
-                onChangeText={setNumber}
-                keyboardType="numeric"
-            />
-            <TextInput
-                style={styles.input}
-                placeholder={t.expDate}
-                value={expDate}
-                onChangeText={setExpDate}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder={t.cvv}
-                value={cvv}
-                onChangeText={setCvv}
-                keyboardType="numeric"
-            />
-            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-                <Text style={styles.saveButtonText}>{t.save}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
-                <Text style={styles.cancelButtonText}>{t.cancel}</Text>
-            </TouchableOpacity>
-        </View>
     );
 };
 
@@ -282,7 +241,7 @@ const styles = StyleSheet.create({
         width: "100%",
         padding: 16,
         borderRadius: 12,
-        minHeight: 150, // Altura mínima para o cartão
+        minHeight: 150,
     },
     selectedCard: {
         borderWidth: 2,
@@ -296,7 +255,7 @@ const styles = StyleSheet.create({
     cardNumber: {
         fontSize: 16,
         marginTop: 10,
-        letterSpacing: 2, // Melhora a legibilidade
+        letterSpacing: 2,
     },
     selectedText: {
         fontSize: 14,

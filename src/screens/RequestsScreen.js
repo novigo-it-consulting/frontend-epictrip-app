@@ -14,14 +14,14 @@ import {
 } from "react-native";
 import { Provider as PaperProvider, DefaultTheme } from "react-native-paper";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-import colors from "../colors";
-import { Ionicons } from "@expo/vector-icons";
-import CustomTabBar from "../components/CustomBar";
 import { useNavigation } from "@react-navigation/native";
-import { getRequestsByUser } from "../services/api";
+import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// 1. Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
+import { Ionicons } from "@expo/vector-icons";
+
+import colors from "../colors";
+import CustomTabBar from "../components/CustomBar";
+import { getRequestsByUser } from "../services/api";
 
 // Mapeia o status da API para uma chave consistente (não traduzível)
 const STATUS_KEYS = {
@@ -47,6 +47,7 @@ const STATUS_STYLES = {
 const FILTER_KEYS = ["all", "inProgress", "done", "waitingPayment", "paid", "unrealized"];
 
 const formatDate = (dateString) => {
+  if (!dateString) return "";
   const date = new Date(dateString);
   const options = { month: "short", day: "numeric", weekday: "short" };
   return date.toLocaleDateString("en-US", options).replace(",", "");
@@ -54,51 +55,9 @@ const formatDate = (dateString) => {
 
 const RequestScreen = () => {
   const navigation = useNavigation();
-  const [activeFilter, setActiveFilter] = useState("all"); // Usa a chave, não o texto
+  const { t } = useTranslation();
+  const [activeFilter, setActiveFilter] = useState("all");
   const [loadedRequests, setRequests] = useState([]);
-
-  // 2. Criar um estado para armazenar os textos traduzidos
-  const [t, setT] = useState({
-    requests: "Requests",
-    searchPlaceholder: "Try Disney, Food or Tickets",
-    allRequests: "All requests",
-    // Textos dos filtros e status
-    all: "All",
-    inProgress: "In progress",
-    done: "Done",
-    waitingPayment: "Waiting payment",
-    paid: "Paid",
-    unrealized: "Unrealized",
-  });
-
-  // 3. useEffect para buscar as traduções
-  useEffect(() => {
-    const fetchTranslations = async () => {
-      try {
-        const [
-          requests, searchPlaceholder, allRequests, all, inProgress,
-          done, waitingPayment, paid, unrealized
-        ] = await Promise.all([
-          translate("Requests", "en"),
-          translate("Try Disney, Food or Tickets", "en"),
-          translate("All requests", "en"),
-          translate("All", "en"),
-          translate("In progress", "en"),
-          translate("Done", "en"),
-          translate("Waiting payment", "en"),
-          translate("Paid", "en"),
-          translate("Unrealized", "en"),
-        ]);
-        setT({
-          requests, searchPlaceholder, allRequests, all, inProgress,
-          done, waitingPayment, paid, unrealized
-        });
-      } catch (error) {
-        console.error("Falha ao buscar traduções:", error);
-      }
-    };
-    fetchTranslations();
-  }, []);
 
   const handleRequestClick = (request) => {
     navigation.navigate("RequestDetailsScreen", { request });
@@ -135,9 +94,8 @@ const RequestScreen = () => {
               behavior={Platform.OS === "ios" ? "padding" : "height"}
               style={stylesRequests.container}
             >
-              {/* 4. Usar os textos traduzidos */}
               <View style={stylesRequests.headerView}>
-                <Text style={stylesRequests.screenNameText}>{t.requests}</Text>
+                <Text style={stylesRequests.screenNameText}>{t('requestScreen.requests')}</Text>
               </View>
 
               <View style={stylesRequests.searchContainer}>
@@ -149,7 +107,7 @@ const RequestScreen = () => {
                 />
                 <TextInput
                   style={stylesRequests.searchInput}
-                  placeholder={t.searchPlaceholder}
+                  placeholder={t('requestScreen.searchPlaceholder')}
                   placeholderTextColor="gray"
                 />
               </View>
@@ -167,7 +125,7 @@ const RequestScreen = () => {
                       onPress={() => setActiveFilter(filterKey)}
                     >
                       <Text style={stylesRequests.filterText(filterKey === activeFilter)}>
-                        {t[filterKey]}
+                        {t(`requestScreen.filters.${filterKey}`)}
                       </Text>
                     </TouchableOpacity>
                   ))}
@@ -175,7 +133,7 @@ const RequestScreen = () => {
               </ScrollView>
 
               <View style={stylesRequests.requestsHeader}>
-                <Text style={stylesRequests.allRequestsText}>{t.allRequests}</Text>
+                <Text style={stylesRequests.allRequestsText}>{t('requestScreen.allRequests')}</Text>
               </View>
 
               <ScrollView
@@ -184,29 +142,29 @@ const RequestScreen = () => {
                 showsVerticalScrollIndicator={false}
               >
                 {filteredRequests.map((request, index) => {
-                  const statusKey = STATUS_KEYS[request.status];
-                  const statusStyle = STATUS_STYLES[statusKey];
+                  const statusKey = STATUS_KEYS[request.status] || 'unknown';
+                  const statusStyle = STATUS_STYLES[statusKey] || { color: 'gray', icon: 'help-circle-outline' };
                   return (
                     <TouchableOpacity
                       key={index}
                       onPress={() => handleRequestClick(request)}
                       style={[
                         stylesRequests.requestCard,
-                        { borderLeftColor: statusStyle?.color || 'gray' },
+                        { borderLeftColor: statusStyle.color },
                       ]}
                     >
                       <Ionicons
-                        name={statusStyle?.icon || 'help-circle-outline'}
+                        name={statusStyle.icon}
                         size={24}
-                        color={statusStyle?.color || 'gray'}
+                        color={statusStyle.color}
                         style={stylesRequests.requestIcon}
                       />
                       <View style={stylesRequests.requestInfo}>
                         <Text style={stylesRequests.requestTitle} numberOfLines={2}>
                           {request.ai_resume}
                         </Text>
-                        <Text style={stylesRequests.requestStatus(statusStyle?.color || 'gray')}>
-                          {t[statusKey]}
+                        <Text style={stylesRequests.requestStatus(statusStyle.color)}>
+                          {t(`requestScreen.status.${statusKey}`)}
                         </Text>
                         <Text style={stylesRequests.requestDate}>{formatDate(request.created_at)}</Text>
                       </View>
@@ -218,7 +176,7 @@ const RequestScreen = () => {
             </KeyboardAvoidingView>
           </TouchableWithoutFeedback>
         </AlertNotificationRoot>
-        <CustomTabBar where={"Requests"} />
+        <CustomTabBar where={t('homeTabs.requestsButton')} />
       </SafeAreaView>
     </PaperProvider>
   );
@@ -241,7 +199,7 @@ const stylesRequests = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: 20,
-    paddingLeft: 8, // Ajuste para alinhar com o conteúdo
+    paddingLeft: 8,
   },
   screenNameText: {
     fontSize: 24,
@@ -261,6 +219,8 @@ const stylesRequests = StyleSheet.create({
   searchInput: {
     flex: 1,
     height: 40,
+    backgroundColor: 'transparent', // Para remover o fundo padrão do TextInput
+    borderWidth: 0, // Para remover a borda padrão
   },
   filterContainer: {
     paddingBottom: 16,
@@ -287,7 +247,7 @@ const stylesRequests = StyleSheet.create({
   requestsHeader: {
     marginTop: 8,
     marginBottom: 12,
-    paddingLeft: 8, // Ajuste
+    paddingLeft: 8,
   },
   allRequestsText: {
     fontSize: 18,

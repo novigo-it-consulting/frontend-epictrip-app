@@ -1,0 +1,520 @@
+{
+    "homeScreen": {
+        "title": "主屏幕",
+        "logoutButton": "登出"
+    },
+    "homeTabs": {
+        "homeButton": "首页",
+        "groupsButton": "群组",
+        "requestsButton": "请求",
+        "scheduleButton": "日程",
+        "profileButton": "个人资料"
+    },
+    "loginScreen": {
+        "title": "登录",
+        "emailLabel": "电子邮件",
+        "passwordLabel": "密码",
+        "loginButton": "登录",
+        "forgotPassword": "忘记密码？",
+        "noAccount": "没有帐户？",
+        "signUp": "注册",
+        "errorTitle": "哎呀！",
+        "genericError": "登录时出错。请重试。",
+        "invalidEmailAdress": "无效的电子邮件地址",
+        "emailRequired": "需要电子邮件",
+        "passwordMinLength": "密码必须至少包含 6 个字符",
+        "passwordRequired": "需要密码"
+    },
+    "enterCode": {
+        "title": "输入您的代码",
+        "subTitle": "一个 6 位数的代码已发送到您的电子邮件。请检查您的垃圾邮件文件夹。",
+        "codeLabel": "代码",
+        "codePlaceholder": "输入代码",
+        "continueButton": "继续",
+        "resendCode": "重新发送代码",
+        "errorTitle": "哎呀",
+        "errorMessage": "验证代码时出错。请重试。"
+    },
+    "forgetPasswordScreen": {
+        "title": "忘记密码？",
+        "subTitle": "输入您的 Epic Trip 帐户电子邮件地址",
+        "emailLabel": "电子邮件",
+        "continueButton": "继续",
+        "errorTitle": "哎呀！",
+        "noUser": "未找到使用此电子邮件的用户。",
+        "unexpectedError": "发生意外错误。请重试。",
+        "invalidEmail": "无效的电子邮件",
+        "emailRequired": "需要电子邮件"
+    },
+    "signUpScreen": {
+        "title": "注册",
+        "nameLabel": "全名",
+        "emailLabel": "电子邮件",
+        "shareNumberLabel": "分享号码",
+        "phoneLabel": "电话",
+        "languageLabel": "语言",
+        "signUpButton": "注册",
+        "privacyPolicy": "注册即表示您同意我们的",
+        "privacyPolicyLink": " 隐私政策 ",
+        "andOur": "和我们的",
+        "termsAndConditionsLink": " 条款和条件",
+        "alreadyHaveAccount": "已经有帐户了？",
+        "signIn": "登录",
+        "errorCreatingAccount": "创建您的帐户时出错。请稍后重试。",
+        "errorRequired": "此字段为必填项",
+        "successTitle": "成功！",
+        "successMessage": "帐户创建成功！",
+        "errorTitle": "哎呀！",
+        "languages": {
+            "arabic": "阿拉伯语",
+            "azerbaijani": "阿塞拜疆语",
+            "bulgarian": "保加利亚语",
+            "bengali": "孟加拉语",
+            "catalan": "加泰罗尼亚语",
+            "czech": "捷克语",
+            "danish": "丹麦语",
+            "german": "德语",
+            "greek": "希腊语",
+            "english": "英语",
+            "esperanto": "世界语",
+            "spanish": "西班牙语",
+            "estonian": "爱沙尼亚语",
+            "basque": "巴斯克语",
+            "persian": "波斯语",
+            "finnish": "芬兰语",
+            "french": "法语",
+            "irish": "爱尔兰语",
+            "galician": "加利西亚语",
+            "hebrew": "希伯来语",
+            "hindi": "印地语",
+            "hungarian": "匈牙利语",
+            "indonesian": "印度尼西亚语",
+            "italian": "意大利语",
+            "japanese": "日语",
+            "korean": "韩语",
+            "kyrgyz": "吉尔吉斯语",
+            "lithuanian": "立陶宛语",
+            "latvian": "拉脱维亚语",
+            "malay": "马来语",
+            "norwegian": "挪威语",
+            "dutch": "荷兰语",
+            "polish": "波兰语",
+            "portuguese": "葡萄牙语",
+            "portuguese_brazil": "葡萄牙语（巴西）",
+            "romanian": "罗马尼亚语",
+            "russian": "俄语",
+            "slovak": "斯洛伐克语",
+            "slovenian": "斯洛文尼亚语",
+            "albanian": "阿尔巴尼亚语",
+            "swedish": "瑞典语",
+            "filipino": "菲律宾语",
+            "chinese_simplified": "中文（简体）",
+            "chinese_traditional": "中文（繁体）"
+        }
+    },
+    "profileScreen": {
+        "profileTitle": "个人资料",
+        "subTitleAccount": "帐户",
+        "subTitleBooking": "预订",
+        "subuTitleSettings": "设置",
+        "logoutErrorTitle": "登出错误",
+        "errorProfileScreenGetUserInfo": "加载您的信息时发生错误"
+    },
+    "profileHandleChangePassword": {
+        "titleChangePassword": "更改密码"
+    },
+    "profileHandleLogout": {
+        "titleHandleLogout": "登出"
+    },
+    "profileHandleBack": {
+        "titleHandleBack": "返回"
+    },
+    "profileHandleAccount": {
+        "titleHandleAccount": "更改您的个人信息",
+        "loadingError": "正在加载姓名...",
+        "errorUpdating": "更新用户信息时发生错误，请稍后重试。"
+    },
+    "profileHandleHandlePayment": {
+        "titlePayment": "钱包"
+    },
+    "profileHandleChangeRewards": {
+        "titleRewards": "奖励"
+    },
+    "profileHandleSettingsLanguage": {
+        "titleLanguage": "语言"
+    },
+    "setNewPasswordScreen": {
+        "title": "设置您的新密码",
+        "passwordLabel": "新密码",
+        "confirmPasswordLabel": "确认新密码",
+        "continueButton": "继续",
+        "passwordsDoNotMatch": "密码不匹配",
+        "requiredField": "必填字段",
+        "errorChangingPassword": "更改密码时出错。请重试。",
+        "passwordChangedSuccess": "密码已成功更改！",
+        "successTitle": "成功！",
+        "errorTitle": "哎呀！"
+    },
+    "profileHandleBooking": {
+        "errorUserID": "加载用户 ID 失败",
+        "bookingInformation": "您的预订信息",
+        "errorProfileScreenGetUserInfo": "加载您的信息时发生错误",
+        "loadingBookingNumber": "正在加载...",
+        "reservas": "无预订"
+    },
+    "changePersonalInfo": {
+        "failedUpdate": "更新用户信息时发生错误。请稍后重试。",
+        "updateSuccess": "您的个人信息已成功更新。",
+        "failedUpdateUser": "更新用户失败。",
+        "loadingData": "加载初始数据时出错。",
+        "pictureUpdate": "您的个人资料图片已成功更新。",
+        "failedUpdatePicture": "更新个人资料图片失败",
+        "notFoundAsyncStorage": "在 AsyncStorage 中未找到用户 ID。",
+        "failedUserInfo": "获取用户信息失败。",
+        "failedUpdateUserInfo": "更新用户信息失败",
+        "permissionLibraryDenied": "访问媒体库的权限被拒绝",
+        "locationPermissionDenied": "访问位置的权限被拒绝",
+        "genderM": "男",
+        "genderF": "女",
+        "genderOther": "其他",
+        "buttonSave": "保存",
+        "labelFirstName": "名字",
+        "labelLastName": "姓氏",
+        "labelLocation": "当前位置",
+        "labelAge": "年龄",
+        "buttonUploadImage": "上传图片",
+        "personalInfo": "个人信息",
+        "errorEmptyField": "请填写所有必填字段。",
+        "alertAttention": "注意",
+        "alertSuccess": "成功",
+        "alertError": "错误"
+    },
+    "popularEvents": {
+        "title": "热门活动",
+        "vikingsGame": "Minnesota Vikings vs. New...",
+        "disneyPark": "迪士尼乐园",
+        "sugargroveLocation": "1525 Sugargrove, Orlando"
+    },
+    "exploreCategories": {
+        "categories": "探索类别"
+    },
+    "searchViewHome": {
+        "searchEvents": "尝试迪士尼、美食或门票"
+    },
+    "profileAccount": {
+        "welcome": "你好，"
+    },
+    "paymentScreen": {
+        "title": "钱包",
+        "yourCards": "无卡...",
+        "addCard": "添加卡",
+        "errorNotification": "错误",
+        "errorCards": "获取卡失败。请重试。",
+        "cardDeleted": "卡已成功删除。",
+        "deleteError": "删除卡时出错",
+        "errorDeletingCard": "发生错误"
+    },
+    "changePaymentScreen": {
+        "titleError": "错误",
+        "errorFields": "请正确填写所有字段",
+        "titleAddCard": "添加卡",
+        "buttonAddCard": "添加卡",
+        "cardAddedSuccess": "卡已成功添加！",
+        "cardAddedError": "添加卡失败。请重试。"
+    },
+    "payment": {
+        "titlePayment": "付款",
+        "buttonPayment": "进行付款",
+        "successTitle": "成功",
+        "successMessage": "付款成功！",
+        "errorTitle": "错误",
+        "errorMessage": "付款失败。请重试。",
+        "noName": "无名",
+        "expiryPlaceholder": "月/年",
+        "noCards": "未找到卡"
+    },
+    "sampleData": {
+        "categoryBooking": "预订",
+        "categoryServices": "服务",
+        "categoryConcierge": "礼宾服务",
+        "categoryTickets": "门票",
+        "categoryPlaces": "地点",
+        "categoryFood": "食物",
+        "categoryShop": "商店"
+    },
+    "bookingScreen": {
+        "title": "预订",
+        "latestBookings": "最新预订",
+        "loading": "正在加载您的预订...",
+        "yourReservations": "尚无预订",
+        "bookButton": "进行预订",
+        "aboutReservation": "关于您的预订",
+        "reservationDate": "预订日期",
+        "extendReservation": "延长预订",
+        "selectDates": "选择日期",
+        "startDate": "开始日期",
+        "endDate": "结束日期",
+        "reservationNumber": "预订号码",
+        "mainGroup": "主群组",
+        "noLinkedGroup": "无关联群组"
+    },
+    "logoutDialog": {
+        "title": "您真的要离开吗？",
+        "content": "离开后，我们将清除您的所有数据并将您重定向到登录页面。",
+        "noButton": "否",
+        "yesButton": "是，离开"
+    },
+    "experienceScreen": {
+        "errorTitle": "哎呀！",
+        "errorFetching": "获取地点时出错。",
+        "noExperience": "未找到体验",
+        "backButton": "返回",
+        "title": "体验",
+        "searchPlaceholder": "尝试迪士尼、美食或门票",
+        "categories": "类别"
+    },
+    "problemInput": {
+        "title": "电气维修",
+        "placeholder": "描述您的问题...",
+        "helperText": "请附上照片或文件以便更好地解决问题"
+    },
+    "bookingInfo": {
+        "titlePage": "预订信息",
+        "acordionOne": {
+            "title": "访问数据",
+            "content": "您可以在此处找到您的访问数据..."
+        },
+        "acordionTwo": {
+            "title": "数据共享",
+            "content": "我们如何与第三方共享您的数据..."
+        },
+        "acordionThree": {
+            "title": "有用的电话",
+            "content": "重要电话号码列表..."
+        }
+    },
+    "bookingDetails": {
+        "about": "关于您的预订",
+        "reservationDate": "预订日期",
+        "checkin": "入住：",
+        "checkout": "退房：",
+        "reservationNumber": "预订号码"
+    },
+    "chatScreen": {
+        "header": {
+            "userName": "Amiko",
+            "userStatus": "在线"
+        },
+        "messages": {
+            "sending": "发送中...",
+            "sendFailed": "发送失败",
+            "typing": "Amiko 正在输入..."
+        },
+        "input": {
+            "placeholder": "输入消息"
+        },
+        "context": {
+            "claimContext": "这是一项索赔，以下是处理它所需的数据：{{travelerDetailsClaim}}。{{requestNumberClaim}}",
+            "requestNumber": "已打开的请求 ID 是 {{requestId}}",
+            "travelerDetails": "旅客详情：预订名称：{{bookingName}}，预订状态：{{statusBooking}}，入住日期：{{checkinDate}}，退房日期：{{checkoutDate}}，姓名：{{fullName}}，人员 ID：{{userId}}，电子邮件：{{email}}，电话：{{phoneNumber}}，分享号码：{{shareNumber}}。",
+            "houseDetails": "房屋详情：房屋名称：{{houseName}}，是否为公寓房：{{isCondoHouse}}，位置：{{number}} {{address}}, {{neighbourhood}}, {{city}}, {{state}}, {{zipCode}}, {{country}}，最大容量：{{maximumCapacity}}，允许携带宠物：{{petsAllowed}}，允许吸烟：{{smokingAllowed}}，允许举办派对：{{partiesAllowed}}",
+            "amenities": "设施：有游泳池：{{hasPool}}，有烧烤架：{{hasBabercueGrill}}，有中央空调：{{hasCentralAirConditioner}}，有分体式空调：{{hasSplitterAirConditioner}}，有烘干机：{{hasDryer}}，有洗衣机：{{hasWashingMachine}}，有 Wi-Fi：{{hasWifi}}",
+            "maxCapacity": "最大住客数：{{maximumCapacity}}，总房间数：{{totalRooms}}，总浴室数：{{totalBathRooms}}",
+            "offer": "以下是一项优惠：产品名称为 {{productName}}。{{productDescription}}。严重性为 {{productSeverity}}。地址为 {{number}} {{address}}, {{neighbourhood}}, {{city}}, {{state}}, {{country}}, {{zipCode}}。\n\n",
+            "notAvailable": "不适用"
+        }
+    },
+    "selectPaymentScreen": {
+        "title": "选择付款方式",
+        "savedCards": "已保存的卡",
+        "totalProducts": "产品总计",
+        "totalTax": "税款总计",
+        "totalAmount": "总金额",
+        "payButton": "支付",
+        "addCardButton": "添加新卡",
+        "modal": {
+            "approvedTitle": "付款已批准！",
+            "rejectedTitle": "付款被拒绝！",
+            "approvedMessage": "您的付款已成功处理。",
+            "rejectedMessage": "您的付款无法处理。请重试。",
+            "returnButton": "返回请求"
+        }
+    },
+    "customBar": {
+        "product": "产品"
+    },
+    "conciergeList": {
+        "loading": "正在加载...",
+        "concierge": "礼宾服务",
+        "categories": "类别",
+        "noItems": "未找到任何项目"
+    },
+    "createNewEvent": {
+        "title1": "创建您的",
+        "title2": "精彩活动",
+        "eventNamePlaceholder": "活动名称",
+        "descriptionPlaceholder": "描述",
+        "createButton": "创建活动",
+        "errorTitle": "哎呀！",
+        "errorMessage": "创建活动时出错。请稍后重试！",
+        "emptyFields": "请填写活动名称和描述。",
+        "successTitle": "成功！",
+        "successMessage": "活动创建成功！"
+    },
+    "eventDetails": {
+        "noTitle": "无标题活动",
+        "today": "今天",
+        "overview": "概述",
+        "noDescription": "无可用描述",
+        "hours": "小时"
+    },
+    "groupUsersScreen": {
+        "title": "群组用户屏幕"
+    },
+    "offersByCategory": {
+        "loading": "正在加载...",
+        "categoryFallback": "类别",
+        "noItems": "在此类别中未找到任何项目。"
+    },
+    "offersList": {
+        "loading": "正在加载...",
+        "categoryFallback": "类别",
+        "categories": "类别",
+        "suggestions": "建议"
+    },
+    "paymentSelectCard": {
+        "title": "测试付款",
+        "buttonText": "进行付款",
+        "successTitle": "成功",
+        "successMessage": "付款成功！",
+        "errorTitle": "错误",
+        "errorMessage": "付款失败。请重试。"
+    },
+    "requestDetails": {
+        "title": "请求详情",
+        "dateNotAvailable": "日期不可用",
+        "requestTitle": "请求",
+        "paymentTitle": "付款",
+        "total": "总计",
+        "selectPaymentMethod": "选择付款方式",
+        "noDescription": "无可用描述。",
+        "status": {
+            "inProgress": "进行中",
+            "done": "已完成",
+            "waitingPayment": "等待付款",
+            "paid": "已支付",
+            "unrealized": "未实现",
+            "unknown": "未知"
+        }
+    },
+    "requestScreen": {
+        "requests": "请求",
+        "searchPlaceholder": "尝试迪士尼、美食或门票",
+        "allRequests": "所有请求",
+        "filters": {
+            "all": "全部",
+            "inProgress": "进行中",
+            "done": "已完成",
+            "waitingPayment": "等待付款",
+            "paid": "已支付",
+            "unrealized": "未实现"
+        },
+        "status": {
+            "inProgress": "进行中",
+            "done": "已完成",
+            "waitingPayment": "等待付款",
+            "paid": "已支付",
+            "unrealized": "未实现",
+            "unknown": "未知"
+        }
+    },
+    "scheduleScreen": {
+        "schedule": "日程",
+        "bookingDate": "预订日期",
+        "today": "今天",
+        "events": "活动",
+        "noTitle": "无标题活动",
+        "noEvents": "此日期无预订活动",
+        "dayNames": {
+            "sun": "周日",
+            "mon": "周一",
+            "tue": "周二",
+            "wed": "周三",
+            "thu": "周四",
+            "fri": "周五",
+            "sat": "周六"
+        }
+    },
+    "languageSelectionScreen": {
+        "title": "选择您的语言",
+        "searchPlaceholder": "搜索语言",
+        "languages": {
+            "arabic": "阿拉伯语",
+            "azerbaijani": "阿塞拜疆语",
+            "bulgarian": "保加利亚语",
+            "bengali": "孟加拉语",
+            "catalan": "加泰罗尼亚语",
+            "czech": "捷克语",
+            "danish": "丹麦语",
+            "german": "德语",
+            "greek": "希腊语",
+            "english": "英语",
+            "esperanto": "世界语",
+            "spanish": "西班牙语",
+            "estonian": "爱沙尼亚语",
+            "basque": "巴斯克语",
+            "persian": "波斯语",
+            "finnish": "芬兰语",
+            "french": "法语",
+            "irish": "爱尔兰语",
+            "galician": "加利西亚语",
+            "hebrew": "希伯来语",
+            "hindi": "印地语",
+            "hungarian": "匈牙利语",
+            "indonesian": "印度尼西亚语",
+            "italian": "意大利语",
+            "japanese": "日语",
+            "korean": "韩语",
+            "kyrgyz": "吉尔吉斯语",
+            "lithuanian": "立陶宛语",
+            "latvian": "拉脱维亚语",
+            "malay": "马来语",
+            "norwegian": "挪威语",
+            "dutch": "荷兰语",
+            "polish": "波兰语",
+            "portuguese": "葡萄牙语",
+            "portuguese_brazil": "葡萄牙语（巴西）",
+            "romanian": "罗马尼亚语",
+            "russian": "俄语",
+            "slovak": "斯洛伐克语",
+            "slovenian": "斯洛文尼亚语",
+            "albanian": "阿尔巴尼亚语",
+            "swedish": "瑞典语",
+            "filipino": "菲律宾语",
+            "chinese_simplified": "中文（简体）",
+            "chinese_traditional": "中文（繁体）"
+        }
+    },
+    "servicesScreen": {
+        "loading": "正在加载...",
+        "title": "服务"
+    },
+    "walletScreen": {
+        "loading": "正在加载...",
+        "wallet": "钱包",
+        "selected": "（已选择）",
+        "addNewCard": "添加新卡",
+        "cardholderName": "持卡人姓名",
+        "cardNumber": "卡号",
+        "expDate": "到期日期 (MM/YY)",
+        "cvv": "CVV",
+        "save": "保存",
+        "cancel": "取消"
+    },
+    "contactCard": {
+        "role": "房地产经纪人"
+    },
+    "profileHandleSettingsPrivacy": {
+        "title": "隐私"
+    }
+}

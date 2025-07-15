@@ -9,82 +9,46 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
-  SafeAreaView
+  SafeAreaView,
+  ActivityIndicator
 } from "react-native";
 import {
   TextInput,
   Button,
   Provider as PaperProvider,
   DefaultTheme,
-  ActivityIndicator,
   IconButton,
 } from "react-native-paper";
-import logo from "../../assets/logo.png";
 import { useForm, Controller } from "react-hook-form";
-import styles from "../styles/globalScreen.js";
-import screenNumberStyles from "../styles/ScreenNumberStyles";
-import colors from "../colors.js";
+import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
-import { requestGenerateToken } from "../services/api.js";
+import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 import {
   ALERT_TYPE,
   AlertNotificationRoot,
   Toast,
 } from "react-native-alert-notification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// 1. Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
 
-const ForgetPasswordScreen = ({ navigation }) => {
+import logo from "../../assets/logo.png";
+import styles from "../styles/globalScreen.js";
+import screenNumberStyles from "../styles/ScreenNumberStyles";
+import colors from "../colors.js";
+import { requestGenerateToken } from "../services/api.js";
+
+const ForgetPasswordScreen = () => {
+  const { t } = useTranslation();
+  const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [typedUsername, setTypedUsername] = useState("");
 
-  // 2. Criar um estado para armazenar os textos traduzidos
-  const [t, setT] = useState({
-    title: "Forgot Password",
-    subTitle: "Type in your Epic Trip account email address",
-    emailLabel: "E-mail",
-    continueButton: "Continue",
-    noUser: "No user found",
-    unexpectedError: "An unexpected error occurred, please try again.",
-    invalidEmail: "Invalid e-mail",
-    emailRequired: "E-mail is required",
+  const schema = yup.object().shape({
+    username: yup
+      .string()
+      .email(t('forgetPasswordScreen.invalidEmail'))
+      .required(t('forgetPasswordScreen.emailRequired')),
   });
-
-  // 3. useEffect para buscar as traduções
-  useEffect(() => {
-    const fetchTranslations = async () => {
-      try {
-        const [
-          title, subTitle, emailLabel, continueButton, noUser,
-          unexpectedError, invalidEmail, emailRequired
-        ] = await Promise.all([
-          translate("Forgot Password", "en"), // Título mais apropriado para a tela
-          translate("Type in your Epic Trip account email address", "en"),
-          translate("E-mail", "en"),
-          translate("Continue", "en"),
-          translate("No user found", "en"),
-          translate("An unexpected error occurred, please try again.", "en"),
-          translate("Invalid e-mail", "en"),
-          translate("E-mail is required", "en"),
-        ]);
-        setT({
-          title, subTitle, emailLabel, continueButton, noUser,
-          unexpectedError, invalidEmail, emailRequired
-        });
-      } catch (error) {
-        console.error("Falha ao buscar traduções:", error);
-      }
-    };
-    fetchTranslations();
-  }, []);
-
-  const fetchTypedUsername = async () => {
-    const typedUser = await AsyncStorage.getItem("username");
-    if (typedUser) {
-      setTypedUsername(typedUser);
-    }
-  };
 
   const {
     control,
@@ -92,47 +56,46 @@ const ForgetPasswordScreen = ({ navigation }) => {
     formState: { errors },
     setValue
   } = useForm({
+    resolver: yupResolver(schema),
     defaultValues: {
       username: ''
     }
   });
 
   useEffect(() => {
-    if (typedUsername) {
-      setValue('username', typedUsername)
-    }
-  }, [typedUsername, setValue])
-
-  const schema = yup.object().shape({
-    username: yup
-      .string()
-      .email(t.invalidEmail)
-      .required(t.emailRequired),
-  });
+    const fetchTypedUsername = async () => {
+      const typedUser = await AsyncStorage.getItem("username");
+      if (typedUser) {
+        setTypedUsername(typedUser);
+        setValue('username', typedUser);
+      }
+    };
+    fetchTypedUsername();
+  }, [setValue]);
 
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      await schema.validate(data, { abortEarly: false });
       const response = await requestGenerateToken(data);
-
-      if (response === 201) {
+      if (response.status === 201) { // Verifica o status da resposta
         navigation.navigate("EnterCode");
       } else {
-        throw new Error(t.unexpectedError);
+        // Lança um erro para ser pego pelo bloco catch
+        throw new Error(t('forgetPasswordScreen.unexpectedError'));
       }
     } catch (error) {
-      const message = error?.response?.data?.message || error.message || t.unexpectedError;
+      const message = error?.response?.data?.message || error.message || t('forgetPasswordScreen.unexpectedError');
+      // Trata o erro 500 especificamente como "usuário não encontrado"
       if (error?.response?.status === 500) {
         Toast.show({
           type: ALERT_TYPE.DANGER,
-          title: "Ops",
-          textBody: t.noUser,
+          title: t('forgetPasswordScreen.errorTitle'),
+          textBody: t('forgetPasswordScreen.noUser'),
         });
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
-          title: "Ops",
+          title: t('forgetPasswordScreen.errorTitle'),
           textBody: message,
         });
       }
@@ -142,7 +105,6 @@ const ForgetPasswordScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    fetchTypedUsername();
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
       () => Toast.hide()
@@ -178,15 +140,14 @@ const ForgetPasswordScreen = ({ navigation }) => {
                 </View>
               </View>
               <View style={styles.container}>
-                {/* 4. Usar os textos traduzidos */}
-                <Text style={styles.textTitle}>{t.title}</Text>
-                <Text style={styles.linkPrivacy}>{t.subTitle}</Text>
+                <Text style={styles.textTitle}>{t('forgetPasswordScreen.title')}</Text>
+                <Text style={styles.linkPrivacy}>{t('forgetPasswordScreen.subTitle')}</Text>
 
                 <Controller
                   control={control}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <TextInput
-                      label={t.emailLabel}
+                      label={t('forgetPasswordScreen.emailLabel')}
                       mode="flat"
                       onBlur={onBlur}
                       left={<TextInput.Icon icon="account-outline" />}
@@ -215,7 +176,7 @@ const ForgetPasswordScreen = ({ navigation }) => {
                   {loading ? (
                     <ActivityIndicator color={colors.white} />
                   ) : (
-                    t.continueButton
+                    t('forgetPasswordScreen.continueButton')
                   )}
                 </Button>
               </View>

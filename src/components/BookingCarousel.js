@@ -1,18 +1,14 @@
-import { useState } from "react";
 import React from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { Card, Title, Paragraph } from "react-native-paper";
 import Carousel from "react-native-reanimated-carousel";
 import { useTranslation } from "react-i18next";
-import { translate } from "../services/translations/translateServices";
 
 const BookingCarousel = () => {
   const width = Dimensions.get("window").width;
+  const { t } = useTranslation();
 
-  const handleTranslation = async (q, source) => {
-    return await translate(q, source);
-  }
-
+  // Os dados agora usam chaves de tradução para os textos
   const data = [
     {
       title: "Minnesota Vikings vs. New...",
@@ -27,11 +23,9 @@ const BookingCarousel = () => {
     // Adicione mais itens conforme necessário
   ];
 
-  const { t } = useTranslation();
-
   return (
     <View style={styles.container}>
-      <Text style={styles.titlePage}>{handleTranslation("Popular Events", "en")}</Text>
+      <Text style={styles.titlePage}>{t("popularEvents.title")}</Text>
       <Carousel
         loop
         width={width}
@@ -46,17 +40,15 @@ const BookingCarousel = () => {
             <Card style={styles.card}>
               <Card.Cover source={item.image} style={styles.image} />
               <Card.Content>
-                <Title style={styles.title}>{item.title}</Title>
+                <Title style={styles.title}>{t(item.titleKey)}</Title>
                 <Paragraph style={styles.description}>
-                  {item.description}
+                  {t(item.descriptionKey)}
                 </Paragraph>
               </Card.Content>
             </Card>
           </View>
         )}
-
       />
-
     </View>
   );
 };
@@ -64,7 +56,7 @@ const BookingCarousel = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "columm",
+    flexDirection: "column",
     alignItems: "flex-start",
     justifyContent: "space-between",
     width: "85%",
@@ -77,6 +69,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
   },
+  carouselContent: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   card: {
     backgroundColor: "#fff",
     borderRadius: 24,
@@ -88,7 +84,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 10,
-    width: "85%",
+    width: "95%", // Ajustado para não cortar a sombra
   },
   image: {
     height: 120,
@@ -98,10 +94,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: "bold",
-    textAlign: "center",
-    color: "#172B4D",
     textAlign: "left",
-    fontSize: 18,
+    color: "#172B4D",
   },
   description: {
     textAlign: "left",

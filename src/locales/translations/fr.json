@@ -1,0 +1,520 @@
+{
+    "homeScreen": {
+        "title": "Écran d'accueil",
+        "logoutButton": "Déconnexion"
+    },
+    "homeTabs": {
+        "homeButton": "Accueil",
+        "groupsButton": "Groupes",
+        "requestsButton": "Demandes",
+        "scheduleButton": "Agenda",
+        "profileButton": "Profil"
+    },
+    "loginScreen": {
+        "title": "Connexion",
+        "emailLabel": "E-mail",
+        "passwordLabel": "Mot de passe",
+        "loginButton": "Se connecter",
+        "forgotPassword": "Mot de passe oublié ?",
+        "noAccount": "Vous n'avez pas de compte ?",
+        "signUp": "S'inscrire",
+        "errorTitle": "Oups !",
+        "genericError": "Erreur de connexion. Veuillez réessayer.",
+        "invalidEmailAdress": "Adresse e-mail invalide",
+        "emailRequired": "L'e-mail est requis",
+        "passwordMinLength": "Le mot de passe doit contenir au moins 6 caractères",
+        "passwordRequired": "Le mot de passe est requis"
+    },
+    "enterCode": {
+        "title": "Entrez votre code",
+        "subTitle": "Un code à 6 chiffres a été envoyé à votre e-mail. Vérifiez votre dossier spam.",
+        "codeLabel": "Code",
+        "codePlaceholder": "Entrez le code",
+        "continueButton": "Continuer",
+        "resendCode": "Renvoyer le code",
+        "errorTitle": "Oups",
+        "errorMessage": "Erreur lors de la validation du code. Veuillez réessayer."
+    },
+    "forgetPasswordScreen": {
+        "title": "Mot de passe oublié ?",
+        "subTitle": "Saisissez l'adresse e-mail de votre compte Epic Trip",
+        "emailLabel": "E-mail",
+        "continueButton": "Continuer",
+        "errorTitle": "Oups !",
+        "noUser": "Aucun utilisateur trouvé avec cet e-mail.",
+        "unexpectedError": "Une erreur inattendue s'est produite. Veuillez réessayer.",
+        "invalidEmail": "E-mail invalide",
+        "emailRequired": "L'e-mail est requis"
+    },
+    "signUpScreen": {
+        "title": "S'inscrire",
+        "nameLabel": "Nom complet",
+        "emailLabel": "E-mail",
+        "shareNumberLabel": "Numéro de partage",
+        "phoneLabel": "Téléphone",
+        "languageLabel": "Langue",
+        "signUpButton": "S'inscrire",
+        "privacyPolicy": "En vous inscrivant, vous acceptez notre",
+        "privacyPolicyLink": " Politique de confidentialité ",
+        "andOur": "et nos",
+        "termsAndConditionsLink": " Conditions générales",
+        "alreadyHaveAccount": "Vous avez déjà un compte ?",
+        "signIn": "Se connecter",
+        "errorCreatingAccount": "Erreur lors de la création de votre compte. Veuillez réessayer plus tard.",
+        "errorRequired": "Ce champ est obligatoire",
+        "successTitle": "Succès !",
+        "successMessage": "Compte créé avec succès !",
+        "errorTitle": "Oups !",
+        "languages": {
+            "arabic": "Arabe",
+            "azerbaijani": "Azerbaïdjanais",
+            "bulgarian": "Bulgare",
+            "bengali": "Bengali",
+            "catalan": "Catalan",
+            "czech": "Tchèque",
+            "danish": "Danois",
+            "german": "Allemand",
+            "greek": "Grec",
+            "english": "Anglais",
+            "esperanto": "Espéranto",
+            "spanish": "Espagnol",
+            "estonian": "Estonien",
+            "basque": "Basque",
+            "persian": "Persan",
+            "finnish": "Finlandais",
+            "french": "Français",
+            "irish": "Irlandais",
+            "galician": "Galicien",
+            "hebrew": "Hébreu",
+            "hindi": "Hindi",
+            "hungarian": "Hongrois",
+            "indonesian": "Indonésien",
+            "italian": "Italien",
+            "japanese": "Japonais",
+            "korean": "Coréen",
+            "kyrgyz": "Kirghize",
+            "lithuanian": "Lituanien",
+            "latvian": "Letton",
+            "malay": "Malais",
+            "norwegian": "Norvégien",
+            "dutch": "Néerlandais",
+            "polish": "Polonais",
+            "portuguese": "Portugais",
+            "portuguese_brazil": "Portugais (Brésil)",
+            "romanian": "Roumain",
+            "russian": "Russe",
+            "slovak": "Slovaque",
+            "slovenian": "Slovène",
+            "albanian": "Albanais",
+            "swedish": "Suédois",
+            "filipino": "Philippin",
+            "chinese_simplified": "Chinois (simplifié)",
+            "chinese_traditional": "Chinois (traditionnel)"
+        }
+    },
+    "profileScreen": {
+        "profileTitle": "Profil",
+        "subTitleAccount": "Compte",
+        "subTitleBooking": "Réservation",
+        "subuTitleSettings": "Paramètres",
+        "logoutErrorTitle": "Erreur de déconnexion",
+        "errorProfileScreenGetUserInfo": "Une erreur s'est produite lors du chargement de vos informations"
+    },
+    "profileHandleChangePassword": {
+        "titleChangePassword": "Changer le mot de passe"
+    },
+    "profileHandleLogout": {
+        "titleHandleLogout": "Déconnexion"
+    },
+    "profileHandleBack": {
+        "titleHandleBack": "Retour"
+    },
+    "profileHandleAccount": {
+        "titleHandleAccount": "Modifier vos informations personnelles",
+        "loadingError": "Chargement du nom...",
+        "errorUpdating": "Une erreur s'est produite lors de la mise à jour des informations de l'utilisateur, veuillez réessayer plus tard."
+    },
+    "profileHandleHandlePayment": {
+        "titlePayment": "Portefeuille"
+    },
+    "profileHandleChangeRewards": {
+        "titleRewards": "Récompenses"
+    },
+    "profileHandleSettingsLanguage": {
+        "titleLanguage": "Langue"
+    },
+    "setNewPasswordScreen": {
+        "title": "Définir votre nouveau mot de passe",
+        "passwordLabel": "Nouveau mot de passe",
+        "confirmPasswordLabel": "Confirmer le nouveau mot de passe",
+        "continueButton": "Continuer",
+        "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+        "requiredField": "Champ obligatoire",
+        "errorChangingPassword": "Erreur lors du changement de mot de passe. Veuillez réessayer.",
+        "passwordChangedSuccess": "Mot de passe changé avec succès !",
+        "successTitle": "Succès !",
+        "errorTitle": "Oups !"
+    },
+    "profileHandleBooking": {
+        "errorUserID": "Échec du chargement de l'ID utilisateur",
+        "bookingInformation": "Vos informations de réservation",
+        "errorProfileScreenGetUserInfo": "Une erreur s'est produite lors du chargement de vos informations",
+        "loadingBookingNumber": "Chargement...",
+        "reservas": "Aucune réservation"
+    },
+    "changePersonalInfo": {
+        "failedUpdate": "Une erreur s'est produite lors de la mise à jour des informations de l'utilisateur. Veuillez réessayer plus tard.",
+        "updateSuccess": "Vos informations personnelles ont été mises à jour avec succès.",
+        "failedUpdateUser": "Échec de la mise à jour de l'utilisateur.",
+        "loadingData": "Erreur lors du chargement des données initiales.",
+        "pictureUpdate": "Votre photo de profil a été mise à jour avec succès.",
+        "failedUpdatePicture": "Échec de la mise à jour de la photo de profil",
+        "notFoundAsyncStorage": "ID utilisateur non trouvé dans AsyncStorage.",
+        "failedUserInfo": "Échec de la récupération des informations de l'utilisateur.",
+        "failedUpdateUserInfo": "Échec de la mise à jour des informations de l'utilisateur",
+        "permissionLibraryDenied": "L'autorisation d'accéder à la médiathèque a été refusée",
+        "locationPermissionDenied": "L'autorisation d'accéder à l'emplacement a été refusée",
+        "genderM": "Homme",
+        "genderF": "Femme",
+        "genderOther": "Autre",
+        "buttonSave": "Enregistrer",
+        "labelFirstName": "Prénom",
+        "labelLastName": "Nom de famille",
+        "labelLocation": "Emplacement actuel",
+        "labelAge": "Âge",
+        "buttonUploadImage": "Télécharger une image",
+        "personalInfo": "Informations personnelles",
+        "errorEmptyField": "Veuillez remplir tous les champs obligatoires.",
+        "alertAttention": "Attention",
+        "alertSuccess": "Succès",
+        "alertError": "Erreur"
+    },
+    "popularEvents": {
+        "title": "Événements populaires",
+        "vikingsGame": "Minnesota Vikings vs. New...",
+        "disneyPark": "Parc Disney",
+        "sugargroveLocation": "1525 Sugargrove, Orlando"
+    },
+    "exploreCategories": {
+        "categories": "Explorer les catégories"
+    },
+    "searchViewHome": {
+        "searchEvents": "Essayez Disney, Nourriture ou Billets"
+    },
+    "profileAccount": {
+        "welcome": "Bonjour,"
+    },
+    "paymentScreen": {
+        "title": "Portefeuille",
+        "yourCards": "Aucune carte...",
+        "addCard": "Ajouter une carte",
+        "errorNotification": "Erreur",
+        "errorCards": "Échec de la récupération des cartes. Veuillez réessayer.",
+        "cardDeleted": "Carte supprimée avec succès.",
+        "deleteError": "Erreur lors de la suppression de la carte",
+        "errorDeletingCard": "Une erreur s'est produite"
+    },
+    "changePaymentScreen": {
+        "titleError": "Erreur",
+        "errorFields": "Veuillez remplir tous les champs correctement",
+        "titleAddCard": "Ajouter une carte",
+        "buttonAddCard": "Ajouter une carte",
+        "cardAddedSuccess": "Carte ajoutée avec succès !",
+        "cardAddedError": "Échec de l'ajout de la carte. Veuillez réessayer."
+    },
+    "payment": {
+        "titlePayment": "Paiement",
+        "buttonPayment": "Effectuer le paiement",
+        "successTitle": "Succès",
+        "successMessage": "Paiement réussi !",
+        "errorTitle": "Erreur",
+        "errorMessage": "Le paiement a échoué. Veuillez réessayer.",
+        "noName": "Sans nom",
+        "expiryPlaceholder": "MM/AA",
+        "noCards": "Aucune carte trouvée"
+    },
+    "sampleData": {
+        "categoryBooking": "Réservations",
+        "categoryServices": "Services",
+        "categoryConcierge": "Conciergerie",
+        "categoryTickets": "Billets",
+        "categoryPlaces": "Lieux",
+        "categoryFood": "Nourriture",
+        "categoryShop": "Boutique"
+    },
+    "bookingScreen": {
+        "title": "Réservations",
+        "latestBookings": "Dernières réservations",
+        "loading": "Chargement de vos réservations...",
+        "yourReservations": "Aucune réservation pour le moment",
+        "bookButton": "Faire une réservation",
+        "aboutReservation": "À propos de votre réservation",
+        "reservationDate": "Date de réservation",
+        "extendReservation": "Prolonger la réservation",
+        "selectDates": "Sélectionner les dates",
+        "startDate": "Date de début",
+        "endDate": "Date de fin",
+        "reservationNumber": "Numéro de réservation",
+        "mainGroup": "Groupe principal",
+        "noLinkedGroup": "Aucun groupe lié"
+    },
+    "logoutDialog": {
+        "title": "Voulez-vous vraiment partir ?",
+        "content": "En partant, nous effacerons toutes vos données et vous redirigerons vers la connexion.",
+        "noButton": "Non",
+        "yesButton": "Oui, partir"
+    },
+    "experienceScreen": {
+        "errorTitle": "Oups !",
+        "errorFetching": "Erreur lors de la récupération des lieux.",
+        "noExperience": "Aucune expérience trouvée",
+        "backButton": "Retour",
+        "title": "Expérience",
+        "searchPlaceholder": "Essayez Disney, Nourriture ou Billets",
+        "categories": "Catégories"
+    },
+    "problemInput": {
+        "title": "Maintenance électrique",
+        "placeholder": "Décrivez votre problème...",
+        "helperText": "Veuillez joindre une photo ou un fichier pour une meilleure résolution du problème"
+    },
+    "bookingInfo": {
+        "titlePage": "Informations de réservation",
+        "acordionOne": {
+            "title": "Données d'accès",
+            "content": "Vous pouvez trouver vos données d'accès ici..."
+        },
+        "acordionTwo": {
+            "title": "Partage de données",
+            "content": "Comment nous partageons vos données avec des tiers..."
+        },
+        "acordionThree": {
+            "title": "Téléphones utiles",
+            "content": "Liste des numéros de téléphone importants..."
+        }
+    },
+    "bookingDetails": {
+        "about": "À propos de votre réservation",
+        "reservationDate": "Date de réservation",
+        "checkin": "Arrivée :",
+        "checkout": "Départ :",
+        "reservationNumber": "Numéro de réservation"
+    },
+    "chatScreen": {
+        "header": {
+            "userName": "Amiko",
+            "userStatus": "En ligne"
+        },
+        "messages": {
+            "sending": "Envoi...",
+            "sendFailed": "Échec de l'envoi",
+            "typing": "Amiko est en train d'écrire..."
+        },
+        "input": {
+            "placeholder": "Écrire un message"
+        },
+        "context": {
+            "claimContext": "Ceci est une réclamation, voici les données nécessaires pour la traiter : {{travelerDetailsClaim}}. {{requestNumberClaim}}",
+            "requestNumber": "L'ID de la demande ouverte est {{requestId}}",
+            "travelerDetails": "Détails du voyageur : Nom de la réservation : {{bookingName}}, Statut de la réservation : {{statusBooking}}, Date d'arrivée : {{checkinDate}}, Date de départ : {{checkoutDate}}, Nom de la personne : {{fullName}}, ID de la personne : {{userId}}, E-mail : {{email}}, Téléphone : {{phoneNumber}}, Numéro de partage : {{shareNumber}}.",
+            "houseDetails": "Détails de la maison : Nom de la maison : {{houseName}}, Est une maison en copropriété : {{isCondoHouse}}, Emplacement : {{number}} {{address}}, {{neighbourhood}}, {{city}}, {{state}}, {{zipCode}}, {{country}}, Capacité maximale : {{maximumCapacity}}, Animaux autorisés : {{petsAllowed}}, Fumeurs autorisés : {{smokingAllowed}}, Fêtes autorisées : {{partiesAllowed}}",
+            "amenities": "Équipements : A une piscine : {{hasPool}}, A un barbecue : {{hasBabercueGrill}}, A la climatisation centrale : {{hasCentralAirConditioner}}, A la climatisation split : {{hasSplitterAirConditioner}}, A un sèche-linge : {{hasDryer}}, A une machine à laver : {{hasWashingMachine}}, A le Wi-Fi : {{hasWifi}}",
+            "maxCapacity": "Invités maximum : {{maximumCapacity}}, Nombre total de chambres : {{totalRooms}}, Nombre total de salles de bain : {{totalBathRooms}}",
+            "offer": "Ce qui suit est une offre : Le nom du produit est {{productName}}. {{productDescription}}. la gravité est {{productSeverity}}. L'adresse est {{number}} {{address}}, {{neighbourhood}}, {{city}}, {{state}}, {{country}}, {{zipCode}}.\n\n",
+            "notAvailable": "N/A"
+        }
+    },
+    "selectPaymentScreen": {
+        "title": "Sélectionner le paiement",
+        "savedCards": "Cartes enregistrées",
+        "totalProducts": "Total des produits",
+        "totalTax": "Taxe totale",
+        "totalAmount": "Montant total",
+        "payButton": "Payer",
+        "addCardButton": "Ajouter une nouvelle carte",
+        "modal": {
+            "approvedTitle": "Paiement approuvé !",
+            "rejectedTitle": "Paiement rejeté !",
+            "approvedMessage": "Votre paiement a été traité avec succès.",
+            "rejectedMessage": "Votre paiement n'a pas pu être traité. Veuillez réessayer.",
+            "returnButton": "Retour aux demandes"
+        }
+    },
+    "customBar": {
+        "product": "Produit"
+    },
+    "conciergeList": {
+        "loading": "Chargement...",
+        "concierge": "Conciergerie",
+        "categories": "Catégories",
+        "noItems": "Aucun article trouvé"
+    },
+    "createNewEvent": {
+        "title1": "Créez votre",
+        "title2": "événement incroyable",
+        "eventNamePlaceholder": "Nom de l'événement",
+        "descriptionPlaceholder": "Description",
+        "createButton": "Créer un événement",
+        "errorTitle": "Oups !",
+        "errorMessage": "Erreur lors de la création de l'événement. Veuillez réessayer plus tard !",
+        "emptyFields": "Veuillez remplir le nom et la description de l'événement.",
+        "successTitle": "Succès !",
+        "successMessage": "Événement créé avec succès !"
+    },
+    "eventDetails": {
+        "noTitle": "Événement sans titre",
+        "today": "Aujourd'hui",
+        "overview": "Aperçu",
+        "noDescription": "Aucune description disponible",
+        "hours": "Heures"
+    },
+    "groupUsersScreen": {
+        "title": "Écran des utilisateurs du groupe"
+    },
+    "offersByCategory": {
+        "loading": "Chargement...",
+        "categoryFallback": "Catégorie",
+        "noItems": "Aucun article trouvé dans cette catégorie."
+    },
+    "offersList": {
+        "loading": "Chargement...",
+        "categoryFallback": "Catégorie",
+        "categories": "Catégories",
+        "suggestions": "Suggestions"
+    },
+    "paymentSelectCard": {
+        "title": "Tester le paiement",
+        "buttonText": "Effectuer le paiement",
+        "successTitle": "Succès",
+        "successMessage": "Paiement réussi !",
+        "errorTitle": "Erreur",
+        "errorMessage": "Le paiement a échoué. Veuillez réessayer."
+    },
+    "requestDetails": {
+        "title": "Détails de la demande",
+        "dateNotAvailable": "Date non disponible",
+        "requestTitle": "Demande",
+        "paymentTitle": "Paiement",
+        "total": "Total",
+        "selectPaymentMethod": "Sélectionner le mode de paiement",
+        "noDescription": "Aucune description disponible.",
+        "status": {
+            "inProgress": "En cours",
+            "done": "Terminé",
+            "waitingPayment": "En attente de paiement",
+            "paid": "Payé",
+            "unrealized": "Non réalisé",
+            "unknown": "Inconnu"
+        }
+    },
+    "requestScreen": {
+        "requests": "Demandes",
+        "searchPlaceholder": "Essayez Disney, Nourriture ou Billets",
+        "allRequests": "Toutes les demandes",
+        "filters": {
+            "all": "Toutes",
+            "inProgress": "En cours",
+            "done": "Terminées",
+            "waitingPayment": "En attente de paiement",
+            "paid": "Payées",
+            "unrealized": "Non réalisées"
+        },
+        "status": {
+            "inProgress": "En cours",
+            "done": "Terminé",
+            "waitingPayment": "En attente de paiement",
+            "paid": "Payé",
+            "unrealized": "Non réalisé",
+            "unknown": "Inconnu"
+        }
+    },
+    "scheduleScreen": {
+        "schedule": "Agenda",
+        "bookingDate": "Date de réservation",
+        "today": "Aujourd'hui",
+        "events": "Événements",
+        "noTitle": "Événement sans titre",
+        "noEvents": "Aucun événement réservé pour cette date",
+        "dayNames": {
+            "sun": "Dim",
+            "mon": "Lun",
+            "tue": "Mar",
+            "wed": "Mer",
+            "thu": "Jeu",
+            "fri": "Ven",
+            "sat": "Sam"
+        }
+    },
+    "languageSelectionScreen": {
+        "title": "Sélectionnez votre langue",
+        "searchPlaceholder": "Rechercher une langue",
+        "languages": {
+            "arabic": "Arabe",
+            "azerbaijani": "Azerbaïdjanais",
+            "bulgarian": "Bulgare",
+            "bengali": "Bengali",
+            "catalan": "Catalan",
+            "czech": "Tchèque",
+            "danish": "Danois",
+            "german": "Allemand",
+            "greek": "Grec",
+            "english": "Anglais",
+            "esperanto": "Espéranto",
+            "spanish": "Espagnol",
+            "estonian": "Estonien",
+            "basque": "Basque",
+            "persian": "Persan",
+            "finnish": "Finlandais",
+            "french": "Français",
+            "irish": "Irlandais",
+            "galician": "Galicien",
+            "hebrew": "Hébreu",
+            "hindi": "Hindi",
+            "hungarian": "Hongrois",
+            "indonesian": "Indonésien",
+            "italian": "Italien",
+            "japanese": "Japonais",
+            "korean": "Coréen",
+            "kyrgyz": "Kirghize",
+            "lithuanian": "Lituanien",
+            "latvian": "Letton",
+            "malay": "Malais",
+            "norwegian": "Norvégien",
+            "dutch": "Néerlandais",
+            "polish": "Polonais",
+            "portuguese": "Portugais",
+            "portuguese_brazil": "Portugais (Brésil)",
+            "romanian": "Roumain",
+            "russian": "Russe",
+            "slovak": "Slovaque",
+            "slovenian": "Slovène",
+            "albanian": "Albanais",
+            "swedish": "Suédois",
+            "filipino": "Philippin",
+            "chinese_simplified": "Chinois (simplifié)",
+            "chinese_traditional": "Chinois (traditionnel)"
+        }
+    },
+    "servicesScreen": {
+        "loading": "Chargement...",
+        "title": "Services"
+    },
+    "walletScreen": {
+        "loading": "Chargement...",
+        "wallet": "Portefeuille",
+        "selected": "(sélectionné)",
+        "addNewCard": "Ajouter une nouvelle carte",
+        "cardholderName": "Nom du titulaire de la carte",
+        "cardNumber": "Numéro de carte",
+        "expDate": "Date d'expiration (MM/AA)",
+        "cvv": "CVV",
+        "save": "Enregistrer",
+        "cancel": "Annuler"
+    },
+    "contactCard": {
+        "role": "Agent immobilier"
+    },
+    "profileHandleSettingsPrivacy": {
+        "title": "Confidentialité"
+    }
+}

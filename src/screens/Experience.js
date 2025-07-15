@@ -3,74 +3,37 @@ import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, Dimens
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Card, Title, Paragraph } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import { getAllPlaces } from '../services/api';
-// 1. Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
 
 const { width } = Dimensions.get('window');
 
 const ExperienceScreen = ({ navigation }) => {
-  const [activeItem, setActiveItem] = useState(0); // Inicia com o primeiro item ativo
+  const { t } = useTranslation();
+  const [activeItem, setActiveItem] = useState(0);
   const [loading, setLoading] = useState(true);
   const [places, setPlaces] = useState([]);
 
-  // 2. Criar um estado para armazenar os textos traduzidos
-  const [t, setT] = useState({
-    experiences: "Experiences",
-    searchPlaceholder: "Try Disney, Food or Tickets",
-    categories: "Categories",
-    noPlacesFound: "No places found.",
-    categoryItems: ["Parks", "Shows", "Sports", "Tours", "Events"],
-  });
+  // Array de chaves para as categorias, para facilitar o mapeamento
+  const categoryKeys = ['parks', 'shows', 'sports', 'tours', 'events'];
 
-  // 3. useEffect para buscar as traduções
   useEffect(() => {
-    const fetchTranslations = async () => {
+    const fetchPlacesData = async () => {
       try {
-        const [
-          experiences, searchPlaceholder, categories, noPlacesFound,
-          parks, shows, sports, tours, events
-        ] = await Promise.all([
-          translate("Experiences", "en"),
-          translate("Try Disney, Food or Tickets", "en"),
-          translate("Categories", "en"),
-          translate("No places found.", "en"),
-          translate("Parks", "en"),
-          translate("Shows", "en"),
-          translate("Sports", "en"),
-          translate("Tours", "en"),
-          translate("Events", "en"),
-        ]);
-        setT({
-          experiences,
-          searchPlaceholder,
-          categories,
-          noPlacesFound,
-          categoryItems: [parks, shows, sports, tours, events]
-        });
+        const response = await getAllPlaces();
+        if (response.status === 200) {
+          setPlaces(response.data.data);
+        } else {
+          console.error('Erro ao buscar dados: ', response.status);
+        }
       } catch (error) {
-        console.error("Falha ao buscar traduções:", error);
+        console.error('Erro ao buscar dados da API:', error);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchTranslations();
-  }, []);
 
-  const fetchPlacesData = async () => {
-    try {
-      const response = await getAllPlaces();
-      if (response.status === 200) {
-        setPlaces(response.data.data);
-      } else {
-        console.error('Erro ao buscar dados: ', response.status);
-      }
-    } catch (error) {
-      console.error('Erro ao buscar dados da API:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
     fetchPlacesData();
   }, []);
 
@@ -103,27 +66,26 @@ const ExperienceScreen = ({ navigation }) => {
           <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
             <Icon name="arrow-back" size={24} color="#333" />
           </TouchableOpacity>
-          {/* 4. Usar os textos traduzidos */}
-          <Text style={styles.title}>{t.experiences}</Text>
+          <Text style={styles.title}>{t('experienceScreen.title')}</Text>
         </View>
 
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchBar}
-            placeholder={t.searchPlaceholder}
+            placeholder={t('experienceScreen.searchPlaceholder')}
           />
           <Icon name="search" size={20} color="#333" style={styles.searchIcon} />
         </View>
       </View>
 
-      <Text style={styles.categoriesText}>{t.categories}</Text>
+      <Text style={styles.categoriesText}>{t('experienceScreen.categories')}</Text>
 
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.itemsContainer}
       >
-        {t.categoryItems.map((category, index) => (
+        {categoryKeys.map((key, index) => (
           <TouchableOpacity
             key={index}
             style={[
@@ -132,7 +94,9 @@ const ExperienceScreen = ({ navigation }) => {
             ]}
             onPress={() => setActiveItem(index)}
           >
-            <Text style={[styles.itemText, activeItem === index && styles.itemTextActive]}>{category}</Text>
+            <Text style={[styles.itemText, activeItem === index && styles.itemTextActive]}>
+              {t(`experienceScreen.categoryItems.${key}`)}
+            </Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -149,7 +113,7 @@ const ExperienceScreen = ({ navigation }) => {
                 </View>
               ))
             ) : (
-              <Text style={styles.noDataText}>{t.noPlacesFound}</Text>
+              <Text style={styles.noDataText}>{t('experienceScreen.noPlacesFound')}</Text>
             )}
           </View>
         </ScrollView>

@@ -1,63 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { requestGetUser } from "../services/api";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import { useTranslation } from "react-i18next";
+
+// Removido: requestGetUser e AsyncStorage, pois não eram usados para renderizar nada.
+// Se precisar deles para alguma lógica futura, podem ser adicionados novamente.
 
 export default function ProfileHandleSettingsPrivacy() {
-  const [bookingNumber, setBookingNumber] = useState("");
-  const [profilePhoto, setProfilePhoto] = useState(null);
-
-  const getUserToProfile = async () => {
-    const userId = await AsyncStorage.getItem("userId");
-    if (!userId) {
-      console.error("User ID not found in AsyncStorage");
-      return;
-    }
-
-    try {
-      const response = await requestGetUser(userId);
-      if (response.status === 200) {
-        setBookingNumber(response.data.data.shareNumber); // Assuming the response has a profilePic field for the user's photo
-      } else {
-        console.error("Failed to fetch user profile:", response.status);
-      }
-    } catch (error) {
-      console.error("An error occurred while fetching user profile:", error);
-    }
-  };
-
-  useEffect(() => {
-    getUserToProfile();
-  }, []);
+  const { t } = useTranslation();
 
   return (
     <AlertNotificationRoot theme={"light"}>
       <View style={stylesProfile.container}>
         <View style={stylesProfile.boxProfile}>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "row",
-            }}
-          >
+          <View style={stylesProfile.rowContainer}>
             <Image
               source={require("../../assets/profile/PrivacyIcon.png")}
-              style={{ width: 48, height: 48, borderRadius: 24 }}
+              style={stylesProfile.icon}
             />
             <View style={stylesProfile.titleName}>
-              <Text
-                style={{
-                  fontSize: 14,
-                  textAlign: "left",
-                  color: "#172B4D",
-                  fontWeight: "light",
-                }}
-              >
-                {"Privacy"}
+              <Text style={stylesProfile.text}>
+                {t('profileHandleSettingsPrivacy.title')}
               </Text>
             </View>
             <View style={stylesProfile.boxNotification}>
@@ -74,23 +38,39 @@ export default function ProfileHandleSettingsPrivacy() {
 
 const stylesProfile = StyleSheet.create({
   container: {
-    flex: 0.1,
-    flexDirection: "column",
+    flex: 1,
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    width: "85%",
+    paddingVertical: 8,
   },
   boxProfile: {
     width: "100%",
     display: "flex",
     flexDirection: "row",
   },
+  rowContainer: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  icon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+  },
+  text: {
+    fontSize: 16,
+    textAlign: "left",
+    color: "#172B4D",
+    fontWeight: '600',
+  },
   boxNotification: {
     height: 32,
-    width: "auto",
+    width: 32,
     display: "flex",
     alignItems: "center",
-    flexDirection: "column",
+    justifyContent: 'center',
     marginLeft: "auto",
   },
   boxColor: {
@@ -98,12 +78,11 @@ const stylesProfile = StyleSheet.create({
     width: 25,
     height: 25,
     borderRadius: 24,
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: "row",
   },
   titleName: {
     marginLeft: 12,
+    flex: 1,
   },
 });

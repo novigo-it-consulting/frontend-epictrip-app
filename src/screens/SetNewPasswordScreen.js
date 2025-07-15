@@ -10,154 +10,83 @@ import {
   Platform,
   KeyboardAvoidingView,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import {
   TextInput,
   Button,
   Provider as PaperProvider,
   DefaultTheme,
-  ActivityIndicator,
   IconButton,
 } from "react-native-paper";
-import logo from "../../assets/logo.png";
 import { useForm, Controller } from "react-hook-form";
-import styles from "../styles/globalScreen.js";
-import screenNumberStyles from "../styles/ScreenNumberStyles";
-import colors from "../colors.js";
+import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
-import { requestChangePassword } from "../services/api.js";
+import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 import {
   ALERT_TYPE,
   AlertNotificationRoot,
   Toast,
 } from "react-native-alert-notification";
-import { translate } from "../services/translations/translateServices";
 
-const SetNewPasswordScreen = ({ navigation }) => {
+import logo from "../../assets/logo.png";
+import styles from "../styles/globalScreen.js";
+import screenNumberStyles from "../styles/ScreenNumberStyles";
+import colors from "../colors.js";
+import { requestChangePassword } from "../services/api.js";
+
+const SetNewPasswordScreen = () => {
+  const { t } = useTranslation();
+  const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
-  const [t, setT] = useState({
-    title: "Set your new password",
-    passwordLabel: "Password",
-    confirmPasswordLabel: "Confirm Password",
-    continueButton: "Continue",
-    passwordsDoNotMatch: "Passwords do not match",
-    requiredField: "Required field",
-    errorChangingPassword: "Error changing password. Please try again.",
-    passwordChangedSuccess: "Password changed successfully!",
-    successTitle: "Success"
+  const schema = yup.object().shape({
+    newPassword: yup.string().required(t('setNewPasswordScreen.requiredField')),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref('newPassword'), null], t('setNewPasswordScreen.passwordsDoNotMatch'))
+      .required(t('setNewPasswordScreen.requiredField')),
   });
-
-  useEffect(() => {
-    const fetchTranslations = async () => {
-      try {
-        const [
-          title, passwordLabel, confirmPasswordLabel, continueButton,
-          passwordsDoNotMatch, requiredField, errorChangingPassword,
-          passwordChangedSuccess, successTitle
-        ] = await Promise.all([
-          translate("Set your new password", "en"),
-          translate("Password", "en"),
-          translate("Confirm Password", "en"),
-          translate("Continue", "en"),
-          translate("Passwords do not match", "en"),
-          translate("Required field", "en"),
-          translate("Error changing password. Please try again.", "en"),
-          translate("Password changed successfully!", "en"),
-          translate("Success", "en"),
-        ]);
-        setT({
-          title, passwordLabel, confirmPasswordLabel, continueButton,
-          passwordsDoNotMatch, requiredField, errorChangingPassword,
-          passwordChangedSuccess, successTitle
-        });
-      } catch (error) {
-        console.error("Falha ao buscar traduções:", error);
-      }
-    };
-    fetchTranslations();
-  }, []);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm();
-
-  const schema = yup.object().shape({
-    newPassword: yup.string().required(t.requiredField),
-    confirmPassword: yup.string().required(t.requiredField),
+  } = useForm({
+    resolver: yupResolver(schema),
   });
-
-  const defaultToastConfig = {
-    autoClose: 3000,
-    titleStyle: { fontSize: 16, fontWeight: "bold" },
-  };
-
-  const lightColors = {
-    label: "#000",
-    card: "#fcfcfc",
-    overlay: "#f0f0f0",
-    success: "#28a745",
-    danger: "rgba(255, 0, 0, 1)",
-    warning: "#ffc107",
-  };
 
   const onSubmit = async (data) => {
     setLoading(true);
-
-    if (data.newPassword !== data.confirmPassword) {
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Ops",
-        textBody: t.passwordsDoNotMatch,
-      });
-      setLoading(false);
-      return;
-    }
-
     try {
-      await schema.validate(data, { abortEarly: false });
       const response = await requestChangePassword(data);
-      console.log("API Response 0:", JSON.stringify(response, null, 2));
-
-      if (response && JSON.stringify(response, null, 2) == "200") {
+      if (response.status === 200) {
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
-          title: t.successTitle,
-          textBody: t.passwordChangedSuccess,
+          title: t('setNewPasswordScreen.successTitle'),
+          textBody: t('setNewPasswordScreen.passwordChangedSuccess'),
         });
 
         setTimeout(() => {
-          try {
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'Login' }],
-            });
-          } catch (navError) {
-            console.error("Erro de Navegação:", navError);
-            Toast.show({
-              type: ALERT_TYPE.DANGER,
-              title: "Erro de Navegação",
-              textBody: "Não foi possível ir para a tela de Login.",
-            });
-          }
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+          });
         }, 1500);
-
       } else {
-        console.log("API Response 1:", JSON.stringify(response, null, 2));
-        throw new Error(response?.data?.message || t.errorChangingPassword);
+        throw new Error(response?.data?.message || t('setNewPasswordScreen.errorChangingPassword'));
       }
     } catch (error) {
-      console.log("API Response: 2", error.message);
-      const message = error?.response?.data?.message || error.message || t.errorChangingPassword;
+      const message = error?.response?.data?.message || error.message || t('setNewPasswordScreen.errorChangingPassword');
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        title: "Ops",
+        title: t('setNewPasswordScreen.errorTitle'),
         textBody: message,
       });
+    } finally {
       setLoading(false);
     }
   };
@@ -178,11 +107,7 @@ const SetNewPasswordScreen = ({ navigation }) => {
 
   return (
     <PaperProvider theme={theme}>
-      <AlertNotificationRoot
-        toastConfig={defaultToastConfig}
-        colors={[lightColors]}
-        theme={"light"}
-      >
+      <AlertNotificationRoot theme={"light"}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -201,12 +126,13 @@ const SetNewPasswordScreen = ({ navigation }) => {
               </View>
             </View>
             <View style={styles.container}>
-              <Text style={styles.textTitle}>{t.title}</Text>
+              <Text style={styles.textTitle}>{t('setNewPasswordScreen.title')}</Text>
               <Controller
                 control={control}
+                name="newPassword"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    label={t.passwordLabel}
+                    label={t('setNewPasswordScreen.passwordLabel')}
                     mode="flat"
                     onBlur={onBlur}
                     left={<TextInput.Icon icon="account-key-outline" />}
@@ -224,15 +150,18 @@ const SetNewPasswordScreen = ({ navigation }) => {
                     error={!!errors.newPassword}
                   />
                 )}
-                name="newPassword"
-                rules={{ required: true }}
-                defaultValue=""
               />
+              {errors.newPassword && (
+                <Text style={{ color: colors.error }}>
+                  {errors.newPassword.message}
+                </Text>
+              )}
               <Controller
                 control={control}
+                name="confirmPassword"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    label={t.confirmPasswordLabel}
+                    label={t('setNewPasswordScreen.confirmPasswordLabel')}
                     mode="flat"
                     left={<TextInput.Icon icon="account-key-outline" />}
                     onBlur={onBlur}
@@ -256,9 +185,6 @@ const SetNewPasswordScreen = ({ navigation }) => {
                     error={!!errors.confirmPassword}
                   />
                 )}
-                name="confirmPassword"
-                rules={{ required: true }}
-                defaultValue=""
               />
               {errors.confirmPassword && (
                 <Text style={{ color: colors.error }}>
@@ -274,7 +200,7 @@ const SetNewPasswordScreen = ({ navigation }) => {
                 {loading ? (
                   <ActivityIndicator color={colors.white} />
                 ) : (
-                  t.continueButton
+                  t('setNewPasswordScreen.continueButton')
                 )}
               </Button>
             </View>

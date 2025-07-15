@@ -8,56 +8,37 @@ import {
   StyleSheet,
 } from 'react-native';
 import { Plus } from 'lucide-react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import { requestGetEvents } from '../services/api';
 import CustomTabBar from "../components/CustomBar";
-// 1. Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
 
 const ScheduleScreen = () => {
   const navigation = useNavigation();
+  const { t } = useTranslation();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [dates, setDates] = useState([]);
   const [events, setEvents] = useState([]);
 
-  // 2. Criar um estado para armazenar os textos traduzidos
-  const [t, setT] = useState({
-    schedule: "Schedule",
-    bookingDate: "Booking date",
-    today: "Today",
-    events: "Events",
-    noTitle: "Event without title",
-    noEvents: "No event booked for this date",
-    dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-  });
+  const dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
-  // 3. useEffect para buscar as traduções
-  useEffect(() => {
-    const fetchTranslations = async () => {
-      try {
-        const [
-          schedule, bookingDate, today, events, noTitle, noEvents,
-          sun, mon, tue, wed, thu, fri, sat
-        ] = await Promise.all([
-          translate("Schedule", "en"),
-          translate("Booking date", "en"),
-          translate("Today", "en"),
-          translate("Events", "en"),
-          translate("Event without title", "en"),
-          translate("No event booked for this date", "en"),
-          translate("Sun", "en"), translate("Mon", "en"), translate("Tue", "en"),
-          translate("Wed", "en"), translate("Thu", "en"), translate("Fri", "en"), translate("Sat", "en"),
-        ]);
-        setT({
-          schedule, bookingDate, today, events, noTitle, noEvents,
-          dayNames: [sun, mon, tue, wed, thu, fri, sat]
-        });
-      } catch (error) {
-        console.error("Falha ao buscar traduções:", error);
+  const getEvents = async () => {
+    try {
+      const response = await requestGetEvents();
+      if (response && Array.isArray(response.data)) {
+        setEvents(response.data);
       }
-    };
-    fetchTranslations();
-  }, []);
+    } catch (error) {
+      console.error('Erro ao buscar eventos:', error);
+    }
+  };
+
+  // Usando useFocusEffect para recarregar os eventos sempre que a tela for focada
+  useFocusEffect(
+    React.useCallback(() => {
+      getEvents();
+    }, [])
+  );
 
   useEffect(() => {
     const generateWeekDates = () => {
@@ -67,9 +48,8 @@ const ScheduleScreen = () => {
       for (let i = 0; i < 7; i++) {
         const date = new Date(today);
         date.setDate(today.getDate() + i);
-
         weekDates.push({
-          day: t.dayNames[date.getDay()], // Usa os nomes dos dias traduzidos
+          day: t(`scheduleScreen.dayNames.${dayKeys[date.getDay()]}`),
           date: date.getDate(),
           fullDate: new Date(date),
         });
@@ -78,8 +58,7 @@ const ScheduleScreen = () => {
     };
 
     generateWeekDates();
-    getEvents();
-  }, [t.dayNames]); // Roda novamente quando as traduções dos dias chegam
+  }, [t]); // A dependência 't' garante que os dias da semana sejam atualizados ao mudar o idioma
 
   const isSameDate = (date1, date2) => {
     return (
@@ -126,17 +105,6 @@ const ScheduleScreen = () => {
     navigation.navigate('EventDetails', { event });
   };
 
-  const getEvents = async () => {
-    try {
-      const response = await requestGetEvents();
-      if (response && Array.isArray(response.data)) {
-        setEvents(response.data);
-      }
-    } catch (error) {
-      console.error('Erro ao buscar eventos:', error);
-    }
-  };
-
   const getEventColor = (index) => {
     const colors = ['#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444'];
     return colors[index % colors.length];
@@ -150,8 +118,7 @@ const ScheduleScreen = () => {
         {/* Cabeçalho */}
         <View style={styles.headerContainer}>
           <View style={styles.header}>
-            {/* 4. Usar os textos traduzidos */}
-            <Text style={styles.headerTitle}>{t.schedule}</Text>
+            <Text style={styles.headerTitle}>{t('scheduleScreen.schedule')}</Text>
             <TouchableOpacity style={styles.addButton} onPress={handleGoCreateNewEvent}>
               <Plus size={18} color="#4B5563" />
             </TouchableOpacity>
@@ -159,7 +126,7 @@ const ScheduleScreen = () => {
 
           {/* Seção de Datas */}
           <View>
-            <Text style={styles.sectionTitle}>{t.bookingDate}</Text>
+            <Text style={styles.sectionTitle}>{t('scheduleScreen.bookingDate')}</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               {dates.map(dateItem => {
                 const isActive = isSameDate(selectedDate, dateItem.fullDate);
@@ -184,7 +151,7 @@ const ScheduleScreen = () => {
         {/* Seção de Eventos */}
         <View style={styles.todayContainer}>
           <Text style={styles.sectionTitle}>
-            {isSameDate(selectedDate, new Date()) ? t.today : t.events}
+            {isSameDate(selectedDate, new Date()) ? t('scheduleScreen.today') : t('scheduleScreen.events')}
           </Text>
           <View style={styles.eventsList}>
             {selectedDateEvents.length > 0 ? (
@@ -193,7 +160,7 @@ const ScheduleScreen = () => {
                   <View style={[styles.eventCard, { borderLeftColor: getEventColor(index) }]}>
                     <View style={styles.eventDetails}>
                       <Text style={styles.eventTitle}>
-                        {event.eventName || t.noTitle}
+                        {event.eventName || t('scheduleScreen.noTitle')}
                       </Text>
                       <Text style={styles.eventTime}>
                         {formatEventTime(event.startsAt, event.endsAt)}
@@ -209,13 +176,13 @@ const ScheduleScreen = () => {
               ))
             ) : (
               <View style={styles.noEventsContainer}>
-                <Text style={styles.noEventsText}>{t.noEvents}</Text>
+                <Text style={styles.noEventsText}>{t('scheduleScreen.noEvents')}</Text>
               </View>
             )}
           </View>
         </View>
       </ScrollView>
-      <CustomTabBar />
+      <CustomTabBar where={t('homeTabs.scheduleButton')} />
     </SafeAreaView>
   );
 };

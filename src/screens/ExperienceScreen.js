@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
-  StyleSheet,
   View,
   Text,
+  StyleSheet,
   FlatList,
   ActivityIndicator,
   TouchableOpacity,
@@ -12,85 +12,51 @@ import {
   Toast,
   ALERT_TYPE,
 } from "react-native-alert-notification";
+import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from 'react-i18next';
+import { Searchbar, IconButton } from "react-native-paper";
+import { useSharedValue } from "react-native-reanimated";
+
 import ListItem from "../components/ListItem";
 import colors from "../colors";
-import { IconButton } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
-import { Searchbar } from "react-native-paper";
-import { useSharedValue } from "react-native-reanimated";
 import CustomTabBar from "../components/CustomBar";
 import { getAllPlaces } from "../services/api";
-// 1. Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
 
 const ExperienceScreen = () => {
+  const { t } = useTranslation();
+  const navigation = useNavigation();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const scrollX = useSharedValue(0);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const navigation = useNavigation();
-
-  // 2. Criar um estado para armazenar os textos traduzidos
-  const [t, setT] = useState({
-    noExperience: "No Experience",
-    back: "Back",
-    experience: "Experience",
-    searchPlaceholder: "Try Disney, Food or Tickets",
-    errorFetching: "Error fetching places",
-    categories: "Categories",
-  });
-
-  // 3. useEffect para buscar as traduções
   useEffect(() => {
-    const fetchTranslations = async () => {
+    const fetchPlacesData = async () => {
       try {
-        const [
-          noExperience, back, experience, searchPlaceholder,
-          errorFetching, categories
-        ] = await Promise.all([
-          translate("No Experience", "en"),
-          translate("Back", "en"),
-          translate("Experience", "en"),
-          translate("Try Disney, Food or Tickets", "en"),
-          translate("Error fetching places", "en"),
-          translate("Categories", "en"),
-        ]);
-        setT({ noExperience, back, experience, searchPlaceholder, errorFetching, categories });
+        setLoading(true);
+        const response = await getAllPlaces();
+        if (response.status === 200) {
+          setData(response.data.data);
+        } else {
+          Toast.show({
+            type: ALERT_TYPE.DANGER,
+            title: t('experienceScreen.errorTitle'),
+            textBody: t('experienceScreen.errorFetching'),
+          });
+        }
       } catch (error) {
-        console.error("Falha ao buscar traduções:", error);
-      }
-    };
-    fetchTranslations();
-  }, []);
-
-  const fetchPlacesData = async () => {
-    try {
-      setLoading(true);
-      const response = await getAllPlaces();
-      if (response.status === 200) {
-        setData(response.data.data); // Ajustado para response.data.data
-      } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
-          title: "Ops",
-          textBody: t.errorFetching, // Usando a tradução
+          title: t('experienceScreen.errorTitle'),
+          textBody: t('experienceScreen.errorFetching'),
         });
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Ops",
-        textBody: t.errorFetching, // Usando a tradução
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  useEffect(() => {
     fetchPlacesData();
-  }, []);
+  }, [t]);
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -107,13 +73,12 @@ const ExperienceScreen = () => {
           <ActivityIndicator size="large" color={colors.primary} />
         ) : data.length === 0 ? (
           <View style={styles.noDataView}>
-            {/* 4. Usar os textos traduzidos */}
-            <Text style={styles.noDataText}>{t.noExperience}</Text>
+            <Text style={styles.noDataText}>{t('experienceScreen.noExperience')}</Text>
             <TouchableOpacity
               style={styles.addButton}
               onPress={handleGoBack}
             >
-              <Text style={styles.addButtonText}>{t.back}</Text>
+              <Text style={styles.addButtonText}>{t('experienceScreen.backButton')}</Text>
             </TouchableOpacity>
           </View>
         ) : (
@@ -126,16 +91,16 @@ const ExperienceScreen = () => {
                   size={30}
                 />
               </TouchableOpacity>
-              <Text style={styles.title}>{t.experience}</Text>
+              <Text style={styles.title}>{t('experienceScreen.title')}</Text>
             </View>
             <Searchbar
               style={styles.searchbar}
-              placeholder={t.searchPlaceholder}
+              placeholder={t('experienceScreen.searchPlaceholder')}
               onChangeText={setSearchQuery}
               value={searchQuery}
             />
             <View style={styles.container}>
-              <Text style={styles.titlePage}>{t.categories}</Text>
+              <Text style={styles.titlePage}>{t('experienceScreen.categories')}</Text>
               <FlatList
                 data={data}
                 horizontal
@@ -144,13 +109,13 @@ const ExperienceScreen = () => {
                 scrollEventThrottle={16}
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item, index }) => ( // Adicionado index
+                renderItem={({ item, index }) => (
                   <ListItem
                     style={styles.listItem}
                     scrollX={scrollX}
-                    index={index} // Passando o index correto
+                    index={index}
                     dataLength={data.length}
-                    title={item.title} // Supondo que o item tenha uma propriedade 'title'
+                    title={item.overview} // Usando 'overview' como título
                     id={item.id}
                     onPress={() => { }}
                   />

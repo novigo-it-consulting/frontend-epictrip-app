@@ -15,14 +15,14 @@ import {
 } from "react-native-alert-notification";
 import Carousel from "react-native-reanimated-carousel";
 import "react-native-gesture-handler";
-import colors from "../colors";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 import { IconButton } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import colors from "../colors";
 import { requestGetMethodsByUser, requestDeletePaymentMethod } from "../services/api";
 import CustomTabBar from "../components/CustomBar";
-// 1. Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -31,94 +31,24 @@ const PaymentScreen = () => {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
-
-  // 2. Criar um estado para armazenar os textos traduzidos
-  const [t, setT] = useState({
-    wallet: "Wallet",
-    noCards: "No cards...",
-    addCard: "Add Card",
-    noName: "No Name",
-    errorTitle: "Error",
-    unexpectedFormatError: "Unexpected response format. Please try again.",
-    noCardsFoundError: "No cards found for this user",
-    fetchError: "Failed to fetch cards. Please try again.",
-    deleteSuccess: "Card deleted successfully.",
-    deleteErrorTitle: "Error deleting card",
-    genericError: "An error occurred",
-  });
-
-  // 3. useEffect para buscar as traduções
-  useEffect(() => {
-    const fetchTranslations = async () => {
-      try {
-        const [
-          wallet, noCards, addCard, noName, errorTitle, unexpectedFormatError,
-          noCardsFoundError, fetchError, deleteSuccess, deleteErrorTitle, genericError
-        ] = await Promise.all([
-          translate("Wallet", "en"),
-          translate("No cards...", "en"),
-          translate("Add Card", "en"),
-          translate("No Name", "en"),
-          translate("Error", "en"),
-          translate("Unexpected response format. Please try again.", "en"),
-          translate("No cards found for this user", "en"),
-          translate("Failed to fetch cards. Please try again.", "en"),
-          translate("Card deleted successfully.", "en"),
-          translate("Error deleting card", "en"),
-          translate("An error occurred", "en"),
-        ]);
-        setT({
-          wallet, noCards, addCard, noName, errorTitle, unexpectedFormatError,
-          noCardsFoundError, fetchError, deleteSuccess, deleteErrorTitle, genericError
-        });
-      } catch (error) {
-        console.error("Falha ao buscar traduções:", error);
-      }
-    };
-    fetchTranslations();
-  }, []);
-
-
-  const defaultToastConfig = {
-    autoClose: 3000,
-    titleStyle: { fontSize: 16, fontWeight: "bold" },
-  };
-
-  const lightColors = {
-    label: "#000",
-    card: "#fcfcfc",
-    overlay: "#f0f0f0",
-    success: "#28a745",
-    danger: "rgba(255, 0, 0, 1)",
-    warning: "#ffc107",
-  };
-
-  const handleEditPress = async (cardId) => {
-    await AsyncStorage.setItem("cardId", cardId);
-    navigation.navigate("UpdateCard");
-  };
+  const { t } = useTranslation();
 
   const fetchCards = async () => {
     try {
+      setLoading(true);
       const userId = await AsyncStorage.getItem("userId");
       const response = await requestGetMethodsByUser(userId);
       if (response.status === 200 || response.status === 201) {
         setCards(response.data.data);
-      } else {
-        Toast.show({
-          type: ALERT_TYPE.DANGER,
-          title: t.errorTitle,
-          textBody: t.unexpectedFormatError,
-        });
       }
     } catch (error) {
-      if (error.message.includes('404')) { // Verificação mais robusta do erro
-        setCards([]); // Garante que a lista de cartões esteja vazia
+      if (error.message.includes('404')) {
+        setCards([]);
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
-          title: t.errorTitle,
-          textBody: t.fetchError,
+          title: t('paymentScreen.errorNotification'),
+          textBody: t('paymentScreen.errorCards'),
         });
       }
     } finally {
@@ -126,12 +56,15 @@ const PaymentScreen = () => {
     }
   };
 
-  const getRandomDarkColor = () => {
-    // ... (lógica existente sem alterações)
-  };
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchCards();
+    }, [])
+  );
 
-  const handleGoBack = () => {
-    navigation.navigate("ProfileScreen");
+  const handleEditPress = async (cardId) => {
+    await AsyncStorage.setItem("cardId", cardId);
+    navigation.navigate("UpdateCard");
   };
 
   const handleDeleteCard = async (cardId) => {
@@ -141,41 +74,49 @@ const PaymentScreen = () => {
         setCards((prevCards) => prevCards.filter((card) => card.methodId !== cardId));
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
-          title: t.deleteSuccess,
+          title: t('paymentScreen.cardDeleted'),
         });
       } else {
-        Toast.show({
-          type: ALERT_TYPE.DANGER,
-          title: t.deleteErrorTitle,
-          textBody: t.genericError,
-        });
+        throw new Error('Deletion failed');
       }
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        title: t.deleteErrorTitle,
-        textBody: t.genericError,
+        title: t('paymentScreen.deleteError'),
+        textBody: t('paymentScreen.errorDeletingCard'),
       });
     }
   };
 
   const formatCardNumber = (number) => {
-    return "**** **** **** " + number.slice(-4);
+    return number ? "**** **** **** " + number.slice(-4) : "**** **** **** ****";
   };
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      fetchCards();
-    });
-    return unsubscribe;
-  }, [navigation]); // Dependência corrigida para evitar loops
+  const getRandomDarkColor = () => {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    let c = color.substring(1);
+    let rgb = parseInt(c, 16);
+    let r = (rgb >> 16) & 0xff;
+    let g = (rgb >> 8) & 0xff;
+    let b = (rgb >> 0) & 0xff;
+
+    r = Math.floor(r * 0.5);
+    g = Math.floor(g * 0.5);
+    b = Math.floor(b * 0.5);
+
+    return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
+  };
+
+  const handleGoBack = () => {
+    navigation.navigate("ProfileScreen");
+  };
 
   return (
-    <AlertNotificationRoot
-      toastConfig={defaultToastConfig}
-      colors={[lightColors]}
-      theme={"light"}
-    >
+    <AlertNotificationRoot theme={"light"}>
       <View style={styles.containerAlpha}>
         {loading ? (
           <ActivityIndicator size="medium" color={colors.primary} />
@@ -189,18 +130,17 @@ const PaymentScreen = () => {
                   size={30}
                 />
               </TouchableOpacity>
-              {/* 4. Usar os textos traduzidos */}
-              <Text style={styles.title}>{t.wallet}</Text>
+              <Text style={styles.title}>{t('paymentScreen.title')}</Text>
             </View>
 
             {!cards || cards.length === 0 ? (
               <View style={styles.noCardsView}>
-                <Text style={styles.noCardsText}>{t.noCards}</Text>
+                <Text style={styles.noCardsText}>{t('paymentScreen.yourCards')}</Text>
                 <TouchableOpacity
                   style={styles.addButton}
                   onPress={() => navigation.navigate("ChangePaymentScreen")}
                 >
-                  <Text style={styles.addButtonText}>{t.addCard}</Text>
+                  <Text style={styles.addButtonText}>{t('paymentScreen.addCard')}</Text>
                 </TouchableOpacity>
               </View>
             ) : (
@@ -211,7 +151,7 @@ const PaymentScreen = () => {
                   height={height * 0.3}
                   data={cards}
                   scrollAnimationDuration={1000}
-                  renderItem={({ item, index }) => ( // Usando 'item' para clareza
+                  renderItem={({ item }) => (
                     <View style={styles.carouselContent}>
                       <View
                         style={[
@@ -251,14 +191,14 @@ const PaymentScreen = () => {
                         </View>
                         <View style={styles.cardDetailsView}>
                           <Text style={styles.creditText}>
-                            {item.cardName || t.noName}
+                            {item.cardName || t('payment.noName')}
                           </Text>
                           <Text style={styles.cardDetailsText}>
-                            {formatCardNumber(item.cardNumber) || "**** **** **** ****"}
+                            {formatCardNumber(item.cardNumber)}
                           </Text>
                         </View>
                         <Text style={styles.expiryText}>
-                          {`${item.cardExpiration.split("-")[1]}/${item.cardExpiration.split("-")[0]}` || "MM/YY"}
+                          {`${item.cardExpiration.split("-")[1]}/${item.cardExpiration.split("-")[0]}` || t('payment.expiryPlaceholder')}
                         </Text>
                       </View>
                     </View>
@@ -269,7 +209,7 @@ const PaymentScreen = () => {
                     style={styles.addButtonAbsolute}
                     onPress={() => navigation.navigate("ChangePaymentScreen")}
                   >
-                    <Text style={styles.addButtonText}>{t.addCard}</Text>
+                    <Text style={styles.addButtonText}>{t('paymentScreen.addCard')}</Text>
                   </TouchableOpacity>
                 </View>
               </>

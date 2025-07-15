@@ -1,16 +1,19 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import Entypo from '@expo/vector-icons/Entypo';
+import { useTranslation } from 'react-i18next';
 
 const ContactCard = () => {
+    const { t } = useTranslation();
+
     return (
         <View style={styles.container}>
             <Image
-                source={{ uri: 'https://via.placeholder.com/50' }}
+                source={{ uri: 'https://via.placeholder.com/50' }} // Placeholder image
                 style={styles.profileImage}
             />
             <View style={styles.textContainer}>
-                <Text style={styles.roleText}>Realtor</Text>
+                <Text style={styles.roleText}>{t('contactCard.role')}</Text>
                 <Text style={styles.nameText}>Courtney Kim</Text>
             </View>
             <View style={styles.iconContainer}>

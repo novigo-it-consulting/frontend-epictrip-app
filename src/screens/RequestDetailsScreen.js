@@ -1,19 +1,11 @@
-import React, { useState, useEffect } from "react";
-import {
-    View,
-    Text,
-    SafeAreaView,
-    TouchableOpacity,
-    StyleSheet,
-    ScrollView,
-} from "react-native";
+import React from 'react';
+import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 import GoBackArrow from "../components/GoBackArrow";
-import { useNavigation } from "@react-navigation/native";
-// 1. Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
 
-// Mapeia o status da API para uma chave consistente
+// Mapeia o status da API para uma chave de tradução consistente
 const STATUS_KEYS = {
     OPEN_N1: "inProgress",
     OPEN_N2: "inProgress",
@@ -42,62 +34,15 @@ const formatDate = (dateString) => {
     return date.toLocaleDateString("en-US", options).replace(",", "");
 };
 
-const RequestDetailsScreen = ({ route }) => {
-    const request = route?.params?.request || {};
+const RequestDetailsScreen = () => {
     const navigation = useNavigation();
-
-    // 2. Criar um estado para armazenar os textos traduzidos
-    const [t, setT] = useState({
-        requestDetails: "Request Details",
-        dateNotAvailable: "Date not available",
-        requestTitle: "Request",
-        paymentTitle: "Payment",
-        total: "Total",
-        selectPaymentMethod: "Select payment method",
-        // Statuses
-        inProgress: "In progress",
-        done: "Done",
-        waitingPayment: "Waiting payment",
-        paid: "Paid",
-        unrealized: "Unrealized",
-        unknown: "Unknown",
-    });
-
-    // 3. useEffect para buscar as traduções
-    useEffect(() => {
-        const fetchTranslations = async () => {
-            try {
-                const [
-                    requestDetails, dateNotAvailable, requestTitle, paymentTitle, total, selectPaymentMethod,
-                    inProgress, done, waitingPayment, paid, unrealized, unknown
-                ] = await Promise.all([
-                    translate("Request Details", "en"),
-                    translate("Date not available", "en"),
-                    translate("Request", "en"),
-                    translate("Payment", "en"),
-                    translate("Total", "en"),
-                    translate("Select payment method", "en"),
-                    translate("In progress", "en"),
-                    translate("Done", "en"),
-                    translate("Waiting payment", "en"),
-                    translate("Paid", "en"),
-                    translate("Unrealized", "en"),
-                    translate("Unknown", "en"),
-                ]);
-                setT({
-                    requestDetails, dateNotAvailable, requestTitle, paymentTitle, total, selectPaymentMethod,
-                    inProgress, done, waitingPayment, paid, unrealized, unknown
-                });
-            } catch (error) {
-                console.error("Falha ao buscar traduções:", error);
-            }
-        };
-        fetchTranslations();
-    }, []);
+    const route = useRoute();
+    const { t } = useTranslation();
+    const request = route?.params?.request || {};
 
     const statusKey = STATUS_KEYS[request.status] || "unknown";
     const statusStyle = STATUS_STYLES[statusKey];
-    const statusLabel = t[statusKey];
+    const statusLabel = t(`requestDetails.status.${statusKey}`);
     const showPaymentSection = request?.status === "PAYMENT_A";
 
     return (
@@ -105,8 +50,7 @@ const RequestDetailsScreen = ({ route }) => {
             <ScrollView contentContainerStyle={styles.content}>
                 <View style={styles.header}>
                     <GoBackArrow />
-                    {/* 4. Usar os textos traduzidos */}
-                    <Text style={styles.title}>{request.title || t.requestDetails}</Text>
+                    <Text style={styles.title}>{request.title || t('requestDetails.title')}</Text>
                     <Ionicons name="close" size={24} color="gray" />
                 </View>
 
@@ -115,23 +59,23 @@ const RequestDetailsScreen = ({ route }) => {
                         <Ionicons name={statusStyle.icon} size={20} color={statusStyle.color} style={styles.statusIcon} />
                         <Text style={[styles.status, { color: statusStyle.color }]}>{statusLabel}</Text>
                     </View>
-                    <Text style={styles.date}>{formatDate(request.created_at) || t.dateNotAvailable}</Text>
+                    <Text style={styles.date}>{formatDate(request.created_at) || t('requestDetails.dateNotAvailable')}</Text>
                 </View>
 
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>{t.requestTitle}</Text>
-                    <Text style={styles.message}>{request.ai_resume}</Text>
+                    <Text style={styles.sectionTitle}>{t('requestDetails.requestTitle')}</Text>
+                    <Text style={styles.message}>{request.ai_resume || t('requestDetails.noDescription')}</Text>
                 </View>
 
                 {showPaymentSection && (
                     <View style={styles.paymentSection}>
-                        <Text style={styles.sectionTitle}>{t.paymentTitle}</Text>
+                        <Text style={styles.sectionTitle}>{t('requestDetails.paymentTitle')}</Text>
                         <View style={styles.totalRow}>
-                            <Text style={styles.totalText}>{t.total}</Text>
+                            <Text style={styles.totalText}>{t('requestDetails.total')}</Text>
                             <Text style={styles.totalAmount}>$ 65</Text>
                         </View>
                         <TouchableOpacity style={styles.paymentButton} onPress={() => navigation.navigate("SelectPaymentScreen")}>
-                            <Text style={styles.paymentButtonText}>{t.selectPaymentMethod}</Text>
+                            <Text style={styles.paymentButtonText}>{t('requestDetails.selectPaymentMethod')}</Text>
                         </TouchableOpacity>
                     </View>
                 )}

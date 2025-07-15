@@ -1,44 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, StyleSheet, Image, StatusBar, Text } from 'react-native';
+import { ScrollView, View, StyleSheet, Image, StatusBar, ActivityIndicator } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRoute } from '@react-navigation/native';
+import axios from "axios";
+
 import ProblemInput from '../components/ProblemInput';
 import BookingInfo from '../components/BookingInfo';
 import CustomBar from '../components/CustomBar';
 import mockData from '../data/mockServiceDetails';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import GoBackArrow from '../components/GoBackArrow';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import axios from "axios";
 
 const ConciergeDetails = () => {
+  const { t } = useTranslation();
   const route = useRoute();
-  const { serviceId } = route.params || {};
-  const { productData } = route.params || {};
-  const { clickedProduct } = route.params || {};
+  const { serviceId, productData, clickedProduct } = route.params || {};
 
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true); // Gerencie o estado de carregamento
-
-  const fetchData = async () => {
-    try {
-      const token = await AsyncStorage.getItem("token");
-      const url = `https://homol-api.fertech.dev.br/uploads?productId=${serviceId}`;
-      const headers = {
-        Authorization: `Bearer ${token}`
-      };
-      const response = await axios.get(url, { headers });
-      if (response.status === 200) {
-        setData(response.data);
-        setLoading(false); // Atualize o estado de carregamento
-      }
-    } catch (error) {
-      alert(`Erro ao carregar dados: ${error.message}`);
-      setLoading(false); // Mesmo no erro, o carregamento termina
-    }
-  };
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchData = async () => {
+      if (!serviceId) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const token = await AsyncStorage.getItem("token");
+        const url = `https://homol-api.fertech.dev.br/uploads?productId=${serviceId}`;
+        const headers = {
+          Authorization: `Bearer ${token}`
+        };
+        const response = await axios.get(url, { headers });
+        if (response.status === 200) {
+          setData(response.data);
+        }
+      } catch (error) {
+        console.error(`Erro ao carregar dados: ${error.message}`);
+        // Você pode adicionar um Toast de erro aqui se desejar
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchData();
-  }, []);
+  }, [serviceId]);
 
   const { bookingInfo } = mockData;
 
@@ -49,7 +55,9 @@ const ConciergeDetails = () => {
         <View style={styles.arrowView}>
           <GoBackArrow colorArrow={'white'} />
         </View>
-        {!loading && data ? ( // Verifique se os dados estão disponíveis e o carregamento terminou
+        {loading ? (
+          <ActivityIndicator style={styles.loader} size="large" color="#fff" />
+        ) : data && data.data && data.data[0] ? (
           <Image
             source={{ uri: data.data[0].filePath }}
             style={styles.image}
@@ -60,7 +68,7 @@ const ConciergeDetails = () => {
         <ProblemInput productData={productData} clickedProduct={clickedProduct} />
         <BookingInfo bookingInfo={bookingInfo} />
       </ScrollView>
-      <CustomBar />
+      <CustomBar where={t('customBar.product')} />
     </>
   );
 };
@@ -78,22 +86,18 @@ const styles = StyleSheet.create({
     height: 300,
     overflow: 'hidden',
     marginBottom: -50,
-    position: 'relative'
+    position: 'relative',
+    backgroundColor: '#ccc', // Cor de fundo enquanto a imagem carrega
+    justifyContent: 'center',
   },
   image: {
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginVertical: 16,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#888',
-    marginBottom: 24,
+  loader: {
+    position: 'absolute',
+    alignSelf: 'center',
   },
   arrowView: {
     position: 'absolute',
