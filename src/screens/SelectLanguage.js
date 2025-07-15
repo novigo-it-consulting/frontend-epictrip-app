@@ -16,56 +16,20 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from '@expo/vector-icons';
 import colors from '../colors';
 
-// Lista completa de idiomas com seus códigos e nomes em inglês (para tradução)
-const ALL_LANGUAGES = [
-    { code: 'ar', nameKey: 'arabic', countryCode: 'SA' },
-    { code: 'az', nameKey: 'azerbaijani', countryCode: 'AZ' },
-    { code: 'bg', nameKey: 'bulgarian', countryCode: 'BG' },
-    { code: 'bn', nameKey: 'bengali', countryCode: 'BD' },
-    { code: 'ca', nameKey: 'catalan', countryCode: 'ES-CT' },
-    { code: 'cs', nameKey: 'czech', countryCode: 'CZ' },
-    { code: 'da', nameKey: 'danish', countryCode: 'DK' },
-    { code: 'de', nameKey: 'german', countryCode: 'DE' },
-    { code: 'el', nameKey: 'greek', countryCode: 'GR' },
+// Lista de idiomas agora contém apenas os que possuem arquivos de tradução
+const AVAILABLE_LANGUAGES = [
     { code: 'en', nameKey: 'english', countryCode: 'US' },
-    { code: 'eo', nameKey: 'esperanto', countryCode: 'EO' },
+    { code: 'de', nameKey: 'german', countryCode: 'DE' },
     { code: 'es', nameKey: 'spanish', countryCode: 'ES' },
-    { code: 'et', nameKey: 'estonian', countryCode: 'EE' },
-    { code: 'eu', nameKey: 'basque', countryCode: 'ES-PV' },
-    { code: 'fa', nameKey: 'persian', countryCode: 'IR' },
-    { code: 'fi', nameKey: 'finnish', countryCode: 'FI' },
     { code: 'fr', nameKey: 'french', countryCode: 'FR' },
-    { code: 'ga', nameKey: 'irish', countryCode: 'IE' },
-    { code: 'gl', nameKey: 'galician', countryCode: 'ES-GA' },
-    { code: 'he', nameKey: 'hebrew', countryCode: 'IL' },
-    { code: 'hi', nameKey: 'hindi', countryCode: 'IN' },
-    { code: 'hu', nameKey: 'hungarian', countryCode: 'HU' },
-    { code: 'id', nameKey: 'indonesian', countryCode: 'ID' },
     { code: 'it', nameKey: 'italian', countryCode: 'IT' },
-    { code: 'ja', nameKey: 'japanese', countryCode: 'JP' },
-    { code: 'ko', nameKey: 'korean', countryCode: 'KR' },
-    { code: 'ky', nameKey: 'kyrgyz', countryCode: 'KG' },
-    { code: 'lt', nameKey: 'lithuanian', countryCode: 'LT' },
-    { code: 'lv', nameKey: 'latvian', countryCode: 'LV' },
-    { code: 'ms', nameKey: 'malay', countryCode: 'MY' },
-    { code: 'nb', nameKey: 'norwegian', countryCode: 'NO' },
-    { code: 'nl', nameKey: 'dutch', countryCode: 'NL' },
-    { code: 'pl', nameKey: 'polish', countryCode: 'PL' },
-    { code: 'pt', nameKey: 'portuguese', countryCode: 'PT' },
     { code: 'pt-BR', nameKey: 'portuguese_brazil', countryCode: 'BR' },
-    { code: 'ro', nameKey: 'romanian', countryCode: 'RO' },
     { code: 'ru', nameKey: 'russian', countryCode: 'RU' },
-    { code: 'sk', nameKey: 'slovak', countryCode: 'SK' },
-    { code: 'sl', nameKey: 'slovenian', countryCode: 'SI' },
-    { code: 'sq', nameKey: 'albanian', countryCode: 'AL' },
-    { code: 'sv', nameKey: 'swedish', countryCode: 'SE' },
-    { code: 'tl', nameKey: 'filipino', countryCode: 'PH' },
     { code: 'zh-Hans', nameKey: 'chinese_simplified', countryCode: 'CN' },
-    { code: 'zh-Hant', nameKey: 'chinese_traditional', countryCode: 'TW' }
 ];
 
 const getFlagEmoji = (countryCode) => {
-    if (countryCode === 'EO') return '🌍';
+    if (countryCode === 'EO') return '🌍'; // Mantido para o caso de ser adicionado no futuro
     const codePoints = countryCode
         .toUpperCase()
         .split('')
@@ -81,13 +45,13 @@ const LanguageSelectionScreen = () => {
     const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        const processedLanguages = ALL_LANGUAGES.map(lang => ({
-            ...lang,
-            label: t(`languageSelectionScreen.languages.${lang.nameKey}`)
-        })).sort((a, b) => a.label.localeCompare(b.label)); // Ordena alfabeticamente
+    const allLanguages = AVAILABLE_LANGUAGES.map(lang => ({
+        ...lang,
+        label: t(`languageSelectionScreen.languages.${lang.nameKey}`)
+    })).sort((a, b) => a.label.localeCompare(b.label));
 
-        setFilteredLanguages(processedLanguages);
+    useEffect(() => {
+        setFilteredLanguages(allLanguages);
         setIsLoading(false);
     }, [t]);
 
@@ -95,7 +59,7 @@ const LanguageSelectionScreen = () => {
         try {
             setSelectedLanguage(language.code);
             await AsyncStorage.setItem("language", language.code);
-            i18n.changeLanguage(language.code); // Muda o idioma globalmente
+            i18n.changeLanguage(language.code);
             setTimeout(() => {
                 navigate("Login");
             }, 300);
@@ -107,18 +71,14 @@ const LanguageSelectionScreen = () => {
     const handleSearch = (query) => {
         setSearchQuery(query);
         const lowercasedQuery = query.toLowerCase();
-        const currentLanguages = ALL_LANGUAGES.map(lang => ({
-            ...lang,
-            label: t(`languageSelectionScreen.languages.${lang.nameKey}`)
-        }));
 
         if (query) {
-            const filtered = currentLanguages.filter((lang) =>
+            const filtered = allLanguages.filter((lang) =>
                 lang.label.toLowerCase().includes(lowercasedQuery)
             );
             setFilteredLanguages(filtered);
         } else {
-            setFilteredLanguages(currentLanguages.sort((a, b) => a.label.localeCompare(b.label)));
+            setFilteredLanguages(allLanguages);
         }
     };
 

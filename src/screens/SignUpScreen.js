@@ -40,51 +40,16 @@ import screenNumberStyles from "../styles/ScreenNumberStyles";
 import colors from "../colors";
 import { requestSignUpGuest } from "../services/api";
 
-const ALL_LANGUAGES = [
-  { code: 'ar', nameKey: 'arabic', countryCode: 'SA' },
-  { code: 'az', nameKey: 'azerbaijani', countryCode: 'AZ' },
-  { code: 'bg', nameKey: 'bulgarian', countryCode: 'BG' },
-  { code: 'bn', nameKey: 'bengali', countryCode: 'BD' },
-  { code: 'ca', nameKey: 'catalan', countryCode: 'ES-CT' },
-  { code: 'cs', nameKey: 'czech', countryCode: 'CZ' },
-  { code: 'da', nameKey: 'danish', countryCode: 'DK' },
-  { code: 'de', nameKey: 'german', countryCode: 'DE' },
-  { code: 'el', nameKey: 'greek', countryCode: 'GR' },
+// Lista de idiomas agora contém apenas os que possuem arquivos de tradução
+const AVAILABLE_LANGUAGES = [
   { code: 'en', nameKey: 'english', countryCode: 'US' },
-  { code: 'eo', nameKey: 'esperanto', countryCode: 'EO' },
+  { code: 'de', nameKey: 'german', countryCode: 'DE' },
   { code: 'es', nameKey: 'spanish', countryCode: 'ES' },
-  { code: 'et', nameKey: 'estonian', countryCode: 'EE' },
-  { code: 'eu', nameKey: 'basque', countryCode: 'ES-PV' },
-  { code: 'fa', nameKey: 'persian', countryCode: 'IR' },
-  { code: 'fi', nameKey: 'finnish', countryCode: 'FI' },
   { code: 'fr', nameKey: 'french', countryCode: 'FR' },
-  { code: 'ga', nameKey: 'irish', countryCode: 'IE' },
-  { code: 'gl', nameKey: 'galician', countryCode: 'ES-GA' },
-  { code: 'he', nameKey: 'hebrew', countryCode: 'IL' },
-  { code: 'hi', nameKey: 'hindi', countryCode: 'IN' },
-  { code: 'hu', nameKey: 'hungarian', countryCode: 'HU' },
-  { code: 'id', nameKey: 'indonesian', countryCode: 'ID' },
   { code: 'it', nameKey: 'italian', countryCode: 'IT' },
-  { code: 'ja', nameKey: 'japanese', countryCode: 'JP' },
-  { code: 'ko', nameKey: 'korean', countryCode: 'KR' },
-  { code: 'ky', nameKey: 'kyrgyz', countryCode: 'KG' },
-  { code: 'lt', nameKey: 'lithuanian', countryCode: 'LT' },
-  { code: 'lv', nameKey: 'latvian', countryCode: 'LV' },
-  { code: 'ms', nameKey: 'malay', countryCode: 'MY' },
-  { code: 'nb', nameKey: 'norwegian', countryCode: 'NO' },
-  { code: 'nl', nameKey: 'dutch', countryCode: 'NL' },
-  { code: 'pl', nameKey: 'polish', countryCode: 'PL' },
-  { code: 'pt', nameKey: 'portuguese', countryCode: 'PT' },
   { code: 'pt-BR', nameKey: 'portuguese_brazil', countryCode: 'BR' },
-  { code: 'ro', nameKey: 'romanian', countryCode: 'RO' },
   { code: 'ru', nameKey: 'russian', countryCode: 'RU' },
-  { code: 'sk', nameKey: 'slovak', countryCode: 'SK' },
-  { code: 'sl', nameKey: 'slovenian', countryCode: 'SI' },
-  { code: 'sq', nameKey: 'albanian', countryCode: 'AL' },
-  { code: 'sv', nameKey: 'swedish', countryCode: 'SE' },
-  { code: 'tl', nameKey: 'filipino', countryCode: 'PH' },
   { code: 'zh-Hans', nameKey: 'chinese_simplified', countryCode: 'CN' },
-  { code: 'zh-Hant', nameKey: 'chinese_traditional', countryCode: 'TW' }
 ];
 
 const getFlagEmoji = (countryCode) => {
@@ -99,13 +64,13 @@ const SignUpScreen = ({ navigation }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const initialLang = ALL_LANGUAGES.find(l => l.code === i18n.language) || ALL_LANGUAGES.find(l => l.code === 'en');
+  const initialLang = AVAILABLE_LANGUAGES.find(l => l.code === i18n.language) || AVAILABLE_LANGUAGES.find(l => l.code === 'en');
   const [selectedLanguage, setSelectedLanguage] = useState({
     ...initialLang,
     label: t(`signUpScreen.languages.${initialLang.nameKey}`)
   });
 
-  const allLanguages = ALL_LANGUAGES.map(lang => ({
+  const allLanguages = AVAILABLE_LANGUAGES.map(lang => ({
     ...lang,
     label: t(`signUpScreen.languages.${lang.nameKey}`)
   })).sort((a, b) => a.label.localeCompare(b.label));
