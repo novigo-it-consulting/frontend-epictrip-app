@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ActivityIndicator,
-  Alert, // <-- IMPORTADO
+  Alert,
 } from "react-native";
 import {
   AlertNotificationRoot,
@@ -55,13 +55,13 @@ const ChangePersonalInfo = () => {
         .catch((error) => {
           Toast.show({
             type: ALERT_TYPE.DANGER,
-            title: "Ops",
+            title: t("changePersonalInfo.alertError"),
             textBody: t("changePersonalInfo.loadingData"),
           });
           setLoading(false);
         });
     }
-  }, [initialDataLoaded]);
+  }, [initialDataLoaded, t]);
 
   const handleGoBack = () => {
     navigation.navigate("ProfileScreen");
@@ -72,10 +72,9 @@ const ChangePersonalInfo = () => {
     const userId = await AsyncStorage.getItem("userId");
 
     if (!userId) {
-      t("changePersonalInfo.notFoundAsyncStorage");
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        title: "Ops",
+        title: t("changePersonalInfo.alertError"),
         textBody: t("changePersonalInfo.notFoundAsyncStorage"),
       });
       setLoading(false);
@@ -85,49 +84,26 @@ const ChangePersonalInfo = () => {
     try {
       const response = await requestGetUser(userId);
       if (response.status === 200) {
-        const { profilePic } = response.data.data;
+        const { profilePic, fullName, gender, birthDate, email, phone, userRole, language, rental } = response.data.data;
         setProfilePhoto(profilePic);
-        const {
-          fullName,
-          gender,
-          birthDate,
-          email,
-          phone,
-          userRole,
-          language,
-          rental,
-        } = response.data.data;
-        const [firstName, lastName] = fullName.split(" ");
+        const [firstName, lastName] = fullName ? fullName.split(" ") : ["", ""];
+        const age = birthDate ? new Date(birthDate) : new Date();
 
-        const age = new Date(birthDate);
-
-        setUserData({
-          firstName,
-          lastName,
-          gender,
-          age,
-          email,
-          userRole,
-          phone,
-          language,
-          rental,
-        });
-        fetchLocation(); // fetchLocation já tem setLoading(false)
-        return;
+        setUserData({ firstName, lastName, gender, age, email, userRole, phone, language, rental });
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
-          title: "Ops",
-          textBody: t("changePersonalInfo.failedUpdateUserInfo"),
+          title: t("changePersonalInfo.alertError"),
+          textBody: t("changePersonalInfo.failedUserInfo"),
         });
-        setLoading(false);
       }
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        title: "Ops",
-        textBody: t("changePersonalInfo.failedUpdate"),
+        title: t("changePersonalInfo.alertError"),
+        textBody: t("changePersonalInfo.failedUserInfo"),
       });
+    } finally {
       setLoading(false);
     }
   };
@@ -135,23 +111,26 @@ const ChangePersonalInfo = () => {
   const fetchLocation = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
-      t("changePersonalInfo.locationPermissionDenied");
-      setLoading(false);
+      Toast.show({
+        type: ALERT_TYPE.WARNING,
+        title: t("changePersonalInfo.alertAttention"),
+        textBody: t("changePersonalInfo.locationPermissionDenied"),
+      });
       return;
     }
 
-    const { coords } = await Location.getCurrentPositionAsync({});
-    const { latitude, longitude } = coords;
-    const response = await Location.reverseGeocodeAsync({
-      latitude,
-      longitude,
-    });
+    try {
+      const { coords } = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = coords;
+      const response = await Location.reverseGeocodeAsync({ latitude, longitude });
 
-    if (response.length > 0) {
-      const { city, region, country } = response[0];
-      setAutoLocation(`${city} - ${region}, ${country}`);
+      if (response.length > 0) {
+        const { city, region, country } = response[0];
+        setAutoLocation(`${city} - ${region}, ${country}`);
+      }
+    } catch (error) {
+      console.error("Error fetching location: ", error);
     }
-    setLoading(false);
   };
 
   const handleSave = async () => {
@@ -169,7 +148,7 @@ const ChangePersonalInfo = () => {
     if (!userId) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        title: "Ops",
+        title: t("changePersonalInfo.alertError"),
         textBody: t("changePersonalInfo.notFoundAsyncStorage"),
       });
       setLoading(false);
@@ -190,9 +169,7 @@ const ChangePersonalInfo = () => {
 
     try {
       const response = await requestUpdateUser(userId, updatedData);
-
       if (response.status === 200) {
-        setUserData(updatedData);
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: t("changePersonalInfo.alertSuccess"),
@@ -200,18 +177,18 @@ const ChangePersonalInfo = () => {
         });
         setTimeout(() => {
           navigation.navigate("ProfileScreen");
-        }, 3000); // Reduzido o tempo para 3s
+        }, 2000);
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
-          title: "Ops",
+          title: t("changePersonalInfo.alertError"),
           textBody: t("changePersonalInfo.failedUpdateUserInfo"),
         });
       }
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        title: "Ops",
+        title: t("changePersonalInfo.alertError"),
         textBody: t("changePersonalInfo.failedUpdate"),
       });
     } finally {
@@ -219,14 +196,12 @@ const ChangePersonalInfo = () => {
     }
   };
 
-  // Função auxiliar para fazer o upload e evitar repetição de código
   const uploadImage = async (result) => {
     if (!result.canceled) {
       setLoading(true);
       try {
         const response = await changeProfilePic(result.assets[0]);
         if (response.status === 200) {
-          // Assumindo que a API retorna o novo URL da imagem
           setProfilePhoto(response.data.data.profilePic);
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
@@ -243,7 +218,7 @@ const ChangePersonalInfo = () => {
       } catch (error) {
         Toast.show({
           type: ALERT_TYPE.DANGER,
-          title: "Ops",
+          title: t("changePersonalInfo.alertError"),
           textBody: t("changePersonalInfo.failedUpdatePicture"),
         });
       } finally {
@@ -252,33 +227,31 @@ const ChangePersonalInfo = () => {
     }
   };
 
-  // Função para pedir permissão e ABRIR A CÂMERA
   const takePhoto = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
       Alert.alert(
-        "Permissão necessária",
-        "Você precisa conceder permissão para usar a câmera."
+        t("changePersonalInfo.permissionRequired"),
+        t("changePersonalInfo.cameraPermissionDenied")
       );
       return;
     }
 
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
-      aspect: [1, 1], // Rosto geralmente é 1:1
+      aspect: [1, 1],
       quality: 0.5,
     });
 
     await uploadImage(result);
   };
 
-  // Função para pedir permissão e ABRIR A GALERIA
   const chooseFromGallery = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       Alert.alert(
-        "Permissão necessária",
-        "Você precisa conceder permissão para acessar a galeria."
+        t("changePersonalInfo.permissionRequired"),
+        t("changePersonalInfo.galleryPermissionDenied")
       );
       return;
     }
@@ -293,49 +266,30 @@ const ChangePersonalInfo = () => {
     await uploadImage(result);
   };
 
-  // Função principal que pergunta ao usuário de onde pegar a imagem
   const handleChoosePhoto = () => {
     Alert.alert(
-      "Alterar Foto de Perfil",
-      "Escolha uma opção",
+      t("changePersonalInfo.changePhotoTitle"),
+      t("changePersonalInfo.changePhotoMessage"),
       [
         {
-          text: "Tirar Foto...",
+          text: t("changePersonalInfo.takePhoto"),
           onPress: takePhoto,
         },
         {
-          text: "Escolher da Galeria...",
+          text: t("changePersonalInfo.chooseFromGallery"),
           onPress: chooseFromGallery,
         },
         {
-          text: "Cancelar",
+          text: t("changePersonalInfo.cancel"),
           style: "cancel",
         },
       ]
     );
   };
 
-  const defaultToastConfig = {
-    autoClose: 3000,
-    titleStyle: { fontSize: 16, fontWeight: "bold" },
-  };
-
-  const lightColors = {
-    label: "#000",
-    card: "#fcfcfc",
-    overlay: "#f0f0f0",
-    success: "#28a745",
-    danger: "rgba(255, 0, 0, 1)",
-    warning: "#ffc107",
-  };
-
   return (
     <>
-      <AlertNotificationRoot
-        toastConfig={defaultToastConfig}
-        colors={[lightColors]}
-        theme={"light"}
-      >
+      <AlertNotificationRoot theme={"light"}>
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.backGroundLight }}>
           {loading ? (
             <View style={styles.loadingContainer}>
@@ -397,7 +351,7 @@ const ChangePersonalInfo = () => {
                 <TextInput
                   label={t("changePersonalInfo.labelLocation")}
                   disabled
-                  value={autoLocation}
+                  value={autoLocation || ""}
                   keyboardType="default"
                   autoCapitalize="words"
                   mode="flat"

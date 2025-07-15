@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
     StyleSheet,
     View,
@@ -15,50 +15,14 @@ import {
 import { IconButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import Entypo from '@expo/vector-icons/Entypo';
-// 1. Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
+// 1. Importar o hook de tradução
+import { useTranslation } from 'react-i18next';
 
 const BookingDetails = ({ route }) => {
     const { data } = route.params;
     const navigation = useNavigation();
-
-    // 2. Criar estados para todos os textos que precisam de tradução
-    const [aboutText, setAboutText] = useState("About Your Reservation");
-    const [reservationDateText, setReservationDateText] = useState("Reservation Date");
-    const [checkinText, setCheckinText] = useState("Check-in:");
-    const [checkoutText, setCheckoutText] = useState("Check-out:");
-    const [reservationNumberText, setReservationNumberText] = useState("Reservation Number");
-
-    // 3. useEffect para buscar todas as traduções de uma vez
-    useEffect(() => {
-        const fetchTranslations = async () => {
-            try {
-                const [
-                    translatedAbout,
-                    translatedReservationDate,
-                    translatedCheckin,
-                    translatedCheckout,
-                    translatedReservationNumber,
-                ] = await Promise.all([
-                    translate("About Your Reservation", "en"),
-                    translate("Reservation Date", "en"),
-                    translate("Check-in:", "en"),
-                    translate("Check-out:", "en"),
-                    translate("Reservation Number", "en"),
-                ]);
-
-                setAboutText(translatedAbout);
-                setReservationDateText(translatedReservationDate);
-                setCheckinText(translatedCheckin);
-                setCheckoutText(translatedCheckout);
-                setReservationNumberText(translatedReservationNumber);
-
-            } catch (error) {
-                console.error("Falha ao buscar traduções:", error);
-            }
-        };
-        fetchTranslations();
-    }, []); // Array vazio [] garante que rode apenas uma vez
+    // 2. Inicializar o hook para obter a função de tradução 't'
+    const { t } = useTranslation();
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -110,18 +74,18 @@ const BookingDetails = ({ route }) => {
                     </View>
 
                     <View style={styles.detailsSection}>
-                        {/* 4. Usar os estados com os textos traduzidos */}
+                        {/* 3. Usar a função 't' com as chaves de tradução */}
                         <Text style={styles.sectionTitle}>
-                            {aboutText}
+                            {t('bookingDetails.about')}
                         </Text>
 
                         <Text style={styles.sectionSubtitle}>
-                            {reservationDateText}
+                            {t('bookingDetails.reservationDate')}
                         </Text>
 
                         <View style={styles.dateContainer}>
                             <View style={styles.dateRow}>
-                                <Text style={styles.dateLabel}>{checkinText}</Text>
+                                <Text style={styles.dateLabel}>{t('bookingDetails.checkin')}</Text>
                                 <View style={styles.dateBox}>
                                     <Text style={styles.dateText}>
                                         {formatDate(data.checkIn)}
@@ -130,7 +94,7 @@ const BookingDetails = ({ route }) => {
                             </View>
 
                             <View style={styles.dateRow}>
-                                <Text style={styles.dateLabel}>{checkoutText}</Text>
+                                <Text style={styles.dateLabel}>{t('bookingDetails.checkout')}</Text>
                                 <View style={styles.dateBox}>
                                     <Text style={styles.dateText}>
                                         {formatDate(data.checkOut)}
@@ -141,7 +105,7 @@ const BookingDetails = ({ route }) => {
 
                         <View style={styles.reservationNumberSection}>
                             <Text style={styles.sectionSubtitle}>
-                                {reservationNumberText}
+                                {t('bookingDetails.reservationNumber')}
                             </Text>
                             <Text style={styles.reservationNumber}>
                                 {data.shareNumber}
@@ -154,6 +118,7 @@ const BookingDetails = ({ route }) => {
     );
 };
 
+// ... (seus estilos permanecem os mesmos)
 const styles = StyleSheet.create({
     headerContainer: {
         height: 300,

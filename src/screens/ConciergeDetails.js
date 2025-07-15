@@ -1,22 +1,18 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, Image, StatusBar, Text } from 'react-native';
+import { ScrollView, View, StyleSheet, Image, StatusBar } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import ProblemInput from '../components/ProblemInput';
 import BookingInfo from '../components/BookingInfo';
 import CustomBar from '../components/CustomBar';
 import mockData from '../data/mockServiceDetails';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 
-const ConciergeDetails = ({ navigation }) => {
+const ConciergeDetails = () => {
   const { bookingInfo } = mockData;
-
   const route = useRoute();
-  const { data } = route.params || {};
-  const { clickedImage } = route.params || {};
-  const { clickedProduct } = route.params || {};
+  const { t } = useTranslation();
 
-  const goToChat = (screen) => {
-    navigation.navigate(screen);
-  }
+  const { data, clickedImage, clickedProduct } = route.params || {};
 
   return (
     <>
@@ -31,7 +27,7 @@ const ConciergeDetails = ({ navigation }) => {
         <ProblemInput productData={data} clickedProduct={clickedProduct} />
         <BookingInfo bookingInfo={bookingInfo} />
       </ScrollView>
-      <CustomBar where={"Product"} />
+      <CustomBar where={t('customBar.product')} />
     </>
   );
 };

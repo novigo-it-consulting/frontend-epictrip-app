@@ -1,99 +1,73 @@
 import React, { useEffect, useState } from 'react';
-import { Provider as PaperProvider, DefaultTheme } from "react-native-paper";
+import { Provider as PaperProvider, DefaultTheme, ActivityIndicator } from "react-native-paper";
 import {
     Text,
     SafeAreaView,
     StyleSheet,
     View,
     TouchableOpacity,
-    ActivityIndicator
+    ScrollView
 } from "react-native";
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import colors from "../colors";
 import SearchBarHome from '../components/SearchViewHome';
 import GoBackArrow from '../components/GoBackArrow';
 import CardServicesCategoriesInside from '../components/CardServicesCategoriesInside';
-import { ScrollView } from 'react-native-gesture-handler';
-import { useNavigation, useRoute } from '@react-navigation/native';
 import { getProductsByGroup, getUploadByProduct } from '../services/api';
-// 1. Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
 
 const ConciergeList = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const { group } = route.params || {};
+    const { t } = useTranslation();
 
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    // 2. Criar um estado para armazenar os textos traduzidos
-    const [t, setT] = useState({
-        loading: "Loading...",
-        concierge: "Concierge",
-        categories: "Categories",
-        noItems: "No items",
-    });
-
-    // 3. useEffect para buscar as traduções
     useEffect(() => {
-        const fetchTranslations = async () => {
+        const getProducts = async () => {
             try {
-                const [loading, concierge, categories, noItems] = await Promise.all([
-                    translate("Loading...", "en"),
-                    translate("Concierge", "en"),
-                    translate("Categories", "en"),
-                    translate("No items", "en")
-                ]);
-                setT({ loading, concierge, categories, noItems });
+                let prds = [];
+                const products = await getProductsByGroup(group);
+
+                for (const product of products) {
+                    try {
+                        const upload = await getUploadByProduct(product.id);
+                        // O nome e a descrição não são mais traduzidos aqui.
+                        // A tradução deve ocorrer no componente que os exibe.
+                        const obj = {
+                            product: product,
+                            upload: upload[0]
+                        };
+                        prds.push(obj);
+                    } catch (error) {
+                        console.warn(`Error getting image for product ${product.id}:`, error);
+                    }
+                }
+                return prds;
             } catch (error) {
-                console.error("Falha ao buscar traduções:", error);
+                console.error('Error fetching products:', error);
+                return [];
             }
         };
-        fetchTranslations();
-    }, []);
 
-    const getProducts = async () => {
-        try {
-            let prds = [];
-            const products = await getProductsByGroup(group);
-
-            for (const product of products) {
-                try {
-                    const upload = await getUploadByProduct(product.id);
-                    product.name = await translate(product.name, "en");
-                    product.description = await translate(product.description, "en");
-                    const obj = {
-                        product: product,
-                        upload: upload[0]
-                    };
-                    prds.push(obj);
-                } catch (error) {
-                    console.warn(`Erro ao obter imagem para o produto ${product.id}:`, error);
-                }
-            }
-            return prds;
-        } catch (error) {
-            console.error('Erro ao buscar produtos:', error);
-            return [];
-        }
-    };
-
-    useEffect(() => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
                 const products = await getProducts();
                 setData(products);
             } catch (error) {
-                console.error('Erro ao buscar dados iniciais:', error);
+                console.error('Error fetching initial data:', error);
             } finally {
                 setIsLoading(false);
             }
         };
-        fetchData();
-    }, []);
 
-    const handlePressCard = async (uri, prd) => {
+        fetchData();
+    }, [group]);
+
+    const handlePressCard = (uri, prd) => {
         navigation.navigate('ConciergeDetails', { data: data, clickedImage: uri, clickedProduct: prd });
     };
 
@@ -101,8 +75,7 @@ const ConciergeList = () => {
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#172B4D" />
-                {/* 4. Usar o texto traduzido */}
-                <Text style={styles.loadingText}>{t.loading}</Text>
+                <Text style={styles.loadingText}>{t('conciergeList.loading')}</Text>
             </View>
         );
     }
@@ -112,8 +85,7 @@ const ConciergeList = () => {
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.headerContainer}>
                     <GoBackArrow />
-                    {/* 4. Usar o texto traduzido */}
-                    <Text style={styles.titleText}>{t.concierge}</Text>
+                    <Text style={styles.titleText}>{t('conciergeList.concierge')}</Text>
                 </View>
 
                 <View style={styles.searchContainer}>
@@ -121,8 +93,7 @@ const ConciergeList = () => {
                 </View>
 
                 <View style={styles.categoriesHeader}>
-                    {/* 4. Usar o texto traduzido */}
-                    <Text style={styles.categoryText}>{t.categories}</Text>
+                    <Text style={styles.categoryText}>{t('conciergeList.categories')}</Text>
                 </View>
 
                 <View style={styles.cardsContainer}>
@@ -139,16 +110,16 @@ const ConciergeList = () => {
                                     style={styles.cardTouchable}
                                 >
                                     <CardServicesCategoriesInside
-                                        title={prd.product.name}
+                                        // Passando as chaves de tradução para o componente filho
+                                        title={t(prd.product.name)}
                                         image={prd.upload.filePath}
-                                        description={prd.product.description}
+                                        description={t(prd.product.description)}
                                     />
                                 </TouchableOpacity>
                             ))
                         ) : (
                             <View style={styles.emptyContainer}>
-                                {/* 4. Usar o texto traduzido */}
-                                <Text style={styles.emptyText}>{t.noItems}</Text>
+                                <Text style={styles.emptyText}>{t('conciergeList.noItems')}</Text>
                             </View>
                         )}
                     </ScrollView>

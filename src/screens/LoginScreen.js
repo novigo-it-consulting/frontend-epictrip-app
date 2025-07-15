@@ -107,7 +107,7 @@ const LoginScreen = ({ navigation }) => {
         const userId = response.data.userId;
         await AsyncStorage.setItem("token", response.data.token);
         await AsyncStorage.setItem("username", data.username);
-        await AsyncStorage.setItem("language", response.data.language);
+        // await AsyncStorage.setItem("language", response.data.language);
         if (userId) {
           await AsyncStorage.setItem("userId", userId);
           navigation.navigate("Home");

@@ -166,7 +166,9 @@
     "titleError": "Error",
     "errorFields": "Please fill out all fields correctly",
     "titleAddCard": "Add Card",
-    "buttonAddCard": "Add Card"
+    "buttonAddCard": "Add Card",
+    "cardAddedSuccess": "Card added successfully!",
+    "cardAddedError": "Failed to add card. Please try again."
   },
   "payment": {
     "titlePayment": "Payment",
@@ -182,6 +184,9 @@
     "categoryShop": "Shop"
   },
   "bookingScreen": {
+    "title": "Bookings",
+    "latestBookings": "Latest bookings",
+    "loading": "Loading your bookings...",
     "yourReservations": "No Bookings Yet",
     "bookButton": "Make a reservation",
     "aboutReservation": "About Your Reservation",
@@ -223,5 +228,61 @@
       "title": "Useful phones",
       "content": "List of important phone numbers..."
     }
+  },
+  "bookingDetails": {
+    "about": "About Your Reservation",
+    "reservationDate": "Reservation Date",
+    "checkin": "Check-in:",
+    "checkout": "Check-out:",
+    "reservationNumber": "Reservation Number"
+  },
+  "chatScreen": {
+    "header": {
+      "userName": "Amiko",
+      "userStatus": "Online"
+    },
+    "messages": {
+      "sending": "Sending...",
+      "sendFailed": "Failed to send",
+      "typing": "Amiko is typing..."
+    },
+    "input": {
+      "placeholder": "Type a message"
+    },
+    "context": {
+      "claimContext": "This is a claim, here are the necessary data to handle it: {{travelerDetailsClaim}}. {{requestNumberClaim}}",
+      "requestNumber": "The opened request id is {{requestId}}",
+      "travelerDetails": "Traveler Details: Booking Name: {{bookingName}}, Booking Status: {{statusBooking}}, Check-In Date: {{checkinDate}}, Check-Out Date: {{checkoutDate}}, Person Name: {{fullName}}, Person Id: {{userId}}, Email: {{email}}, Phone: {{phoneNumber}}, Share Number: {{shareNumber}}.",
+      "houseDetails": "House Details: House Name: {{houseName}}, Is condo house: {{isCondoHouse}}, Location: {{number}} {{address}}, {{neighbourhood}}, {{city}}, {{state}}, {{zipCode}}, {{country}}, Maximum Capacity: {{maximumCapacity}}, Pets Allowed: {{petsAllowed}}, Smoking Allowed: {{smokingAllowed}}, Parties Allowed: {{partiesAllowed}}",
+      "amenities": "Amenities: Has Pool: {{hasPool}}, Has Babercue Grill: {{hasBabercueGrill}}, Has Central Air Conditioner: {{hasCentralAirConditioner}}, Has Splitter Air Conditioner: {{hasSplitterAirConditioner}}, Has Dryer: {{hasDryer}}, Has Washing Machine: {{hasWashingMachine}}, Has Wi-fi: {{hasWifi}}",
+      "maxCapacity": "Maximum Guests: {{maximumCapacity}}, Total Rooms: {{totalRooms}}, Total Bath Rooms: {{totalBathRooms}}",
+      "offer": "The following is an offer: The product name is {{productName}}. {{productDescription}}. the severity is {{productSeverity}}. The Address is {{number}} {{address}}, {{neighbourhood}}, {{city}}, {{state}}, {{country}}, {{zipCode}}.\n\n",
+      "notAvailable": "N/A"
+    }
+  },
+  "selectPaymentScreen": {
+    "title": "Select Payment",
+    "savedCards": "Saved cards",
+    "totalProducts": "Total Products",
+    "totalTax": "Total Tax",
+    "totalAmount": "Total Amount",
+    "payButton": "Pay",
+    "addCardButton": "Add new card",
+    "modal": {
+      "approvedTitle": "Payment Approved!",
+      "rejectedTitle": "Payment Rejected!",
+      "approvedMessage": "Your payment was successfully processed.",
+      "rejectedMessage": "Your payment could not be processed. Please try again.",
+      "returnButton": "Return to Requests"
+    }
+  },
+  "customBar": {
+    "product": "Product"
+  },
+  "conciergeList": {
+    "loading": "Loading...",
+    "concierge": "Concierge",
+    "categories": "Categories",
+    "noItems": "No items found"
   }
 }

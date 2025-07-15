@@ -166,7 +166,9 @@
     "titleError": "Error",
     "errorFields": "Por favor, complete todos los campos correctamente",
     "titleAddCard": "Agregar Tarjeta",
-    "buttonAddCard": "Agregar Tarjeta"
+    "buttonAddCard": "Agregar Tarjeta",
+    "cardAddedSuccess": "¡Tarjeta agregada con éxito!",
+    "cardAddedError": "No se pudo agregar la tarjeta. Inténtalo de nuevo."
   },
   "payment": {
     "titlePayment": "Pago",
@@ -182,6 +184,9 @@
     "categoryShop": "Tienda"
   },
   "bookingScreen": {
+    "title": "Reservas",
+    "latestBookings": "Últimas reservas",
+    "loading": "Cargando tus reservas...",
     "yourReservations": "Aún no hay reservas",
     "bookButton": "Hacer una reserva",
     "aboutReservation": "Sobre tu Reserva",
@@ -223,5 +228,61 @@
       "title": "Teléfonos útiles",
       "content": "Lista de números de teléfono importantes..."
     }
+  },
+  "bookingDetails": {
+    "about": "Sobre tu Reserva",
+    "reservationDate": "Fecha de Reserva",
+    "checkin": "Check-in:",
+    "checkout": "Check-out:",
+    "reservationNumber": "Número de Reserva"
+  },
+  "chatScreen": {
+    "header": {
+      "userName": "Amiko",
+      "userStatus": "En línea"
+    },
+    "messages": {
+      "sending": "Enviando...",
+      "sendFailed": "Error al enviar",
+      "typing": "Amiko está escribiendo..."
+    },
+    "input": {
+      "placeholder": "Escribe un mensaje"
+    },
+    "context": {
+      "claimContext": "Esta es una reclamación, aquí están los datos necesarios para gestionarla: {{travelerDetailsClaim}}. {{requestNumberClaim}}",
+      "requestNumber": "El ID de la solicitud abierta es {{requestId}}",
+      "travelerDetails": "Detalles del Viajero: Nombre de la Reserva: {{bookingName}}, Estado de la Reserva: {{statusBooking}}, Fecha de Check-In: {{checkinDate}}, Fecha de Check-Out: {{checkoutDate}}, Nombre de la Persona: {{fullName}}, ID de la Persona: {{userId}}, Correo Electrónico: {{email}}, Teléfono: {{phoneNumber}}, Número de Compartir: {{shareNumber}}.",
+      "houseDetails": "Detalles de la Casa: Nombre de la Casa: {{houseName}}, Es una casa en condominio: {{isCondoHouse}}, Ubicación: {{number}} {{address}}, {{neighbourhood}}, {{city}}, {{state}}, {{zipCode}}, {{country}}, Capacidad Máxima: {{maximumCapacity}}, Mascotas Permitidas: {{petsAllowed}}, Fumar Permitido: {{smokingAllowed}}, Fiestas Permitidas: {{partiesAllowed}}",
+      "amenities": "Comodidades: Tiene Piscina: {{hasPool}}, Tiene Parrilla: {{hasBabercueGrill}}, Tiene Aire Acondicionado Central: {{hasCentralAirConditioner}}, Tiene Aire Acondicionado Split: {{hasSplitterAirConditioner}}, Tiene Secadora: {{hasDryer}}, Tiene Lavadora: {{hasWashingMachine}}, Tiene Wi-fi: {{hasWifi}}",
+      "maxCapacity": "Máximo de Huéspedes: {{maximumCapacity}}, Total de Habitaciones: {{totalRooms}}, Total de Baños: {{totalBathRooms}}",
+      "offer": "La siguiente es una oferta: El nombre del producto es {{productName}}. {{productDescription}}. la severidad es {{productSeverity}}. La Dirección es {{number}} {{address}}, {{neighbourhood}}, {{city}}, {{state}}, {{country}}, {{zipCode}}.\n\n",
+      "notAvailable": "N/D"
+    }
+  },
+  "selectPaymentScreen": {
+    "title": "Seleccionar Pago",
+    "savedCards": "Tarjetas guardadas",
+    "totalProducts": "Total de Productos",
+    "totalTax": "Total de Impuestos",
+    "totalAmount": "Monto Total",
+    "payButton": "Pagar",
+    "addCardButton": "Agregar nueva tarjeta",
+    "modal": {
+      "approvedTitle": "¡Pago Aprobado!",
+      "rejectedTitle": "¡Pago Rechazado!",
+      "approvedMessage": "Su pago fue procesado exitosamente.",
+      "rejectedMessage": "Su pago no pudo ser procesado. Por favor, inténtelo de nuevo.",
+      "returnButton": "Volver a Solicitudes"
+    }
+  },
+  "customBar": {
+    "product": "Producto"
+  },
+  "conciergeList": {
+    "loading": "Cargando...",
+    "concierge": "Conserje",
+    "categories": "Categorías",
+    "noItems": "No se encontraron artículos"
   }
 }

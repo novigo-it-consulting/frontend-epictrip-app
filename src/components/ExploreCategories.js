@@ -92,7 +92,7 @@ const ExploreCategories = () => {
 
   const handlePress = async (id, data) => {
     switch (id) {
-      case "bbfaecfc-013e-4ce3-9ac1-80d7b4c0010b":
+      case "d0ad9914-d969-4144-84e4-c6921974766d":
         navigation.navigate('ServiceScreen', { group: id });
         break;
       case "a99bc9a0-f142-4158-8b38-bf37426f18e4":
@@ -101,7 +101,7 @@ const ExploreCategories = () => {
       case "f00977b4-354f-41d5-aaf5-fb3d935022d9":
         navigation.navigate('ChatAmico', { clickedProduct: "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3" })
         break;
-      case "d8d5deb6-dcd4-4235-98a5-a659e6e46c43":
+      case "b531f523-52a8-4607-98bc-4173224ee7a7":
         navigation.navigate('BookingScreen', { group: id });
         break;
       default:

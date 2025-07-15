@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     View,
     Text,
@@ -10,32 +10,52 @@ import {
     ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import GoBackArrow from "../components/GoBackArrow";
-
-const savedCards = [
-    { id: 1, name: "Polina personal", last4: "0123" },
-    { id: 2, name: "Polina Nubank", last4: "0123" },
-    { id: 3, name: "John Doe 1", last4: "0123" },
-];
+import { requestGetPaymentMethodsByUser } from "../services/api"; // Supondo que exista essa função
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SelectPaymentScreen = ({ navigation }) => {
+    const { t } = useTranslation();
+    const [cards, setCards] = useState([]);
     const [selectedCard, setSelectedCard] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isPaying, setIsPaying] = useState(false);
     const [paymentResult, setPaymentResult] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
 
+    // Valores de exemplo, você pode recebê-los via props ou estado
     const totalProducts = 100;
     const totalTax = 10;
     const totalAmount = totalProducts + totalTax;
 
+    useEffect(() => {
+        const fetchCards = async () => {
+            try {
+                const userId = await AsyncStorage.getItem("userId");
+                if (userId) {
+                    const response = await requestGetPaymentMethodsByUser(userId);
+                    if (response.status === 200) {
+                        setCards(response.data);
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to fetch cards:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchCards();
+    }, []);
+
     const handlePay = () => {
-        setIsLoading(true);
+        setIsPaying(true);
         setModalVisible(true);
 
-        // Simula um tempo de carregamento
         setTimeout(() => {
-            setIsLoading(false);
-            const isApproved = Math.random() > 0.5;
+            setIsPaying(false);
+            const isApproved = Math.random() > 0.5; // Simulação de aprovação/rejeição
             setPaymentResult(isApproved ? "approved" : "rejected");
         }, 2000);
     };
@@ -46,22 +66,30 @@ const SelectPaymentScreen = ({ navigation }) => {
     };
 
     const returnToRequestScreen = () => {
-        setModalVisible(false);
+        closeModal();
         navigation.navigate("RequestScreen");
     };
+
+    if (isLoading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#0057FF" />
+            </View>
+        );
+    }
 
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.content}>
                 <View style={styles.header}>
                     <GoBackArrow />
-                    <Text style={styles.title}>Select Payment</Text>
+                    <Text style={styles.title}>{t('selectPaymentScreen.title')}</Text>
                     <View style={{ width: 24 }} />
                 </View>
 
-                <Text style={styles.sectionTitle}>Saved cards</Text>
+                <Text style={styles.sectionTitle}>{t('selectPaymentScreen.savedCards')}</Text>
 
-                {savedCards.map((card) => (
+                {cards.map((card) => (
                     <View key={card.id}>
                         <TouchableOpacity
                             style={styles.cardContainer}
@@ -71,8 +99,8 @@ const SelectPaymentScreen = ({ navigation }) => {
                                 <Ionicons name="card-outline" size={24} color="#6C757D" />
                             </View>
                             <View style={styles.cardInfo}>
-                                <Text style={styles.cardName}>{card.name}</Text>
-                                <Text style={styles.cardLast4}>**** {card.last4}</Text>
+                                <Text style={styles.cardName}>{card.cardName}</Text>
+                                <Text style={styles.cardLast4}>**** {card.cardNumber.slice(-4)}</Text>
                             </View>
                             <Ionicons
                                 name={selectedCard === card.id ? "chevron-up" : "chevron-down"}
@@ -84,27 +112,27 @@ const SelectPaymentScreen = ({ navigation }) => {
                         {selectedCard === card.id && (
                             <View style={styles.paymentSummary}>
                                 <View style={styles.paymentRow}>
-                                    <Text style={styles.paymentLabel}>Total Products</Text>
+                                    <Text style={styles.paymentLabel}>{t('selectPaymentScreen.totalProducts')}</Text>
                                     <Text style={styles.paymentAmount}>$ {totalProducts.toFixed(2)}</Text>
                                 </View>
                                 <View style={styles.paymentRow}>
-                                    <Text style={styles.paymentLabel}>Total Tax</Text>
+                                    <Text style={styles.paymentLabel}>{t('selectPaymentScreen.totalTax')}</Text>
                                     <Text style={styles.paymentAmount}>$ {totalTax.toFixed(2)}</Text>
                                 </View>
                                 <View style={styles.totalRow}>
-                                    <Text style={styles.totalText}>Total Amount</Text>
+                                    <Text style={styles.totalText}>{t('selectPaymentScreen.totalAmount')}</Text>
                                     <Text style={styles.totalAmount}>$ {totalAmount.toFixed(2)}</Text>
                                 </View>
                                 <TouchableOpacity style={styles.payButton} onPress={handlePay}>
-                                    <Text style={styles.payButtonText}>Pay</Text>
+                                    <Text style={styles.payButtonText}>{t('selectPaymentScreen.payButton')}</Text>
                                 </TouchableOpacity>
                             </View>
                         )}
                     </View>
                 ))}
 
-                <TouchableOpacity style={styles.addCardButton}>
-                    <Text style={styles.addCardText}>Add new card</Text>
+                <TouchableOpacity style={styles.addCardButton} onPress={() => navigation.navigate('ChangePaymentCard')}>
+                    <Text style={styles.addCardText}>{t('selectPaymentScreen.addCardButton')}</Text>
                 </TouchableOpacity>
             </ScrollView>
 
@@ -116,7 +144,7 @@ const SelectPaymentScreen = ({ navigation }) => {
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                        {isLoading ? (
+                        {isPaying ? (
                             <ActivityIndicator size="large" color="#0057FF" />
                         ) : (
                             <>
@@ -132,17 +160,19 @@ const SelectPaymentScreen = ({ navigation }) => {
                                 />
 
                                 <Text style={styles.modalTitle}>
-                                    {paymentResult === "approved" ? "Payment Approved!" : "Payment Rejected!"}
+                                    {paymentResult === "approved"
+                                        ? t('selectPaymentScreen.modal.approvedTitle')
+                                        : t('selectPaymentScreen.modal.rejectedTitle')}
                                 </Text>
 
                                 <Text style={styles.modalText}>
                                     {paymentResult === "approved"
-                                        ? "Your payment was successfully processed."
-                                        : "Your payment could not be processed. Please try again."}
+                                        ? t('selectPaymentScreen.modal.approvedMessage')
+                                        : t('selectPaymentScreen.modal.rejectedMessage')}
                                 </Text>
 
                                 <TouchableOpacity style={styles.returnButton} onPress={returnToRequestScreen}>
-                                    <Text style={styles.returnButtonText}>Return to Requests</Text>
+                                    <Text style={styles.returnButtonText}>{t('selectPaymentScreen.modal.returnButton')}</Text>
                                 </TouchableOpacity>
                             </>
                         )}
@@ -157,6 +187,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#FFFFFF",
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     content: {
         paddingHorizontal: 16,

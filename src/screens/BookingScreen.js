@@ -7,41 +7,15 @@ import HouseCarousel from "../components/HouseCarousel";
 import FooterNavBar from "../components/FooterNavBar";
 import { requestGetBookingByUser, requestGetHousesByBooking } from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// 1. Importar o serviço de tradução
-import { translate } from "../services/translations/translateServices";
+// 1. Importar o hook de tradução
+import { useTranslation } from "react-i18next";
 
 const BookingScreen = ({ navigation }) => {
   const [bookings, setBookings] = useState([]);
   const [inactiveBookings, setInactiveBookings] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // 2. Criar estados para os textos que precisam de tradução
-  const [loadingText, setLoadingText] = useState("Loading your bookings...");
-  const [titleText, setTitleText] = useState("Bookings");
-  const [subtitleText, setSubtitleText] = useState("Latest bookings");
-
-  // 3. useEffect para buscar todas as traduções de uma vez
-  useEffect(() => {
-    const fetchTranslations = async () => {
-      try {
-        const [
-          translatedLoading,
-          translatedTitle,
-          translatedSubtitle,
-        ] = await Promise.all([
-          translate("Loading your bookings...", "en"),
-          translate("Bookings", "en"),
-          translate("Latest bookings", "en"),
-        ]);
-        setLoadingText(translatedLoading);
-        setTitleText(translatedTitle);
-        setSubtitleText(translatedSubtitle);
-      } catch (error) {
-        console.error("Falha ao buscar traduções:", error);
-      }
-    };
-    fetchTranslations();
-  }, []);
+  // 2. Inicializar o hook para obter a função 't'
+  const { t } = useTranslation();
 
   const getBookings = async () => {
     try {
@@ -51,12 +25,14 @@ const BookingScreen = ({ navigation }) => {
         const activeBookingsList = [];
         const inactiveBookingsList = [];
         const userBookings = await requestGetBookingByUser(userId);
+
         for (const booking of userBookings) {
           const houseBooking = await requestGetHousesByBooking(booking.houseId);
           const listObj = {
             bookingId: booking.bookingId,
-            bookingStatus: await translate(booking.status, "en"),
-            bookingName: await translate(booking.bookingName, "en"),
+            // ATENÇÃO: Status mantido original para a lógica funcionar corretamente
+            bookingStatus: booking.status,
+            bookingName: booking.bookingName, // Nome também mantido original
             checkIn: booking.checkIn,
             checkOut: booking.checkOut,
             shareNumber: booking.shareNumber,
@@ -72,6 +48,8 @@ const BookingScreen = ({ navigation }) => {
             houseDoorCode: houseBooking.houseDoorCode,
             condoGateCode: houseBooking.condoGateCode,
           };
+
+          // A lógica agora compara com o valor original vindo da API
           if (listObj.bookingStatus === "Active" || listObj.bookingStatus === "Incoming") {
             activeBookingsList.push(listObj);
           } else {
@@ -106,8 +84,8 @@ const BookingScreen = ({ navigation }) => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        {/* 4. Usar o estado com o texto traduzido */}
-        <Text style={styles.loadingText}>{loadingText}</Text>
+        {/* 3. Usar a função 't' com a chave de tradução */}
+        <Text style={styles.loadingText}>{t('bookingScreen.loading')}</Text>
         <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
@@ -123,8 +101,8 @@ const BookingScreen = ({ navigation }) => {
           onPress={() => navigation.goBack()}
         />
 
-        {/* 4. Usar os estados com os textos traduzidos */}
-        <Text style={styles.title}>{titleText}</Text>
+        {/* 3. Usar a função 't' com a chave de tradução */}
+        <Text style={styles.title}>{t('bookingScreen.title')}</Text>
 
         <View style={styles.searchBarContainer}>
           <SearchBarHome />
@@ -132,7 +110,8 @@ const BookingScreen = ({ navigation }) => {
 
         <FeaturedHouseCard bookings={bookings} onPress={() => getBookings()} />
 
-        <Text style={styles.subtitle}>{subtitleText}</Text>
+        {/* 3. Usar a função 't' com a chave de tradução */}
+        <Text style={styles.subtitle}>{t('bookingScreen.latestBookings')}</Text>
 
         <HouseCarousel bookings={inactiveBookings} />
 

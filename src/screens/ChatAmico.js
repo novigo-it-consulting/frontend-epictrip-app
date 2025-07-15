@@ -7,7 +7,6 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-  TouchableOpacity,
 } from 'react-native';
 import { TextInput, Button, Avatar } from 'react-native-paper';
 import Amiko from "../services/amiko/amiko.js";
@@ -15,7 +14,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GoBackArrow from "../components/GoBackArrow.js";
 import { requestGetBookingByUser, requestGetHousesByBooking, requestGetUser, getAddressById, createFirstRequest } from "../services/api";
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
+import { useTranslation } from "react-i18next";
 
 const ChatScreen = () => {
   const route = useRoute();
@@ -27,75 +27,69 @@ const ChatScreen = () => {
   const [amikoInstance, setAmikoInstance] = useState(null);
   const [chatState, setChatState] = useState('');
   const scrollViewRef = useRef();
+  const { t, i18n } = useTranslation(); // Hook de tradução
 
   const buildContext = async () => {
     try {
+      const userId = await AsyncStorage.getItem("userId");
+      const notAvailable = t('chatScreen.context.notAvailable');
+
       if (clickedProduct === 'a531dd1d-6b90-4fd1-a2e5-0e9e795288e3') {
-        const newRequestClaim = await createFirstRequest(
-          await AsyncStorage.getItem("userId"),
-          clickedProduct.product?.id || "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3"
-        );
+        const newRequestClaim = await createFirstRequest(userId, clickedProduct.product?.id || "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3");
+        const userClaim = await requestGetUser(userId);
+        const bookingClaims = await requestGetBookingByUser(userId);
 
-        let requestNumberClaim = "The opened request id is {request_id}";
-        let travelerDetailsClaim = "Traveler Details: Booking Name: {BookingName}, Booking Status: {statusBooking}, Check - In Date: {checkinDate}, Check - Out Date: {checkoutDate}, Person Name:{fullName}, Person Id:{userId}, Email: {email}, Phone: {phoneNumber}, Share Number: {shareNumber}.";
+        const travelerDetailsData = {
+          bookingName: bookingClaims?.[0]?.bookingName || notAvailable,
+          statusBooking: bookingClaims?.[0]?.status || notAvailable,
+          checkinDate: bookingClaims?.[0]?.checkIn || notAvailable,
+          checkoutDate: bookingClaims?.[0]?.checkOut || notAvailable,
+          fullName: userClaim?.data?.data?.fullName || notAvailable,
+          userId: userClaim?.data?.data?.userId || notAvailable,
+          email: userClaim?.data?.data?.email || notAvailable,
+          phoneNumber: userClaim?.data?.data?.phone || notAvailable,
+          shareNumber: bookingClaims?.[0]?.shareNumber || notAvailable,
+        };
 
-        const userClaim = await requestGetUser(await AsyncStorage.getItem("userId"));
-        const bookingClaims = await requestGetBookingByUser(await AsyncStorage.getItem("userId"));
+        const travelerDetailsClaim = t('chatScreen.context.travelerDetails', travelerDetailsData);
+        const requestNumberClaim = t('chatScreen.context.requestNumber', { requestId: newRequestClaim.uniqueNumber });
 
-        if (bookingClaims && bookingClaims.length > 0) {
-          travelerDetailsClaim = travelerDetailsClaim
-            .replace("{BookingName}", bookingClaims[0].bookingName || "N/A")
-            .replace("{statusBooking}", bookingClaims[0].status || "N/A")
-            .replace("{checkinDate}", bookingClaims[0].checkIn || "N/A")
-            .replace("{checkoutDate}", bookingClaims[0].checkOut || "N/A")
-            .replace("{fullName}", userClaim.data.data.fullName || "N/A")
-            .replace("{userId}", userClaim.data.data.userId || "N/A")
-            .replace("{email}", userClaim.data.data.email || "N/A")
-            .replace("{phoneNumber}", userClaim.data.data.phone || "N/A")
-            .replace("{shareNumber}", bookingClaims[0].shareNumber || "N/A");
-        } else {
-          travelerDetailsClaim = travelerDetailsClaim
-            .replace("{BookingName}", "N/A")
-            .replace("{statusBooking}", "N/A")
-            .replace("{checkinDate}", "N/A")
-            .replace("{checkoutDate}", "N/A")
-            .replace("{fullName}", userClaim.data.data.fullName || "N/A")
-            .replace("{userId}", userClaim.data.data.userId || "N/A")
-            .replace("{email}", userClaim.data.data.email || "N/A")
-            .replace("{phoneNumber}", userClaim.data.data.phone || "N/A")
-            .replace("{shareNumber}", "N/A");
-        }
-
-        requestNumberClaim = requestNumberClaim.replace("{request_id}", newRequestClaim.uniqueNumber);
-        return `This is a claim, here are the necessary data to handle it: ${travelerDetailsClaim}. ${requestNumberClaim}`;
+        return t('chatScreen.context.claimContext', { travelerDetailsClaim, requestNumberClaim });
       }
 
-      let contextString = "";
-      const bookings = await requestGetBookingByUser(await AsyncStorage.getItem("userId"));
-      const newRequest = await createFirstRequest(
-        await AsyncStorage.getItem("userId"),
-        clickedProduct.product?.id || "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3"
-      );
-
-      let requestNumber = `The opened request id is ${newRequest.uniqueNumber}`;
+      const bookings = await requestGetBookingByUser(userId);
+      const newRequest = await createFirstRequest(userId, clickedProduct.product?.id || "a531dd1d-6b90-4fd1-a2e5-0e9e795288e3");
+      const requestNumber = t('chatScreen.context.requestNumber', { requestId: newRequest.uniqueNumber });
 
       for (const bk of bookings) {
         if (bk.status === 'Active') {
           const house = await requestGetHousesByBooking(bk.houseId);
-          const user = await requestGetUser(await AsyncStorage.getItem("userId"));
+          const user = await requestGetUser(userId);
 
-          let houseDetails = `House Details: House Name: ${house.houseName}, Is condo house: ${house.isCondoHouse}, Location: ${house.number} ${house.address}, ${house.neighbourhood}, ${house.city}, ${house.state}, ${house.zipCode}, ${house.country}, Maximum Capacity: ${house.maximumCapacity}, Pets Allowed: ${house.petsAllowed}, Smoking Allowed: ${house.smokingAllowed}, Parties Allowed: ${house.partiesAllowed}`;
-
-          let amenities = `Amenities: Has Pool: ${house.hasPool}, Has Babercue Grill: ${house.hasBabercueGrill}, Has Central Air Conditioner: ${house.hasCentralAirConditioner}, Has Splitter Air Conditioner: ${house.hasSplitterAirConditioner}, Has Dryer: ${house.hasDryer}, Has Washing Machine: ${house.hasWashingMachine}, Has Wi-fi: ${house.hasWifi}`;
-
-          let maxCapacity = `Maximum Guests: ${house.maximumCapacity}, Total Rooms: ${house.totalRooms}, Total Bath Rooms: ${house.totalBathRooms}`;
-
-          let travelerDetails = `Traveler Details: Booking Name: ${bk.bookingName}, Booking Status: ${bk.status}, Check - In Date: ${bk.checkIn}, Check - Out Date: ${bk.checkOut}, Person Name:${user.data.data.fullName}, Person Id:${user.data.data.userId}, Email: ${user.data.data.email}, Phone: ${user.data.data.phone}, Share Number: ${bk.shareNumber}.`;
+          const houseDetails = t('chatScreen.context.houseDetails', { ...house, interpolation: { escapeValue: false } });
+          const amenities = t('chatScreen.context.amenities', { ...house, interpolation: { escapeValue: false } });
+          const maxCapacity = t('chatScreen.context.maxCapacity', { ...house, interpolation: { escapeValue: false } });
+          const travelerDetails = t('chatScreen.context.travelerDetails', {
+            bookingName: bk.bookingName,
+            statusBooking: bk.status,
+            checkinDate: bk.checkIn,
+            checkoutDate: bk.checkOut,
+            fullName: user.data.data.fullName,
+            userId: user.data.data.userId,
+            email: user.data.data.email,
+            phoneNumber: user.data.data.phone,
+            shareNumber: bk.shareNumber,
+          });
 
           let offers = "";
           for (const prd of productData) {
             const address = await getAddressById(prd.product?.location);
-            offers += `The following is an offer: The product name ${prd.product?.name || "Nome não disponível"}. ${prd.product?.description || "Descrição não disponível"}. the severity is ${prd.product?.severity || "Severidade não disponível"}. The Address is ${address.number} ${address.address}, ${address.neighbourhood}, ${address.city}, ${address.state}, ${address.country}, ${address.zipCode}.\n\n`;
+            offers += t('chatScreen.context.offer', {
+              productName: prd.product?.name || notAvailable,
+              productDescription: prd.product?.description || notAvailable,
+              productSeverity: prd.product?.severity || notAvailable,
+              ...address
+            });
           }
 
           return `${houseDetails}. ${amenities}. ${maxCapacity}. ${travelerDetails}. ${offers}. ${requestNumber}`;
@@ -123,51 +117,33 @@ const ChatScreen = () => {
 
       const amiko = new Amiko(generateUUID(), context);
 
-      amiko.onChatStateReceived = (newChatState) => {
-        setChatState(newChatState);
-      };
+      amiko.onChatStateReceived = (newChatState) => setChatState(newChatState);
 
       amiko.onMessageReceived = async (ServerMessageDto) => {
         setChatState("");
-        console.log("Mensagem recebida: ", ServerMessageDto);
-        // if (ServerMessageDto.direction === 'outgoing') {
-        //   console.log("ENTREI NO IF")
-        //   return prevMessages;
-        // }
-
         setMessages(prevMessages => {
           if (prevMessages.some(msg => msg.id === ServerMessageDto.id)) {
             return prevMessages;
           }
+          const messageContent = ServerMessageDto.direction === 'outgoing'
+            ? ServerMessageDto.metadata.originalMessage
+            : ServerMessageDto.content;
 
-          let messageContent = ''
-
-          if (ServerMessageDto.direction && ServerMessageDto.direction == 'outgoing') {
-            messageContent = ServerMessageDto.metadata.originalMessage;
-          } else {
-            messageContent = ServerMessageDto.content;
-          }
-
-          return [
-            ...prevMessages,
-            {
-              id: ServerMessageDto.id,
-              type: ServerMessageDto.metadata?.agent ? 'agent' :
-                ServerMessageDto.direction === 'incoming' ? 'reply' : 'user',
-              content: messageContent,
-              direction: ServerMessageDto.direction,
-              metadata: ServerMessageDto.metadata,
-              createdAt: ServerMessageDto.createdAt
-            }
-          ];
+          return [...prevMessages, {
+            id: ServerMessageDto.id,
+            type: ServerMessageDto.metadata?.agent ? 'agent' : ServerMessageDto.direction === 'incoming' ? 'reply' : 'user',
+            content: messageContent,
+            direction: ServerMessageDto.direction,
+            metadata: ServerMessageDto.metadata,
+            createdAt: ServerMessageDto.createdAt
+          }];
         });
       };
 
       amiko.onInitMessageList = (initialMessages) => {
         const formattedMessages = initialMessages.map((msg) => ({
           id: msg.id,
-          type: msg.metadata?.agent ? 'agent' :
-            msg.direction === 'incoming' ? 'reply' : 'user',
+          type: msg.metadata?.agent ? 'agent' : msg.direction === 'incoming' ? 'reply' : 'user',
           content: msg.direction === 'outgoing' ? msg.metadata.originalMessage : msg.content,
           direction: msg.direction,
           metadata: msg.metadata,
@@ -186,12 +162,10 @@ const ChatScreen = () => {
         amikoInstance.destroy();
       }
     };
-  }, []);
+  }, [t]); // Adicionado 't' como dependência
 
   useEffect(() => {
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollToEnd({ animated: true });
-    }
+    scrollViewRef.current?.scrollToEnd({ animated: true });
   }, [messages]);
 
   const sendMessageToAmiko = async (message) => {
@@ -199,24 +173,12 @@ const ChatScreen = () => {
     if (!messageText) return;
 
     const tempId = Date.now().toString();
-
-    // setMessages(prev => [
-    //   ...prev,
-    //   {
-    //     id: tempId,
-    //     type: 'user',
-    //     content: messageText,
-    //     direction: 'outgoing',
-    //     metadata: {},
-    //     createdAt: new Date().toISOString(),
-    //     status: 'sending'
-    //   }
-    // ]);
+    const fromLang = i18n.language.toUpperCase(); // Dinamiza o idioma de origem
 
     const content = {
       content: messageText,
       toLang: "EN-US",
-      fromLang: "PT-BR"
+      fromLang: fromLang
     };
 
     try {
@@ -249,8 +211,8 @@ const ChatScreen = () => {
               size={50}
               source={{ uri: 'https://epictrip-dev.s3.us-east-1.amazonaws.com/profilepics/Imagem+do+WhatsApp+de+2024-11-05+%C3%A0(s)+11.31.07_f195be8e.jpg' }}
             />
-            <Text style={styles.userName}>Amiko</Text>
-            <Text style={styles.userStatus}>Online</Text>
+            <Text style={styles.userName}>{t('chatScreen.header.userName')}</Text>
+            <Text style={styles.userStatus}>{t('chatScreen.header.userStatus')}</Text>
           </View>
         </View>
 
@@ -280,16 +242,16 @@ const ChatScreen = () => {
                 )}
                 <Text style={textStyle}>{msg.content}</Text>
                 {msg.status === 'sending' && (
-                  <Text style={styles.messageStatus}>Enviando...</Text>
+                  <Text style={styles.messageStatus}>{t('chatScreen.messages.sending')}</Text>
                 )}
                 {msg.status === 'failed' && (
-                  <Text style={[styles.messageStatus, { color: 'red' }]}>Falha ao enviar</Text>
+                  <Text style={[styles.messageStatus, { color: 'red' }]}>{t('chatScreen.messages.sendFailed')}</Text>
                 )}
               </View>
             );
           })}
           {chatState.state === 'composing' && (
-            <Text style={styles.typingIndicator}>Amiko está digitando...</Text>
+            <Text style={styles.typingIndicator}>{t('chatScreen.messages.typing')}</Text>
           )}
         </ScrollView>
 
@@ -297,7 +259,7 @@ const ChatScreen = () => {
           <View style={styles.textAndSendButtonView}>
             <TextInput
               style={styles.textInput}
-              placeholder="Digite uma mensagem"
+              placeholder={t('chatScreen.input.placeholder')}
               mode="outlined"
               outlineColor="transparent"
               outlineStyle={{ borderRadius: 24 }}
