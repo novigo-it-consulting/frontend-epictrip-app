@@ -8,17 +8,21 @@ import ProfileAccount from "../components/ProfileAccount";
 import FooterNavBar from "../components/FooterNavBar";
 import colors from "../colors";
 import CustomTabBar from "../components/CustomBar";
+import PullToRefreshWrapper from "../components/PullToRefreshWrapper";
 
 const HomeScreen = () => {
+  const handleRefresh = async () => {
+    console.log("Refreshing data...");
+  };
   return (
     <PaperProvider theme={theme}>
       <SafeAreaView style={styles.safeArea}>
         <AlertNotificationRoot>
-          <ScrollView contentContainerStyle={styles.scrollView}>
+          <PullToRefreshWrapper onRefresh={handleRefresh} contentContainerStyle={styles.scrollView}>
             <ProfileAccount />
             <ExploreCategories />
             <PopularEvents />
-          </ScrollView>
+          </PullToRefreshWrapper>
           <CustomTabBar />
         </AlertNotificationRoot>
       </SafeAreaView>
