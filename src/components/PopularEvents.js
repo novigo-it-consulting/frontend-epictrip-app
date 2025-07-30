@@ -57,10 +57,10 @@ const PopularEvents = () => {
         renderItem={({ item }) => (
           <Card style={styles.card}>
             <Card.Cover source={item.image} style={styles.image} />
-            <Card.Content>
-              <Title style={styles.title}>{item.title}</Title>
-              <Paragraph style={styles.description}>{item.description}</Paragraph>
-            </Card.Content>
+            <View style={{ padding: 10 }}>
+              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.description}>{item.description}</Text>
+            </View>
           </Card>
         )}
         onSnapToItem={(index) => setIndex(index)}
@@ -92,7 +92,9 @@ const styles = StyleSheet.create({
     width: "85%",
     marginRight: "auto",
     marginLeft: "auto",
+    marginTop: -100,
   },
+
   titlePage: {
     color: "#172B4D",
     fontSize: 18,
@@ -103,9 +105,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 24,
     width: "85%",
+
   },
   image: {
     height: 120,
+    width: "100%",
     borderRadius: 24,
     backgroundColor: "#fff"
   },
@@ -114,6 +118,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "left",
     color: "#172B4D",
+
   },
   description: {
     textAlign: "left",

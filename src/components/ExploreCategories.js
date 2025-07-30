@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 24,
     backgroundColor: "#FFFFFF",
+    marginTop: -100,
   },
   titlePage: {
     color: "#172B4D",

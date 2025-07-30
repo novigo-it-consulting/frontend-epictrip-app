@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { Card, Title, Paragraph } from "react-native-paper";
 import Carousel from "react-native-reanimated-carousel";
+import AnimatedDotsCarousel from "react-native-animated-dots-carousel";
 import { useTranslation } from "react-i18next";
 
 const BookingCarousel = () => {
   const width = Dimensions.get("window").width;
   const { t } = useTranslation();
+  const [index, setIndex] = useState(0);
 
-  // Os dados agora usam chaves de tradução para os textos
   const data = [
     {
       title: "Minnesota Vikings vs. New...",
@@ -40,15 +41,26 @@ const BookingCarousel = () => {
             <Card style={styles.card}>
               <Card.Cover source={item.image} style={styles.image} />
               <Card.Content>
-                <Title style={styles.title}>{t(item.titleKey)}</Title>
+                <Title style={styles.title}>{item.title}</Title>
                 <Paragraph style={styles.description}>
-                  {t(item.descriptionKey)}
+                  {item.description}
                 </Paragraph>
               </Card.Content>
             </Card>
           </View>
         )}
+        onSnapToItem={setIndex}
       />
+      <View style={styles.dotsContainer}>
+        <AnimatedDotsCarousel
+          length={data.length}
+          currentIndex={index}
+          maxIndicators={4}
+          interpolateOpacityAndColor={true}
+          activeIndicatorConfig={{ color: "#172B4D", margin: 3, opacity: 1, size: 8 }}
+          inactiveIndicatorConfig={{ color: "grey", margin: 3, opacity: 0.2, size: 8 }}
+        />
+      </View>
     </View>
   );
 };
@@ -71,7 +83,7 @@ const styles = StyleSheet.create({
   },
   carouselContent: {
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   card: {
     backgroundColor: "#fff",
@@ -84,7 +96,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 10,
-    width: "95%", // Ajustado para não cortar a sombra
+    width: "95%",
   },
   image: {
     height: 120,
@@ -101,6 +113,11 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: "#6C798F",
     fontSize: 14,
+  },
+  dotsContainer: {
+    marginTop: -100, // diminui o espaço entre os pontinhos e os cards
+    alignItems: "center",
+    width: "100%",
   },
 });
 

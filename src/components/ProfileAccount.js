@@ -132,6 +132,7 @@ const stylesProfile = StyleSheet.create({
     justifyContent: "center",
     width: "100%",
     paddingHorizontal: 20,
+    marginBottom: 20,
   },
   boxProfile: {
     width: "100%",
