@@ -1,0 +1,11 @@
+delete from categories where "categoryId" = 'b1b6b6dd-ee29-4b32-9afd-dfcbc2450cb6';
+
+delete from product_groups where "id" = '4058f065-4d6e-45fb-a687-0c8f9b419ab7';
+
+delete from uploads where "groupId"  = '4058f065-4d6e-45fb-a687-0c8f9b419ab7';
+
+delete from uploads where "categoryId"  = '73ed205f-7268-499d-8405-24e763c1c2a4';
+
+select * from products where "category"  = '4058f065-4d6e-45fb-a687-0c8f9b419ab7';
+
+delete from categories where "categoryId"  = 'e7ac454b-5c99-46b1-8cd9-6b436f7357b9';
