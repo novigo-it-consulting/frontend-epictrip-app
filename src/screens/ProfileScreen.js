@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { Dialog, Portal, Text, Button } from 'react-native-paper';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import ProfileHandleSettingsLanguage from "../components/ProfileHandleSettingsLanguage.js";
 import colors from "../colors";
 import ProfileHandleAccount from "../components/ProfileHandleAccount";
 import ProfileHandleSettingsPassword from "../components/ProfileHandleSettingsPassword";
@@ -60,6 +60,10 @@ const ProfileScreen = () => {
     }
   };
 
+  const handlePressLanguage = () => {
+    navigation.navigate("LanguageSelectionScreen");
+  };
+
   return (
     <SafeAreaView style={stylesProfile.safeArea}>
       <ScrollView
@@ -104,6 +108,13 @@ const ProfileScreen = () => {
               onPress={handlePressPaymentScreen}
             >
               <ProfileHandleSettingsPayment />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={stylesProfile.menuItem}
+              onPress={handlePressLanguage}
+            >
+              <ProfileHandleSettingsLanguage />
             </TouchableOpacity>
 
             <TouchableOpacity
