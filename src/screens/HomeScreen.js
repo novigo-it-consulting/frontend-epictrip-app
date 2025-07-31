@@ -5,7 +5,6 @@ import { AlertNotificationRoot } from "react-native-alert-notification";
 import ExploreCategories from "../components/ExploreCategories";
 import PopularEvents from "../components/PopularEvents";
 import ProfileAccount from "../components/ProfileAccount";
-import FooterNavBar from "../components/FooterNavBar";
 import colors from "../colors";
 import CustomTabBar from "../components/CustomBar";
 import PullToRefreshWrapper from "../components/PullToRefreshWrapper";
