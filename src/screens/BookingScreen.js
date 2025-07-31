@@ -118,7 +118,7 @@ const BookingScreen = ({ navigation }) => {
         <View style={styles.bottomSpace} />
       </ScrollView>
 
-      <CustomTabBar></CustomTabBar>
+      <CustomTabBar />
     </View>
   );
 };
