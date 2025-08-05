@@ -22,7 +22,7 @@ const PopularEvents = () => {
       image: require("../../assets/Categories/card_1.png"), // Certifique-se que o caminho para as imagens está correto
     },
     {
-      title: t("popularEvents.titleDisney"),
+      title: t("popularEvents.disneyPark"),
       description: "1525 Sugargrove, Orlando",
       image: require("../../assets/Categories/foto-1.png"), // Certifique-se que o caminho para as imagens está correto
     },
