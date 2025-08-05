@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-
+import ContactCard from '../components/ContactCard';
 import colors from "../colors";
 import SearchBarHome from '../components/SearchViewHome';
 import GoBackArrow from '../components/GoBackArrow';
@@ -98,6 +98,7 @@ const OffersList = () => {
         fetchData();
     }, [group]);
 
+
     const handlePressCard = (uri, prd) => {
         navigation.navigate('ConciergeDetails', { data: data, clickedImage: uri, clickedProduct: prd });
     };
@@ -114,21 +115,34 @@ const OffersList = () => {
     return (
         <PaperProvider theme={theme}>
             <SafeAreaView style={styles.safeArea}>
-                <View style={styles.headerContainer}>
+                <View style={styles.header}>
                     <GoBackArrow />
                     <Text style={styles.titleText}>{t(groupData?.title) || t('offersList.categoryFallback')}</Text>
+                    <View style={styles.searchWrapper}>
+                        <SearchBarHome widthDesired={"100%"} />
+                    </View>
                 </View>
-                <View style={styles.searchContainer}>
-                    <SearchBarHome widthDesired={"90%"} />
-                </View>
-                <ScrollView style={styles.scrollView}>
-                    <View style={styles.sectionContainer}>
+
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    {/* Seção de Categorias - Mantida como estava, pois funciona */}
+                    <View style={styles.sectionContainerCategories}>
                         <Text style={styles.sectionTitle}>{t('offersList.categories')}</Text>
                         <ExploreCategoriesProducts data={categories} />
                     </View>
-                    <View style={[styles.sectionContainer, { paddingTop: 8 }]}>
-                        <Text style={styles.sectionTitle}>{t('offersList.suggestions')}</Text>
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+
+                    {/* Seção de Sugestões (COM A CORREÇÃO) */}
+                    <View style={styles.sectionContainer}>
+                        {/* O título agora tem seu próprio padding para se alinhar */}
+                        <Text style={[styles.sectionTitle, { paddingHorizontal: 16 }]}>{t('offersList.suggestions')}</Text>
+
+                        {/* O ScrollView usa contentContainerStyle para dar espaço interno para as sombras */}
+                        <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={{
+                                paddingHorizontal: 16
+                            }}
+                        >
                             {data.map((prd) => (
                                 <TouchableOpacity key={prd.product.id} onPress={() => handlePressCard(prd.upload?.filePath, prd)}>
                                     <CardServicesCategoriesInside
@@ -141,6 +155,7 @@ const OffersList = () => {
                         </ScrollView>
                     </View>
                 </ScrollView>
+                <ContactCard />
             </SafeAreaView>
         </PaperProvider>
     );
@@ -159,34 +174,40 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: colors.backGroundLight,
     },
-    headerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 16,
+    header: {
+        paddingVertical: 16,
+        paddingHorizontal: 16, // Padding para o conteúdo do header
         backgroundColor: colors.backGroundLight,
+        flexDirection: 'column',
+        alignItems: 'flex-start',
     },
     titleText: {
-        fontSize: 24,
+        fontSize: 32,
         fontWeight: 'bold',
         color: '#172B4D',
-        marginLeft: 40
+        marginTop: 44,
     },
-    searchContainer: {
-        alignItems: 'center',
-        padding: 16,
+    searchWrapper: {
+        width: '100%',
+        marginTop: 24,
     },
-    scrollView: {
-        flex: 1,
-    },
+    // Container da lista horizontal (SEM padding, para não cortar a sombra)
     sectionContainer: {
-        paddingHorizontal: 16,
-        paddingBottom: 8,
+        marginBottom: 24,
+        height: 272,
     },
+    // Container da seção de categorias (COM padding, pois não tem lista horizontal)
+    sectionContainerCategories: {
+        paddingHorizontal: 16,
+        marginBottom: 24,
+        height: 164
+    },
+    // Estilo base para os títulos de seção
     sectionTitle: {
         fontSize: 18,
         fontWeight: 'bold',
         color: '#172B4D',
-        marginBottom: 8,
+        marginBottom: 12,
     },
     loadingContainer: {
         flex: 1,
