@@ -3,6 +3,9 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import { ArrowLeft } from 'lucide-react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import ContactCard from '../components/ContactCard';
+
+
 
 const EventDetails = () => {
     const navigation = useNavigation();
@@ -109,6 +112,7 @@ const EventDetails = () => {
                     </View>
                 </ScrollView>
             </View>
+            <ContactCard />
         </View>
     );
 };
