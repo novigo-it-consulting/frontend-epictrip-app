@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from "react-nat
 import { IconButton } from "react-native-paper";
 import SearchBarHome from "../components/SearchViewHome";
 import FeaturedHouseCard from "../components/FeaturedHouseCard";
+import CustomTabBar from "../components/CustomBar";
 import HouseCarousel from "../components/HouseCarousel";
-import FooterNavBar from "../components/FooterNavBar";
 import { requestGetBookingByUser, requestGetHousesByBooking } from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // 1. Importar o hook de tradução
@@ -118,7 +118,7 @@ const BookingScreen = ({ navigation }) => {
         <View style={styles.bottomSpace} />
       </ScrollView>
 
-      <FooterNavBar />
+      <CustomTabBar />
     </View>
   );
 };
