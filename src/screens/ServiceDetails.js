@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute } from '@react-navigation/native';
 import axios from "axios";
+import ContactCard from '../components/ContactCard';
 
 import ProblemInput from '../components/ProblemInput';
 import BookingInfo from '../components/BookingInfo';
@@ -68,7 +69,8 @@ const ConciergeDetails = () => {
         <ProblemInput productData={productData} clickedProduct={clickedProduct} />
         <BookingInfo bookingInfo={bookingInfo} />
       </ScrollView>
-      <CustomBar where={t('customBar.product')} />
+      <ContactCard />
+      {/* <CustomBar where={t('customBar.product')} /> */}
     </>
   );
 };

@@ -12,7 +12,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-
+import ContactCard from '../components/ContactCard';
 import SearchBarHome from '../components/SearchViewHome';
 import CardService from '../components/CardServices';
 import GoBackArrow from '../components/GoBackArrow';
@@ -72,7 +72,7 @@ const ServicesScreen = () => {
             }
           } catch (e) {
             console.warn(`Could not get upload for product ${product.id}`);
-            prds.push({ product: product, upload: null }); // Adiciona mesmo sem imagem
+            prds.push({ product: product, upload: null });
           }
         }
         setProductData(prds);
@@ -117,8 +117,8 @@ const ServicesScreen = () => {
         <View style={styles.header}>
           <View style={styles.headerIcons}>
             <GoBackArrow />
-            <Text style={styles.title}>{t('servicesScreen.title')}</Text>
           </View>
+          <Text style={styles.title}>{t('servicesScreen.title')}</Text>
         </View>
         <SearchBarHome />
         <ScrollView>
@@ -148,6 +148,7 @@ const ServicesScreen = () => {
               </View>
             ))}
         </ScrollView>
+        <ContactCard />
       </View>
     </SafeAreaView>
   );
@@ -163,16 +164,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   headerIcons: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    marginBottom: 60,
+    marginLeft: -15,
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
     color: '#172B4D',
-    textAlign: 'center',
-    flex: 1,
-    marginLeft: -40,
+    textAlign: 'left',
+    marginBottom: 10,
   },
   section: {
     marginBottom: 20,

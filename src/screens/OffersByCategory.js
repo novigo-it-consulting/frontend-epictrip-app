@@ -11,10 +11,11 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-
+import ContactCard from '../components/ContactCard';
 import colors from "../colors";
 import SearchBarHome from '../components/SearchViewHome';
 import GoBackArrow from '../components/GoBackArrow';
+import CategoriesBar from '../components/CategoriesBar';
 import { getProductByCategory, getUploadByProduct } from '../services/api';
 import CardServicesCategoriesInsideDetailed from '../components/CardServicesCategoriesInsideDetailed';
 
@@ -27,6 +28,8 @@ const OffersByCategory = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState([]);
+
+    const [selectedCategory, setSelectedCategory] = useState('parks');
 
     useEffect(() => {
         const getProducts = async (id) => {
@@ -96,6 +99,12 @@ const OffersByCategory = () => {
                     <SearchBarHome widthDesired={"90%"} />
                 </View>
 
+
+                <CategoriesBar
+                    selected={selectedCategory}
+                    onSelect={setSelectedCategory}
+                />
+
                 <ScrollView
                     contentContainerStyle={styles.scrollViewContent}
                     style={styles.scrollView}
@@ -124,6 +133,7 @@ const OffersByCategory = () => {
                     </View>
                 </ScrollView>
             </SafeAreaView>
+            <ContactCard />
         </PaperProvider>
     );
 };
@@ -146,15 +156,18 @@ const styles = StyleSheet.create({
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
         paddingHorizontal: 20,
         paddingTop: 20,
         paddingBottom: 10,
+        position: 'relative',
     },
     titleText: {
         fontSize: 24,
         fontWeight: 'bold',
         color: '#172B4D',
-        marginLeft: 36,
+        textAlign: 'center',
+        flex: 1,
     },
     searchContainer: {
         width: '100%',
@@ -173,7 +186,15 @@ const styles = StyleSheet.create({
     },
     cardTouchable: {
         width: '100%',
-        marginVertical: 8,
+        marginVertical: 12,
+        backgroundColor: '#fff',
+        borderRadius: 16,
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.12,
+        shadowRadius: 8,
+        padding: 0,
     },
     emptyContainer: {
         flex: 1,

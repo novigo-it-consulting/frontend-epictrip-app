@@ -21,7 +21,7 @@ const ContactCard = () => {
     return (
         <View style={styles.container}>
             <Image
-                source={{ uri: 'https://via.placeholder.com/50' }} // Placeholder image
+                source={require("../../assets/profile/1.png")}
                 style={styles.profileImage}
             />
             <View style={styles.textContainer}>
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 3,
         elevation: 10,
-        marginBottom: 0,
+        marginBottom: 8,
     },
     profileImage: {
         width: 50,
@@ -84,7 +84,13 @@ const styles = StyleSheet.create({
     iconButton: {
         marginLeft: 10,
         padding: 8,
-        backgroundColor: "#E0E0E0",
+        backgroundColor: "#E9F3FF",
+        borderRadius: 25,
+    },
+    iconButtonPhone: {
+        marginLeft: 10,
+        padding: 8,
+        backgroundColor: "#EBF9EE",
         borderRadius: 25,
     },
 });
