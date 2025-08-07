@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Image, StyleSheet, Linking, Alert } from 
 import Entypo from '@expo/vector-icons/Entypo';
 import { useTranslation } from 'react-i18next';
 
-const PHONE_NUMBER = '+5511952005261';
+const PHONE_NUMBER = '+5511961902007'
 
 const ContactCard = () => {
     const { t } = useTranslation();
