@@ -6,7 +6,8 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  ActivityIndicator
+  ActivityIndicator,
+  Platform
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -112,45 +113,55 @@ const ServicesScreen = () => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <View style={styles.headerIcons}>
-            <GoBackArrow />
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <View style={styles.headerIcons}>
+              <GoBackArrow />
+            </View>
+            <Text style={styles.title}>{t('servicesScreen.title')}</Text>
           </View>
-          <Text style={styles.title}>{t('servicesScreen.title')}</Text>
+          <SearchBarHome />
+          <ScrollView
+            contentContainerStyle={{ paddingBottom: 120 }}
+            showsVerticalScrollIndicator={false}
+          >
+            {categories
+              .filter((cat) => cat.groupId === group)
+              .map((cat) => (
+                <View key={cat.categoryId} style={styles.section}>
+                  <Text style={styles.sectionTitle}>{t(cat.categoryName)}</Text>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    {products
+                      .filter((prd) => prd.product.category === cat.categoryId)
+                      .map((prd) => (
+                        <TouchableOpacity
+                          key={prd.product.id}
+                          onPress={() => handleServicePress(prd.product.id, prd)}
+                        >
+                          <CardService
+                            title={t(prd.product.name)}
+                            image={
+                              prd.upload?.filePath ||
+                              'https://img.freepik.com/fotos-premium/praia-da-ilha-de-cantor-em-palm-beach-florida-us_79295-5856.jpg?w=996'
+                            }
+                          />
+                        </TouchableOpacity>
+                      ))}
+                  </ScrollView>
+                </View>
+              ))}
+          </ScrollView>
         </View>
-        <SearchBarHome />
-        <ScrollView>
-          {categories
-            .filter((cat) => cat.groupId === group)
-            .map((cat) => (
-              <View key={cat.categoryId} style={styles.section}>
-                <Text style={styles.sectionTitle}>{t(cat.categoryName)}</Text>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  {products
-                    .filter((prd) => prd.product.category === cat.categoryId)
-                    .map((prd) => (
-                      <TouchableOpacity
-                        key={prd.product.id}
-                        onPress={() => handleServicePress(prd.product.id, prd)}
-                      >
-                        <CardService
-                          title={t(prd.product.name)}
-                          image={
-                            prd.upload?.filePath ||
-                            'https://img.freepik.com/fotos-premium/praia-da-ilha-de-cantor-em-palm-beach-florida-us_79295-5856.jpg?w=996'
-                          }
-                        />
-                      </TouchableOpacity>
-                    ))}
-                </ScrollView>
-              </View>
-            ))}
-        </ScrollView>
+      </SafeAreaView>
+      <SafeAreaView
+        style={styles.contactCardWrapper}
+        edges={['bottom']}
+      >
         <ContactCard />
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </View>
   );
 };
 
@@ -159,6 +170,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 20,
+  },
+  contactCardWrapper: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingHorizontal: 0,
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    zIndex: 10,
   },
   header: {
     marginBottom: 10,
