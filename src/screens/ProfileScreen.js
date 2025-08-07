@@ -61,7 +61,7 @@ const ProfileScreen = () => {
   };
 
   const handlePressLanguage = () => {
-    navigation.navigate("LanguageSelectionScreen");
+    navigation.navigate("LanguageSelectionScreen", { fromProfile: true }); // Alteração aqui
   };
 
   return (
