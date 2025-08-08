@@ -5,7 +5,12 @@ import { useSharedValue } from "react-native-reanimated";
 import colors from "../colors";
 import { translate } from "../services/translations/translateServices";
 
-const ExploreCategoriesProducts = ({ data }) => {
+const ExploreCategoriesProducts = ({
+  data,
+  renderItem,
+  flatListStyle,
+  flatListContentStyle
+}) => {
   const scrollX = useSharedValue(0);
   const navigation = useNavigation();
   const [loadingText, setLoadingText] = useState("Loading");
@@ -19,7 +24,6 @@ const ExploreCategoriesProducts = ({ data }) => {
         console.error("Falha ao traduzir 'Loading':", error);
       }
     };
-
     fetchTranslation();
   }, []);
 
@@ -33,14 +37,14 @@ const ExploreCategoriesProducts = ({ data }) => {
 
   if (!data || data.length === 0) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, flatListStyle]}>
         <Text>{loadingText}</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, flatListStyle]}>
       <FlatList
         data={data}
         horizontal
@@ -49,15 +53,18 @@ const ExploreCategoriesProducts = ({ data }) => {
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item.categoryData.cat.categoryId.toString()}
-        contentContainerStyle={styles.flatListContent}
-        renderItem={({ item, index }) => (
-          <TouchableOpacity style={styles.card} onPress={() => handlePress(item.categoryData.cat.categoryId, item.categoryData.cat.categoryName)}>
-            <View style={styles.iconView}>
-              {item.uri && <Image source={{ uri: item.uri }} style={styles.image} />}
-            </View>
-            <Text style={styles.text}>{item.categoryData.cat.categoryName}</Text>
-          </TouchableOpacity>
-        )}
+        contentContainerStyle={[styles.flatListContent, flatListContentStyle]}
+        renderItem={
+          renderItem
+            ? renderItem
+            : ({ item }) => (
+              <TouchableOpacity style={styles.card} onPress={() => handlePress(item.categoryData.cat.categoryId, item.categoryData.cat.categoryName)}>
+                {item.uri && <Image source={{ uri: item.uri }} style={styles.image} />}
+                {item.icon && <Image source={item.icon} style={styles.icon} />}
+                <Text style={styles.text}>{item.categoryData.cat.categoryName}</Text>
+              </TouchableOpacity>
+            )
+        }
       />
     </View>
   );
@@ -67,12 +74,10 @@ const styles = StyleSheet.create({
   container: {
     // height: 200, // LINHA REMOVIDA! O contêiner agora se ajusta ao conteúdo.
     backgroundColor: colors.backGroundLight,
-    // As propriedades abaixo ainda são úteis para centralizar o texto "Loading"
     alignItems: 'center',
     justifyContent: 'center'
   },
   flatListContent: {
-    // O padding foi movido do container para cá para evitar que o "Loading" fique descentralizado
     padding: 16,
   },
   iconView: {
