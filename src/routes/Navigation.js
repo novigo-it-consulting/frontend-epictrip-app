@@ -37,6 +37,7 @@ import WalletScreen from "../screens/walletScreen";
 import ScheduleScreen from "../screens/ScheduleScreen";
 import CreateNewEvent from "../screens/CreateNewEvent";
 import EventDetails from "../screens/EventDetails";
+import CupomCard from "../screens/CupomCard";
 
 const Stack = createStackNavigator();
 
@@ -63,6 +64,7 @@ const Navigation = () => {
           options={noGestureScreenOptions}
         />
         <Stack.Screen name="WalletScreen" component={WalletScreen} options={noGestureScreenOptions} />
+        <Stack.Screen name="Coupons" component={CupomCard} options={noGestureScreenOptions} />
         <Stack.Screen name="EventDetails" component={EventDetails} options={noGestureScreenOptions} />
         <Stack.Screen name="CreateNewEvent" component={CreateNewEvent} options={noGestureScreenOptions} />
         <Stack.Screen name="ScheduleScreen" component={ScheduleScreen} options={noGestureScreenOptions} />

@@ -7,88 +7,68 @@ import {
     StyleSheet,
     ScrollView,
     Animated,
-    TextInput,
     Dimensions,
     ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { useTranslation } from "react-i18next";
+import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import GoBackArrow from "../components/GoBackArrow";
+// Assumindo que sua função de API está sendo importada corretamente daqui
 import { requestGetMethodsByUser } from "../services/api";
 
+// --- DIMENSÕES E LAYOUT ---
+// Dimensions ainda é necessário para o snap do carrossel e para calcular a altura do cartão baseada na largura.
 const { width: screenWidth } = Dimensions.get("window");
 
-const EditCardForm = ({ card, onSave, onCancel, t }) => {
-    const [name, setName] = useState(card.cardName);
-    const [number, setNumber] = useState(card.cardNumber);
-    const [expDate, setExpDate] = useState(card.cardExpiration);
-    const [cvv, setCvv] = useState(card.cvv);
+const HORIZONTAL_MARGIN = 16;
+const CARD_WIDTH = screenWidth - (HORIZONTAL_MARGIN * 2);
 
-    const handleSave = () => {
-        const updatedCard = { ...card, cardName: name, cardNumber: number, cardExpiration: expDate, cvv: cvv };
-        onSave(updatedCard);
-    };
+// A altura é metade da largura (aspect ratio = 2).
+const CARD_ASPECT_RATIO = 2;
+const CARD_HEIGHT = CARD_WIDTH / CARD_ASPECT_RATIO;
 
-    return (
-        <View>
-            <TextInput
-                style={styles.input}
-                placeholder={t('walletScreen.cardholderName')}
-                value={name}
-                onChangeText={setName}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder={t('walletScreen.cardNumber')}
-                value={number}
-                onChangeText={setNumber}
-                keyboardType="numeric"
-            />
-            <TextInput
-                style={styles.input}
-                placeholder={t('walletScreen.expDate')}
-                value={expDate}
-                onChangeText={setExpDate}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder={t('walletScreen.cvv')}
-                value={cvv}
-                onChangeText={setCvv}
-                keyboardType="numeric"
-            />
-            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-                <Text style={styles.saveButtonText}>{t('walletScreen.save')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
-                <Text style={styles.cancelButtonText}>{t('walletScreen.cancel')}</Text>
-            </TouchableOpacity>
-        </View>
-    );
-};
+
+// --- COMPONENTES AUXILIARES ---
+
+// Componente para o ícone da Visa
+const VisaLogo = () => (
+    <Text style={styles.visaLogo}>VISA</Text>
+);
+
+// Componente para a seta de voltar
+const GoBackArrow = () => (
+    <TouchableOpacity>
+        <Ionicons name="arrow-back" size={24} color="#000" />
+    </TouchableOpacity>
+);
+
+
+// --- COMPONENTE PRINCIPAL ---
 
 const WalletScreen = () => {
-    const { t } = useTranslation();
     const [selectedCard, setSelectedCard] = useState(null);
-    const [editingCard, setEditingCard] = useState(null);
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(true);
     const scrollX = useRef(new Animated.Value(0)).current;
 
+    // Função para buscar os métodos de pagamento do usuário via API
     const getUserPaymentMethods = async () => {
         try {
             setLoading(true);
             const userId = await AsyncStorage.getItem("userId");
+            if (!userId) {
+                console.log("ID do usuário não encontrado.");
+                setCards([]);
+                setLoading(false);
+                return;
+            }
+            // Utiliza a chamada de API real
             const userCards = await requestGetMethodsByUser(userId);
 
-            if (Array.isArray(userCards)) {
+            if (Array.isArray(userCards) && userCards.length > 0) {
                 setCards(userCards);
-                if (userCards.length > 0) {
-                    setSelectedCard(userCards[0].methodId);
-                }
+                setSelectedCard(userCards[0].methodId);
             } else {
                 setCards([]);
             }
@@ -100,247 +80,257 @@ const WalletScreen = () => {
         }
     };
 
+    // Hook para chamar a função sempre que a tela entrar em foco
     useFocusEffect(
         React.useCallback(() => {
             getUserPaymentMethods();
         }, [])
     );
 
+    // Função para lidar com a edição (a ser implementada)
     const handleEditCard = (card) => {
-        setEditingCard(card.methodId);
+        console.log("Editando o cartão:", card.methodId);
+        // Lógica para abrir um modal de edição
     };
 
-    const handleSaveCard = (updatedCard) => {
-        const updatedCards = cards.map((card) =>
-            card.methodId === updatedCard.methodId ? updatedCard : card
-        );
-        setCards(updatedCards);
-        setEditingCard(null);
-    };
-
+    // Renderiza a tela de carregamento
     if (loading) {
         return (
             <SafeAreaView style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#0057FF" />
-                <Text style={styles.loadingText}>{t('walletScreen.loading')}</Text>
             </SafeAreaView>
         );
     }
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={styles.content}>
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+                {/* Cabeçalho da tela */}
                 <View style={styles.header}>
                     <GoBackArrow />
-                    <Text style={styles.title}>{t('walletScreen.wallet')}</Text>
-                    <View style={{ width: 24 }} />
+                    <Text style={styles.title}>Wallet</Text>
                 </View>
 
-                <View style={styles.cardWrapper}>
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        pagingEnabled
-                        onScroll={Animated.event(
-                            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                            { useNativeDriver: false }
-                        )}
-                        contentContainerStyle={styles.cardScrollContent}
-                    >
-                        {Array.isArray(cards) && cards.map((card) => (
-                            <View
-                                key={card.methodId}
-                                style={[styles.cardContainer, { width: screenWidth - 32 }]}
-                            >
-                                <View style={[styles.card, selectedCard === card.methodId && styles.selectedCard]}>
-                                    {editingCard === card.methodId ? (
-                                        <EditCardForm
-                                            card={card}
-                                            onSave={handleSaveCard}
-                                            onCancel={() => setEditingCard(null)}
-                                            t={t}
-                                        />
-                                    ) : (
-                                        <TouchableOpacity onPress={() => setSelectedCard(card.methodId)}>
+                {/* Mensagem caso não haja cartões */}
+                {cards.length === 0 ? (
+                    <View style={[styles.noCardsContainer, { height: CARD_HEIGHT + 40 }]}>
+                        <Text style={styles.noCardsText}>Nenhum cartão cadastrado.</Text>
+                    </View>
+                ) : (
+                    /* Wrapper do Carrossel de Cartões */
+                    <View style={styles.cardCarouselWrapper}>
+                        <Animated.ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            pagingEnabled
+                            snapToAlignment="center"
+                            snapToInterval={screenWidth}
+                            decelerationRate="fast"
+                            onScroll={Animated.event(
+                                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                                { useNativeDriver: false }
+                            )}
+                            contentContainerStyle={styles.cardScrollContent}
+                        >
+                            {cards.map((card) => (
+                                <View key={card.methodId} style={styles.cardContainer}>
+                                    <TouchableOpacity activeOpacity={0.9} onPress={() => setSelectedCard(card.methodId)}>
+                                        <View style={styles.card}>
                                             <View style={styles.cardHeader}>
-                                                <Ionicons name="card-outline" size={24} color="#6C757D" />
+                                                {/* <VisaLogo /> */}
                                                 <TouchableOpacity onPress={() => handleEditCard(card)}>
-                                                    <Ionicons name="create-outline" size={20} color="#6C757D" />
+                                                    <Ionicons name="create-outline" size={24} color="#555" />
                                                 </TouchableOpacity>
                                             </View>
-                                            <Text style={styles.cardNumber}>•••• •••• •••• {card.cardNumber.slice(-4)} {selectedCard === card.methodId && <Text style={styles.selectedText}>{t('walletScreen.selected')}</Text>}</Text>
+                                            <View style={styles.cardBody}>
+                                                <Text style={styles.cardNumber}>
+                                                    •••• •••• •••• {card.cardNumber.slice(-4)}
+                                                </Text>
+                                            </View>
                                             <View style={styles.cardFooter}>
-                                                <Text style={styles.cardName}>{card.cardName}</Text>
+                                                <View style={styles.cardNameWrapper}>
+                                                    <Text style={styles.cardName} numberOfLines={1} ellipsizeMode="tail">{card.cardName}</Text>
+                                                </View>
                                                 <Text style={styles.cardExp}>{card.cardExpiration}</Text>
                                             </View>
-                                        </TouchableOpacity>
-                                    )}
+                                        </View>
+                                    </TouchableOpacity>
                                 </View>
-                            </View>
-                        ))}
-                    </ScrollView>
-                    <View style={styles.pagination}>
-                        {Array.isArray(cards) && cards.map((_, index) => {
-                            const inputRange = [
-                                (index - 1) * (screenWidth - 32),
-                                index * (screenWidth - 32),
-                                (index + 1) * (screenWidth - 32),
-                            ];
-                            const dotOpacity = scrollX.interpolate({
-                                inputRange,
-                                outputRange: [0.3, 1, 0.3],
-                                extrapolate: "clamp",
-                            });
-                            return <Animated.View key={index} style={[styles.dot, { opacity: dotOpacity }]} />;
-                        })}
-                    </View>
-                </View>
+                            ))}
+                        </Animated.ScrollView>
 
+                        {/* Paginação em pontos */}
+                        <View style={styles.pagination}>
+                            {cards.map((_, index) => {
+                                const inputRange = [
+                                    (index - 1) * screenWidth,
+                                    index * screenWidth,
+                                    (index + 1) * screenWidth,
+                                ];
+                                const dotOpacity = scrollX.interpolate({
+                                    inputRange,
+                                    outputRange: [0.3, 1, 0.3],
+                                    extrapolate: "clamp",
+                                });
+                                const dotWidth = scrollX.interpolate({
+                                    inputRange,
+                                    outputRange: [8, 16, 8],
+                                    extrapolate: "clamp",
+                                });
+                                return (
+                                    <Animated.View
+                                        key={index}
+                                        style={[styles.dot, { opacity: dotOpacity, width: dotWidth }]}
+                                    />
+                                );
+                            })}
+                        </View>
+                    </View>
+                )}
+
+
+                {/* Botão para adicionar novo cartão */}
                 <TouchableOpacity style={styles.addCardButton}>
-                    <Text style={styles.addCardText}>{t('walletScreen.addNewCard')}</Text>
+                    <Text style={styles.addCardText}>Add new card</Text>
                 </TouchableOpacity>
             </ScrollView>
         </SafeAreaView>
     );
 };
 
+// --- ESTILOS ---
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "#F8F9FA",
     },
-    content: {
-        paddingHorizontal: 16,
-        paddingBottom: 20,
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: "#F8F9FA",
+    },
+    scrollContent: {
+        flexGrow: 1,
+        paddingBottom: 40,
     },
     header: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
+        alignItems: 'flex-start',
         paddingVertical: 16,
+        paddingHorizontal: '4%', // Usando porcentagem
+        marginBottom: 10,
     },
     title: {
-        fontSize: 20,
+        fontSize: 32,
         fontWeight: "bold",
-        textAlign: "center",
-        flex: 1,
+        color: "#111",
+        marginTop: 16,
     },
-    cardWrapper: {
+    cardCarouselWrapper: {
+        height: CARD_HEIGHT + 40,
         alignItems: "center",
-        marginTop: 20,
+        marginBottom: 'auto',
     },
     cardScrollContent: {
-        alignItems: "center",
+        alignItems: 'center',
     },
     cardContainer: {
+        width: screenWidth,
+        paddingHorizontal: '4%', // Usando porcentagem
         justifyContent: "center",
-        alignItems: "center",
+        alignItems: "center"
     },
     card: {
-        backgroundColor: "#EAF2FF",
-        width: "100%",
-        padding: 16,
-        borderRadius: 12,
-        minHeight: 150,
-    },
-    selectedCard: {
-        borderWidth: 2,
-        borderColor: "#0057FF",
+        backgroundColor: "#E9EFFF",
+        width: 350, // Ocupa 100% do cardContainer
+        height: CARD_HEIGHT,
+        borderRadius: 16,
+        padding: 20,
+        justifyContent: "space-between",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 5,
     },
     cardHeader: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
     },
+    visaLogo: {
+        fontSize: 22,
+        fontWeight: '900',
+        fontStyle: 'italic',
+        color: '#1A1F71',
+    },
+    cardBody: {
+        flex: 1,
+        justifyContent: 'center',
+    },
     cardNumber: {
         fontSize: 16,
-        marginTop: 10,
-        letterSpacing: 2,
-    },
-    selectedText: {
-        fontSize: 14,
-        color: "#0057FF",
-        fontWeight: "bold",
+        color: "#343A40",
+        letterSpacing: 1,
     },
     cardFooter: {
         flexDirection: "row",
         justifyContent: "space-between",
-        marginTop: 10,
+        alignItems: "center",
+    },
+    cardNameWrapper: {
+        flex: 1,
+        marginRight: 10,
     },
     cardName: {
         fontSize: 16,
         fontWeight: "bold",
+        color: "#212529",
+        textTransform: 'uppercase',
     },
     cardExp: {
-        fontSize: 16,
-        color: "gray",
+        fontSize: 14,
+        color: "#495057",
     },
     pagination: {
         flexDirection: "row",
-        marginTop: 10,
+        marginTop: 20,
         justifyContent: "center",
+        alignItems: 'center',
     },
     dot: {
-        width: 8,
         height: 8,
         borderRadius: 4,
-        backgroundColor: "#D3D3D3",
+        backgroundColor: "#0057FF",
         marginHorizontal: 4,
     },
     addCardButton: {
         backgroundColor: "#0057FF",
-        paddingVertical: 14,
-        borderRadius: 8,
-        marginTop: 40,
+        paddingVertical: 18,
+        borderRadius: 12,
         alignItems: "center",
+        marginTop: 40,
+        marginHorizontal: '4%', // Usando porcentagem
+        shadowColor: "#0057FF",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 8,
     },
     addCardText: {
         color: "#FFFFFF",
         fontSize: 16,
         fontWeight: "bold",
     },
-    input: {
-        borderWidth: 1,
-        borderColor: "#D3D3D3",
-        borderRadius: 8,
-        padding: 10,
-        marginBottom: 10,
-        backgroundColor: 'white',
+    noCardsContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: '4%', // Usando porcentagem
     },
-    saveButton: {
-        backgroundColor: "#0057FF",
-        paddingVertical: 14,
-        borderRadius: 8,
-        alignItems: "center",
-        marginTop: 10,
-    },
-    saveButtonText: {
-        color: "#FFFFFF",
-        fontSize: 16,
-        fontWeight: "bold",
-    },
-    cancelButton: {
-        backgroundColor: "#E5E7EB",
-        paddingVertical: 14,
-        borderRadius: 8,
-        alignItems: "center",
-        marginTop: 10,
-    },
-    cancelButtonText: {
-        color: "#1F2937",
-        fontSize: 16,
-        fontWeight: "bold",
-    },
-    loadingContainer: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    loadingText: {
-        marginTop: 10,
-        fontSize: 16,
-        color: "#0057FF",
-    },
+    noCardsText: {
+        fontSize: 18,
+        color: '#6c757d'
+    }
 });
 
 export default WalletScreen;
