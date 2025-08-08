@@ -15,9 +15,17 @@ import ContactCard from '../components/ContactCard';
 import colors from "../colors";
 import SearchBarHome from '../components/SearchViewHome';
 import GoBackArrow from '../components/GoBackArrow';
-import CategoriesBar from '../components/CategoriesBar';
+import ExploreCategoriesProducts from '../components/ExploreCategoriesProducts';
 import { getProductByCategory, getUploadByProduct } from '../services/api';
 import CardServicesCategoriesInsideDetailed from '../components/CardServicesCategoriesInsideDetailed';
+
+const categories = [
+    { categoryData: { cat: { categoryId: 'parks', categoryName: 'Parks' } } },
+    { categoryData: { cat: { categoryId: 'shows', categoryName: 'Shows' } } },
+    { categoryData: { cat: { categoryId: 'sports', categoryName: 'Sports' } } },
+    { categoryData: { cat: { categoryId: 'car', categoryName: 'Car' } } },
+    { categoryData: { cat: { categoryId: 'tours', categoryName: 'Tours' } } },
+];
 
 const OffersByCategory = () => {
     const navigation = useNavigation();
@@ -28,8 +36,7 @@ const OffersByCategory = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState([]);
-
-    const [selectedCategory, setSelectedCategory] = useState('parks');
+    const [selected, setSelected] = useState(cat || categories[0].categoryData.cat.categoryId);
 
     useEffect(() => {
         const getProducts = async (id) => {
@@ -46,7 +53,6 @@ const OffersByCategory = () => {
                         productData.push(obj);
                     } catch (e) {
                         console.warn(`Could not get upload for product ${prd.id}`);
-                        // Adiciona o produto mesmo sem imagem para que ele apareça na lista
                         productData.push({ product: prd, upload: null });
                     }
                 }
@@ -78,6 +84,31 @@ const OffersByCategory = () => {
         navigation.navigate('ConciergeDetails', { data: data, clickedImage: uri, clickedProduct: clickedPrd });
     };
 
+    // Renderização customizada para as categorias no estilo CategoriesBar
+    const renderCategoryChip = ({ item }) => (
+        <TouchableOpacity
+            key={item.categoryData.cat.categoryId}
+            style={[
+                styles.chip,
+                selected === item.categoryData.cat.categoryId && styles.chipSelected
+            ]}
+            onPress={() => {
+                setSelected(item.categoryData.cat.categoryId);
+                navigation.navigate('OffersByCategory', {
+                    cat: item.categoryData.cat.categoryId,
+                    catName: item.categoryData.cat.categoryName
+                });
+            }}
+        >
+            <Text style={[
+                styles.chipText,
+                selected === item.categoryData.cat.categoryId && styles.chipTextSelected
+            ]}>
+                {item.categoryData.cat.categoryName}
+            </Text>
+        </TouchableOpacity>
+    );
+
     if (isLoading) {
         return (
             <View style={styles.loadingContainer}>
@@ -99,11 +130,15 @@ const OffersByCategory = () => {
                     <SearchBarHome widthDesired={"90%"} />
                 </View>
 
-
-                <CategoriesBar
-                    selected={selectedCategory}
-                    onSelect={setSelectedCategory}
-                />
+                <View style={styles.categoriesContainer}>
+                    <Text style={styles.categoriesTitle}>Categorias</Text>
+                    <ExploreCategoriesProducts
+                        data={categories}
+                        renderItem={renderCategoryChip}
+                        flatListStyle={{ height: 56, paddingVertical: 0, backgroundColor: 'transparent' }}
+                        flatListContentStyle={{ paddingHorizontal: 0 }}
+                    />
+                </View>
 
                 <ScrollView
                     contentContainerStyle={styles.scrollViewContent}
@@ -120,7 +155,7 @@ const OffersByCategory = () => {
                                 >
                                     <CardServicesCategoriesInsideDetailed
                                         title={t(prd.product.name)}
-                                        image={prd.upload?.filePath || ""} // Fallback para imagem vazia
+                                        image={prd.upload?.filePath || ""}
                                         description={t(prd.product.description)}
                                     />
                                 </TouchableOpacity>
@@ -173,6 +208,48 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
         paddingVertical: 10,
+    },
+    categoriesContainer: {
+        width: '100%',
+        marginBottom: 10,
+        marginLeft: 20,
+        paddingLeft: 10,
+    },
+    categoriesTitle: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        color: '#172B4D',
+        marginTop: 10,
+        marginBottom: 15,
+    },
+    exploreCategoriesOverride: {
+        height: 60,
+        paddingVertical: 0,
+        backgroundColor: 'transparent',
+    },
+    chip: {
+        backgroundColor: '#F4F6FA',
+        borderRadius: 20,
+        paddingHorizontal: 18,
+        paddingVertical: 8,
+        marginRight: 10,
+        minWidth: 80,
+        height: 40,
+        alignItems: "center",
+        justifyContent: "center",
+        elevation: 0,
+        shadowOpacity: 0,
+    },
+    chipSelected: {
+        backgroundColor: '#2563EB',
+    },
+    chipText: {
+        color: '#172B4D',
+        fontWeight: '500',
+        fontSize: 15,
+    },
+    chipTextSelected: {
+        color: '#fff',
     },
     scrollView: {
         width: '100%',

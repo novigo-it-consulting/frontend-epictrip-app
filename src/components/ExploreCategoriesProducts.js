@@ -3,28 +3,29 @@ import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from "react
 import { useNavigation } from '@react-navigation/native';
 import { useSharedValue } from "react-native-reanimated";
 import colors from "../colors";
-// 1. Importar o serviço de tradução
 import { translate } from "../services/translations/translateServices";
 
-const ExploreCategoriesProducts = ({ data }) => {
+const ExploreCategoriesProducts = ({
+  data,
+  renderItem,
+  flatListStyle,
+  flatListContentStyle
+}) => {
   const scrollX = useSharedValue(0);
   const navigation = useNavigation();
-  // 2. Criar estado para o texto de "Loading"
   const [loadingText, setLoadingText] = useState("Loading");
 
-  // useEffect para buscar a tradução
   useEffect(() => {
     const fetchTranslation = async () => {
       try {
-        const result = await translate("Loading", "en"); // Assumindo tradução do inglês
+        const result = await translate("Loading", "en");
         setLoadingText(result);
       } catch (error) {
         console.error("Falha ao traduzir 'Loading':", error);
       }
     };
-
     fetchTranslation();
-  }, []); // Array vazio [] garante que rode apenas uma vez
+  }, []);
 
   const handlePress = async (id, catName) => {
     navigation.navigate('OffersByCategory', { cat: id, catName: catName });
@@ -36,15 +37,14 @@ const ExploreCategoriesProducts = ({ data }) => {
 
   if (!data || data.length === 0) {
     return (
-      <View style={styles.container}>
-        {/* 3. Usar o estado com o texto traduzido */}
+      <View style={[styles.container, flatListStyle]}>
         <Text>{loadingText}</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, flatListStyle]}>
       <FlatList
         data={data}
         horizontal
@@ -53,14 +53,18 @@ const ExploreCategoriesProducts = ({ data }) => {
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item.categoryData.cat.categoryId.toString()}
-        contentContainerStyle={styles.flatListContent}
-        renderItem={({ item, index }) => (
-          <TouchableOpacity style={styles.card} onPress={() => handlePress(item.categoryData.cat.categoryId, item.categoryData.cat.categoryName)}>
-            {item.uri && <Image source={{ uri: item.uri }} style={styles.image} />}
-            {item.icon && <Image source={item.icon} style={styles.icon} />}
-            <Text style={styles.text}>{item.categoryData.cat.categoryName}</Text>
-          </TouchableOpacity>
-        )}
+        contentContainerStyle={[styles.flatListContent, flatListContentStyle]}
+        renderItem={
+          renderItem
+            ? renderItem
+            : ({ item }) => (
+              <TouchableOpacity style={styles.card} onPress={() => handlePress(item.categoryData.cat.categoryId, item.categoryData.cat.categoryName)}>
+                {item.uri && <Image source={{ uri: item.uri }} style={styles.image} />}
+                {item.icon && <Image source={item.icon} style={styles.icon} />}
+                <Text style={styles.text}>{item.categoryData.cat.categoryName}</Text>
+              </TouchableOpacity>
+            )
+        }
       />
     </View>
   );
@@ -71,7 +75,6 @@ const styles = StyleSheet.create({
     height: 200,
     paddingVertical: 16,
     backgroundColor: colors.backGroundLight,
-    // Centraliza o texto de "Loading"
     alignItems: 'center',
     justifyContent: 'center',
   },
