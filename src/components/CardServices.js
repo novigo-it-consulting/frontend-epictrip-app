@@ -5,7 +5,11 @@ const CardService = ({ title, image }) => (
   <View style={styles.card}>
     <Image source={{ uri: image }} style={styles.image} />
     <View style={styles.overlay}>
-      <Text style={styles.title}>{title}</Text>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
+          {title}
+        </Text>
+      </View>
     </View>
   </View>
 );
@@ -30,15 +34,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.20)', // leve escurecimento
     paddingBottom: 12,
   },
+  titleContainer: {
+    backgroundColor: '#F1F5F6',
+    borderRadius: 12,
+    width: 110, // tamanho fixo para todos
+    height: 32, // altura fixa para todos
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   title: {
-    color: '#fff',
+    color: '#172B4D',
     fontWeight: 'bold',
     fontSize: 16,
-    backgroundColor: 'rgba(0,0,0,0.45)',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    overflow: 'hidden',
+    textAlign: 'center',
   },
 });
 
