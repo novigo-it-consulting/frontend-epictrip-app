@@ -26,7 +26,7 @@ const ProfileScreen = () => {
   const handlePressPaymentScreen = async () => {
     try {
       const userId = await AsyncStorage.getItem("userId");
-      await requestGetMethodsByUser(userId);
+      // await requestGetMethodsByUser(userId);
       navigation.navigate("WalletScreen");
     } catch (error) {
       console.error("Erro ao verificar métodos de pagamento, navegando mesmo assim:", error);
