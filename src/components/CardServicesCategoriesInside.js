@@ -1,37 +1,57 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
+// NOVO: Importe o componente de ícone
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const CardServicesCategoriesInside = ({ title, image, description }) => {
   return (
     <View style={styles.serviceCardContainer}>
-      <View style={styles.imageWrapper}>
-        <Image
-          source={{ uri: image }}
-          style={styles.serviceImage}
-          resizeMode="stretch"  // A imagem preencherá 100% do container
-        />
+      <Image
+        source={{ uri: image }}
+        style={styles.serviceImage}
+        resizeMode="stretch"
+      />
+      <View style={styles.textCard}>
+        <Text style={styles.serviceTitle}>{title}</Text>
+
+        {/* NOVO: Bloco para exibir o endereço mockado */}
+        <View style={styles.locationContainer}>
+          <Icon name="location-outline" size={16} color="#5E6C84" />
+          <Text style={styles.addressText}>7007 Sea World Drive, Orlando</Text>
+        </View>
+
+        {/* <Text style={styles.serviceDescription}>{description}</Text> */}
       </View>
-      <Text style={styles.serviceTitle}>{title}</Text>
-      <Text style={styles.serviceDescription}>{description}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   serviceCardContainer: {
-    width: 160,
+    width: 342,
+    height: 232,
     alignItems: 'center',
     marginRight: 16,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
   },
-  imageWrapper: {
-    width: 160,
-    height: 200,
-    borderRadius: 15,
-    overflow: 'hidden',
+  textCard: {
+    width: 328,
+    alignItems: "flex-start",
   },
   serviceImage: {
-    width: '100%',
-    height: '100%',
+    width: 326,
+    height: 128,
+    borderRadius: 8,
+    marginTop: 8,
   },
   serviceTitle: {
     marginTop: 10,
@@ -39,11 +59,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#172B4D',
   },
+  // NOVO: Estilos para o container de localização
+  locationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 6,
+  },
+  // NOVO: Estilo para o texto do endereço
+  addressText: {
+    marginLeft: 6,
+    fontSize: 14,
+    color: '#5E6C84',
+  },
   serviceDescription: {
     marginTop: 5,
     fontSize: 14,
     color: '#6C798F',
-    textAlign: 'center',
+    textAlign: 'left',
   },
 });
 

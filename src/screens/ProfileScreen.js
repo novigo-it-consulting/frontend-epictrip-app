@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { Dialog, Portal, Text, Button } from 'react-native-paper';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import ProfileHandleSettingsLanguage from "../components/ProfileHandleSettingsLanguage.js";
 import colors from "../colors";
 import ProfileHandleAccount from "../components/ProfileHandleAccount";
 import ProfileHandleSettingsPassword from "../components/ProfileHandleSettingsPassword";
@@ -26,7 +26,7 @@ const ProfileScreen = () => {
   const handlePressPaymentScreen = async () => {
     try {
       const userId = await AsyncStorage.getItem("userId");
-      await requestGetMethodsByUser(userId);
+      // await requestGetMethodsByUser(userId);
       navigation.navigate("WalletScreen");
     } catch (error) {
       console.error("Erro ao verificar métodos de pagamento, navegando mesmo assim:", error);
@@ -58,6 +58,10 @@ const ProfileScreen = () => {
     } catch (error) {
       Alert.alert(t('profileScreen.logoutErrorTitle'), error.message);
     }
+  };
+
+  const handlePressLanguage = () => {
+    navigation.navigate("LanguageSelectionScreen", { fromProfile: true }); // Alteração aqui
   };
 
   return (
@@ -104,6 +108,13 @@ const ProfileScreen = () => {
               onPress={handlePressPaymentScreen}
             >
               <ProfileHandleSettingsPayment />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={stylesProfile.menuItem}
+              onPress={handlePressLanguage}
+            >
+              <ProfileHandleSettingsLanguage />
             </TouchableOpacity>
 
             <TouchableOpacity

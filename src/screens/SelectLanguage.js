@@ -10,7 +10,7 @@ import {
     TextInput,
     ActivityIndicator
 } from 'react-native';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from '@expo/vector-icons';
@@ -38,12 +38,15 @@ const getFlagEmoji = (countryCode) => {
 }
 
 const LanguageSelectionScreen = () => {
-    const { navigate } = useNavigation();
+    const { navigate, goBack } = useNavigation();
     const { t, i18n } = useTranslation();
+    const route = useRoute();
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredLanguages, setFilteredLanguages] = useState([]);
     const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
     const [isLoading, setIsLoading] = useState(true);
+
+    const fromProfile = route.params?.fromProfile;
 
     const allLanguages = AVAILABLE_LANGUAGES.map(lang => ({
         ...lang,
@@ -85,7 +88,14 @@ const LanguageSelectionScreen = () => {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor="#F8F9FC" />
-            <Text style={styles.title}>{t('languageSelectionScreen.title')}</Text>
+            <View style={styles.headerRow}>
+                {fromProfile && (
+                    <TouchableOpacity style={styles.backArrow} onPress={goBack}>
+                        <Ionicons name="arrow-back" size={28} color="#111827" />
+                    </TouchableOpacity>
+                )}
+                <Text style={styles.title}>{t('languageSelectionScreen.title')}</Text>
+            </View>
 
             <View style={styles.searchContainer}>
                 <Ionicons name="search" size={20} color="#9CA3AF" style={styles.searchIcon} />
@@ -131,12 +141,28 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#F8F9FC',
     },
+    backArrow: {
+        position: 'absolute',
+        left: 0,
+        zIndex: 10,
+        padding: 8,
+        marginLeft: 8,
+    },
+    headerRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 18,
+        marginBottom: 10,
+        minHeight: 56,
+        position: 'relative',
+    },
     title: {
         fontSize: 28,
         fontWeight: 'bold',
         color: '#111827',
         textAlign: 'center',
-        marginVertical: 20,
+        flex: 1,
     },
     searchContainer: {
         flexDirection: 'row',
@@ -203,4 +229,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default LanguageSelectionScreen;
+export default LanguageSelectionScreen; 

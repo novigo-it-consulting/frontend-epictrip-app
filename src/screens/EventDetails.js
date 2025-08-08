@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import ContactCard from '../components/ContactCard';
 
 const EventDetails = () => {
     const navigation = useNavigation();
@@ -109,6 +110,12 @@ const EventDetails = () => {
                     </View>
                 </ScrollView>
             </View>
+            <SafeAreaView
+                style={styles.contactCardWrapper}
+                edges={['bottom']}
+            >
+                <ContactCard />
+            </SafeAreaView>
         </View>
     );
 };
@@ -120,12 +127,11 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
-        maxWidth: 384,
-        alignSelf: 'center',
-        width: '100%',
+        width: '100%', // ocupa toda a largura da tela
+        alignSelf: 'stretch', // garante que o componente estique
         backgroundColor: 'white',
-        borderRadius: 12,
-        marginTop: 8,
+        borderRadius: 0, // remove bordas arredondadas para ocupar toda a tela
+        marginTop: 0, // remove margem superior
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
@@ -188,6 +194,23 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '500',
         flex: 1,
+    },
+
+    contactCardWrapper: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: '#fff',
+        borderTopLeftRadius: 24,
+        borderTopRightRadius: 24,
+        paddingHorizontal: 0,
+        elevation: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 8,
+        zIndex: 10,
     },
     contentSection: {
         paddingHorizontal: 24,

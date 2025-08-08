@@ -72,43 +72,45 @@ const ExploreCategoriesProducts = ({
 
 const styles = StyleSheet.create({
   container: {
-    height: 200,
-    paddingVertical: 16,
+    // height: 200, // LINHA REMOVIDA! O contêiner agora se ajusta ao conteúdo.
     backgroundColor: colors.backGroundLight,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   flatListContent: {
-    paddingHorizontal: 16,
+    padding: 16,
+  },
+  iconView: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#E9F3FF",
+    justifyContent: "center",
+    alignItems: "center",
   },
   card: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 12,
-    padding: 16,
-    alignItems: "center",
-    justifyContent: "center",
-    width: 100,
-    height: 100,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 80,
+    height: 96,
     marginHorizontal: 8,
-    shadowColor: "#000",
+    padding: 8,
+    // --- Sombras para iOS ---
+    shadowColor: '#172B4D',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.16,
     shadowRadius: 4,
+    // --- Sombra para Android ---
     elevation: 3,
   },
   image: {
-    width: 60,
-    height: 60,
-    marginBottom: 8,
-    borderRadius: 8,
-  },
-  icon: {
-    width: 40,
-    height: 40,
-    marginBottom: 8,
+    width: 26,
+    height: 16,
   },
   text: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: "bold",
     color: "#000",
     textAlign: "center",

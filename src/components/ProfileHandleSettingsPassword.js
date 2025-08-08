@@ -2,9 +2,11 @@ import React from 'react';
 import { StyleSheet, View, Text, Image } from "react-native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import { useTranslation } from 'react-i18next';
+import Feather from "react-native-vector-icons/Feather";
 
-export default function ProfileHandleSettingsPassword() {
+export default function ProfileHandleSettingsPayment() {
   const { t } = useTranslation();
+
 
   return (
     <AlertNotificationRoot theme={"light"}>
@@ -17,8 +19,13 @@ export default function ProfileHandleSettingsPassword() {
             />
             <View style={stylesProfile.titleName}>
               <Text style={stylesProfile.text}>
-                {t('profileHandleChangePassword.titleChangePassword')}
+                {t('Change Password')}
               </Text>
+            </View>
+            <View style={stylesProfile.boxNotification}>
+              <View style={stylesProfile.boxColor}>
+                <Feather name="chevron-right" color={"#172B4D"} size={15} />
+              </View>
             </View>
           </View>
         </View>
@@ -41,20 +48,36 @@ const stylesProfile = StyleSheet.create({
   },
   rowContainer: {
     flex: 1,
-    justifyContent: "flex-start", // Alinhado à esquerda
+    justifyContent: "flex-start",
     alignItems: "center",
     flexDirection: "row",
   },
   icon: {
     width: 48,
     height: 48,
-    borderRadius: 24
+    borderRadius: 24,
   },
   text: {
     fontSize: 16,
     textAlign: "left",
     color: "#172B4D",
     fontWeight: '600',
+  },
+  boxNotification: {
+    height: 32,
+    width: 32,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: 'center',
+    marginLeft: "auto",
+  },
+  boxColor: {
+    backgroundColor: "#F6F8FA",
+    width: 25,
+    height: 25,
+    borderRadius: 24,
+    justifyContent: "center",
+    alignItems: "center",
   },
   titleName: {
     marginLeft: 12,
