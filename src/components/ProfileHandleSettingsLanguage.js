@@ -23,7 +23,7 @@ export default function ProfileHandleSettingsLanguage() {
             </View>
             <View style={stylesProfile.boxNotification}>
               <View style={stylesProfile.boxColor}>
-                <Feather name="arrow-right" color={"#172B4D"} size={15} />
+                <Feather name="chevron-right" color={"#172B4D"} size={15} />
               </View>
             </View>
           </View>
