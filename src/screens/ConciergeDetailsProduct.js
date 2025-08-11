@@ -21,7 +21,7 @@ const ConciergeDetailsProduct = () => {
                     style={styles.image}
                 />
                 <View style={styles.goBackWrapper}>
-                    <GoBackArrow color="#fff" onPress={() => navigation.goBack()} />
+                    <GoBackArrow onPress={() => navigation.goBack()} />
                 </View>
             </View>
             <View style={styles.container}>
@@ -64,7 +64,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 0,
-        backgroundColor: '#fff',
     },
     imageContainer: {
         width: "100%",
@@ -84,6 +83,7 @@ const styles = StyleSheet.create({
         top: 32,
         left: 16,
         zIndex: 2,
+        backgroundColor: "#fff",
     },
     card: {
         backgroundColor: '#fff',
