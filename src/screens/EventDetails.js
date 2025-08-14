@@ -258,4 +258,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default EventDetails;
+export default EventDetails; 
