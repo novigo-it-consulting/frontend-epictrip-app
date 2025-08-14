@@ -131,7 +131,8 @@ const stylesProfile = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
-    paddingHorizontal: 20,
+    height: 48,
+    paddingHorizontal: 20
   },
   boxProfile: {
     width: "100%",
