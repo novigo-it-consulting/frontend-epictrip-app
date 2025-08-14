@@ -25,6 +25,7 @@ import ServiceDetails from "../screens/ServiceDetails";
 import ServicesScreen from "../screens/ServiceScreen";
 import ConciergeDetails from "../screens/ConciergeDetails";
 import ConciergeList from "../screens/ConciergeList";
+import ConciergeDetailsProduct from "../screens/ConciergeDetailsProduct";
 import HomeScreen from "../screens/HomeScreen";
 import OffersList from "../screens/OffersList";
 import OffersByCategory from "../screens/OffersByCategory";
@@ -105,6 +106,7 @@ const Navigation = () => {
         <Stack.Screen name="ExperienceScreen" component={ExperienceScreen} options={noGestureScreenOptions} />
         <Stack.Screen name="ConciergeDetails" component={ConciergeDetails} options={noGestureScreenOptions} />
         <Stack.Screen name="ConciergeList" component={ConciergeList} options={noGestureScreenOptions} />
+        <Stack.Screen name="ConciergeDetailsProduct" component={ConciergeDetailsProduct} options={noGestureScreenOptions} />
       </Stack.Navigator>
     </NavigationContainer>
   );
