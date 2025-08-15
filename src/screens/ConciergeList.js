@@ -1,73 +1,69 @@
 import React, { useEffect, useState } from 'react';
-import { Provider as PaperProvider, DefaultTheme, ActivityIndicator } from "react-native-paper";
+import { Provider as PaperProvider, DefaultTheme } from "react-native-paper";
 import {
     Text,
     SafeAreaView,
     StyleSheet,
     View,
     TouchableOpacity,
-    ScrollView
+    ActivityIndicator
 } from "react-native";
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { useTranslation } from 'react-i18next';
 import colors from "../colors";
 import SearchBarHome from '../components/SearchViewHome';
 import GoBackArrow from '../components/GoBackArrow';
 import CardServicesCategoriesInside from '../components/CardServicesCategoriesInside';
+import { ScrollView } from 'react-native-gesture-handler';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { getProductsByGroup, getUploadByProduct } from '../services/api';
 
 const ConciergeList = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const { group } = route.params || {};
-    const { t } = useTranslation();
 
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        const getProducts = async () => {
-            try {
-                let prds = [];
-                const products = await getProductsByGroup(group);
+    const getProducts = async () => {
+        try {
+            let prds = [];
+            const products = await getProductsByGroup(group);
 
-                for (const product of products) {
-                    try {
-                        const upload = await getUploadByProduct(product.id);
-                        // O nome e a descrição não são mais traduzidos aqui.
-                        // A tradução deve ocorrer no componente que os exibe.
-                        const obj = {
-                            product: product,
-                            upload: upload[0]
-                        };
-                        prds.push(obj);
-                    } catch (error) {
-                        console.warn(`Error getting image for product ${product.id}:`, error);
-                    }
+            for (const product of products) {
+                try {
+                    const upload = await getUploadByProduct(product.id);
+                    const obj = {
+                        product: product,
+                        upload: upload[0]
+                    };
+                    prds.push(obj);
+                } catch (error) {
+                    console.warn(`Erro ao obter imagem para o produto ${product.id}:`, error);
                 }
-                return prds;
-            } catch (error) {
-                console.error('Error fetching products:', error);
-                return [];
             }
-        };
+            return prds;
+        } catch (error) {
+            console.error('Erro ao buscar produtos:', error);
+            return [];
+        }
+    };
 
+    useEffect(() => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
                 const products = await getProducts();
                 setData(products);
             } catch (error) {
-                console.error('Error fetching initial data:', error);
+                console.error('Erro ao buscar dados iniciais:', error);
             } finally {
                 setIsLoading(false);
             }
         };
-
         fetchData();
-    }, [group]);
+    }, []);
 
-    const handlePressCard = (uri, prd) => {
+    const handlePressCard = async (uri, prd) => {
         navigation.navigate('ConciergeDetails', { data: data, clickedImage: uri, clickedProduct: prd });
     };
 
@@ -75,7 +71,7 @@ const ConciergeList = () => {
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#172B4D" />
-                <Text style={styles.loadingText}>{t('conciergeList.loading')}</Text>
+                <Text style={styles.loadingText}>Carregando...</Text>
             </View>
         );
     }
@@ -85,7 +81,7 @@ const ConciergeList = () => {
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.headerContainer}>
                     <GoBackArrow />
-                    <Text style={styles.titleText}>{t('conciergeList.concierge')}</Text>
+                    <Text style={styles.titleText}>Concierge</Text>
                 </View>
 
                 <View style={styles.searchContainer}>
@@ -93,7 +89,7 @@ const ConciergeList = () => {
                 </View>
 
                 <View style={styles.categoriesHeader}>
-                    <Text style={styles.categoryText}>{t('conciergeList.categories')}</Text>
+                    <Text style={styles.categoryText}>Categories</Text>
                 </View>
 
                 <View style={styles.cardsContainer}>
@@ -110,16 +106,15 @@ const ConciergeList = () => {
                                     style={styles.cardTouchable}
                                 >
                                     <CardServicesCategoriesInside
-                                        // Passando as chaves de tradução para o componente filho
-                                        title={t(prd.product.name)}
+                                        title={prd.product.name}
                                         image={prd.upload.filePath}
-                                        description={t(prd.product.description)}
+                                        description={prd.product.description}
                                     />
                                 </TouchableOpacity>
                             ))
                         ) : (
                             <View style={styles.emptyContainer}>
-                                <Text style={styles.emptyText}>{t('conciergeList.noItems')}</Text>
+                                <Text style={styles.emptyText}>Nenhum item encontrado</Text>
                             </View>
                         )}
                     </ScrollView>
@@ -165,7 +160,7 @@ const styles = StyleSheet.create({
     categoriesHeader: {
         width: '100%',
         paddingHorizontal: 20,
-        paddingVertical: 8,
+        paddingVertical: 8, // reduzido aqui
     },
     categoryText: {
         fontSize: 16,
@@ -175,14 +170,14 @@ const styles = StyleSheet.create({
     cardsContainer: {
         width: '100%',
         flex: 1,
-        marginTop: 0,
+        marginTop: 0, // evita espaço extra
     },
     scrollViewContent: {
-        paddingHorizontal: 8,
+        paddingHorizontal: 8, // cards mais próximos das bordas
         alignItems: 'center',
     },
     cardTouchable: {
-        marginHorizontal: 4,
+        marginHorizontal: 4, // cards mais colados entre si
     },
     emptyContainer: {
         flex: 1,
