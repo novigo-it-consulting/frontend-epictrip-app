@@ -64,7 +64,7 @@ const ConciergeList = () => {
     }, []);
 
     const handlePressCard = async (uri, prd) => {
-        navigation.navigate('ConciergeDetails', { data: data, clickedImage: uri, clickedProduct: prd });
+        navigation.navigate('ConciergeDetailsProduct', { data: data, clickedImage: uri, clickedProduct: prd });
     };
 
     if (isLoading) {
@@ -81,7 +81,7 @@ const ConciergeList = () => {
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.headerContainer}>
                     <GoBackArrow />
-                    <Text style={styles.titleText}>Concierge</Text>
+                    <Text style={styles.titleText}>Concierge Caraio</Text>
                 </View>
 
                 <View style={styles.searchContainer}>
