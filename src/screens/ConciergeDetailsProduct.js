@@ -21,7 +21,7 @@ const ConciergeDetailsProduct = () => {
                     style={styles.image}
                 />
                 <View style={styles.goBackWrapper}>
-                    <GoBackArrow onPress={() => navigation.goBack()} />
+                    <GoBackArrow colorArrow={"white"} onPress={() => navigation.goBack()} />
                 </View>
             </View>
             <View style={styles.container}>
