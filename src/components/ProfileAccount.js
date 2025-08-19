@@ -94,9 +94,9 @@ export default function ProfileAccount() {
           </View>
           <TouchableOpacity style={stylesProfile.boxNotification} onPress={() => navigation.navigate('RequestScreen')}>
             <View style={stylesProfile.boxColor}>
-              <Entypo name="bell" size={24} color="#172B4D" />
+              <Entypo name="mail" size={19} color="#172B4D" />
               <View style={stylesProfile.customBadge}>
-                <Text style={stylesProfile.badgeText}>3</Text>
+                <Text style={stylesProfile.badgeText}>2</Text>
               </View>
             </View>
           </TouchableOpacity>
