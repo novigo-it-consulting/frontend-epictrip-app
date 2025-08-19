@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
         color: "#172B4D",
     },
     categoryText: {
-        fontSize: 15,
+        fontSize: 20,
         fontWeight: '700',
         color: '#172B4D',
         marginLeft: 16,
