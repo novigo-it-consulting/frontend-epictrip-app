@@ -48,7 +48,7 @@ const AddCardScreen = () => {
                 await requestCreatePaymentMethod(newCard);
                 Alert.alert("Success", "Card added successfully!");
             }
-            navigation.navigate("WalletScreen", { refresh: true }); // <-- Troque goBack por navigate
+            navigation.navigate("WalletScreen", { refresh: true });
         } catch (error) {
             console.error("Error saving card:", error);
             Alert.alert("Error", "Failed to save card. Please try again.");
@@ -62,113 +62,115 @@ const AddCardScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* Header com X à esquerda e título centralizado */}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.closeButton}>
-                    <Ionicons name="close" size={28} color="#222" />
-                </TouchableOpacity>
-                <View style={styles.headerTitleWrapper}>
-                    <Text style={styles.headerTitle}>{editingCard ? "Edit card" : "Add card"}</Text>
-                </View>
-            </View>
-
-            {/* Card Modal */}
-            <View style={styles.cardModal}>
-                <View style={styles.cardModalContent}>
-                    <Text style={styles.cardNameModal} numberOfLines={1}>
-                        {cardName || "Polina J S Amaro"}
-                    </Text>
-                    <View style={styles.cardRow}>
-                        <Text style={styles.cardLabel}>Number</Text>
-                        <Text style={styles.cardNumberModal}>
-                            {cardNumber
-                                ? formatCardNumber(cardNumber.padEnd(16, "•"))
-                                : "1234 5678 9101 2345"}
-                        </Text>
+            <View style={styles.innerContainer}>
+                {/* Header com X à esquerda e título centralizado */}
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.closeButton}>
+                        <Ionicons name="close" size={28} color="#222" />
+                    </TouchableOpacity>
+                    <View style={styles.headerTitleWrapper}>
+                        <Text style={styles.headerTitle}>{editingCard ? "Edit card" : "Add card"}</Text>
                     </View>
-                    <View style={styles.cardRow}>
-                        <View style={styles.cardCol}>
-                            <Text style={styles.cardLabel}>Month/Year</Text>
-                            <Text style={styles.cardValue}>
-                                {cardExpiration || "01/23"}
+                </View>
+
+                {/* Card Modal */}
+                <View style={styles.cardModal}>
+                    <View style={styles.cardModalContent}>
+                        <Text style={styles.cardNameModal} numberOfLines={1}>
+                            {cardName || "Polina J S Amaro"}
+                        </Text>
+                        <View style={styles.cardRow}>
+                            <Text style={styles.cardLabel}>Number</Text>
+                            <Text style={styles.cardNumberModal}>
+                                {cardNumber
+                                    ? formatCardNumber(cardNumber.padEnd(16, "•"))
+                                    : "1234 5678 9101 2345"}
                             </Text>
                         </View>
-                        <View style={styles.cardCol}>
-                            <Text style={styles.cardLabel}>CVV</Text>
-                            <Text style={styles.cardValue}>
-                                {cardCvv || "123"}
-                            </Text>
-                        </View>
-                        <View style={styles.cardCol}>
-                            {/* Mastercard logo */}
-                            <View style={styles.mastercardLogo}>
-                                <View style={styles.mcRed} />
-                                <View style={styles.mcYellow} />
+                        <View style={styles.cardRow}>
+                            <View style={styles.cardCol}>
+                                <Text style={styles.cardLabel}>Month/Year</Text>
+                                <Text style={styles.cardValue}>
+                                    {cardExpiration || "01/23"}
+                                </Text>
+                            </View>
+                            <View style={styles.cardCol}>
+                                <Text style={styles.cardLabel}>CVV</Text>
+                                <Text style={styles.cardValue}>
+                                    {cardCvv || "123"}
+                                </Text>
+                            </View>
+                            <View style={styles.cardCol}>
+                                {/* Mastercard logo */}
+                                <View style={styles.mastercardLogo}>
+                                    <View style={styles.mcRed} />
+                                    <View style={styles.mcYellow} />
+                                </View>
                             </View>
                         </View>
                     </View>
                 </View>
-            </View>
 
-            {/* Card Info Form */}
-            <View style={styles.formSection}>
-                <Text style={styles.formTitle}>Card info</Text>
-                {/* Name */}
-                <View style={styles.inputWrapper}>
-                    <MaterialIcons name="person-outline" size={22} color="#A0A4A8" style={styles.inputIcon} />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Name"
-                        value={cardName}
-                        onChangeText={setCardName}
-                        placeholderTextColor="#A0A4A8"
-                    />
-                </View>
-                {/* Card Number */}
-                <View style={styles.inputWrapper}>
-                    <FontAwesome name="credit-card" size={20} color="#A0A4A8" style={styles.inputIcon} />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Card number"
-                        value={cardNumber}
-                        onChangeText={text => setCardNumber(text.replace(/[^0-9]/g, ""))}
-                        keyboardType="numeric"
-                        maxLength={16}
-                        placeholderTextColor="#A0A4A8"
-                    />
-                </View>
-                {/* Month/Year & Code */}
-                <View style={styles.rowInputs}>
-                    <View style={[styles.inputWrapper, { flex: 1, marginRight: 8 }]}>
-                        <MaterialIcons name="date-range" size={20} color="#A0A4A8" style={styles.inputIcon} />
+                {/* Card Info Form */}
+                <View style={styles.formSection}>
+                    <Text style={styles.formTitle}>Card info</Text>
+                    {/* Name */}
+                    <View style={styles.inputWrapper}>
+                        <MaterialIcons name="person-outline" size={22} color="#A0A4A8" style={styles.inputIcon} />
                         <TextInput
                             style={styles.input}
-                            placeholder="Month/Year"
-                            value={cardExpiration}
-                            onChangeText={setCardExpiration}
+                            placeholder="Name"
+                            value={cardName}
+                            onChangeText={setCardName}
                             placeholderTextColor="#A0A4A8"
-                            maxLength={5}
                         />
                     </View>
-                    <View style={[styles.inputWrapper, { flex: 1, marginLeft: 8 }]}>
-                        <Ionicons name="lock-closed-outline" size={20} color="#A0A4A8" style={styles.inputIcon} />
+                    {/* Card Number */}
+                    <View style={styles.inputWrapper}>
+                        <FontAwesome name="credit-card" size={20} color="#A0A4A8" style={styles.inputIcon} />
                         <TextInput
                             style={styles.input}
-                            placeholder="Code"
-                            value={cardCvv}
-                            onChangeText={text => setCardCvv(text.replace(/[^0-9]/g, ""))}
+                            placeholder="Card number"
+                            value={cardNumber}
+                            onChangeText={text => setCardNumber(text.replace(/[^0-9]/g, ""))}
                             keyboardType="numeric"
-                            maxLength={4}
+                            maxLength={16}
                             placeholderTextColor="#A0A4A8"
                         />
                     </View>
+                    {/* Month/Year & Code */}
+                    <View style={styles.rowInputs}>
+                        <View style={[styles.inputWrapper, { flex: 1, marginRight: 8 }]}>
+                            <MaterialIcons name="date-range" size={20} color="#A0A4A8" style={styles.inputIcon} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Month/Year"
+                                value={cardExpiration}
+                                onChangeText={setCardExpiration}
+                                placeholderTextColor="#A0A4A8"
+                                maxLength={5}
+                            />
+                        </View>
+                        <View style={[styles.inputWrapper, { flex: 1, marginLeft: 8 }]}>
+                            <Ionicons name="lock-closed-outline" size={20} color="#A0A4A8" style={styles.inputIcon} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Code"
+                                value={cardCvv}
+                                onChangeText={text => setCardCvv(text.replace(/[^0-9]/g, ""))}
+                                keyboardType="numeric"
+                                maxLength={4}
+                                placeholderTextColor="#A0A4A8"
+                            />
+                        </View>
+                    </View>
+                    {/* Add Card Button */}
+                    <TouchableOpacity style={styles.addCardButton} onPress={handleAddCard}>
+                        <Text style={styles.addCardButtonText}>
+                            {editingCard ? "Save changes" : "Add card"}
+                        </Text>
+                    </TouchableOpacity>
                 </View>
-                {/* Add Card Button */}
-                <TouchableOpacity style={styles.addCardButton} onPress={handleAddCard}>
-                    <Text style={styles.addCardButtonText}>
-                        {editingCard ? "Save changes" : "Add card"}
-                    </Text>
-                </TouchableOpacity>
             </View>
         </SafeAreaView>
     );
@@ -178,8 +180,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#fff",
-        paddingHorizontal: 20,
         marginTop: 25,
+    },
+    innerContainer: {
+        flex: 1,
+        paddingHorizontal: 20,
     },
     header: {
         flexDirection: "row",
@@ -213,8 +218,8 @@ const styles = StyleSheet.create({
     cardModal: {
         backgroundColor: "#fff",
         borderRadius: 16,
-        paddingVertical: 28, // aumentado
-        paddingHorizontal: 22, // aumentado
+        paddingVertical: 28,
+        paddingHorizontal: 22,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.07,
@@ -231,12 +236,12 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         color: "#222",
-        marginBottom: 18, // aumentado
+        marginBottom: 18,
     },
     cardRow: {
         flexDirection: "row",
         alignItems: "center",
-        marginBottom: 18, // aumentado
+        marginBottom: 18,
     },
     cardLabel: {
         fontSize: 13,
