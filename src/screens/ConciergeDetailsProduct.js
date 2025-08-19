@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View, StyleSheet, Image, StatusBar, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, StatusBar, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import ContactCard from '../components/ContactCard';
@@ -33,11 +33,7 @@ const ConciergeDetailsProduct = () => {
                 </View>
             </View>
             <View style={styles.container}>
-                <ScrollView
-                    style={{ flex: 1 }}
-                    keyboardShouldPersistTaps="handled"
-                    contentContainerStyle={{ paddingBottom: 40 }}
-                >
+                <View style={{ flex: 1 }}>
                     <View style={styles.card}>
                         <View style={styles.handle} />
                         <Text style={styles.title}>{clickedImage?.product.name}</Text>
@@ -61,7 +57,7 @@ const ConciergeDetailsProduct = () => {
                             <Text style={styles.submitButtonText}>{t('') || "Submit"}</Text>
                         </TouchableOpacity>
                     </View>
-                </ScrollView>
+                </View>
             </View>
             <ContactCard />
         </>
@@ -75,7 +71,7 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         width: "100%",
-        height: 300,
+        height: 350,
         overflow: 'hidden',
         marginBottom: -50,
         position: 'relative',
@@ -99,8 +95,9 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 24,
         paddingHorizontal: 20,
         paddingTop: 24,
-        paddingBottom: 16,
-        marginTop: -24,
+        paddingBottom: 400,
+        marginTop: 20,
+        height: '548',
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.07,
