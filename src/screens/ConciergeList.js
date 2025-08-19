@@ -6,13 +6,15 @@ import {
     StyleSheet,
     View,
     TouchableOpacity,
-    ActivityIndicator
+    ActivityIndicator,
+    Platform,
+    Image
 } from "react-native";
 import colors from "../colors";
 import SearchBarHome from '../components/SearchViewHome';
 import GoBackArrow from '../components/GoBackArrow';
-import CardServicesCategoriesInside from '../components/CardServicesCategoriesInside';
 import { ScrollView } from 'react-native-gesture-handler';
+import ContactCard from '../components/ContactCard';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { getProductsByGroup, getUploadByProduct } from '../services/api';
 
@@ -81,44 +83,56 @@ const ConciergeList = () => {
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.headerContainer}>
                     <GoBackArrow />
-                    <Text style={styles.titleText}>Concierge Caraio</Text>
                 </View>
+                <Text style={styles.titleText}>Concierge</Text>
 
                 <View style={styles.searchContainer}>
-                    <SearchBarHome widthDesired={"90%"} />
+                    <SearchBarHome
+                        widthDesired={"100%"}
+                        placeholder="Try Disney, Food or Tickets"
+                        style={styles.searchBar}
+                        inputStyle={styles.searchInput}
+                    />
                 </View>
 
-                <View style={styles.categoriesHeader}>
-                    <Text style={styles.categoryText}>Categories</Text>
-                </View>
+                <Text style={styles.categoryText}>Categories</Text>
 
-                <View style={styles.cardsContainer}>
-                    <ScrollView
-                        horizontal
-                        contentContainerStyle={styles.scrollViewContent}
-                        showsHorizontalScrollIndicator={false}
-                    >
-                        {data.length > 0 ? (
-                            data.map((prd) => (
-                                <TouchableOpacity
-                                    key={prd.product.id}
-                                    onPress={() => handlePressCard(prd.upload.filePath, prd)}
-                                    style={styles.cardTouchable}
-                                >
-                                    <CardServicesCategoriesInside
-                                        title={prd.product.name}
-                                        image={prd.upload.filePath}
-                                        description={prd.product.description}
-                                    />
-                                </TouchableOpacity>
-                            ))
-                        ) : (
-                            <View style={styles.emptyContainer}>
-                                <Text style={styles.emptyText}>Nenhum item encontrado</Text>
-                            </View>
-                        )}
-                    </ScrollView>
-                </View>
+                {/* ScrollView vertical apenas na área dos produtos */}
+                <ScrollView style={styles.verticalScroll} contentContainerStyle={styles.verticalScrollContent}>
+                    <View style={styles.cardsContainer}>
+                        <ScrollView
+                            horizontal
+                            contentContainerStyle={styles.scrollViewContent}
+                            showsHorizontalScrollIndicator={false}
+                        >
+                            {data.length > 0 ? (
+                                data.map((prd) => (
+                                    <TouchableOpacity
+                                        key={prd.product.id}
+                                        onPress={() => handlePressCard(prd.upload.filePath, prd)}
+                                        style={styles.imageCardTouchable}
+                                        activeOpacity={0.85}
+                                    >
+                                        <View style={styles.imageCard}>
+                                            <Image
+                                                source={{ uri: prd.upload.filePath }}
+                                                style={styles.image}
+                                                resizeMode="cover"
+                                            />
+                                            <Text style={styles.imageTitle}>{prd.product.name}</Text>
+                                            <Text style={styles.imageDescription}>{prd.product.description}</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                ))
+                            ) : (
+                                <View style={styles.emptyContainer}>
+                                    <Text style={styles.emptyText}>Nenhum item encontrado</Text>
+                                </View>
+                            )}
+                        </ScrollView>
+                    </View>
+                </ScrollView>
+                <ContactCard />
             </SafeAreaView>
         </PaperProvider>
     );
@@ -135,49 +149,96 @@ const theme = {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: colors.backGroundLight,
-        alignItems: 'center',
+        backgroundColor: "#fff",
+        alignItems: 'flex-start',
+        paddingTop: Platform.OS === "android" ? 30 : 0,
     },
     headerContainer: {
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 20,
-        paddingTop: 20,
-        paddingBottom: 10,
+        paddingHorizontal: 16,
+        paddingTop: 8,
+        paddingBottom: 0,
+        marginBottom: 0,
     },
     titleText: {
         fontSize: 32,
-        fontWeight: 'bold',
+        fontWeight: '700',
         color: '#172B4D',
-        marginLeft: 36,
+        marginLeft: 16,
+        marginTop: 54,
+        marginBottom: 0,
+        letterSpacing: -0.5,
     },
     searchContainer: {
         width: '100%',
-        alignItems: 'center',
-        paddingVertical: 10,
+        paddingHorizontal: 16,
+        marginTop: 25,
+        marginBottom: 0,
     },
-    categoriesHeader: {
-        width: '100%',
-        paddingHorizontal: 20,
-        paddingVertical: 8, // reduzido aqui
+    searchBar: {
+        borderRadius: 16,
+        backgroundColor: "#F6F8FB",
+        height: 44,
+        justifyContent: "center",
+    },
+    searchInput: {
+        fontSize: 15,
+        color: "#172B4D",
     },
     categoryText: {
-        fontSize: 16,
-        fontWeight: 'bold',
+        fontSize: 15,
+        fontWeight: '700',
         color: '#172B4D',
+        marginLeft: 16,
+        marginTop: 30,
+        marginBottom: 8,
+    },
+    verticalScroll: {
+        flex: 1,
+        width: '100%',
+    },
+    verticalScrollContent: {
+        paddingBottom: 16,
     },
     cardsContainer: {
         width: '100%',
-        flex: 1,
-        marginTop: 0, // evita espaço extra
+        marginTop: 0,
     },
     scrollViewContent: {
-        paddingHorizontal: 8, // cards mais próximos das bordas
-        alignItems: 'center',
+        paddingLeft: 12,
+        paddingRight: 0,
+        alignItems: 'flex-start',
     },
-    cardTouchable: {
-        marginHorizontal: 4, // cards mais colados entre si
+    imageCardTouchable: {
+        marginRight: 16,
+        marginLeft: 0,
+    },
+    imageCard: {
+        width: 170,
+        alignItems: 'flex-start',
+    },
+    image: {
+        width: 170,
+        height: 200,
+        borderRadius: 16,
+        backgroundColor: "#eee",
+    },
+    imageTitle: {
+        fontSize: 15,
+        fontWeight: "700",
+        color: "#172B4D",
+        marginTop: 8,
+        marginLeft: 2,
+        marginBottom: 0,
+    },
+    imageDescription: {
+        fontSize: 12,
+        color: "#7A869A",
+        marginLeft: 2,
+        marginBottom: 6,
+        marginTop: 2,
     },
     emptyContainer: {
         flex: 1,
@@ -193,7 +254,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: colors.backGroundLight,
+        backgroundColor: "#fff",
     },
     loadingText: {
         marginTop: 10,
