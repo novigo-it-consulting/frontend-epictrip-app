@@ -13,6 +13,8 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 
 // Assumindo que sua função de API está sendo importada corretamente daqui
 import { requestGetMethodsByUser } from "../services/api";
@@ -51,6 +53,8 @@ const WalletScreen = () => {
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(true);
     const scrollX = useRef(new Animated.Value(0)).current;
+    const navigation = useNavigation();
+    const route = useRoute();
 
     // Função para buscar os métodos de pagamento do usuário via API
     const getUserPaymentMethods = async () => {
@@ -84,12 +88,12 @@ const WalletScreen = () => {
     useFocusEffect(
         React.useCallback(() => {
             getUserPaymentMethods();
-        }, [])
+        }, [route.params?.refresh]) // <-- Adicione dependência do parâmetro refresh
     );
 
     // Função para lidar com a edição (a ser implementada)
     const handleEditCard = (card) => {
-        console.log("Editando o cartão:", card.methodId);
+        navigation.navigate("AddCardScreen", { card });
         // Lógica para abrir um modal de edição
     };
 
@@ -190,7 +194,10 @@ const WalletScreen = () => {
 
 
                 {/* Botão para adicionar novo cartão */}
-                <TouchableOpacity style={styles.addCardButton}>
+                <TouchableOpacity
+                    style={styles.addCardButton}
+                    onPress={() => navigation.navigate("AddCardScreen")}
+                >
                     <Text style={styles.addCardText}>Add new card</Text>
                 </TouchableOpacity>
             </ScrollView>
