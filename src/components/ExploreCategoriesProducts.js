@@ -58,10 +58,16 @@ const ExploreCategoriesProducts = ({
           renderItem
             ? renderItem
             : ({ item }) => (
-              <TouchableOpacity style={styles.card} onPress={() => handlePress(item.categoryData.cat.categoryId, item.categoryData.cat.categoryName)}>
-                {item.uri && <Image source={{ uri: item.uri }} style={styles.image} />}
-                {item.icon && <Image source={item.icon} style={styles.icon} />}
-                <Text style={styles.text}>{item.categoryData.cat.categoryName}</Text>
+              <TouchableOpacity
+                style={styles.card}
+                onPress={() => handlePress(item.categoryData.cat.categoryId, item.categoryData.cat.categoryName)}
+              >
+                {/* View que cria o círculo azul */}
+                <View style={styles.iconBackground}>
+                  {item.uri && <Image source={{ uri: item.uri }} style={styles.image} resizeMode="contain" />}
+                  {item.icon && <Image source={item.icon} style={styles.image} resizeMode="contain" />}
+                </View>
+                <Text style={styles.text} numberOfLines={2}>{item.categoryData.cat.categoryName}</Text>
               </TouchableOpacity>
             )
         }
@@ -72,47 +78,46 @@ const ExploreCategoriesProducts = ({
 
 const styles = StyleSheet.create({
   container: {
-    // height: 200, // LINHA REMOVIDA! O contêiner agora se ajusta ao conteúdo.
     backgroundColor: colors.backGroundLight,
-    alignItems: 'center',
     justifyContent: 'center'
   },
   flatListContent: {
-    padding: 16,
-  },
-  iconView: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#E9F3FF",
-    justifyContent: "center",
-    alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 8,
   },
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 24,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    width: 80,
-    height: 96,
+    width: 96,
+    height: 112,
     marginHorizontal: 8,
     padding: 8,
-    // --- Sombras para iOS ---
     shadowColor: '#172B4D',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.16,
+    shadowOpacity: 0.1,
     shadowRadius: 4,
-    // --- Sombra para Android ---
     elevation: 3,
   },
+  // --- NOVO ESTILO PARA O CÍRCULO AZUL ---
+  iconBackground: {
+    width: 56,
+    height: 56,
+    borderRadius: 28, // Metade da largura/altura
+    backgroundColor: '#E6F7FF', // Tom de azul claro
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8, // Espaço entre o círculo e o texto
+  },
   image: {
-    width: 26,
-    height: 16,
+    width: 32, // Tamanho ajustado para caber bem no círculo
+    height: 32, // Tamanho ajustado para caber bem no círculo
   },
   text: {
     fontSize: 12,
-    fontWeight: "bold",
-    color: "#000",
+    fontWeight: "600",
+    color: "#172B4D",
     textAlign: "center",
   },
 });

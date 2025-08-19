@@ -20,18 +20,22 @@ const ListItem = ({ scrollX, index, dataLength, title, id, onPress, withIcon, ic
     <TouchableOpacity onPress={() => onPress(id)}>
       <Card style={withIcon ? styles.card : styles.cardWithoutIcon}>
         <View style={styles.shadowContainer}>
-          {/* Renderiza o ícone se existir */}
+          {/* Renderiza o ícone com o fundo azul */}
           {withIcon && icon && (
-            <View style={styles.iconContainer}>{icon()}</View>
+            <View style={styles.iconBackground}>
+              <View style={styles.iconContainer}>{icon()}</View>
+            </View>
           )}
 
           {/* Renderiza a imagem da URI */}
           {uri && (
-            <Image
-              source={{ uri }}
-              style={styles.image}
-              resizeMode="contain"
-            />
+            <View style={styles.imageContainer}>
+              <Image
+                source={{ uri }}
+                style={styles.image}
+                resizeMode="contain"
+              />
+            </View>
           )}
 
           <View style={styles.titleContainer}>
@@ -67,27 +71,42 @@ const styles = StyleSheet.create({
   shadowContainer: {
     flex: 1,
     justifyContent: "center",
+    alignItems: "center", // Centralizar os itens verticalmente
     height: 112,
     width: 96,
   },
-  iconContainer: {
+  // Novo estilo para o fundo azul do ícone
+  iconBackground: {
+    backgroundColor: '#E6F7FF', // Cor do círculo azul
+    width: 56, // Ajuste o tamanho conforme necessário
+    height: 56, // Ajuste o tamanho conforme necessário
+    borderRadius: 28, // Metade da largura/altura para ser um círculo
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 4,
+  },
+  iconContainer: {
     alignItems: "center",
   },
   titleContainer: {
     alignItems: "center",
     width: 96,
-    height: 20,
+    height: 30, // Aumentei a altura para melhor acomodar o texto
+    justifyContent: 'center', // Centralizar o texto verticalmente
   },
   title: {
     fontSize: 12,
     color: "#172B4D",
     fontWeight: "bold",
+    textAlign: 'center', // Centralizar o texto
+  },
+  imageContainer: {
+    alignItems: "center",
+    marginBottom: 8,
   },
   image: {
     width: 64,
     height: 64,
-    marginBottom: 8,
   },
 });
 
