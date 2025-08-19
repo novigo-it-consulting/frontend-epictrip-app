@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "app.myepictrip",
-      "buildNumber": "580",
+      "buildNumber": "581",
       "entitlements": {
         "aps-environment": "production"
       },
@@ -31,7 +31,7 @@
         "backgroundColor": "#C2185B"
       },
       "package": "app.myepictrip",
-      "versionCode": 580,
+      "versionCode": 581,
       "permissions": [
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.ACCESS_COARSE_LOCATION",
