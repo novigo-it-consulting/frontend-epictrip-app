@@ -65,8 +65,8 @@ const ConciergeList = () => {
         fetchData();
     }, []);
 
-    const handlePressCard = async (uri, prd) => {
-        navigation.navigate('ConciergeDetailsProduct', { data: data, clickedImage: uri, clickedProduct: prd });
+    const handlePressCard = async (uri) => {
+        navigation.navigate('ConciergeDetailsProduct', { data: data, clickedImage: uri });
     };
 
     if (isLoading) {
@@ -109,7 +109,7 @@ const ConciergeList = () => {
                                 data.map((prd) => (
                                     <TouchableOpacity
                                         key={prd.product.id}
-                                        onPress={() => handlePressCard(prd.upload.filePath, prd)}
+                                        onPress={() => handlePressCard(prd)}
                                         style={styles.imageCardTouchable}
                                         activeOpacity={0.85}
                                     >

@@ -100,7 +100,7 @@ const OffersList = () => {
 
 
     const handlePressCard = (uri, prd) => {
-        navigation.navigate('ConciergeDetails', { clickedImage: uri, clickedProduct: prd });
+        navigation.navigate('ProductDetailsDesignTwo', { data: data, clickedImage: uri, clickedProduct: prd });
     };
 
     if (isLoading) {

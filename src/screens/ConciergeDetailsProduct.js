@@ -4,20 +4,28 @@ import { useTranslation } from 'react-i18next';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import ContactCard from '../components/ContactCard';
 import GoBackArrow from '../components/GoBackArrow';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ConciergeDetailsProduct = () => {
     const { t } = useTranslation();
     const route = useRoute();
     const navigation = useNavigation();
-    const { clickedImage, clickedProduct } = route.params || {};
+    const { clickedImage } = route.params || {};
+    const { clickedProduct } = route.params || {};
+    const { data } = route.params || {};
     const [input, setInput] = useState('');
+
+    const navigateChat = async () => {
+        await AsyncStorage.setItem("preMessage", input);
+        navigation.navigate("ChatAmico", { productData: data, clickedProduct: clickedProduct })
+    }
 
     return (
         <>
             <StatusBar barStyle="light-content" />
             <View style={styles.imageContainer}>
                 <Image
-                    source={{ uri: clickedImage }}
+                    source={{ uri: clickedImage.upload.filePath }}
                     style={styles.image}
                 />
                 <View style={styles.goBackWrapper}>
@@ -32,7 +40,7 @@ const ConciergeDetailsProduct = () => {
                 >
                     <View style={styles.card}>
                         <View style={styles.handle} />
-                        <Text style={styles.title}>{clickedProduct?.name || 'BBQ Grills'}</Text>
+                        <Text style={styles.title}>{clickedImage?.product.name}</Text>
                         <View style={styles.inputContainer}>
                             <TextInput
                                 style={styles.input}
@@ -49,7 +57,7 @@ const ConciergeDetailsProduct = () => {
                         <Text style={styles.helperText}>
                             {t('') || "This message will open a request and a chat with your Realtor."}
                         </Text>
-                        <TouchableOpacity style={styles.submitButton}>
+                        <TouchableOpacity style={styles.submitButton} onPress={() => navigateChat()}>
                             <Text style={styles.submitButtonText}>{t('') || "Submit"}</Text>
                         </TouchableOpacity>
                     </View>
