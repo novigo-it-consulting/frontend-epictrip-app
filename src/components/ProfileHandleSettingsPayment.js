@@ -14,7 +14,7 @@ export default function ProfileHandleSettingsPayment() {
         <View style={stylesProfile.boxProfile}>
           <View style={stylesProfile.rowContainer}>
             <Image
-              source={require("../../assets/profile/SettingsIcon.png")}
+              source={require("../../assets/profile/PaymentIcon.png")}
               style={stylesProfile.icon}
             />
             <View style={stylesProfile.titleName}>
