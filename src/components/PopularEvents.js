@@ -12,38 +12,34 @@ const PopularEvents = () => {
   const width = Dimensions.get("window").width;
   const { t } = useTranslation();
 
-  // Estado para armazenar o título traduzido
   const [translatedTitle, setTranslatedTitle] = useState("Popular Events");
 
   const data = [
     {
       title: "Minnesota Vikings vs. New...",
       description: "1525 Sugargrove, Orlando",
-      image: require("../../assets/Categories/card_1.png"), // Certifique-se que o caminho para as imagens está correto
+      image: require("../../assets/Categories/card_1.png"),
     },
     {
       title: t("popularEvents.disneyPark"),
       description: "1525 Sugargrove, Orlando",
-      image: require("../../assets/Categories/foto-1.png"), // Certifique-se que o caminho para as imagens está correto
+      image: require("../../assets/Categories/foto-1.png"),
     },
   ];
 
   const [index, setIndex] = useState(0);
 
-  // useEffect para chamar a tradução apenas uma vez quando o componente montar
   useEffect(() => {
     const fetchTranslation = async () => {
-      // Usando "en" como no seu código original, pode ser alterado se necessário
       const result = await translate("Popular Events", "en");
       setTranslatedTitle(result);
     };
 
     fetchTranslation();
-  }, []); // O array de dependências vazio [] garante que o efeito rode apenas uma vez
+  }, []);
 
   return (
     <View style={styles.container}>
-      {/* Usa o estado com o valor já traduzido */}
       <Text style={styles.titlePage}>{translatedTitle}</Text>
       <Carousel
         loop
@@ -97,17 +93,20 @@ const styles = StyleSheet.create({
     color: "#172B4D",
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 40,
   },
   card: {
     backgroundColor: "#fff",
     borderRadius: 24,
+    marginTop: 10,
     width: "85%",
+    elevation: 4,
   },
   image: {
     height: 120,
-    borderRadius: 24,
-    backgroundColor: "#fff"
+    borderRadius: 24, // Mantém os cantos arredondados para a imagem
+    backgroundColor: "#fff",
+    margin: 10, // Adiciona margem em todas as direções, criando o espaçamento interno
   },
   title: {
     fontSize: 18,
