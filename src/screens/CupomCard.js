@@ -1,58 +1,86 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-paper';
 import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
+import { useNavigation } from "@react-navigation/native";
 
 const CupomCard = ({
     title = "McDonald's",
     address = "7007 Sea World Drive, Orlando",
     discount = "15% OFF"
-}) => (
-    <View style={styles.container}>
+}) => { // 1. Chaves {} abrem o corpo do componente
 
-        <Feather name="arrow-left" size={24} color="#1c1c1c" style={styles.backIcon} />
-        <Text style={styles.title}>Coupon</Text>
-        <View style={styles.qrContainer}>
-            <QRCode
-                value="https://meusite.com"
-                size={200}
-            />
+    // 2. Toda a lógica foi movida para DENTRO do componente
+    const navigation = useNavigation();
+
+    const goBack = () => {
+        if (navigation.canGoBack()) {
+            navigation.goBack();
+        } else {
+            console.warn("Não é possível voltar, pois não há tela anterior.");
+        }
+    };
+
+    // 3. Adicionado 'return' explícito para o JSX
+    return (
+        <View style={styles.container}>
+
+            {/* 4. O ícone agora é clicável e chama a função goBack */}
+            <TouchableOpacity onPress={goBack} style={styles.backIconContainer}>
+                <Feather name="arrow-left" size={24} color="#1c1c1c" />
+            </TouchableOpacity>
+
+            <Text style={styles.title}>Coupon</Text>
+
+            <View style={styles.qrContainer}>
+                <QRCode
+                    value="https://meusite.com"
+                    size={200}
+                />
+            </View>
+
+            <Text style={styles.place}>{title}</Text>
+
+            <View style={styles.addressRow}>
+                <MaterialCommunityIcons name="map-marker" size={16} color="#6B7280" />
+                <Text style={styles.address}>{address}</Text>
+            </View>
+
+            <Button mode="contained" style={styles.discountBtn} labelStyle={styles.discountLabel}>
+                {discount}
+            </Button>
+
+            <View style={styles.infoRow}>
+                <Feather name="info" size={16} color="#6B7280" />
+                <Text style={styles.infoText}>
+                    This is a single use code for your use only. Get a new code each time you shop with EpicTrip.
+                </Text>
+            </View>
         </View>
-        <Text style={styles.place}>{title}</Text>
-        <View style={styles.addressRow}>
-            <MaterialCommunityIcons name="map-marker" size={16} color="#6B7280" />
-            <Text style={styles.address}>{address}</Text>
-        </View>
-        <Button mode="contained" style={styles.discountBtn} labelStyle={styles.discountLabel}>
-            {discount}
-        </Button>
-        <View style={styles.infoRow}>
-            <Feather name="info" size={16} color="#6B7280" />
-            <Text style={styles.infoText}>
-                This is a single use code for your use only. Get a new code each time you shop with EpicTrip.
-            </Text>
-        </View>
-    </View>
-);
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        paddingTop: 150, // Alterado de 32 para 80
+        paddingTop: 150,
         backgroundColor: '#fff',
     },
-    backIcon: {
+    // Estilo para o container do ícone para melhorar a área de toque
+    backIconContainer: {
         position: 'absolute',
-        top: 66, // Alterado de 24 para 36
+        top: 66,
         left: 16,
+        padding: 8, // Aumenta a área clicável
+        zIndex: 1, // Garante que fique sobre outros elementos
     },
     title: {
         fontSize: 28,
         fontWeight: 'bold',
         color: '#1c1c1c',
-        marginTop: -8, // Subiu o título
+        marginTop: -8,
         marginBottom: 24,
         alignSelf: 'flex-start',
         marginLeft: 16,
@@ -67,12 +95,7 @@ const styles = StyleSheet.create({
         shadowRadius: 8,
         shadowOffset: { width: 0, height: 2 },
         marginBottom: 24,
-        marginTop: 56, // Aumentado para descer mais o QR Code
-    },
-    qrImage: {
-        width: 140,
-        height: 140,
-        resizeMode: 'contain',
+        marginTop: 56,
     },
     place: {
         fontSize: 18,
