@@ -122,7 +122,9 @@ const ServicesScreen = () => {
             </View>
             <Text style={styles.title}>{t('servicesScreen.title')}</Text>
           </View>
-          <SearchBarHome />
+          <View style={styles.searchBarWrapper}>
+            <SearchBarHome />
+          </View>
           <ScrollView
             contentContainerStyle={{ paddingBottom: 120 }}
             showsVerticalScrollIndicator={false}
@@ -169,7 +171,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 20,
+    padding: 16,
   },
   contactCardWrapper: {
     position: 'absolute',
@@ -203,8 +205,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   section: {
-    marginBottom: 20,
-    marginTop: 20,
+    marginBottom: 15,
+    marginTop: 5,
   },
   sectionTitle: {
     fontSize: 18,
@@ -221,6 +223,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
     color: '#172B4D',
+  },
+  searchBarWrapper: {
+    marginBottom: 12,
   },
 });
 
