@@ -141,11 +141,10 @@ const OffersList = () => {
                                 alignItems: "flex-start"
                             }}
                         >
-                            {data.map((prd, index) => {
-                                let overlayText = '';
-                                if (index === 0) overlayText = 'Concert';
-                                else if (index === 1) overlayText = 'Comedy';
-                                else if (index === 2) overlayText = 'Sports';
+                            {data.map((prd) => {
+                                const categoryName = categories.find(
+                                    (catItem) => catItem.categoryData?.cat?.categoryId === prd.product?.category
+                                )?.categoryData?.cat?.categoryName;
 
                                 return (
                                     <TouchableOpacity
@@ -159,9 +158,9 @@ const OffersList = () => {
                                                 style={styles.cardImage}
                                                 resizeMode="cover"
                                             />
-                                            {index < 3 && (
+                                            {categoryName && (
                                                 <Text style={styles.overlayFixedLabel}>
-                                                    {overlayText}
+                                                    {categoryName}
                                                 </Text>
                                             )}
                                         </View>
