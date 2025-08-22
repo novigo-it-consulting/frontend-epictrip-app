@@ -16,6 +16,8 @@ import GoBackArrow from "../components/GoBackArrow.js";
 import { requestGetBookingByUser, requestGetHousesByBooking, requestGetUser, getAddressById, createFirstRequest } from "../services/api";
 import { useRoute } from '@react-navigation/native';
 import { useTranslation } from "react-i18next";
+import { TouchableOpacity } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ChatScreen = () => {
   const route = useRoute();
@@ -209,10 +211,21 @@ const ChatScreen = () => {
           <View style={styles.userInfo}>
             <Avatar.Image
               size={50}
+              style={{ marginRight: 10 }}
               source={{ uri: 'https://epictrip-dev.s3.us-east-1.amazonaws.com/profilepics/Imagem+do+WhatsApp+de+2024-11-05+%C3%A0(s)+11.31.07_f195be8e.jpg' }}
             />
-            <Text style={styles.userName}>{t('chatScreen.header.userName')}</Text>
-            <Text style={styles.userStatus}>{t('chatScreen.header.userStatus')}</Text>
+            <View style={styles.nameStatusContainer}>
+              <Text style={styles.userName}>{t('chatScreen.header.userName')}</Text>
+              <Text style={styles.userStatus}>{t('chatScreen.header.userStatus')}</Text>
+            </View>
+          </View>
+          <View style={styles.headerIcons}>
+            <TouchableOpacity>
+              <MaterialCommunityIcons name="phone" size={24} color="#364764" />
+            </TouchableOpacity>
+            <TouchableOpacity style={{ marginLeft: 16 }}>
+              <MaterialCommunityIcons name="dots-vertical" size={24} color="#364764" />
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -257,6 +270,9 @@ const ChatScreen = () => {
 
         <View style={styles.footer}>
           <View style={styles.textAndSendButtonView}>
+            <TouchableOpacity style={styles.attachmentIcon}>
+              <MaterialCommunityIcons name="paperclip" size={24} color="#364764" />
+            </TouchableOpacity>
             <TextInput
               style={styles.textInput}
               placeholder={t('chatScreen.input.placeholder')}
@@ -289,7 +305,8 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between', // Alterado para alinhar os ícones à direita
+    alignItems: 'center',
     padding: 10,
     paddingTop: 5,
     shadowColor: '#000',
@@ -297,7 +314,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     backgroundColor: '#FFFFFF',
-    alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
     borderBottomRightRadius: 24,
@@ -306,17 +322,24 @@ const styles = StyleSheet.create({
   userInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 42,
+    marginLeft: 50,
+  },
+  nameStatusContainer: {
+    marginLeft: 10,
+    justifyContent: 'center',
+  },
+  headerIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 10,
   },
   userName: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginLeft: 10,
   },
   userStatus: {
     fontSize: 12,
     color: 'green',
-    marginLeft: 10,
   },
   chatContainer: {
     flex: 1,
@@ -393,6 +416,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 24,
+    paddingHorizontal: 8, // Adicionado para espaçamento interno
+  },
+  attachmentIcon: {
+    marginRight: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   textInput: {
     flex: 0.8,
