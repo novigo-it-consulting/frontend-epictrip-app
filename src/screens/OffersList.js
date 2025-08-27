@@ -131,7 +131,7 @@ const OffersList = () => {
                     {/* Seção de Categorias */}
                     <View style={styles.sectionContainerCategories}>
                         <Text style={styles.sectionTitle}>{t('offersList.categories')}</Text>
-                        <ExploreCategoriesProducts data={categories} />
+                        <ExploreCategoriesProducts data={categories} group={group} />
                     </View>
 
                     {/* Seção de Sugestões */}

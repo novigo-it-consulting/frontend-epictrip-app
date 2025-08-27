@@ -16,7 +16,7 @@ import colors from "../colors";
 import SearchBarHome from '../components/SearchViewHome';
 import GoBackArrow from '../components/GoBackArrow';
 import ExploreCategoriesProducts from '../components/ExploreCategoriesProducts';
-import { getProductByCategory, getUploadByProduct } from '../services/api';
+import { getCategoryByGroup, getUploadByProduct, getProductsByGroup } from '../services/api';
 import CardServicesCategoriesInsideDetailed from '../components/CardServicesCategoriesInsideDetailed';
 
 // Categorias fixas
@@ -33,10 +33,11 @@ const OffersByCategory = () => {
     const route = useRoute();
     const { t } = useTranslation();
 
-    const { cat, catName } = route.params || {};
+    const { cat, catName, selectedGroup } = route.params || {};
 
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState([]);
+    const [realCategories, setRealCategories] = useState([]);
     const [selected, setSelected] = useState(cat || categories[0].categoryData.cat.categoryId);
 
     // Buscar produtos da categoria selecionada
@@ -45,8 +46,18 @@ const OffersByCategory = () => {
             if (!selected) return;
             try {
                 setIsLoading(true);
-                const products = await getProductByCategory(selected);
+                let cats = [];
+                const categories = await getCategoryByGroup(selectedGroup);
+                for (const cat of categories) {
+                    const obj = {
+                        categoryData: { cat },
+                        uri: ''
+                    }
+                    cats.push(obj);
+                }
+                setRealCategories(cats);
 
+                const products = await getProductsByGroup(selectedGroup);
                 const productData = [];
                 for (const prd of products) {
                     try {
@@ -123,7 +134,7 @@ const OffersByCategory = () => {
                 <View style={styles.categoriesContainer}>
                     <Text style={styles.categoriesTitle}>Categorias</Text>
                     <ExploreCategoriesProducts
-                        data={categories}
+                        data={realCategories}
                         renderItem={renderCategoryChip}
                         flatListStyle={{ height: 56, paddingVertical: 0, backgroundColor: 'transparent' }}
                         flatListContentStyle={{ paddingHorizontal: 0 }}

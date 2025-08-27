@@ -9,7 +9,8 @@ const ExploreCategoriesProducts = ({
   data,
   renderItem,
   flatListStyle,
-  flatListContentStyle
+  flatListContentStyle,
+  group
 }) => {
   const scrollX = useSharedValue(0);
   const navigation = useNavigation();
@@ -28,7 +29,7 @@ const ExploreCategoriesProducts = ({
   }, []);
 
   const handlePress = async (id, catName) => {
-    navigation.navigate('OffersByCategory', { cat: id, catName: catName });
+    navigation.navigate('OffersByCategory', { cat: id, catName: catName, selectedGroup: group });
   };
 
   const onScroll = (e) => {
