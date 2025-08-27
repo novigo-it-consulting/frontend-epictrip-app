@@ -19,6 +19,7 @@ import ExploreCategoriesProducts from '../components/ExploreCategoriesProducts';
 import { getProductByCategory, getUploadByProduct } from '../services/api';
 import CardServicesCategoriesInsideDetailed from '../components/CardServicesCategoriesInsideDetailed';
 
+// Categorias fixas
 const categories = [
     { categoryData: { cat: { categoryId: 'parks', categoryName: 'Parks' } } },
     { categoryData: { cat: { categoryId: 'shows', categoryName: 'Shows' } } },
@@ -38,47 +39,38 @@ const OffersByCategory = () => {
     const [data, setData] = useState([]);
     const [selected, setSelected] = useState(cat || categories[0].categoryData.cat.categoryId);
 
+    // Buscar produtos da categoria selecionada
     useEffect(() => {
-        const getProducts = async (id) => {
-            const productData = [];
+        const fetchData = async () => {
+            if (!selected) return;
             try {
-                const products = await getProductByCategory(id);
+                setIsLoading(true);
+                const products = await getProductByCategory(selected);
+
+                const productData = [];
                 for (const prd of products) {
                     try {
                         const uploadResponse = await getUploadByProduct(prd.id);
-                        const obj = {
+                        productData.push({
                             upload: uploadResponse[0],
                             product: prd
-                        };
-                        productData.push(obj);
+                        });
                     } catch (e) {
                         console.warn(`Could not get upload for product ${prd.id}`);
                         productData.push({ product: prd, upload: null });
                     }
                 }
+
+                setData(productData);
             } catch (error) {
-                console.error('Error fetching products by category:', error);
+                console.error('Erro ao buscar dados iniciais:', error);
+            } finally {
+                setIsLoading(false);
             }
-            return productData;
         };
 
-        if (cat) {
-            const fetchData = async () => {
-                try {
-                    setIsLoading(true);
-                    const products = await getProducts(cat);
-                    setData(products);
-                } catch (error) {
-                    console.error('Erro ao buscar dados iniciais:', error);
-                } finally {
-                    setIsLoading(false);
-                }
-            };
-            fetchData();
-        } else {
-            setIsLoading(false);
-        }
-    }, [cat]);
+        fetchData();
+    }, [selected]);
 
     const handlePressCard = async (uri, clickedPrd) => {
         navigation.navigate('ConciergeDetails', { data: data, clickedImage: uri, clickedProduct: clickedPrd });
@@ -94,10 +86,6 @@ const OffersByCategory = () => {
             ]}
             onPress={() => {
                 setSelected(item.categoryData.cat.categoryId);
-                navigation.navigate('OffersByCategory', {
-                    cat: item.categoryData.cat.categoryId,
-                    catName: item.categoryData.cat.categoryName
-                });
             }}
         >
             <Text style={[
@@ -123,7 +111,9 @@ const OffersByCategory = () => {
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.headerContainer}>
                     <GoBackArrow />
-                    <Text style={styles.titleText}>{t(catName) || t('offersByCategory.categoryFallback')}</Text>
+                    <Text style={styles.titleText}>
+                        {t(catName) || t('offersByCategory.categoryFallback')}
+                    </Text>
                 </View>
 
                 <View style={styles.searchContainer}>
@@ -221,11 +211,6 @@ const styles = StyleSheet.create({
         color: '#172B4D',
         marginTop: 10,
         marginBottom: 15,
-    },
-    exploreCategoriesOverride: {
-        height: 60,
-        paddingVertical: 0,
-        backgroundColor: 'transparent',
     },
     chip: {
         backgroundColor: '#F4F6FA',
