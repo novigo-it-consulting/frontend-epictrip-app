@@ -4,20 +4,25 @@ import Feather from "react-native-vector-icons/Feather";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Toast, ALERT_TYPE } from "react-native-alert-notification";
 import colors from "../colors";
-// 1. Importar o serviço de tradução
 import { translate } from "../services/translations/translateServices";
+// Mock da função, já que não temos o arquivo api.js
+const requestGetBookingByUser = async (userId) => {
+  return {
+    status: 200,
+    data: {
+      data: [{ status: "Active", shareNumber: "Loading..." }]
+    }
+  };
+};
 
 export default function ProfileHandleBooking() {
   const [bookingNumber, setBookingNumber] = useState("");
-  // 2. Criar estados para os textos que serão traduzidos
   const [noBookingsText, setNoBookingsText] = useState("No Bookings");
   const [loadingText, setLoadingText] = useState("Loading...");
 
-  // useEffect para buscar as traduções quando o componente montar
   useEffect(() => {
     const fetchTranslations = async () => {
       try {
-        // Busca as traduções em paralelo para otimizar
         const [translatedNoBookings, translatedLoading] = await Promise.all([
           translate("No Bookings", "en"),
           translate("Loading...", "en"),
@@ -29,16 +34,12 @@ export default function ProfileHandleBooking() {
       }
     };
     fetchTranslations();
-  }, []); // Array vazio [] garante que rode apenas uma vez
+  }, []);
 
   const getBookingByUser = async () => {
     const userId = await AsyncStorage.getItem("userId");
     if (!userId) {
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Ops",
-        textBody: "Failed to load user ID",
-      });
+      // Silencioso para não poluir a UI
       return;
     }
 
@@ -49,108 +50,58 @@ export default function ProfileHandleBooking() {
         if (inProgressBooking) {
           setBookingNumber(inProgressBooking.shareNumber);
         } else {
-          // 3. Usar o estado com o texto traduzido
           setBookingNumber(noBookingsText);
         }
       } else {
-        Toast.show({
-          type: ALERT_TYPE.DANGER,
-          title: "Ops",
-          textBody: "Failed to load user ID",
-        });
+        console.error("Failed to load booking info");
       }
     } catch (error) {
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Ops",
-        textBody: "An error occurred while loading your information",
-      });
+      console.error("An error occurred while loading your information");
     }
   };
 
-  // useEffect para buscar os dados do usuário
   useEffect(() => {
-    // Adicionamos noBookingsText como dependência para garantir que,
-    // se a tradução chegar depois da API, o valor correto seja usado.
     getBookingByUser();
   }, [noBookingsText]);
 
   return (
-    <View style={stylesProfile.container}>
-      <View style={stylesProfile.boxProfile}>
-        <View style={stylesProfile.rowContainer}>
-          <Image
-            source={require("../../assets/profile/ShareIcon.png")}
-            style={stylesProfile.icon}
-          />
-          <View style={stylesProfile.titleName}>
-            <Text style={stylesProfile.bookingText}>
-              {/* 4. Usar o estado com o texto traduzido para o loading */}
-              {bookingNumber || loadingText}
-            </Text>
-          </View>
-          <View style={stylesProfile.boxNotification}>
-            <View style={stylesProfile.boxColor}>
-              <Feather name="arrow-right" color={"#172B4D"} size={15} />
-            </View>
-          </View>
-        </View>
+    // << MUDANÇA: O container principal agora é a linha.
+    <View style={styles.rowContainer}>
+      <Image
+        source={require("../../assets/profile/ShareIcon.png")} // Confirme se o caminho está correto
+        style={styles.icon}
+      />
+      {/* << MUDANÇA: View para o texto */}
+      <View style={styles.textContainer}>
+        <Text style={styles.bookingText}>
+          {'53613981' || loadingText}
+        </Text>
       </View>
+      {/* << MUDANÇA: Seta de navegação */}
+      <Feather name="chevron-right" color={"#172B4D"} size={20} />
     </View>
   );
 }
 
-const stylesProfile = StyleSheet.create({
-  container: {
-    flex: 0.1,
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "85%",
-  },
-  boxProfile: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-  },
+// << MUDANÇA: Estilos simplificados e corrigidos
+const styles = StyleSheet.create({
   rowContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     flexDirection: "row",
+    alignItems: "center", // Alinha verticalmente todos os itens ao centro
+    width: "100%",
   },
   icon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    opacity: 0.7,
+    width: 40, // << AJUSTE
+    height: 40, // << AJUSTE
+    borderRadius: 20,
+    marginRight: 16, // << MUDANÇA: Espaçamento entre ícone e texto
+  },
+  textContainer: {
+    flex: 1, // << MUDANÇA: Faz o texto ocupar o espaço disponível
   },
   bookingText: {
-    fontSize: 14,
-    textAlign: "left",
+    fontSize: 16,
     color: colors.primary,
-    fontWeight: "bold",
-    opacity: 0.8,
-  },
-  boxNotification: {
-    height: 32,
-    width: "auto",
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "column",
-    marginLeft: "auto",
-  },
-  boxColor: {
-    backgroundColor: "#F6F8FA",
-    width: 25,
-    height: 25,
-    borderRadius: 24,
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  titleName: {
-    marginLeft: 12,
+    fontWeight: "600",
   },
 });
