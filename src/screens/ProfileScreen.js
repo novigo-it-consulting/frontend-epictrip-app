@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProfileHandleSettingsLanguage from "../components/ProfileHandleSettingsLanguage.js";
 import colors from "../colors";
 import ProfileHandleAccount from "../components/ProfileHandleAccount";
+import ProfileHandleBooking from "../components/ProfileHandleBooking";
 import ProfileHandleSettingsPassword from "../components/ProfileHandleSettingsPassword";
 import ProfileHandleSettingsPayment from "../components/ProfileHandleSettingsPayment";
 import ProfileHandleLogout from "../components/ProfileHandleLogout.js";
@@ -32,6 +33,10 @@ const ProfileScreen = () => {
       console.error("Erro ao verificar métodos de pagamento, navegando mesmo assim:", error);
       navigation.navigate("WalletScreen");
     }
+  };
+
+  const handlePressGoBooking = () => {
+    navigation.navigate("BookingScreen");
   };
 
   const handlePressChangePassword = async () => {
@@ -61,7 +66,7 @@ const ProfileScreen = () => {
   };
 
   const handlePressLanguage = () => {
-    navigation.navigate("LanguageSelectionScreen", { fromProfile: true }); // Alteração aqui
+    navigation.navigate("LanguageSelectionScreen", { fromProfile: true });
   };
 
   return (
@@ -87,6 +92,19 @@ const ProfileScreen = () => {
             </Text>
             <TouchableOpacity style={stylesProfile.menuItem} onPress={handlePress}>
               <ProfileHandleAccount />
+            </TouchableOpacity>
+          </View>
+
+          {/* Booking Section - CORRIGIDA */}
+          <View style={stylesProfile.section}>
+            <Text style={stylesProfile.sectionTitle}>
+              {t("profileScreen.subTitleBooking")}
+            </Text>
+            <TouchableOpacity
+              style={stylesProfile.menuItem}
+              onPress={handlePressGoBooking}
+            >
+              <ProfileHandleBooking />
             </TouchableOpacity>
           </View>
 
@@ -162,6 +180,7 @@ const ProfileScreen = () => {
   );
 };
 
+// ... (O resto do seu código e estilos permanecem os mesmos)
 const stylesProfile = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -188,18 +207,21 @@ const stylesProfile = StyleSheet.create({
     paddingTop: 10,
   },
   section: {
-    marginBottom: 32,
+    marginBottom: 24, // << AJUSTE: um pouco menos de margem para ficar mais coeso
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: 16, // << AJUSTE: um pouco menor para dar mais destaque ao título principal
+    fontWeight: '600', // << AJUSTE: semibold
     marginBottom: 16,
     color: colors.textPrimary || "#000",
+    opacity: 0.8,
   },
   menuItem: {
     marginBottom: 8,
     borderRadius: 12,
-    overflow: 'hidden',
+    backgroundColor: '#fff', // Adicionei um fundo para melhor visualização
+    padding: 12, // Adicionei padding
+    // Removi overflow: 'hidden' pois pode não ser necessário
   },
 });
 
@@ -240,5 +262,6 @@ const styles = StyleSheet.create({
     minWidth: 100,
   }
 });
+
 
 export default ProfileScreen;
