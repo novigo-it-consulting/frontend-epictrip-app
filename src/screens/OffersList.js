@@ -16,6 +16,7 @@ import ContactCard from '../components/ContactCard';
 import colors from "../colors";
 import SearchBarHome from '../components/SearchViewHome';
 import GoBackArrow from '../components/GoBackArrow';
+import CardServicesCategoriesInside from '../components/CardServicesCategoriesInside';
 import ExploreCategoriesProducts from '../components/ExploreCategoriesProducts';
 import { getProductsByGroup, getUploadByProduct, getCategoryByGroup, getUploadByCategory } from '../services/api';
 
@@ -28,6 +29,11 @@ const OffersList = () => {
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [categories, setCategories] = useState([]);
+
+    // Normaliza e detecta se é a tela de Tickets (aceita "tickets", "ticket", "bilhetes", "bilhete")
+    const normalize = (v) => (v || '').toString().toLowerCase();
+    const isTickets = normalize(group).includes('ticket') || normalize(group).includes('bilhet') ||
+        normalize(groupData?.title).includes('ticket') || normalize(groupData?.title).includes('bilhet');
 
     useEffect(() => {
         const getProducts = async () => {
@@ -131,46 +137,66 @@ const OffersList = () => {
 
                     {/* Seção de Sugestões */}
                     <View style={styles.sectionContainer}>
-                        <Text style={[styles.sectionTitle, { paddingHorizontal: 16 }]}>{t('offersList.suggestions')}</Text>
+                        <Text style={[styles.sectionTitle, { paddingHorizontal: 16 }]}>
+                            {t('offersList.suggestions')}
+                        </Text>
 
-                        <ScrollView
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            contentContainerStyle={{
-                                paddingHorizontal: 16,
-                                alignItems: "flex-start"
-                            }}
-                        >
-                            {data.map((prd) => {
-                                const categoryName = categories.find(
-                                    (catItem) => catItem.categoryData?.cat?.categoryId === prd.product?.category
-                                )?.categoryData?.cat?.categoryName;
+                        {isTickets ? (
+                            <ScrollView
+                                horizontal
+                                showsHorizontalScrollIndicator={false}
+                                contentContainerStyle={{ paddingHorizontal: 16 }}
+                            >
+                                {data.map((prd) => {
+                                    const categoryName = categories.find(
+                                        (catItem) => catItem.categoryData?.cat?.categoryId === prd.product?.category
+                                    )?.categoryData?.cat?.categoryName;
 
-                                return (
+                                    return (
+                                        <TouchableOpacity
+                                            key={prd.product.id}
+                                            style={styles.imageCardTouchable}
+                                            onPress={() => handlePressCard(prd.upload?.filePath, prd)}
+                                            activeOpacity={0.85}
+                                        >
+                                            <View style={styles.imageCard}>
+                                                <View style={{ position: 'relative' }}>
+                                                    <Image
+                                                        source={{ uri: prd.upload?.filePath }}
+                                                        style={styles.image}
+                                                        resizeMode="cover"
+                                                    />
+                                                    {categoryName && (
+                                                        <Text style={styles.overlayFixedLabel}>{categoryName}</Text>
+                                                    )}
+                                                </View>
+                                                <Text style={styles.imageTitle}>{t(prd.product.name)}</Text>
+                                                <Text style={styles.imageDescription}>{t(prd.product.description)}</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    );
+                                })}
+                            </ScrollView>
+                        ) : (
+                            <ScrollView
+                                horizontal
+                                showsHorizontalScrollIndicator={false}
+                                contentContainerStyle={{ paddingHorizontal: 16 }}
+                            >
+                                {data.map((prd) => (
                                     <TouchableOpacity
                                         key={prd.product.id}
-                                        style={styles.cardWrapper}
                                         onPress={() => handlePressCard(prd.upload?.filePath, prd)}
                                     >
-                                        <View style={styles.imageContainer}>
-                                            <Image
-                                                source={{ uri: prd.upload?.filePath }}
-                                                style={styles.cardImage}
-                                                resizeMode="cover"
-                                            />
-                                            {categoryName && (
-                                                <Text style={styles.overlayFixedLabel}>
-                                                    {categoryName}
-                                                </Text>
-                                            )}
-                                        </View>
-                                        <Text style={styles.cardLabel}>
-                                            {t(prd.product.name)}
-                                        </Text>
+                                        <CardServicesCategoriesInside
+                                            title={t(prd.product.name)}
+                                            image={prd.upload?.filePath}
+                                            description={t(prd.product.description)}
+                                        />
                                     </TouchableOpacity>
-                                );
-                            })}
-                        </ScrollView>
+                                ))}
+                            </ScrollView>
+                        )}
                     </View>
                 </ScrollView>
                 <ContactCard />
@@ -199,11 +225,52 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'flex-start',
     },
+    imageCardTouchable: {
+        marginRight: 16,
+        marginLeft: 0,
+    },
+    imageCard: {
+        width: 170,
+        alignItems: 'flex-start',
+    },
+    image: {
+        width: 170,
+        height: 200,
+        borderRadius: 16,
+        backgroundColor: "#eee",
+    },
+    imageTitle: {
+        fontSize: 15,
+        fontWeight: "700",
+        color: "#172B4D",
+        marginTop: 8,
+        marginLeft: 2,
+        marginBottom: 0,
+    },
+    imageDescription: {
+        fontSize: 12,
+        color: "#7A869A",
+        marginLeft: 2,
+        marginBottom: 6,
+        marginTop: 2,
+    },
+    overlayFixedLabel: {
+        position: 'absolute',
+        top: 8,
+        left: 8,
+        backgroundColor: '#0065FF',
+        color: '#FFFFFF',
+        fontSize: 14,
+        fontWeight: 'bold',
+        paddingVertical: 4,
+        paddingHorizontal: 8,
+        borderRadius: 6,
+    },
     titleText: {
         fontSize: 32,
         fontWeight: 'bold',
         color: '#172B4D',
-        marginTop: 54,
+        marginTop: 44,
     },
     searchWrapper: {
         width: '100%',
@@ -215,18 +282,17 @@ const styles = StyleSheet.create({
     sectionContainerCategories: {
         paddingHorizontal: 16,
         marginBottom: 24,
-        marginTop: 16,
         height: 164
     },
     sectionTitle: {
         fontSize: 18,
         fontWeight: 'bold',
         color: '#172B4D',
-        marginBottom: 5,
+        marginBottom: 12,
     },
     cardWrapper: {
-        marginRight: 16,
-        width: 160,
+        marginBottom: 16,
+        width: '100%',
     },
     imageContainer: {
         position: 'relative',
@@ -264,7 +330,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.backGroundLight,
     },
     loadingText: {
-        marginTop: 20,
+        marginTop: 10,
         fontSize: 16,
         color: "#172B4D",
     }
