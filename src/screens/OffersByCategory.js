@@ -16,75 +16,92 @@ import colors from "../colors";
 import SearchBarHome from '../components/SearchViewHome';
 import GoBackArrow from '../components/GoBackArrow';
 import ExploreCategoriesProducts from '../components/ExploreCategoriesProducts';
-import { getProductByCategory, getUploadByProduct } from '../services/api';
+import { getCategoryByGroup, getUploadByProduct, getProductsByGroup } from '../services/api';
 import CardServicesCategoriesInsideDetailed from '../components/CardServicesCategoriesInsideDetailed';
-
-const categories = [
-    { categoryData: { cat: { categoryId: 'parks', categoryName: 'Parks' } } },
-    { categoryData: { cat: { categoryId: 'shows', categoryName: 'Shows' } } },
-    { categoryData: { cat: { categoryId: 'sports', categoryName: 'Sports' } } },
-    { categoryData: { cat: { categoryId: 'car', categoryName: 'Car' } } },
-    { categoryData: { cat: { categoryId: 'tours', categoryName: 'Tours' } } },
-];
 
 const OffersByCategory = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const { t } = useTranslation();
 
-    const { cat, catName } = route.params || {};
+    const { cat, catName, selectedGroup } = route.params || {};
 
     const [isLoading, setIsLoading] = useState(true);
-    const [data, setData] = useState([]);
-    const [selected, setSelected] = useState(cat || categories[0].categoryData.cat.categoryId);
+    // State para os produtos FILTRADOS que serão exibidos na tela
+    const [filteredData, setFilteredData] = useState([]);
+    // State para guardar TODOS os produtos buscados da API
+    const [allProducts, setAllProducts] = useState([]);
+    const [realCategories, setRealCategories] = useState([]);
+    // Inicia 'selected' com a categoria que veio da rota ou a primeira da lista
+    const [selected, setSelected] = useState(cat);
 
+    // EFEITO 1: Busca os dados brutos (categorias e TODOS os produtos) UMA ÚNICA VEZ.
     useEffect(() => {
-        const getProducts = async (id) => {
-            const productData = [];
+        const fetchInitialData = async () => {
+            if (!selectedGroup) return;
+
             try {
-                const products = await getProductByCategory(id);
+                setIsLoading(true);
+
+                // Busca as categorias do grupo
+                const categories = await getCategoryByGroup(selectedGroup);
+                if (categories.length > 0) {
+                    const cats = categories.map(c => ({ categoryData: { cat: c }, uri: '' }));
+                    setRealCategories(cats);
+                    // Se nenhuma categoria foi passada via params, define a primeira como selecionada
+                    if (!cat) {
+                        setSelected(categories[0].categoryId);
+                    }
+                }
+
+                // Busca TODOS os produtos do grupo
+                const products = await getProductsByGroup(selectedGroup);
+                const productData = [];
                 for (const prd of products) {
                     try {
                         const uploadResponse = await getUploadByProduct(prd.id);
-                        const obj = {
-                            upload: uploadResponse[0],
+                        productData.push({
+                            upload: uploadResponse[0] || null,
                             product: prd
-                        };
-                        productData.push(obj);
+                        });
                     } catch (e) {
-                        console.warn(`Could not get upload for product ${prd.id}`);
+                        console.warn(`Não foi possível obter a imagem para o produto ${prd.id}`);
                         productData.push({ product: prd, upload: null });
                     }
                 }
+                // Guarda a lista completa de produtos no state 'allProducts'
+                setAllProducts(productData);
+
             } catch (error) {
-                console.error('Error fetching products by category:', error);
+                console.error('Erro ao buscar dados iniciais:', error);
+            } finally {
+                setIsLoading(false);
             }
-            return productData;
         };
 
-        if (cat) {
-            const fetchData = async () => {
-                try {
-                    setIsLoading(true);
-                    const products = await getProducts(cat);
-                    setData(products);
-                } catch (error) {
-                    console.error('Erro ao buscar dados iniciais:', error);
-                } finally {
-                    setIsLoading(false);
-                }
-            };
-            fetchData();
-        } else {
-            setIsLoading(false);
-        }
-    }, [cat]);
+        fetchInitialData();
+    }, [selectedGroup]); // Dependência: executa apenas se o grupo mudar
 
-    const handlePressCard = async (uri, clickedPrd) => {
-        navigation.navigate('ConciergeDetails', { data: data, clickedImage: uri, clickedProduct: clickedPrd });
+    // EFEITO 2: Filtra os produtos sempre que a categoria 'selected' ou a lista 'allProducts' mudar.
+    useEffect(() => {
+        if (!selected) return; // Não faz nada se nenhuma categoria estiver selecionada
+
+        console.log(allProducts)
+
+        // Filtra a lista completa
+        const filtered = allProducts.filter(p => {
+            // ATENÇÃO: Verifique se 'p.product.categoryId' é o campo correto no seu objeto de produto
+            return p.product.category === selected;
+        });
+
+        setFilteredData(filtered); // Atualiza os dados que serão exibidos na tela
+
+    }, [selected, allProducts]); // Dependências: executa ao selecionar categoria ou quando os produtos carregam
+
+    const handlePressCard = (uri, clickedPrd) => {
+        navigation.navigate('ConciergeDetails', { data: filteredData, clickedImage: uri, clickedProduct: clickedPrd });
     };
 
-    // Renderização customizada para as categorias no estilo CategoriesBar
     const renderCategoryChip = ({ item }) => (
         <TouchableOpacity
             key={item.categoryData.cat.categoryId}
@@ -92,13 +109,7 @@ const OffersByCategory = () => {
                 styles.chip,
                 selected === item.categoryData.cat.categoryId && styles.chipSelected
             ]}
-            onPress={() => {
-                setSelected(item.categoryData.cat.categoryId);
-                navigation.navigate('OffersByCategory', {
-                    cat: item.categoryData.cat.categoryId,
-                    catName: item.categoryData.cat.categoryName
-                });
-            }}
+            onPress={() => setSelected(item.categoryData.cat.categoryId)}
         >
             <Text style={[
                 styles.chipText,
@@ -123,7 +134,9 @@ const OffersByCategory = () => {
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.headerContainer}>
                     <GoBackArrow />
-                    <Text style={styles.titleText}>{t(catName) || t('offersByCategory.categoryFallback')}</Text>
+                    <Text style={styles.titleText}>
+                        {t(catName) || t('offersByCategory.categoryFallback')}
+                    </Text>
                 </View>
 
                 <View style={styles.searchContainer}>
@@ -133,7 +146,7 @@ const OffersByCategory = () => {
                 <View style={styles.categoriesContainer}>
                     <Text style={styles.categoriesTitle}>Categorias</Text>
                     <ExploreCategoriesProducts
-                        data={categories}
+                        data={realCategories}
                         renderItem={renderCategoryChip}
                         flatListStyle={{ height: 56, paddingVertical: 0, backgroundColor: 'transparent' }}
                         flatListContentStyle={{ paddingHorizontal: 0 }}
@@ -146,8 +159,8 @@ const OffersByCategory = () => {
                     showsVerticalScrollIndicator={false}
                 >
                     <View style={styles.cardsContainer}>
-                        {data.length > 0 ? (
-                            data.map((prd) => (
+                        {filteredData.length > 0 ? (
+                            filteredData.map((prd) => (
                                 <TouchableOpacity
                                     key={prd.product.id}
                                     onPress={() => handlePressCard(prd.upload?.filePath, prd)}
@@ -173,6 +186,7 @@ const OffersByCategory = () => {
     );
 };
 
+// ... (o restante do código, theme e styles, permanece o mesmo)
 const theme = {
     ...DefaultTheme,
     colors: {
@@ -221,11 +235,6 @@ const styles = StyleSheet.create({
         color: '#172B4D',
         marginTop: 10,
         marginBottom: 15,
-    },
-    exploreCategoriesOverride: {
-        height: 60,
-        paddingVertical: 0,
-        backgroundColor: 'transparent',
     },
     chip: {
         backgroundColor: '#F4F6FA',

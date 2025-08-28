@@ -105,7 +105,12 @@ const OffersList = () => {
     }, [group]);
 
     const handlePressCard = (uri, prd) => {
-        navigation.navigate('ProductDetailsDesignTwo', { data: data, clickedImage: uri, clickedProduct: prd });
+        if (prd.product.group === '031e45b9-20bd-40b2-9bdc-08bdf0fa6481' || prd.product.group === 'f7f9c47e-a45a-4bda-8e1f-11085c0b13a6') {
+            navigation.navigate('Coupons', { data: data, clickedImage: uri, clickedProduct: prd });
+
+        } else {
+            navigation.navigate('ProductDetailsDesignTwo', { data: data, clickedImage: uri, clickedProduct: prd });
+        }
     };
 
     if (isLoading) {
@@ -132,7 +137,7 @@ const OffersList = () => {
                     {/* Seção de Categorias */}
                     <View style={styles.sectionContainerCategories}>
                         <Text style={styles.sectionTitle}>{t('offersList.categories')}</Text>
-                        <ExploreCategoriesProducts data={categories} />
+                        <ExploreCategoriesProducts data={categories} group={group} />
                     </View>
 
                     {/* Seção de Sugestões */}
