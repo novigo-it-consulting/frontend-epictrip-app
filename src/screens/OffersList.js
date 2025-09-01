@@ -178,24 +178,30 @@ const OffersList = () => {
                                 })}
                             </ScrollView>
                         ) : (
-                            <ScrollView
-                                horizontal
-                                showsHorizontalScrollIndicator={false}
-                                contentContainerStyle={{ paddingHorizontal: 16 }}
-                            >
-                                {data.map((prd) => (
-                                    <TouchableOpacity
-                                        key={prd.product.id}
-                                        onPress={() => handlePressCard(prd.upload?.filePath, prd)}
-                                    >
-                                        <CardServicesCategoriesInside
-                                            title={t(prd.product.name)}
-                                            image={prd.upload?.filePath}
-                                            description={t(prd.product.description)}
-                                        />
-                                    </TouchableOpacity>
-                                ))}
-                            </ScrollView>
+                            <View style={{ height: 260 }}>
+                                <ScrollView
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                    contentContainerStyle={{
+                                        paddingHorizontal: 16,
+                                        alignItems: "center"
+                                    }}
+                                >
+                                    {data.map((prd) => (
+                                        <TouchableOpacity
+                                            key={prd.product.id}
+                                            onPress={() => handlePressCard(prd.upload?.filePath, prd)}
+                                            style={{ marginRight: 16 }}
+                                        >
+                                            <CardServicesCategoriesInside
+                                                title={t(prd.product.name)}
+                                                image={prd.upload?.filePath}
+                                                description={t(prd.product.description)}
+                                            />
+                                        </TouchableOpacity>
+                                    ))}
+                                </ScrollView>
+                            </View>
                         )}
                     </View>
                 </ScrollView>
