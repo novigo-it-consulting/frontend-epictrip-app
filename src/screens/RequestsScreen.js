@@ -231,6 +231,7 @@ const stylesRequests = StyleSheet.create({
     backgroundColor: isActive ? "#0057FF" : "white",
     paddingHorizontal: 16,
     paddingVertical: 8,
+    paddingBottom: 4,
     borderRadius: 20,
     marginRight: 8,
     shadowOpacity: 0.1,
