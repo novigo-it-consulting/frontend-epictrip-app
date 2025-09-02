@@ -157,9 +157,8 @@ const ExploreCategories = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1, // Remove o height fixo e permite que o componente se ajuste
     paddingHorizontal: 24,
-    height: 16
   },
   titlePage: {
     color: "#172B4D",

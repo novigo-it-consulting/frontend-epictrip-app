@@ -17,11 +17,13 @@ const HomeScreen = () => {
     <PaperProvider theme={theme}>
       <SafeAreaView style={styles.safeArea}>
         <AlertNotificationRoot>
-          <PullToRefreshWrapper onRefresh={handleRefresh} contentContainerStyle={styles.scrollView}>
-            <ProfileAccount />
-            <ExploreCategories />
-            <PopularEvents />
-          </PullToRefreshWrapper>
+          <View style={styles.contentContainer}>
+            <PullToRefreshWrapper onRefresh={handleRefresh} contentContainerStyle={styles.scrollView}>
+              <ProfileAccount />
+              <ExploreCategories />
+              <PopularEvents />
+            </PullToRefreshWrapper>
+          </View>
           <CustomTabBar />
         </AlertNotificationRoot>
       </SafeAreaView>
@@ -40,11 +42,13 @@ const theme = {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: 'colors.backGroundLight,'
+    backgroundColor: colors.backGroundLight,
+  },
+  contentContainer: {
+    flex: 1,
   },
   scrollView: {
     flexGrow: 1,
-    backgroundColor: colors.backGroundLight,
   },
   styleFilter: {
     position: "absolute",
