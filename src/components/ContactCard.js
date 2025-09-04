@@ -10,11 +10,13 @@ const ContactCard = () => {
 
     const handleCallPress = async () => {
         const url = `tel:${PHONE_NUMBER}`;
-        const supported = await Linking.canOpenURL(url);
-        if (supported) {
-            Linking.openURL(url);
-        } else {
-            Alert.alert(t('contactCard.callError'), t('contactCard.callNotSupported'));
+        try {
+            await Linking.openURL(url);
+        } catch (error) {
+            Alert.alert(
+                t("contactCard.callError"),
+                t("contactCard.callNotSupported")
+            );
         }
     };
 
