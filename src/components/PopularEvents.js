@@ -91,7 +91,8 @@ const styles = StyleSheet.create({
   image: {
     height: 160,
     resizeMode: "cover",
-    marginTop: 10
+    marginTop: 10,
+    backgroundColor: "#fff"
   },
   badge: {
     position: "absolute",
