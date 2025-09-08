@@ -176,7 +176,7 @@ const OffersList = () => {
                                                     )}
                                                 </View>
                                                 <Text style={styles.imageTitle}>{t(prd.product.name)}</Text>
-                                                <Text style={styles.imageDescription}>{t(prd.product.description)}</Text>
+                                                <Text style={styles.imageDescription}>10 aug - Orlando, FL</Text>
                                             </View>
                                         </TouchableOpacity>
                                     );
