@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform, ScrollView, KeyboardAvoidingView } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { ArrowLeft, Calendar } from 'lucide-react-native';
-import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useTranslation } from 'react-i18next';
-import { LinearGradient } from 'expo-linear-gradient'; // Importando o LinearGradient
-import { requestCreateEvent } from "../services/api";
 import {
-    ALERT_TYPE,
-    AlertNotificationRoot,
-    Toast,
-} from "react-native-alert-notification";
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    StyleSheet,
+    Platform,
+    ScrollView,
+    KeyboardAvoidingView,
+} from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import Ionicons from 'react-native-vector-icons/Ionicons'; // Ícones estáveis
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTranslation } from 'react-i18next';
+import { LinearGradient } from 'expo-linear-gradient';
+import { requestCreateEvent } from '../services/api';
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 
 const CreateNewEvent = () => {
     const { t } = useTranslation();
@@ -28,25 +33,26 @@ const CreateNewEvent = () => {
 
     const handleGoBack = () => {
         navigation.goBack();
-    }
+    };
 
     const formatDate = (date) => {
         return date.toLocaleDateString('pt-BR');
     };
 
     const formatTime = (date) => {
-        return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        return date.toLocaleTimeString('pt-BR', {
+            hour: '2-digit',
+            minute: '2-digit',
+        });
     };
 
     const onStartDateChange = (event, selectedDate) => {
-        setShowStartDatePicker(Platform.OS === 'ios');
-        if (selectedDate) {
-            setStartDate(selectedDate);
-        }
+        setShowStartDatePicker(false);
+        if (selectedDate) setStartDate(selectedDate);
     };
 
     const onStartTimeChange = (event, selectedTime) => {
-        setShowStartTimePicker(Platform.OS === 'ios');
+        setShowStartTimePicker(false);
         if (selectedTime) {
             const newDate = new Date(startDate);
             newDate.setHours(selectedTime.getHours());
@@ -56,14 +62,12 @@ const CreateNewEvent = () => {
     };
 
     const onEndDateChange = (event, selectedDate) => {
-        setShowEndDatePicker(Platform.OS === 'ios');
-        if (selectedDate) {
-            setEndDate(selectedDate);
-        }
+        setShowEndDatePicker(false);
+        if (selectedDate) setEndDate(selectedDate);
     };
 
     const onEndTimeChange = (event, selectedTime) => {
-        setShowEndTimePicker(Platform.OS === 'ios');
+        setShowEndTimePicker(false);
         if (selectedTime) {
             const newDate = new Date(endDate);
             newDate.setHours(selectedTime.getHours());
@@ -84,11 +88,11 @@ const CreateNewEvent = () => {
 
         const event = {
             eventName: eventName,
-            owner: await AsyncStorage.getItem("userId"),
+            owner: await AsyncStorage.getItem('userId'),
             description: description,
             startsAt: startDate,
-            endsAt: endDate
-        }
+            endsAt: endDate,
+        };
 
         try {
             const response = await requestCreateEvent(event);
@@ -100,10 +104,10 @@ const CreateNewEvent = () => {
                 });
                 const createdEvent = response.data;
                 setTimeout(() => {
-                    navigation.navigate("EventDetails", { event: createdEvent });
+                    navigation.navigate('EventDetails', { event: createdEvent });
                 }, 1500);
             } else {
-                throw new Error("Failed to create event");
+                throw new Error('Failed to create event');
             }
         } catch (error) {
             Toast.show({
@@ -112,92 +116,136 @@ const CreateNewEvent = () => {
                 textBody: t('createNewEvent.errorMessage'),
             });
         }
-    }
+    };
 
     return (
-        <AlertNotificationRoot>
-            <KeyboardAvoidingView
-                style={styles.container}
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-            >
-                <ScrollView contentContainerStyle={styles.scrollContent}>
-                    {/* Header */}
-                    <View style={styles.header}>
-                        <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
-                            <ArrowLeft size={28} color="#1F2937" />
-                        </TouchableOpacity>
-                        <View style={styles.iconContainer}>
-                            <LinearGradient
-                                colors={['#60A5FA', '#3B82F6']}
-                                style={styles.iconWrapper}
-                            >
-                                <Calendar size={32} color="white" />
-                            </LinearGradient>
-                        </View>
-                        <View style={styles.titleContainer}>
-                            <Text style={styles.title}>{t('createNewEvent.title1')}</Text>
-                            <Text style={styles.subtitle}>{t('createNewEvent.title2')}</Text>
-                        </View>
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+                {/* Header */}
+                <View style={styles.header}>
+                    <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+                        <Ionicons name="arrow-back" size={28} color="#1F2937" />
+                    </TouchableOpacity>
+                    <View style={styles.iconContainer}>
+                        <LinearGradient
+                            colors={['#60A5FA', '#3B82F6']}
+                            style={styles.iconWrapper}
+                        >
+                            <Ionicons name="calendar-outline" size={32} color="white" />
+                        </LinearGradient>
                     </View>
+                    <View style={styles.titleContainer}>
+                        <Text style={styles.title}>{t('createNewEvent.title1')}</Text>
+                        <Text style={styles.subtitle}>{t('createNewEvent.title2')}</Text>
+                    </View>
+                </View>
 
-                    {/* Form */}
-                    <View style={styles.form}>
-                        <TextInput
-                            placeholder={t('createNewEvent.eventNamePlaceholder')}
-                            value={eventName}
-                            onChangeText={setEventName}
-                            style={styles.input}
-                            placeholderTextColor="#9CA3AF"
-                        />
-                        <TextInput
-                            placeholder={t('createNewEvent.descriptionPlaceholder')}
-                            value={description}
-                            onChangeText={setDescription}
-                            style={[styles.input, styles.multilineInput]}
-                            placeholderTextColor="#9CA3AF"
-                            multiline
-                        />
+                {/* Form */}
+                <View style={styles.form}>
+                    <TextInput
+                        placeholder={t('createNewEvent.eventNamePlaceholder')}
+                        value={eventName}
+                        onChangeText={setEventName}
+                        style={styles.input}
+                        placeholderTextColor="#9CA3AF"
+                    />
+                    <TextInput
+                        placeholder={t('createNewEvent.descriptionPlaceholder')}
+                        value={description}
+                        onChangeText={setDescription}
+                        style={[styles.input, styles.multilineInput]}
+                        placeholderTextColor="#9CA3AF"
+                        multiline
+                    />
 
-                        <Text style={styles.dateLabel}>{t('createNewEvent.startsAt') || 'Início'}</Text>
-                        <View style={styles.timeRow}>
-                            <TouchableOpacity style={styles.dateInput} onPress={() => setShowStartDatePicker(true)}>
-                                <Calendar size={20} color="#6B7280" />
-                                <Text style={styles.dateTimeText}>{formatDate(startDate)}</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.dateInput} onPress={() => setShowStartTimePicker(true)}>
-                                <Text style={styles.dateTimeText}>{formatTime(startDate)}</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <Text style={styles.dateLabel}>{t('createNewEvent.endsAt') || 'Término'}</Text>
-                        <View style={styles.timeRow}>
-                            <TouchableOpacity style={styles.dateInput} onPress={() => setShowEndDatePicker(true)}>
-                                <Calendar size={20} color="#6B7280" />
-                                <Text style={styles.dateTimeText}>{formatDate(endDate)}</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.dateInput} onPress={() => setShowEndTimePicker(true)}>
-                                <Text style={styles.dateTimeText}>{formatTime(endDate)}</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <TouchableOpacity onPress={handleCreateEvent}>
-                            <LinearGradient
-                                colors={['#3B82F6', '#2563EB']}
-                                style={styles.createButton}
-                            >
-                                <Text style={styles.createButtonText}>{t('createNewEvent.createButton')}</Text>
-                            </LinearGradient>
+                    <Text style={styles.dateLabel}>
+                        {t('createNewEvent.startsAt') || 'Início'}
+                    </Text>
+                    <View style={styles.timeRow}>
+                        <TouchableOpacity
+                            style={styles.dateInput}
+                            onPress={() => setShowStartDatePicker(true)}
+                        >
+                            <Ionicons name="calendar-outline" size={20} color="#6B7280" />
+                            <Text style={styles.dateTimeText}>{formatDate(startDate)}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.dateInput}
+                            onPress={() => setShowStartTimePicker(true)}
+                        >
+                            <Text style={styles.dateTimeText}>{formatTime(startDate)}</Text>
                         </TouchableOpacity>
                     </View>
 
-                    {/* Date Time Pickers */}
-                    {showStartDatePicker && <DateTimePicker value={startDate} mode="date" display="default" onChange={onStartDateChange} />}
-                    {showStartTimePicker && <DateTimePicker value={startDate} mode="time" display="default" onChange={onStartTimeChange} />}
-                    {showEndDatePicker && <DateTimePicker value={endDate} mode="date" display="default" onChange={onEndDateChange} />}
-                    {showEndTimePicker && <DateTimePicker value={endDate} mode="time" display="default" onChange={onEndTimeChange} />}
-                </ScrollView>
-            </KeyboardAvoidingView>
-        </AlertNotificationRoot>
+                    <Text style={styles.dateLabel}>
+                        {t('createNewEvent.endsAt') || 'Término'}
+                    </Text>
+                    <View style={styles.timeRow}>
+                        <TouchableOpacity
+                            style={styles.dateInput}
+                            onPress={() => setShowEndDatePicker(true)}
+                        >
+                            <Ionicons name="calendar-outline" size={20} color="#6B7280" />
+                            <Text style={styles.dateTimeText}>{formatDate(endDate)}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.dateInput}
+                            onPress={() => setShowEndTimePicker(true)}
+                        >
+                            <Text style={styles.dateTimeText}>{formatTime(endDate)}</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <TouchableOpacity onPress={handleCreateEvent}>
+                        <LinearGradient
+                            colors={['#3B82F6', '#2563EB']}
+                            style={styles.createButton}
+                        >
+                            <Text style={styles.createButtonText}>
+                                {t('createNewEvent.createButton')}
+                            </Text>
+                        </LinearGradient>
+                    </TouchableOpacity>
+                </View>
+
+                {/* Date Time Pickers */}
+                {showStartDatePicker && (
+                    <DateTimePicker
+                        value={startDate}
+                        mode="date"
+                        display="default"
+                        onChange={onStartDateChange}
+                    />
+                )}
+                {showStartTimePicker && (
+                    <DateTimePicker
+                        value={startDate}
+                        mode="time"
+                        display="default"
+                        onChange={onStartTimeChange}
+                    />
+                )}
+                {showEndDatePicker && (
+                    <DateTimePicker
+                        value={endDate}
+                        mode="date"
+                        display="default"
+                        onChange={onEndDateChange}
+                    />
+                )}
+                {showEndTimePicker && (
+                    <DateTimePicker
+                        value={endDate}
+                        mode="time"
+                        display="default"
+                        onChange={onEndTimeChange}
+                    />
+                )}
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 };
 
@@ -217,7 +265,7 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
         alignItems: 'center',
-        shadowColor: "#000",
+        shadowColor: '#000',
         shadowOffset: {
             width: 0,
             height: 4,
@@ -313,7 +361,7 @@ const styles = StyleSheet.create({
         paddingVertical: 18,
         alignItems: 'center',
         marginTop: 20,
-        shadowColor: "#2563EB",
+        shadowColor: '#2563EB',
         shadowOffset: {
             width: 0,
             height: 4,

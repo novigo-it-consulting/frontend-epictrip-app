@@ -12,15 +12,15 @@ const useMockData = () => {
       const originalBookingInfo = [
         {
           title: "Access data",
-          content: "You can find your access data here..."
+          content: "32762312"
         },
         {
           title: "Sharing data",
-          content: "How we share your data with third parties..."
+          content: "53613981"
         },
         {
           title: "Useful phones",
-          content: "List of important phone numbers..."
+          content: "+1 (415) 867-3924"
         }
       ];
 
