@@ -461,7 +461,10 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   goBackArrow: {
-    marginTop: 20,
+    marginTop: 0,
+    marginBottom: 0,
+    marginRight: 5,
+    alignSelf: "center",
   },
   textInput: {
     flex: 1,
@@ -469,8 +472,9 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   avatar: {
-    marginRight: 5,
-    marginLeft: 50,
+    marginRight: 8,
+    marginLeft: 55,
+    alignSelf: "center", // Garante alinhamento vertical
   },
   sendButton: {
     marginLeft: 6,
