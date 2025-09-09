@@ -219,8 +219,8 @@ const stylesRequests = StyleSheet.create({
   searchInput: {
     flex: 1,
     height: 40,
-    backgroundColor: 'transparent', // Para remover o fundo padrão do TextInput
-    borderWidth: 0, // Para remover a borda padrão
+    backgroundColor: 'transparent',
+    borderWidth: 0,
   },
   filterContainer: {
     paddingBottom: 16,
@@ -229,14 +229,14 @@ const stylesRequests = StyleSheet.create({
   },
   filterButton: (isActive) => ({
     backgroundColor: isActive ? "#0057FF" : "white",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    paddingBottom: 4,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    paddingBottom: 8,
     borderRadius: 20,
     marginRight: 8,
     shadowOpacity: 0.1,
     shadowRadius: 3,
-    height: 32,
+    height: 40,
     shadowOffset: { height: 1 },
     elevation: 2,
   }),
